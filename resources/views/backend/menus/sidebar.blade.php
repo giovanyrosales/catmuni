@@ -40,13 +40,13 @@
              @endcan
 
 
-             @can('url.encargada.presupuesto.index')
+             @can('url.empresa.crear.index')
                 <li class="nav-item">
 
                     <a href="#" class="nav-link">
                         <i class="far fa-edit"></i>
                         <p>
-                            Extras
+                            Config
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -54,118 +54,15 @@
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.basepresupuesto.index') }}" target="frameprincipal" class="nav-link">
+                            <a href="{{ route('admin.crear.empresa.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Base de Presupuesto</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.rubro.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Rubro</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.cuenta.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Cuentas</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.objespecifico.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Objeto Específico</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.unidades.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Unidad de Medida</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.departamento.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Departamentos</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.anio.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Año de Presupuesto</p>
+                                <p>Empresas</p>
                             </a>
                         </li>
 
                     </ul>
                 </li>
              @endcan
-
-
-             @can('url.presupuesto.crear.index')
-                <li class="nav-item">
-
-                    <a href="#" class="nav-link">
-                        <i class="far fa-edit"></i>
-                        <p>
-                            Mi Presupuesto
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.crear.presupuesto.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Crear</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.editar.presupuesto.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Editar</p>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-             @endcan
-
-             @can('url.encargada.presupuesto.index')
-                <li class="nav-item">
-
-                    <a href="#" class="nav-link">
-                        <i class="far fa-edit"></i>
-                        <p>
-                            Presupuestos
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.ver.presupuestos.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Revisar</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.generar.presupuestos.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Generar</p>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-                @endcan
 
             </ul>
         </nav>
