@@ -22,15 +22,15 @@ class ControlController extends Controller
 
         // $permiso = $user->getAllPermissions()->pluck('name');
 
-        // Rol 1: Encargado-Unidad
-        if($user->hasPermissionTo('url.presupuesto.crear.index')){
-            $ruta = 'admin.crear.presupuesto.index';
+        
+        // Rol 1: Encargado-Empresas
+        if($user->hasPermissionTo('url.empresa.crear.index')){
+            $ruta = 'admin.crear.empresa.index';
         }
 
-        // Rol 2: Encargado-Presupuesto
-        // vista informatico -> redirigir a nuevas solicitudes
-        else  if($user->hasPermissionTo('url.encargada.presupuesto.index')){
-            $ruta = 'admin.ver.presupuestos.index';
+        // Rol 2: Encargado-Inmuebles
+        else  if($user->hasPermissionTo('url.inmueble.crear.index')){
+            $ruta = 'admin.crear.inmueble.index';
         }
 
         else{
@@ -38,9 +38,7 @@ class ControlController extends Controller
             $ruta = 'no.permisos.index';
         }
 
-        $departamento = Departamento::where('id', $user->id_departamento)->pluck('nombre')->first();
-
-        return view('backend.index', compact( 'ruta', 'user', 'departamento'));
+        return view('backend.index', compact( 'ruta', 'user'));
     }
 
     public function indexSinPermiso(){

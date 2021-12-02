@@ -7,7 +7,7 @@
 
     <ul class="navbar-nav">
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link" style="color: white">{{ $departamento }}</a>
+            <a href="#" class="nav-link" style="color: white"></a>
         </li>
     </ul>
 

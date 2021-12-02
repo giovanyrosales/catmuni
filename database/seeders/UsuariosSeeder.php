@@ -20,6 +20,6 @@ class UsuariosSeeder extends Seeder
             'usuario' => 'admin',
             'password' => bcrypt('admin'),
             'activo' => 1
-        ])->assignRole('Encargado-Administrador');
+        ])->assignRole('Encargado-Empresas');
     }
 }
