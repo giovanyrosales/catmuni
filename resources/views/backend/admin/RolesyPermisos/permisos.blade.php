@@ -11,7 +11,7 @@
 
 <style>
     table{
-        /*Ajustar tablas*/
+        /*Ajustar tablas.*/
         table-layout:fixed;
     }
 </style>
