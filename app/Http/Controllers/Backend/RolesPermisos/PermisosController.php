@@ -18,13 +18,13 @@ class PermisosController extends Controller
     public function index(){
         $roles = Role::all()->pluck('name', 'id');
 
-        return view('backend.admin.rolesypermisos.permisos.index', compact('roles'));
+        return view('backend.admin.rolesypermisos.permisos', compact('roles'));
     }
 
     public function tablaUsuarios(){
         $usuarios = Usuario::orderBy('id', 'ASC')->get();
 
-        return view('backend.admin.rolesypermisos.permisos.tabla.tablapermisos', compact('usuarios'));
+        return view('backend.admin.rolesypermisos.tabla.tablapermisos', compact('usuarios'));
     }
 
     public function nuevoUsuario(Request $request){

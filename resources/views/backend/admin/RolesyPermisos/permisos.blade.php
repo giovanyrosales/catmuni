@@ -18,16 +18,16 @@
 
 <div id="divcontenedor" style="display: none">
     <section class="content-header">
-    <div class="container-fluid">
-        <div class="col-sm-12">
-            <h1>Permisos Usuarios</h1>
+        <div class="container-fluid">
+            <div class="col-sm-12">
+                <h1>Permisos Usuarios</h1>
+            </div>
+            <br>
+            <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+                Nuevo Usuario
+            </button>
         </div>
-        <br>
-        <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
-            <i class="fas fa-pencil-alt"></i>
-            Nuevo Usuario
-        </button>
-    </div>
     </section>
 
     <section class="content">
