@@ -9,7 +9,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-            @can('seccion.roles.y.permisos')
+
              <li class="nav-item">
 
                  <a href="#" class="nav-link">
@@ -37,10 +37,7 @@
 
                 </ul>
              </li>
-             @endcan
 
-
-             @can('url.empresa.crear.index')
                 <li class="nav-item">
 
                     <a href="#" class="nav-link">
@@ -62,7 +59,6 @@
 
                     </ul>
                 </li>
-             @endcan
 
             </ul>
         </nav>

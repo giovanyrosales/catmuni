@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Controles;
 
 use App\Http\Controllers\Controller;
-use App\Models\Departamento;
-use App\Models\Unidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,7 +20,7 @@ class ControlController extends Controller
 
         // $permiso = $user->getAllPermissions()->pluck('name');
 
-        
+
         // Rol 1: Encargado-Empresas
         if($user->hasPermissionTo('url.empresa.crear.index')){
             $ruta = 'admin.crear.empresa.index';

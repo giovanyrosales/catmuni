@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\Login\LoginController;
 use App\Http\Controllers\Controles\ControlController;
 use App\Http\Controllers\Backend\Empresas\EmpresaController;
+use App\Http\Controllers\Backend\RolesPermisos\RolesController;
+use App\Http\Controllers\Backend\RolesPermisos\PermisosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +51,7 @@ Route::get('/admin/roles/index', [RolesController::class,'index'])->name('admin.
     Route::get('/admin/editar-perfil/index', [PerfilController::class,'indexEditarPerfil'])->name('admin.perfil');
     Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
 
-        // --- NUEVA EMPRESA - ROL ENCARGADO EMPRESAS         
+        // --- NUEVA EMPRESA - ROL ENCARGADO EMPRESAS
         Route::get('/admin/nuevo/empresa/index', [EmpresaController::class,'index'])->name('admin.crear.empresa.index');
         Route::post('/admin/nuevo/empresa/crear', [EmpresaController::class,'crearEmpresa']);
 

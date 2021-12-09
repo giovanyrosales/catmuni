@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Roles;
+namespace App\Http\Controllers\Backend\RolesPermisos;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,12 +14,12 @@ class RolesController extends Controller
     }
 
     public function index(){
-        return view('backend.admin.roles.index');
+        return view('backend.admin.rolesypermisos.roles.index');
     }
 
     public function tablaRoles(){
         $roles = Role::all()->pluck('name', 'id');
-        return view('backend.admin.roles.tabla.tablaroles', compact('roles'));
+        return view('backend.admin.rolesypermisos.roles.tabla.tablaroles', compact('roles'));
     }
 
     public function vistaPermisos($id){
@@ -27,7 +27,7 @@ class RolesController extends Controller
         // obtener todos los permisos que existen
         $permisos = Permission::all()->pluck('name', 'id');
 
-        return view('backend.admin.roles.roles-permisos.index', compact('id', 'permisos'));
+        return view('backend.admin.rolesypermisos.roles.roles-permisos.index', compact('id', 'permisos'));
     }
 
     public function tablaRolesPermisos($id){
@@ -39,7 +39,7 @@ class RolesController extends Controller
         // lista de todos los permisos que existen
         //$permisos = Permission::pluck('name', 'id');
 
-        return view('backend.admin.roles.roles-permisos.tabla.tabla-rolepermisos', compact('permisos'));
+        return view('backend.admin.rolesypermisos..roles.roles-permisos.tabla.tabla-rolepermisos', compact('permisos'));
     }
 
     public function borrarPermiso(Request $request){
@@ -71,13 +71,13 @@ class RolesController extends Controller
     }
 
     public function listaTodosPermisos(){
-        return view('backend.admin.roles.indexlista-permisos');
+        return view('backend.admin.rolesypermisos.roles.indexlista-permisos');
     }
 
     public function tablaTodosPermisos(){
 
         $permisos = Permission::all();
-        return view('backend.admin.roles.tabla.tablaindexlista-permiso', compact('permisos'));
+        return view('backend.admin.rolesypermisos.roles.tabla.tablaindexlista-permiso', compact('permisos'));
     }
 
     public function borrarRolGlobal(Request $request){
