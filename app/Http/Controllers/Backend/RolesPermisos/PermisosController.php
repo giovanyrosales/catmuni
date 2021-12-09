@@ -86,7 +86,7 @@ class PermisosController extends Controller
 
             //$usuario->assignRole($request->rol); asigna un rol extra
 
-            //elimina el rol existente y agrega el nuevo
+            //elimina el rol existente y agrega el nuevo.
             $usuario->syncRoles($request->rol);
 
             $usuario->save();
