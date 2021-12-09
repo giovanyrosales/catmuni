@@ -20,7 +20,7 @@ class PerfilController extends Controller
     }
 
     public function editarUsuario(Request $request){
-
+//comentario
         if (!Auth::check()) {return ['success' => 2];}
 
         $usuario = auth()->user();
