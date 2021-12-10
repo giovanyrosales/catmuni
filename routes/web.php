@@ -19,14 +19,14 @@ use App\Http\Controllers\Backend\Contribuyentes\ContribuyentesController;
 |
 */
 
-Route::get('/', [LoginController::class,'index'])->name('login');
+    Route::get('/', [LoginController::class,'index'])->name('login');
 
-Route::post('admin/login', [LoginController::class, 'login']);
-Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
+    Route::post('admin/login', [LoginController::class, 'login']);
+    Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
-// --- CONTROL WEB ---
-Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name('admin.panel');
-Route::get('/admin/roles/index', [RolesController::class,'index'])->name('admin.roles.index');
+    // --- CONTROL WEB ---
+    Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name('admin.panel');
+    Route::get('/admin/roles/index', [RolesController::class,'index'])->name('admin.roles.index');
 
      // --- ROLES ---
     Route::get('/admin/roles/tabla', [RolesController::class,'tablaRoles']);
