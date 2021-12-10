@@ -46,7 +46,7 @@
               <div class="col-md-6">
               <div class="form-group">
                         <label>Nombre del negocio:</label>
-                        <input type="text" name="nombre" id="nombre_negocio" class="form-control" required placeholder="Nombre del negocio" value="">
+                        <input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Nombre del negocio" value="">
                         <input type="hidden" name="id" id="id" class="form-control" value="">
                       </div>
                 <!-- /.form-group -->
@@ -54,12 +54,12 @@
                 <div class="col-md-6">
                   <div class="form-group">
                           <label>NIT de la Empresa:</label>
-                          <input type="text" name="nit_empresa" id="dui" class="form-control" required placeholder="0000-000000-000-0" value="">
+                          <input type="text" name="nit" id="nit" class="form-control" required placeholder="0000-000000-000-0" value="">
                   </div></div>
                 <div class="col-md-6">
                   <div class="form-group">
                           <label>N° de Tarjeta:</label>
-                          <input type="text" name="tel" id="tel" required placeholder="0000" class="form-control" value="">
+                          <input type="text" name="num_tarjeta" id="num_tarjeta" required placeholder="0000" class="form-control" value="">
                 </div>
                 </div>
                 </div>
@@ -80,10 +80,7 @@
                           <input type="text" name="contribuyente" id="contribuyente" required placeholder="Contribuyente" class="form-control" value="">
                   </div></div>
                 <div class="col-md-6">
-       
-
-                          <button type="button" onclick="abrirModalAgregar()" class="btn btn-success float-right" style="margin-top:30px;">Asignar representante</button>
-   
+                     <button type="button" onclick="abrirModalAgregar()" class="btn btn-success float-right" style="margin-top:30px;">Asignar representante</button>
                 </div>
                 </div>
 
@@ -93,7 +90,7 @@
               <div class="col-md-5">
               <div class="form-group">
                         <label>Tipo de Comeciante:</label>
-                        <input type="text" name="tipo_comerciante" id="apellido" class="form-control" required placeholder="Tipo de Comerciante" value="">
+                        <input type="text" name="tipo_comerciante" id="tipo_comerciante" class="form-control" required placeholder="Tipo de Comerciante" value="">
                       </div>
                 <!-- /.form-group -->
                 <div class="form-group">
@@ -148,7 +145,9 @@
                       <label>Propietarios registrados:</label>
                       <div class="col-12">
                         <!-- Cambie el nombre del select para hacerlo live search itemName = mexamen -->
-                        <select class="itemName form-control" id="mdescripcion"  name="itemName"></select>
+                  {{--      @foreach($users as $user)
+                        <select class="itemName form-control" id="mdescripcion"  name="user"> {{ $user->nombre }} {{ $user->apellido }}</select>
+                        @endforeach --}}
                       </div>
                     </div>
                     
@@ -188,6 +187,11 @@
             document.getElementById("divcontenedor").style.display = "block";
         });
     </script>
-
+    <script>
+    function abrirModalAgregar(){
+        document.getElementById("formulario").reset();   
+        $('#modalAgregar').modal('show');   
+    }
+    </script>
 
 @endsection

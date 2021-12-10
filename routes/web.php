@@ -6,6 +6,7 @@ use App\Http\Controllers\Controles\ControlController;
 use App\Http\Controllers\Backend\Empresas\EmpresaController;
 use App\Http\Controllers\Backend\RolesPermisos\RolesController;
 use App\Http\Controllers\Backend\RolesPermisos\PermisosController;
+use App\Http\Controllers\Backend\Contribuyentes\ContribuyentesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,9 +52,18 @@ Route::get('/admin/roles/index', [RolesController::class,'index'])->name('admin.
     Route::get('/admin/editar-perfil/index', [PerfilController::class,'indexEditarPerfil'])->name('admin.perfil');
     Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
 
-        // --- NUEVA EMPRESA - ROL ENCARGADO EMPRESAS
-        Route::get('/admin/nuevo/empresa/index', [EmpresaController::class,'index'])->name('admin.crear.empresa.index');
-        Route::post('/admin/nuevo/empresa/crear', [EmpresaController::class,'crearEmpresa']);
+    // --- NUEVA EMPRESA - ROL ENCARGADO EMPRESAS
+    Route::get('/admin/nuevo/empresa/index', [EmpresaController::class,'index'])->name('admin.crear.empresa.index');
+    Route::post('/admin/nuevo/empresa/crear', [EmpresaController::class,'crearEmpresa']);
+    Route::get('/admin/nuevo/empresa/Listar', [EmpresaController::class,'listarEmpresas'])->name('admin.listarEmpresa.index');
+    Route::get('/admin/empresas/tabla', [EmpresaController::class,'tablaEmpresas']);
+    Route::get('/admin/nuevo/empresa/variable', [EmpresaController::class,'Contribuyentes']);
+
+    // --- CONTRIBUYENTES ---
+    Route::get('/admin/nuevo/contribuyentes/Listar', [ContribuyentesController::class,'listarContribuyentes'])->name('admin.listarContribuyentes.index');
+    Route::get('/admin/nuevo/contribuyentes/Crear', [ContribuyentesController::class,'crearContribuyentes'])->name('admin.crear.contribuyentes.index');
+    Route::get('/admin/contribuyentes/tabla', [ContribuyentesController::class,'tablaContribuyentes']);
+
 
     // --- SIN PERMISOS VISTA 403 ---
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');

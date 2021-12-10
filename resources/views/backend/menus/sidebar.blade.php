@@ -53,7 +53,7 @@
                                     </a>
                                     </li>
                                 <li class="nav-item">
-                                    <a href="/#" target="frameprincipal" class="nav-link">
+                                    <a href="{{ route('admin.listarEmpresa.index') }}" target="frameprincipal" class="nav-link">
                                     <i class="fas fa-list-ol nav-icon"></i>
                                     <p>Listar Empresas</p>
                                 </a>
@@ -68,13 +68,13 @@
                                 </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="/#" target="frameprincipal" class="nav-link">
+                                <a href="{{ route('admin.crear.contribuyentes.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-plus-circle nav-icon"></i>
                                 <p>Agregar contribuyente</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/#" target="frameprincipal" class="nav-link">
+                                <a href="{{ route('admin.listarContribuyentes.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-id-badge nav-icon"></i>
                                 <p>Listar Contribuyentes</p>
                                 </a>
