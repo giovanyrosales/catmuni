@@ -20,7 +20,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-                <a href="{{ route('admin.perfil') }}" target="frameprincipal" class="dropdown-item">
+                <a href="{{ route('admin.usuario.editarperfil') }}" target="frameprincipal" class="dropdown-item">
                     <i class="fas fa-user"></i></i> Editar Perfil
                 </a>
                 <div class="dropdown-divider"></div>

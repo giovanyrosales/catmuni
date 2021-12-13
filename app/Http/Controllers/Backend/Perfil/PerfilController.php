@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Perfil;
+namespace App\Http\Controllers\Backend\Perfil;
 
 use App\Http\Controllers\Controller;
 use App\Models\Usuario;
@@ -9,30 +9,29 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class PerfilController extends Controller
-{
-    public function __construct(){
+{ 
+     public function __construct(){
         $this->middleware('auth');
     }
 
     public function indexEditarPerfil(){
-        $usuario = auth()->user();
-        return view('backend.admin.perfil.index', compact('usuario'));
+       $usuario = auth()->user();
+       return view('backend.admin.usuario.editarperfil', compact('usuario'));
     }
 
-    public function editarUsuario(Request $request){
-//comentario
-        if (!Auth::check()) {return ['success' => 2];}
+    public function actualizarUsuario(Request $request){
 
+       if (!Auth::check()) {return ['success' => 2];}
+       //Log::info($request->all());
+        
         $usuario = auth()->user();
-
-        if (Hash::check($request->passactual, $usuario->password)) {
-
+  
             Usuario::where('id', $usuario->id)
-                ->update(['password' => bcrypt($request->passnueva)]);
+                ->update(['password' => bcrypt($request->password)]);
 
             return ['success' => 1];
-        }else{
-            return ['success' => 2];
         }
-    }
+        
+        
+    
 }

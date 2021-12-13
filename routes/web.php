@@ -7,6 +7,8 @@ use App\Http\Controllers\Backend\Empresas\EmpresaController;
 use App\Http\Controllers\Backend\RolesPermisos\RolesController;
 use App\Http\Controllers\Backend\RolesPermisos\PermisosController;
 use App\Http\Controllers\Backend\Contribuyentes\ContribuyentesController;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Backend\Perfil\PerfilController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,8 +51,9 @@ use App\Http\Controllers\Backend\Contribuyentes\ContribuyentesController;
     Route::post('/admin/permisos/extra-borrar', [PermisosController::class, 'borrarPermisoGlobal']);
 
     // --- PERFIL ---
-    Route::get('/admin/editar-perfil/index', [PerfilController::class,'indexEditarPerfil'])->name('admin.perfil');
-    Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
+    Route::get('/admin/usuario/editarperfil/index', [PerfilController::class,'indexEditarPerfil'])
+    ->name('admin.usuario.editarperfil');
+    Route::post('/admin/usuario/editarperfil', [PerfilController::class, 'actualizarUsuario']);
 
     // --- NUEVA EMPRESA - ROL ENCARGADO EMPRESAS
     Route::get('/admin/nuevo/empresa/index', [EmpresaController::class,'index'])->name('admin.crear.empresa.index');
