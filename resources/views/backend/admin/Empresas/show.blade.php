@@ -147,6 +147,46 @@
             </div><!-- .widget -->
         </a>
 
+        </div>
+        <div class="col-md-4 col-sm-8">
+        <a href="#" data-toggle="modal" data-target="#modalCobro" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-secondary">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Calificación</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+
+        </div>
+        <div class="col-md-4 col-sm-8">
+        <a href="#" data-toggle="modal" data-target="#modalCobro" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-info">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Recalificación</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+
+        </div>
+        <div class="col-md-4 col-sm-8">
+        <a href="#" data-toggle="modal" data-target="#modalCobro" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-dark">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Vacio</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-chart-pie"></i>&nbsp;<i class="fas fa-building"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+
+
     </div>
     </div><!-- .ROW -->
 

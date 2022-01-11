@@ -30,7 +30,10 @@ class CreateEmpresaTable extends Migration
             $table->string('inicio_operaciones', 250);
             $table->string('direccion', 250);
             $table->string('num_tarjeta', 50);
-            $table->string('telefono', 50); 
+            $table->string('telefono', 50);
+            $table->string('tarifa_fija', 50)->nullable();
+            $table->string('tarifa_variable', 50)->nullable();
+            $table->string('ultima_fecha_pago', 50)->nullable();  
 
             $table->foreign('id_contribuyente')->references('id')->on('contribuyente');
             $table->foreign('id_estado_empresa')->references('id')->on('estado_empresa');
