@@ -142,7 +142,7 @@
     <script>
 
         function modalAgregar(){
-            document.getElementById("formulario-nuevo").reset();
+            document.getElementById("formulario-nuevo");
             $('#modalAgregar').modal('show');
         }
 

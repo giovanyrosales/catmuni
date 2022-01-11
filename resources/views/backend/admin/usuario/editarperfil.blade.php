@@ -139,7 +139,10 @@
                   </div>
                 <!-- /.form-group -->  
               </div>
-               
+              <div class="card-footer">
+                  <button type="button" class="btn btn-success float-right" onclick="actualizarPerfil()">Actualizar</button>
+                  <button type="button" onclick="location.href='{{url('panel')}}'" class="btn btn float-left">Cancelar</button>
+                </div>
               </div>
             <!-- /.col -->
             </div>
@@ -147,17 +150,13 @@
           </div>
            </div>
          <!-- /.card-body -->
-         <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="actualizarPerfil()">Actualizar</button>
-                  <button type="button" onclick="location.href='{{url('panel')}}'" class="btn btn-default">Cancelar</button>
-                </div>
+        
                 <!-- /.card-footer -->
          </div> 
       <!-- /.card -->
       </form>
     </div>
-      <!-- /form -->
-     
+          <!-- /form -->
     <!-- /.container-fluid -->
     </section>
 @section('content-admin-js')  

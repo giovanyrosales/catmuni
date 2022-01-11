@@ -25,13 +25,13 @@
                                     <td>{{$contribuyente->telefono}}</td>
                                     <td>{{$contribuyente->email}}</td>
                                     <td style="text-align: center;">
-                                        <button type="button" class="btn btn-success btn-xs" data-toggle="modal" >
+                                        <button type="button" class="btn btn-dark btn-xs" onclick="verContribuyentes({{ $contribuyente->id }})" data-toggle="modal" >
                                         <i class="fas fa-search" title="Ver Registro"></i>&nbsp; Ver 
                                         </button>     
-                                        <button type="button" class="btn btn-primary btn-xs" >
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="informacionContribuyentes({{ $contribuyente->id }})">
                                         <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
-                                        <button type="button" class="btn btn-danger btn-xs" >
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminar({{ $contribuyente->id }})">
                                         <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
                                         </button>
                                     </td>
