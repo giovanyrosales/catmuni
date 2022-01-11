@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGiroComercialTable extends Migration
+class CreateActividadEconomicaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateGiroComercialTable extends Migration
      */
     public function up()
     {
-        Schema::create('giro_comercial', function (Blueprint $table) {
+        Schema::create('actividad_economica', function (Blueprint $table) {
             $table->id();
-            $table->string('rubro', 50);
             $table->string('codigo_atc_economica', 50);
+            $table->string('mora', 50);
+            $table->string('rubro', 50);
         });
     }
 
@@ -27,6 +28,6 @@ class CreateGiroComercialTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('giro_comercial');
+        Schema::dropIfExists('actividad_economica');
     }
 }

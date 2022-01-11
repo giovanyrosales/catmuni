@@ -7,34 +7,45 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                <th style="width: 15%;">Nombre</th>
-                                <th style="width: 10%;">N° Tarjeta</th>
+                                <th style="width: 20%;">Nombre</th>
+                                <th style="width: 25%;">Representante Legal</th>
+                                <th style="width: 15%;">N° Tarjeta</th>
+                                <th style="width: 10%;">Estado</th>
                                 <th style="width: 20%;">Dirección</th>
-                                <th style="width: 10%;">Teléfono</th>
-                                <th style="width: 15%;">Inicio de operaciones</th>
+                                <th style="width: 12%;">Teléfono</th>
                                 <th style="width: 15%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
-
-                            @foreach($empresas as $empresa)
+                            @foreach($lista as $dato)
                                 <tr>
-                                    <td>{{$empresa->nombre}} </td>
-                                    <td>{{$empresa->num_tarjeta}}</td>
-                                    <td>{{$empresa->direccion}}</td>
-                                    <td>{{$empresa->telefono}}</td>
-                                    <td>{{$empresa->inicio_operaciones}}</td>
+                                    <td>{{$dato->nombre}} </td>
+                                    <td>{{$dato->contribuyente}}&nbsp;{{$dato->apellido}}</td>
+                                    <td>{{$dato->num_tarjeta}}</td>
+                                    @if($dato->estado == 'Activo')
+                                    <td align="center"> <span class="badge bg-success">Activo</span></td>
+                                    @elseif($dato->estado == 'Cerrado')
+                                    <td align="center"> <span class="badge bg-danger">Cerrado</span></td>
+                                    @else
+                                    <td align="center"> <span class="badge bg-Warning">En Mora</span></td>
+                                    @endif
+                                    <td>{{$dato->direccion}}</td>
+                                    <td>{{$dato->telefono}}</td>
                                     <td style="text-align: center;">
-                                        <button type="button" class="btn btn-success btn-xs" data-toggle="modal" >
-                                        <i class="fas fa-search" title="Ver Registro"></i>&nbsp; Ver 
-                                        </button>
-                                                            
-                                        <button type="button" class="btn btn-primary btn-xs" >
-                                        <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
-                                        </button>
+
+
+                          
+                                    <button type="button" onclick="VerEmpresa({{$dato->id}} )" class="btn btn-dark btn-xs" >
+                                    <i class="fas fa-search"></i>
+                                    Ver
+                                    </button>
+                                   
+                                  
+                                    <button type="button" class="btn btn-primary btn-xs" onclick="informacion({{$dato->id}})">
+                                    <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
+                                    </button>
                                     </td>
                                 </tr>
-
                             @endforeach
 
                             </tbody>
@@ -49,6 +60,11 @@
 
 
 <script>
+
+
+
+
+
     $(function () {
         $("#tabla").DataTable({
             "paging": true,

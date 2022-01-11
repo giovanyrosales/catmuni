@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\Contribuyentes\ContribuyentesController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Backend\Perfil\PerfilController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,10 +58,15 @@ use App\Http\Controllers\Backend\Perfil\PerfilController;
 
     // --- NUEVA EMPRESA - ROL ENCARGADO EMPRESAS
     Route::get('/admin/nuevo/empresa/index', [EmpresaController::class,'index'])->name('admin.crear.empresa.index');
-    Route::post('/admin/nuevo/empresa/crear', [EmpresaController::class,'crearEmpresa']);
+    Route::post('/admin/empresa/nueva', [EmpresaController::class,'nuevaEmpresa']);
     Route::get('/admin/nuevo/empresa/Listar', [EmpresaController::class,'listarEmpresas'])->name('admin.listarEmpresa.index');
     Route::get('/admin/empresas/tabla', [EmpresaController::class,'tablaEmpresas']);
-    Route::get('/admin/nuevo/empresa/variable', [EmpresaController::class,'Contribuyentes']);
+    Route::post('/admin/empresas/informacion', [EmpresaController::class, 'informacionEmpresas']);
+    Route::post('/admin/empresas/show-inf', [EmpresaController::class, 'informacionEmpresas']);
+    Route::post('/admin/empresas/editar', [EmpresaController::class, 'editarEmpresas']);
+    Route::get('/admin/empresas/show/{lista}', [EmpresaController::class, 'show']);
+   
+    
 
     // --- CONTRIBUYENTES ---
     Route::get('/admin/nuevo/contribuyentes/Listar', [ContribuyentesController::class,'listarContribuyentes'])->name('admin.listarContribuyentes.index');
