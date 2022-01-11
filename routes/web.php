@@ -66,7 +66,15 @@ use App\Http\Controllers\Backend\Perfil\PerfilController;
     Route::get('/admin/nuevo/contribuyentes/Listar', [ContribuyentesController::class,'listarContribuyentes'])->name('admin.listarContribuyentes.index');
     Route::get('/admin/nuevo/contribuyentes/Crear', [ContribuyentesController::class,'crearContribuyentes'])->name('admin.crear.contribuyentes.index');
     Route::get('/admin/contribuyentes/tabla', [ContribuyentesController::class,'tablaContribuyentes']);
+    Route::post('/admin/Contribuyentes/Crear_Contribuyentes', [ContribuyentesController::class,'nuevoContribuyente']);
+    Route::post('/admin/Contribuyentes/informacion', [ContribuyentesController::class, 'informacionContribuyentes']);
+    Route::post('/admin/Contribuyentes/editar', [ContribuyentesController::class, 'editarContribuyente']);
+    Route::post('/admin/Contribuyentes/eliminar_contribuyentes', [ContribuyentesController::class, 'eliminarContribuyentes']);
 
 
     // --- SIN PERMISOS VISTA 403 ---
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
+
+
+    // --- REPORTES
+    
