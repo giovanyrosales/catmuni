@@ -4,12 +4,8 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
+
 
 class Empresas extends Model
 {
@@ -28,7 +24,8 @@ class Empresas extends Model
         'telefono',
         'id_contribuyente',
         'id_estado_empresa',
-        'id_giro_comercial'
+        'id_giro_comercial',
+        'id_actividad_economica'
       ];
 
 

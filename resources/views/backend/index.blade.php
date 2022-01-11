@@ -15,6 +15,8 @@
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <!-- Mensajes Toast -->
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
+
+
     @yield('content-admin-css')
 </head>
 
@@ -42,6 +44,7 @@
 <script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/adminlte.min.js') }}" type="text/javascript"></script>
+
 
 
 @yield('content-admin-js')
