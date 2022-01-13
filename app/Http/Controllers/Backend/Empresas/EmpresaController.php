@@ -99,11 +99,45 @@ class EmpresaController extends Controller
             return ['success' => 2];
         }
     }
+
+// ---------Calificación de empresa ------------------------------------------>
+
+public function calificacion($id)
+{
+    $contribuyentes = Contribuyentes::All();
+    $estadoempresas = EstadoEmpresas::All();
+    $giroscomerciales = GiroComercial::All();
+    $actividadeseconomicas = ActividadEconomica::All();
+
+
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro')
+    ->find($id);
+    
+    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas'));
+    
+}
+
+// ---------Termina Calificación de empresa ------------------------------------------>
+
     
 //Vista detallada
 public function show($id)
 {
+    $contribuyentes = Contribuyentes::All();
+    $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
+    $actividadeseconomicas = ActividadEconomica::All();
 
     $ultimo_cobro = Cobros::latest()
     ->where('id_empresa', "=", "$id")
@@ -115,13 +149,13 @@ public function show($id)
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
     
-    ->select('empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro')
     ->find($id);
-    return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','ultimo_cobro'));
+    return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro'));
     
 }
 
@@ -233,4 +267,8 @@ public function nuevaEmpresa(Request $request){
 
 
  //Termina editar empresa
+
+
+
+
 }

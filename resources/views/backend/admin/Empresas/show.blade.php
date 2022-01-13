@@ -51,7 +51,7 @@
       <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h6 class="card-category-">Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; </h6>
+            <h5 class="card-category-">Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; </h5>
           </div>
       <!--body-->
       <div class="card-body">
@@ -149,7 +149,7 @@
 
         </div>
         <div class="col-md-4 col-sm-8">
-        <a href="#" data-toggle="modal" data-target="#modalCalificacion" >
+        <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-secondary">
                     <div class="pull-left">
@@ -175,13 +175,13 @@
 
         </div>
         <div class="col-md-4 col-sm-8">
-        <a href="#" data-toggle="modal" data-target="#modalVacio" >
+        <a href="#" data-toggle="modal" data-target="#modalCierresTraspasos" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Vacio</h3>
+                        <h3 class="widget-title text-white">Cierres y traspasos</h3>
                     </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-chart-pie"></i>&nbsp;<i class="fas fa-building"></i></span>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
             </div><!-- .widget -->
         </a>
@@ -246,11 +246,11 @@
                         </tr>
                         <tr>
                           <th>Giro Comercial</th>
-                          <td><span class="badge badge-primary">{{$empresa->nombre_giro}}</span></td>
+                          <td>{{$empresa->nombre_giro}}</span></td>
                         </tr>
                         <tr>
                           <th>Actividad Económica</th>
-                          <td><span class="badge badge-dark">{{$empresa->rubro}}</span></td>
+                          <td>{{$empresa->rubro}}</span></td>
                         </tr>
                         <tr>
                           <th>N° de tarjeta</th>
@@ -274,7 +274,6 @@
         
           <div class="card-footer">
             <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="ListarEmpresas()"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
-            <button type="button" onclick="ListarEmpresas()" class="btn btn-default">Volver</button>
           </div>
         </div>
       </form>
@@ -349,7 +348,9 @@
 <!-- /.section -->
 <!-- seccion frame -->
 <!-- Cuadro para datos del contribuyente termina aquí ------------------------------------------>
-
+<div class="card-footer">
+            <button type="button" onclick="ListarEmpresas()" class="btn btn-default">Volver</button>
+          </div>
             </div>
           </div>
         </div>
@@ -360,192 +361,204 @@
 
 <!-- Termina vista detallada-->
 
+<!--Inicia Modal Cierres y Traspasos--------------------------------------------------------------->
 
-
-
-<!--Inicia Modal Calificación--------------------------------------------------------------->
-
-<div class="modal fade" id="modalCalificacion">
+<div class="modal fade" id="modalCierresTraspasos">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+            <h5 class="modal-title">Cierre y traspaso de empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <form id="formulario-Calificacion">
+            @csrf
+              <div class="card-body">
+<!-- Inicia Formulario Cierres y Traspasos--> 
+<section class="content">
+      <div class="container-fluid">
+       
+      <!-- /.card-header -->
+         <div class="card card-green">
+            <div class="card-header">
+                <h3 class="card-title">FORMULARIO DE CIERRE Y TRASPASO.</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+                  </div>
+            </div>
+        <!-- /.card-header -->
+
+
+        <!-- Campos del formulario Cierres y Traspasos -->
+        <div class="card border-success mb-3"><!-- Panel TRASPASO DE EMPRESA -->
+           <div class="card-header text-success"><label>II. TRASPASO DE EMPRESA</label></div>
               <div class="card-body">
 
-  <!-- Inicia Formulario cobro--> 
-   <section class="content">
-      <div class="container-fluid">
-        <!-- SELECT2 EXAMPLE -->
+                <div class="row"><!-- /.ROW2 -->
 
-        <form class="form-horizontal" id="formulario-cobro">
-        @csrf
-
-          <div class="card card-green">
-            <div class="card-header">
-            <h3 class="card-title">Datos generales.</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-            </div>
-          </div>
-          <!-- /.card-header -->
-          <!-- Campos del formulario de cobros -->
-          <div class="card-body"><!-- Card-body -->
-            <div class="row"><!-- /.ROW1 -->
-            
-             <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Número de tarjeta:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha de último pago:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-            
-                        <input  type="text" class="form-control text-success" disabled value="{{$ultimo_cobro->fecha_pago}}" name="created_at" id="created_at" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-
-
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha hasta donde pagará:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input  type="date" name="nombre" id="nombre-editar" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Giro Comercial:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- Inicia Select Giro Comercial -->
-               <div class="col-md-6">
+                  <!-- /.form-group -->
+                  <div class="col-md-6">
                       <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                disabled
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial-editar" 
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
+                            <label>TRASPASO A NOMBRE DE:</label>
+                      </div>
+                    </div><!-- /.col-md-6 -->
+                    <!-- /.form-group -->
+
+                      <div class="col-md-3">
+                          <div class="form-group">
+                            <!-- Select estado - live search -->
+                              <div class="input-group mb-9">
+                                    <select 
+                                    required
+                                    class="selectpicker"
+                                    data-style="btn-success"
+                                    data-show-subtext="true" 
+                                    data-live-search="true"   
+                                    id="select-estado_empresa" 
+                                    title="-- Seleccione un registro --"
+                                    >
+                                    @foreach($contribuyentes as $contribuyente)
+                                    <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
+                                    @endforeach
+                                    </select>
+                              </div>
+                            <!-- finaliza select estado-->  
+                      </div><!-- /.col-md-3 -->
+                    </div><!-- /.form-group -->
+                  <!-- /.form-group -->
+
+                </div><!--  /.ROW2 -->
+
+              <!-- /.form-group -->
+              <div class="row"><!-- /.ROW3 -->
+              <!-- /.form-group -->
+              <div class="col-md-6">
+                  <div class="form-group">
+                       
+                    <!-- Botón Imprimir Traspaso-->
+                    <br>
+                      <button type="button"  onclick="ImpimirTraspaso()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                        &nbsp; Imprimir resolución de traspaso&nbsp;</button>
+                      </button>
+                    <!-- /.Botón Imprimir Traspaso -->
+
                   </div>
-              <!-- finaliza select Giro Comercial-->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
+               </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <label>Tasa de interes:</label>
+                      <!-- Botón Guardar Traspaso -->
+                        <br>
+                        <button type="button"  onclick="GuardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
+                        &nbsp; Guardar Traspaso &nbsp;</button>
+                      <!-- /.Botón Guardar Traspaso -->
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
+              <!-- /.form-group -->
+              </div><!-- /.ROW3 -->
+
+          </div><!--  /.card-header text-success -->
+        </div> <!-- /.Panel CIERRE DE EMPRESA --> 
+
+     
+         <div class="card border-success mb-3"><!-- Panel CIERRE DE EMPRESA -->
+           <div class="card-header text-success"><label>II. CIERRE DE EMPRESA</label></div>
+              <div class="card-body">
+
+                <div class="row"><!-- /.ROW2 -->
+
+                  <!-- /.form-group -->
+                  <div class="col-md-6">
+                      <div class="form-group">
+                            <label>ESTADO DE LA EMPRESA:</label>
+                      </div>
+                    </div><!-- /.col-md-6 -->
+                    <!-- /.form-group -->
+
+                      <div class="col-md-3">
+                          <div class="form-group">
+                            <!-- Select estado - live search -->
+                              <div class="input-group mb-9">
+                                    <select 
+                                    required
+                                    class="selectpicker"
+                                    data-style="btn-success"
+                                    data-show-subtext="true" 
+                                    data-live-search="true"   
+                                    id="select-estado_empresa" 
+                                    title="-- Selecione el estado  --"
+                                    >
+                                      @foreach($estadoempresas as $estado)
+                                      <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
+                                      @endforeach 
+                                    </select>
+                              </div>
+                            <!-- finaliza select estado-->  
+                      </div><!-- /.col-md-3 -->
+                    </div><!-- /.form-group -->
+                  <!-- /.form-group -->
+
+                </div><!--  /.ROW2 -->
+
+              <!-- /.form-group -->
+              <div class="row"><!-- /.ROW3 -->
+              <!-- /.form-group -->
+              <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha del interes moratorio:</label>
+                       
+                    <!-- Botón Imprimir Cierre -->
+                    <br>
+                      <button type="button"  onclick="ImpimirCierre()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                        &nbsp; Imprimir resolución de Cierre&nbsp;</button>
+                      </button>
+                    <!-- /.Botón Imprimir Cierre -->
+
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="date" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
+                      <!-- Botón Guardar Traspaso -->
+                        <br>
+                        <button type="button"  onclick="GuardarCierre()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
+                        &nbsp; Guardar Cierre &nbsp;</button>
+                      <!-- /.Botón Guardar Traspaso -->
                   </div>
                </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Cantidad de meses a pagar:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number" value="cant_meses" name="cant_meses" id="cant_meses" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-              
-            </div> <!-- /.ROW1 -->
-          <!-- /.col1 -->
+              <!-- /.form-group -->
+              </div><!-- /.ROW3 -->
 
-          
-  <!-- Finaliza campos del formulario de cobros -->
+          </div><!--  /.card-header text-success -->
+        </div> <!-- /.Panel CIERRE DE EMPRESA --> 
 
-
+  <!-- Finaliza campos del formulario Cierres y Traspasos -->
+  
          <!-- /.card-body -->
          <div class="card-footer">
-         <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="far fa-money-bill-alt"></i>&nbsp;Registrar Cobro&nbsp;</button>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
           </div>
          <!-- /.card-footer -->
-         </div>
-        </div>
-      <!-- /.card -->
-      </form>
-      <!-- /form -->
-      </div>
-    <!-- /.container-fluid -->
+
+         </div><!-- Card-body -->
+        </div><!-- /.card Green-->
+      </div><!-- /.container-fluid -->
     </section>
 
-       </form> <!-- /.formulario-Calificacion -->
+       </form> <!-- /.formulario-Calificacion2 -->
       </div> <!-- /.Card-body -->
-     </div> <!-- /.modalCalificacion -->
    </div> <!-- /.modal-dialog modal-xl -->
   </div> <!-- /.modal-content -->
  </div> <!-- /.modal-body -->
+ </div> <!-- /.modalCIerres y traspasos -->
 
-<!-- Finaliza Modal Calificación--------------------------------------------------------->
+<!-- Finaliza Modal Cierres y Traspasos--------------------------------------------------------->
 
 
-<!--Inicia Modal Cobro--------------------------------------------------------------------->
+
+
+<!--Inicia Modal Recalificacion--------------------------------------------------------------------->
 
 <div class="modal fade" id="modalRecalificacion">
         <div class="modal-dialog modal-xl">
@@ -565,7 +578,7 @@
       <div class="container-fluid">
         <!-- SELECT2 EXAMPLE -->
 
-        <form class="form-horizontal" id="formulario-cobro">
+        <form class="form-horizontal" id="formulario-Recalificacion">
         @csrf
 
           <div class="card card-green">
@@ -699,7 +712,7 @@
           <!-- /.col1 -->
           </div> <!-- /.Card-body -->
 
-        <!-- Finaliza campos del formulario de cobros -->
+        <!-- Finaliza campos del formulario Recalificacion -->
 
 
          <!-- /.card-body -->
@@ -717,14 +730,14 @@
     <!-- /.container-fluid -->
     </section>
 
-     </form> <!-- /.formulario-Calificacion -->
+     </form> <!-- /.formulario-Recalificacion -->
     </div> <!-- /.Card-body -->
-   </div> <!-- /.modalCalificacion -->
+   </div> <!-- /.modalRecalificacion -->
   </div> <!-- /.modal-dialog modal-xl -->
  </div> <!-- /.modal-content -->
 </div> <!-- /.modal-body -->
 
-<!-- Finaliza Modal Cobro------------------------------------------------------------------>
+<!-- Finaliza Modal Recalificacion------------------------------------------------------------------>
 
 
 <!--Inicia Modal Cobro--------------------------------------------------------------------->
@@ -925,17 +938,26 @@
     
 <script>
 function modalCobro(){
+            openLoading();
             document.getElementById("formulario-cobro").reset();
             $('#modalCobro').modal('show');
         }
-function modalCobro(){
-            document.getElementById("formulario-Calificacion").reset();
-            $('#modalCalificacion').modal('show');
-        }
-function modalCobro(){
+
+function modalRecalificacion(){
+            openLoading();
             document.getElementById("formulario-Recalificacion").reset();
             $('#modalRecalificacion').modal('show');
         }
+
+function  modalCierresTraspasos(){
+            openLoading();
+            document.getElementById("formulario- modalCierresTraspasos").reset();
+            $('#modalCierresTraspasos').modal('show');
+        }
+
+       
+
+
 </script>
 
 <script type="text/javascript">
@@ -947,9 +969,16 @@ function modalCobro(){
 <script>
 
 function ListarEmpresas(){
+            openLoading();
+            window.location.href="{{ url('/admin/nuevo/empresa/Listar') }}/";
 
-window.location.href="{{ url('/admin/nuevo/empresa/Listar') }}/";
+        }
 
-}
+function CrearCalificacion(id){
+              openLoading();
+              window.location.href="{{ url('/admin/empresas/calificacion') }}/"+id;
+        }
+
+
 </script>
 @stop

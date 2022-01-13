@@ -62,9 +62,9 @@ use App\Http\Controllers\Backend\Perfil\PerfilController;
     Route::get('/admin/nuevo/empresa/Listar', [EmpresaController::class,'listarEmpresas'])->name('admin.listarEmpresa.index');
     Route::get('/admin/empresas/tabla', [EmpresaController::class,'tablaEmpresas']);
     Route::post('/admin/empresas/informacion', [EmpresaController::class, 'informacionEmpresas']);
-    Route::post('/admin/empresas/show-inf', [EmpresaController::class, 'informacionEmpresas']);
     Route::post('/admin/empresas/editar', [EmpresaController::class, 'editarEmpresas']);
     Route::get('/admin/empresas/show/{lista}', [EmpresaController::class, 'show']);
+    Route::get('/admin/empresas/calificacion/{empresa}', [EmpresaController::class, 'calificacion']);
    
     
 
