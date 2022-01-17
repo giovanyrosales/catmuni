@@ -9,8 +9,7 @@
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
 
-
- <!-- Para vista detallada -->
+ <!-- Para vista detallada --> 
 
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 
@@ -136,7 +135,19 @@
 
     </div>
     <div class="col-md-4 col-sm-8">
-        <a href="#" data-toggle="modal" data-target="#modalCobro" >
+    @if($detectorNull== '0')
+    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+    <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-success">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    @else
+        <a href="#"  onclick="modalCobro()" id="btnmodalCobro">
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-success">
                     <div class="pull-left">
@@ -146,22 +157,65 @@
                 </div>
             </div><!-- .widget -->
         </a>
-
+    @endif
         </div>
         <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
+   
+
+              @if($detectorNull== '0')
+             
+                        <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
+                            <div class="widget stats-widget">
+                              <div class="widget-body clearfix bg-secondary">
+                                  <div class="pull-left">
+                                      <h3 class="widget-title text-white">Registrar Calificación</h3>
+                                  </div>
+                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                              </div>
+                          </div><!-- .widget -->
+                        </a>
+        
+              @else 
+                      @if($calificaciones->estado_calificacion == '')
+                        <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
+                            <div class="widget stats-widget">
+                              <div class="widget-body clearfix bg-dark">
+                                  <div class="pull-left">
+                                      <h3 class="widget-title text-white">Registrar Calificación</h3>
+                                  </div>
+                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                              </div>
+                          </div><!-- .widget -->
+                          </a>
+                      @elseif($calificaciones->estado_calificacion == 'creado')
+                      <a href="#" onclick="CalificacionCreada()" >
+                                <div class="widget stats-widget">
+                                    <div class="widget-body clearfix bg-dark">
+                                        <div class="pull-left">
+                                            <h3 class="widget-title text-white">Calificación creada {{$calificaciones->fecha_calificacion}}</h3>
+                                        </div>
+                                        <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
+                                    </div>
+                                </div><!-- .widget -->
+                                </a>
+                      @endif
+ 
+              @endif
+       
+        </div>
+        <div class="col-md-4 col-sm-8">
+        @if($detectorNull== '0')
+        <a href="#"  onclick="NoCalificar()" id="btnmodalCalificar">
             <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-secondary">
+                <div class="widget-body clearfix bg-info">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Calificación</h3>
+                        <h3 class="widget-title text-white">Registrar Recalificación</h3>
                     </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
                 </div>
             </div><!-- .widget -->
         </a>
-
-        </div>
-        <div class="col-md-4 col-sm-8">
+      @else
         <a href="#" data-toggle="modal" data-target="#modalRecalificacion" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-info">
@@ -172,7 +226,7 @@
                 </div>
             </div><!-- .widget -->
         </a>
-
+        @endif
         </div>
         <div class="col-md-4 col-sm-8">
         <a href="#" data-toggle="modal" data-target="#modalCierresTraspasos" >
@@ -573,7 +627,7 @@
             <form id="formulario-Recalificacion">
               <div class="card-body">
 
-  <!-- Inicia Formulario cobro--> 
+  <!-- Inicia Formulario Recalificación--> 
    <section class="content">
       <div class="container-fluid">
         <!-- SELECT2 EXAMPLE -->
@@ -591,7 +645,7 @@
             </div>
           </div>
           <!-- /.card-header -->
-          <!-- Campos del formulario de cobros -->
+          <!-- Campos del formulario de recalificación -->
           <div class="card-body"><!-- Card-body -->
             <div class="row"><!-- /.ROW1 -->
             
@@ -616,11 +670,13 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-            
-                        <input  type="text" class="form-control text-success" disabled value="{{$ultimo_cobro->fecha_pago}}" name="created_at" id="created_at" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-
-
+                  @if($detectorNull=='0')
+                        <input  type="text" disabled  name="ultimo_cobro" class="form-control" required >
+                        <input type="hidden" name="id" id="id-editar" class="form-control text-success" >
+                  @else
+                              <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled  name="ultimo_cobro" class="form-control text-success" required >
+                              <input type="hidden" name="id" id="id-editar" class="form-control" >
+                  @endif
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -752,7 +808,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="formulario-editar">
               <div class="card-body">
 
   <!-- Inicia Formulario cobro--> 
@@ -798,11 +853,13 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-            
-                        <input  type="text" class="form-control text-success" disabled value="{{$ultimo_cobro->fecha_pago}}" name="created_at" id="created_at" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-
-
+                    @if($detectorNull=='0')
+                                <input  type="text" disabled  name="ultimo_cobro" class="form-control" required >
+                                <input type="hidden" name="id" id="id-editar" class="form-control text-success" >
+                    @else
+                                <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled  name="ultimo_cobro" class="form-control text-success" required >
+                                <input type="hidden" name="id" id="id-editar" class="form-control" >
+                    @endif
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -906,20 +963,19 @@
          </div>
         </div>
       <!-- /.card -->
-      </form>
       <!-- /form -->
       </div>
     <!-- /.container-fluid -->
     </section>
 
-     </form> <!-- /.formulario-Recalificacion -->
+     </form> <!-- /.formulario-cobros -->
     </div> <!-- /.Card-body -->
    </div> <!-- /.ModalRecalificacion -->
   </div> <!-- /.modal-dialog modal-xl -->
  </div> <!-- /.modal-content -->
 </div> <!-- /.modal-body -->
 
-<!-- Finaliza Modal Recalificacion------------------------------------------------------------------>
+<!-- Finaliza Modal Cobros------------------------------------------------------------------>
 
 
 @extends('backend.menus.footerjs')
@@ -935,13 +991,11 @@
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
+
+
     
-<script>
-function modalCobro(){
-            openLoading();
-            document.getElementById("formulario-cobro").reset();
-            $('#modalCobro').modal('show');
-        }
+<script type="text/javascript">
+
 
 function modalRecalificacion(){
             openLoading();
@@ -954,9 +1008,6 @@ function  modalCierresTraspasos(){
             document.getElementById("formulario- modalCierresTraspasos").reset();
             $('#modalCierresTraspasos').modal('show');
         }
-
-       
-
 
 </script>
 
@@ -975,10 +1026,30 @@ function ListarEmpresas(){
         }
 
 function CrearCalificacion(id){
+
               openLoading();
               window.location.href="{{ url('/admin/empresas/calificacion') }}/"+id;
         }
+        
+function CalificacionCreada(){
 
+toastr.success('La calificación ya fue creada.');
+return;
+}
+
+function NoCobrar(){
+  toastr.warning('Debe registrar una calificación primero para poder generar un cobro.');
+  return;
+}
+function NoCalificar(){
+  toastr.warning('Debe registrar una calificación primero para poder generar una recalificación.');
+  return;
+}
+
+function modalCobro(){
+  document.getElementById("formulario-cobro").reset();
+  $('#modalCobro').modal('show');
+}
 
 </script>
 @stop

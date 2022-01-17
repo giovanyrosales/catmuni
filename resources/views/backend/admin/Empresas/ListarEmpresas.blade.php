@@ -270,7 +270,7 @@
           </div>
          <!-- /.card-body -->
          <div class="card-footer">
-         <button type="button" class="btn btn-success float-right" onclick="editar()">Guardar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="editar()">Guardar</button>
                   <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
           </div>
          <!-- /.card-footer -->

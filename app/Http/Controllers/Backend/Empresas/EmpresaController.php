@@ -10,6 +10,7 @@ use App\Models\EstadoEmpresas;
 use App\Models\GiroComercial;
 use App\Models\ActividadEconomica;
 use App\Models\Cobros;
+use App\Models\calificacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
@@ -108,8 +109,7 @@ public function calificacion($id)
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
-
-
+    $calificaciones = calificacion::All();
 
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -124,7 +124,7 @@ public function calificacion($id)
     'actividad_economica.rubro')
     ->find($id);
     
-    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas'));
+    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones'));
     
 }
 
@@ -132,12 +132,23 @@ public function calificacion($id)
 
     
 //Vista detallada
-public function show($id)
+public function show( Request $request, $id)
 {
     $contribuyentes = Contribuyentes::All();
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
+
+    $calificaciones = calificacion
+    ::join('detalle_actividad_economica','calificacion.id_detalle_actividad_economica','=','detalle_actividad_economica.id')
+    ->join('empresa','calificacion.id_empresa','=','empresa.id')
+    
+    ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tarifa','calificacion.tipo_tarifa','calificacion.estado_calificacion',
+    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'detalle_actividad_economica.id','detalle_actividad_economica.id_actividad_economica','detalle_actividad_economica.limite_inferior','detalle_actividad_economica.fijo','detalle_actividad_economica.categoria','detalle_actividad_economica.millar')
+    ->where('id_empresa', "=", "$id")
+    ->first();
+
 
     $ultimo_cobro = Cobros::latest()
     ->where('id_empresa', "=", "$id")
@@ -154,9 +165,25 @@ public function show($id)
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro')
-    ->find($id);
-    return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro'));
-    
+    ->find($id);    
+
+   if ($calificaciones == null)
+    { 
+        $detectorNull=0;
+        if ($ultimo_cobro == null)
+        {
+            $detectorNull=0;
+            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull'));
+        }
+            
+           
+    }
+    else
+    {
+        $detectorNull=1;
+        return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull'));
+    }
+      
 }
 
 
