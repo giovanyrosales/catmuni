@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\RolesPermisos\PermisosController;
 use App\Http\Controllers\Backend\Contribuyentes\ContribuyentesController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Backend\Perfil\PerfilController;
+use App\Http\Controllers\Backend\DetalleActividadE\DetalleActividadEController;
 
 
 /*
@@ -82,5 +83,14 @@ use App\Http\Controllers\Backend\Perfil\PerfilController;
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
 
 
-    // --- REPORTES
+    // --- ACTIVIDAD ECONÓMICA
+
+    Route::get('/admin/DetalleActividadEconomica/Crear', [DetalleActividadEController::class,'crearActividad'])->name('admin.crear.detalleactividad.index');
+    Route::post('/admin/DetalleActividadEconomica/DetalleActividad', [DetalleActividadEController::class,'nuevaActividad']);
+
+    Route::get('/admin/DetalleActividadEconomica/Listar', [DetalleActividadEController::class,'listarDetalleActividadE'])->name('admin.listarDetalleActividadEconomica.index');
+    Route::get('/admin/DetalleActividadEconomica/tabla', [DetalleActividadEController::class,'tablaDetalleActividadEconomica']);
+    
+    Route::post('/admin/DetalleActividadEconomica/informacion', [DetalleActividadEController::class, 'informacionDetalle']);
+    Route::post('/admin/DetalleActividadEconomica/editar', [DetalleActividadEController::class, 'editarDetalles']);
     

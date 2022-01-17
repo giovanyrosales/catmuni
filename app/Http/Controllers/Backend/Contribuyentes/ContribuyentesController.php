@@ -41,6 +41,7 @@ class ContribuyentesController extends Controller
     {
         return view('backend.admin.Contribuyentes.Crear_Contribuyentes');
     }
+    
     public function tablaContribuyentes(){
         $contribuyentes = Contribuyentes::orderBy('id', 'ASC')->get();
 
