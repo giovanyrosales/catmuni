@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class Interes extends Model
+class TarifaFija extends Model
 {
 
-    protected $table = 'interes';
+    protected $table = 'tarifa_fija';
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'monto_interes'
+        'nombre_actividad',
+        'limite_inferior',
+        'limite_superior',
+        'impuesto_mensual',
 
       ];
 }

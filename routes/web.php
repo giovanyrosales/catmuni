@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Backend\Perfil\PerfilController;
 use App\Http\Controllers\Backend\DetalleActividadE\DetalleActividadEController;
 use App\Http\Controllers\Backend\TasaInteres\TasaInteresController;
+use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
 
 
 /*
@@ -101,3 +102,8 @@ use App\Http\Controllers\Backend\TasaInteres\TasaInteresController;
     Route::post('/admin/TasaInteres/informacion', [TasaInteresController::class, 'informacionInteres']);
     Route::post('/admin/TasaInteres/editar', [TasaInteresController::class, 'editarInteres']);
     Route::post('/admin/TasaInteres/eliminar', [TasaInteresController::class, 'eliminarInteres']);
+
+    // --- TARIFA FIJA
+    Route::get('/admin/TarifaFija/ListarTarifaFija', [TarifaFijaController::class,'index'])->name('admin.TarifaFija.index');
+    Route::get('/admin/TarifaFija/tabla', [TarifaFijaController::class,'tablaTarifa']);
+    Route::get('/admin/nuevo/TarifaFija/Listar', [TarifaFijaController::class,'listarTarifaFija'])->name('admin.listarTarifaFija.index');
