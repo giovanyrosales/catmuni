@@ -237,9 +237,16 @@ public function cobros($id)
            
     }
     else
-    {
-        $detectorNull=1;
+    {  if ($ultimo_cobro == null)
+        {
+         $detectorNull=0;
+    
         return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date'));
+        }else
+        {
+            $detectorNull=1;
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date'));
+        }
     }
       
 }
@@ -356,7 +363,7 @@ public function nuevaEmpresa(Request $request){
  //Calcular la cantidad de meses entre dos fechas
  public function diffMeses(Request $request)
  {
-    
+    log::info($request->all());
     $f1=Carbon::parse($request->ultimo_cobro);
     $f2=Carbon::parse($request->fechaPagara);
 

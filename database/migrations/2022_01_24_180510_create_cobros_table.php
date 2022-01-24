@@ -18,12 +18,13 @@ class CreateCobrosTable extends Migration
             $table->bigInteger('id_empresa')->unsigned();
             $table->bigInteger('id_usuario')->unsigned();
             
-            $table->Integer('monto_pagado', 50);
+            $table->string('monto_pagado', 50);
             $table->string('fecha_pago', 50);
-            $table->Timestamps('created_at');
+            $table->timestamps();
 
             $table->foreign('id_empresa')->references('id')->on('empresa');
             $table->foreign('id_usuario')->references('id')->on('usuario');
+            
         });
     }
 
