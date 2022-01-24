@@ -60,14 +60,18 @@ use App\Http\Controllers\Backend\DetalleActividadE\DetalleActividadEController;
     // --- NUEVA EMPRESA - ROL ENCARGADO EMPRESAS
     Route::get('/admin/nuevo/empresa/index', [EmpresaController::class,'index'])->name('admin.crear.empresa.index');
     Route::post('/admin/empresa/nueva', [EmpresaController::class,'nuevaEmpresa']);
-    Route::get('/admin/nuevo/empresa/Listar', [EmpresaController::class,'listarEmpresas'])->name('admin.listarEmpresa.index');
+    Route::get('/admin/nuevo/empresa/listar', [EmpresaController::class,'listarEmpresas'])->name('admin.listarEmpresa.index');
     Route::get('/admin/empresas/tabla', [EmpresaController::class,'tablaEmpresas']);
     Route::post('/admin/empresas/informacion', [EmpresaController::class, 'informacionEmpresas']);
     Route::post('/admin/empresas/editar', [EmpresaController::class, 'editarEmpresas']);
     Route::get('/admin/empresas/show/{lista}', [EmpresaController::class, 'show']);
     Route::get('/admin/empresas/calificacion/{empresa}', [EmpresaController::class, 'calificacion']);
-   
+    Route::get('/admin/empresas/cobros/{empresa}', [EmpresaController::class, 'cobros']);
+    Route::post('/admin/empresas/fechapagara', [EmpresaController::class, 'diffMeses']);
+    Route::post('/admin/empresas/calculo_calificacion', [EmpresaController::class, 'calculo_calificacion']);
     
+
+
 
     // --- CONTRIBUYENTES ---
     Route::get('/admin/nuevo/contribuyentes/Listar', [ContribuyentesController::class,'listarContribuyentes'])->name('admin.listarContribuyentes.index');
