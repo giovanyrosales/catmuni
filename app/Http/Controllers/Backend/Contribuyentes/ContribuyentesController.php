@@ -122,10 +122,10 @@ class ContribuyentesController extends Controller
                 'direccion' => 'required',
                 'dui' => 'required',
                 'nit' => 'required',
-                'registro_comerciante' => 'required',
+                
                 'telefono' => 'required',
                 'email' => 'required',
-                'fax' => 'nullable',
+                
             
             );
 
@@ -133,7 +133,7 @@ class ContribuyentesController extends Controller
 
             if ($validar->fails()){ return ['success' => 0];} 
             
-            if($contribuyente = Contribuyentes::where('id', $request->id)->first())
+            if(Contribuyentes::where('id', $request->id)->first())
             {
 
                     Contribuyentes::where('id', $request->id)->update([

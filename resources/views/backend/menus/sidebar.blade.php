@@ -34,18 +34,18 @@
                             <p>Permisos y usuarios</p>
                         </a>
                     </li>
-
+                                       
                     <li class="nav-item">
-                        <a href="{{ route('admin.crear.detalleactividad.index') }}" target="frameprincipal" class="nav-link">
+                        <a href="{{ route('admin.listarDetalleActividadEconomica.index') }}" target="frameprincipal" class="nav-link">
                             <i class="fas fa-donate"></i>
                             <p>Actividades económicas</p>
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a href="{{ route('admin.listarDetalleActividadEconomica.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-stream"></i>
-                            <p>Listar actividad económica</p>
+                        <a href="{{ route('admin.TasaInteres.index') }}" target="frameprincipal" class="nav-link">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <p>Tasas de interés</p>
                         </a>
                     </li>
                 </ul>

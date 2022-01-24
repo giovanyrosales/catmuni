@@ -7,38 +7,24 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                <th style="width: 20%;">Limite inferior</th>
-                                <th style="width: 10%;">Fijo</th>
-                                <th style="width: 15%;">Excedente</th>
-                                <th style="width: 10%;">Millar</th>
-                                <th style="width: 25%;">Actividad económica</th>
-                               
+                                <th style="width: 15%;">ID</th>
+                                <th style="width: 15%;">Tasa de interés</th>
                                 <th style="width: 25%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($lista as $dato)
+                            @foreach($interes as $interes)
                                 <tr>
-                                    <td>{{$dato->limite_inferior}} </td>
-                                    <td>{{$dato->fijo}} </td>
-                                    <td>{{$dato->excedente}} </td>
-                                    <td>{{$dato->millar}} </td>
-                                    <td>{{$dato->actividad_economica}}</td>
-                                  
+                                    <td>{{$interes->id}} </td>
+                                    <td>{{$interes->monto_interes}} </td>
                                     
-
                                     <td style="text-align: center;">
-
-                                    <button type="button" onclick="verDetalles({{$dato->id}} )" class="btn btn-dark btn-xs" >
-                                    <i class="fas fa-search"></i>
-                                    Ver
-                                    </button>
-                                                                    
-                                    <button type="button" class="btn btn-primary btn-xs" onclick="informacionD({{$dato->id}})">
+                                                                
+                                    <button type="button" class="btn btn-primary btn-xs" onclick="informacionTasas({{ $interes->id }})">
                                     <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                     </button>
 
-                                    <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminar({{$dato->id}})">
+                                    <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarInteres({{ $interes->id }})">
                                     <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
                                     </button>
                                     </td>
@@ -46,7 +32,6 @@
                             @endforeach
 
                             </tbody>
-
                         </table>
                     </div>
                 </div>
