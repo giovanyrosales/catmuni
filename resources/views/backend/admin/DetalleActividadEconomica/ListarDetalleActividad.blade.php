@@ -31,7 +31,7 @@
                         </div>
         </div>
         <br>
-        <button type="button"onclick="location.href='{{ url('/admin/DetalleActividadEconomica/Crear') }}'" class="btn btn-success btn-sm" >
+        <button type="button"onclick="agregarDetalles()" class="btn btn-success btn-sm" >
                 <i class="fas fa-pencil-alt"></i>
                 Nuevo detalle de actividad económica
             </button>
@@ -77,7 +77,7 @@
 </div>
 <!--Termina Contenido Frame Principal -->
 
-    <!-- /Modal ver datos del detalle-->
+<!-- /Modal ver datos del detalle-->
 
     <div class="modal fade" id="modalVerDetalles">
         <div class="modal-dialog" style="width:1300px;">
@@ -96,34 +96,51 @@
                  <!-- /.card-header -->
                  <div class="card-body">
                   <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                         <div class="form-group"> 
-                         <label>Limite inferior:</label>
-                        <input type="text" name="limite_inferior" id="limite_inferior-ver" disabled class="form-control" >
-                        <input type="hidden" name="id" id="id-ver"  >
+                        <label>Limite Inferior:</label>
+                        <input type="number" name="limite_inferior" id="limite_inferior-ver" class="form-control" disabled required placeholder="Limite Inferior">
+                        <input type="hidden" name="id" id="id-ver" class="form-control" >
                       </div>
+                        </div>
                 <!-- /.form-group -->
-                <div class="row">
-                <div class="col-md-8">
-                  <div class="form-group">
-                          <label>Fijo:</label>
-                          <input type="number" name="fijo" id="fijo-ver" disabled class="form-control" >
-                  </div></div>
-                <div class="col-md-8">
-                  <div class="form-group">
-                          <label>Categoria:</label>
-                          <input type="number" name="categoria" id="categoria-ver" disabled class="form-control" >
+                   
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Fijo:</label>
+                        <input type="number" name="fijo" id="fijo-ver" class="form-control" disabled required placeholder="Fijo" >
                      </div>
                     </div>
                   </div>
-                <!-- /.form-group -->
-                <div class="form-group">
+
+
+                    <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Excedente:</label>
+                        <input type="number" name="excedente" id="excedente-ver" class="form-control" disabled required placeholder="Fijo" >
+                     </div>
+                    </div>
+
+                   <div class="col-md-6">
+                     <div class="form-group">
+                      <label>Categoria:</label>
+                         <input type="number" name="categoria" id="categoria-ver" disabled required placeholder="Categoria" class="form-control" >
+                    </div>
+                     </div> 
+                  </div> 
+                  
+            
+             <div class="row">
+                   <div class="col-md-6">
+                     <div class="form-group">
                     <label>Millar:</label>
-                    <input type="text" name="millar" id="millar-ver" disabled class="form-control">
+                    <input type="number" name="millar" id="millar-ver" class="form-control" disabled placeholder="Millar"  >
                   </div>
-                <!-- /.form-group --> 
-                <div class="col-md-14">
-                          <div class="form-group">
+                 </div>
+                  
+                <div class="col-md-6">
+                     <div class="form-group">
                           <label>Actividad económica:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
@@ -142,11 +159,12 @@
                                 </select>  
                            </div>
                         </div>
-                <!-- /.form-group -->  
+             
                      </div>
-                    </div>
-                  </div>
-               </div>
+             </div>
+                           <!-- finaliza asignar actividad economica-->
+                        
+                      </div>
                    <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
                     
@@ -161,9 +179,116 @@
               </div>
       <!--Finaliza Modal ver datos del detalle -->
 
+
+      <!--Modal para agregar actividad economica-->
+      <div class="modal fade" id="modalAgregarDetalles">
+        <div class="modal-dialog" style="width:2000px;">
+        <div class="modal-content">
+         <div class="modal-header">
+         <h4 class="modal-title">Agregar detalle actividad económica</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+               <div class="modal-body">
+                    <form id="formulario-AgregarDetalles">
+                        <div class="card-body">
+                        <div class="card-body">
+            <div class="row">
+                   <div class="col-md-6">
+                     <div class="form-group">
+                        <label>Limite Inferior:</label>
+                        <input type="number" name="limite_inferior" id="limite_inferior" class="form-control" required placeholder="Limite Inferior">
+                        <input type="hidden" name="id" id="id" class="form-control" >
+                      </div>
+                   </div>
+                <!-- /.form-group -->
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Fijo:</label>
+                        <input type="number" name="fijo" id="fijo" class="form-control" required placeholder="Fijo" >
+                     </div>
+                    </div>
+            </div>
+            
+            <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Excedente:</label>
+                        <input type="number" name="excedente" id="excedente" class="form-control" required placeholder="Excedente" >
+                     </div>
+                    </div>
+                
+                   <div class="col-md-6">
+                     <div class="form-group">
+                      <label>Categoria:</label>
+                         <input type="number" name="categoria" id="categoria" required placeholder="Categoria" class="form-control" >
+                    </div>
+                     </div> 
+            </div> 
+                 
+            
+            <div class="row">
+                   <div class="col-md-6">
+                     <div class="form-group">
+                    <label>Millar:</label>
+                    <input type="number" name="millar" id="millar" class="form-control" placeholder="Millar"  >
+                  </div>
+                 </div>
+                 
+                <!-- /.form-group -->
+                
+                <div class="col-md-6">
+                     <div class="form-group">
+                          <label>Actividad económica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-6">
+                                <select 
+                                required
+                                class="selectpicker"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-actividad_economica" 
+                                title="-- Selecione la actividad --"
+                                 >
+                                  @foreach($actividadeconomica as $actE)
+                                  <option value="{{ $actE->id }}"> {{ $actE->rubro }}</option>
+                                  @endforeach 
+                                </select> 
+                           </div>
+                           <!-- finaliza asignar actividad economica-->
+                        </div>
+                          </div>
+              </div>
+                           <!-- finaliza select Asignar Representante-->
+           
+              </div>
+            </div>
+                   
+            <div class="form-group">
+              <div class="card-footer">
+                  <button type="button" class="btn btn-success float-right" onclick="nuevaAct()"> Guardar </button>
+                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
+                </div>
+                </div>
+           <!-- /.col -->
+            </div>
+          </div>
+        </div>
+      <!-- /.card -->
+      </form>
+      <!-- /form -->
+      </div>  
+         </div>
+        </div>
+        </div>
+      </div>
+      
+       <!--Finaliza Modal para agregar actividad economica-->
      
      
-      <!-- /Modal editar datos del detalle-->
+    <!-- /Modal editar datos del detalle-->
 
     <div class="modal fade" id="modalEditarDetalles">
         <div class="modal-dialog" style="width:1300px;">
@@ -182,34 +307,48 @@
                  <!-- /.card-header -->
                  <div class="card-body">
                   <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                         <div class="form-group"> 
-                         <label>Limite inferior:</label>
-                        <input type="text" name="limite_inferior" id="limite_inferior-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar"  >
+                        <label>Limite Inferior:</label>
+                        <input type="number" name="limite_inferior" id="limite_inferior-editar" class="form-control" required placeholder="Limite Inferior">
+                        <input type="hidden" name="id" id="id-editar" class="form-control" >
                       </div>
-                <!-- /.form-group -->
-                <div class="row">
-                <div class="col-md-8">
-                  <div class="form-group">
-                          <label>Fijo:</label>
-                          <input type="number" name="fijo" id="fijo-editar" class="form-control" >
-                  </div></div>
-                <div class="col-md-8">
-                  <div class="form-group">
-                          <label>Categoria:</label>
-                          <input type="number" name="categoria" id="categoria-editar" class="form-control" >
+                        </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Fijo:</label>
+                        <input type="number" name="fijo" id="fijo-editar" class="form-control" required placeholder="Fijo" >
+                      </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Excedente:</label>
+                        <input type="number" name="excedente" id="excedente-editar" class="form-control" required placeholder="Excedente" >
                      </div>
                     </div>
-                  </div>
-                <!-- /.form-group -->
-                <div class="form-group">
+                   <div class="col-md-6">
+                     <div class="form-group">
+                      <label>Categoria:</label>
+                         <input type="number" name="categoria" id="categoria-editar" required placeholder="Categoria" class="form-control" >
+                      </div>
+                     </div> 
+                  </div> 
+                 
+                  <div class="row">
+                   <div class="col-md-6">
+                     <div class="form-group">
                     <label>Millar:</label>
-                    <input type="text" name="millar" id="millar-editar" class="form-control">
+                    <input type="number" name="millar" id="millar-editar" class="form-control" placeholder="Millar"  >
                   </div>
-                <!-- /.form-group --> 
-                <div class="col-md-14">
-                          <div class="form-group">
+                 </div>
+                 
+                <!-- /.form-group -->
+                
+                <div class="col-md-6">
+                     <div class="form-group">
                           <label>Actividad económica:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
@@ -229,26 +368,61 @@
                         </div>
                 <!-- /.form-group -->  
                      </div>
+                 </div>
+                           <!-- finaliza asignar actividad economica-->
+                        </div>
+                        </div>
+                      </div>
+                           <!-- finaliza select Asignar Representante-->
+                           <div class="modal-footer justify-content-between">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success  float-right" onclick="editarD()">Actualizar</button>
                     </div>
-                  </div>
-               </div>
-                   <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-success" onclick = "editarD()" data-dismiss="modal">Aceptar</button>
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    </div>
-              <!--finaliza los campos del formulario-->
+                  <!--finaliza los campos del formulario-->
                      </div>
                      </form>
                     </div>
                      </div>
                   </div>
-                </div>
-              </div>
+                
       <!--Finaliza Modal editar datos del detalle -->
 
+    <!-- Inicia Modal Borrar Detalle-->
 
+ <div class="modal fade" id="modalEliminar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Eliminar detalles actividad economica</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-borrar">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <p>¿Realmente desea eliminar el detalle seleccionado?"</p>
+
+                                    <div class="form-group">
+                                        <input type="hidden" id="idborrar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarD()">Borrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!--Finaliza Modal Borrar Detalle-->
 
 @extends('backend.menus.footerjs')
 @section('archivos-js')
@@ -279,12 +453,26 @@
             document.getElementById("divcontenedor").style.display = "block";
         });
 
-    function recargar(){
+    function recargar()
+    {
      var ruta = "{{ url('/admin/DetalleActividadEconomica/tabla') }}";
      $('#tablaDatatable').load(ruta);
-   }
+    }
 
-    function informacionD(id){
+    function agregarDetalles(id)
+    {
+        document.getElementById("formulario-AgregarDetalles").reset();
+            $('#modalAgregarDetalles').modal('show');
+    }
+
+   function editarDetalles(id)
+    {
+        document.getElementById("formulario-EditarDetalles").reset();
+            $('#modalEditarDetalles').modal('show');
+    }
+
+    function informacionD(id)
+    {
          openLoading();
            document.getElementById("formulario-EditarDetalles").reset();
 
@@ -299,6 +487,7 @@
                         $('#id-editar').val(response.data.detalle_actividad_economica.id);
                         $('#limite_inferior-editar').val(response.data.detalle_actividad_economica.limite_inferior);
                         $('#fijo-editar').val(response.data.detalle_actividad_economica.fijo);
+                        $('#excedente-editar').val(response.data.detalle_actividad_economica.excedente);
                         $('#categoria-editar').val(response.data.detalle_actividad_economica.categoria);
                         $('#millar-editar').val(response.data.detalle_actividad_economica.millar);
                         //$('#actividad_economica-ver').val(response.data.actividad_economica.actividad_economica);
@@ -323,14 +512,14 @@
                 });
        
             }
-
-
+          
     function editarD()        
     {
         var id = document.getElementById('id-editar').value;
         var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
         var limite_inferior = document.getElementById('limite_inferior-editar').value;
         var fijo = document.getElementById('fijo-editar').value;
+        var excedente = document.getElementById('excedente-editar').value;
         var categoria = document.getElementById('categoria-editar').value;
         var millar = document.getElementById('millar-editar').value;
 
@@ -340,6 +529,7 @@
             formData.append('actividad_economica', actividad_economica);
             formData.append('limite_inferior', limite_inferior);
             formData.append('fijo',fijo);
+            formData.append('excedente',excedente);
             formData.append('categoria',categoria);
             formData.append('millar',millar)
             
@@ -354,7 +544,7 @@
                     else 
                     {
                       toastMensaje('Error');
-                      $('#modalEditar').modal('hide');
+                      $('#modalEditarDetalles').modal('hide');
                          recargar();
                     }
                   })
@@ -381,11 +571,14 @@
                         $('#id-ver').val(response.data.detalle_actividad_economica.id);
                         $('#limite_inferior-ver').val(response.data.detalle_actividad_economica.limite_inferior);
                         $('#fijo-ver').val(response.data.detalle_actividad_economica.fijo);
+                        $('#excedente-ver').val(response.data.detalle_actividad_economica.excedente);
                         $('#categoria-ver').val(response.data.detalle_actividad_economica.categoria);
                         $('#millar-ver').val(response.data.detalle_actividad_economica.millar);
                         //$('#actividad_economica-ver').val(response.data.actividad_economica.actividad_economica);
-                     
-                        document.getElementById("select-actividad_economica-ver").options.length = 0;
+             
+                        document.getElementById("select-actividad_economica-ver").selectedIndex;
+
+
                         $.each(response.data.actividad_economica, function( key, val ){
                             if(response.data.idact_eco == val.id){
                                 $('#select-actividad_economica-ver').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
@@ -406,8 +599,116 @@
                 });
        
             }
+            function modalEliminar(id)
+            {
+                $('#idborrar').val(id);
+                $('#modalEliminar').modal('show');
+            }
+
+            function eliminarD(){
+            openLoading()
+        
+            // se envia el ID del contribuyente
+            var id = document.getElementById('idborrar').value;
+
+            var formData = new FormData();
+            formData.append('id', id);
+
+            axios.post('/admin/DetalleActividadEconomica/eliminar_detalles', formData, {
+            })
+                .then((response) => {
+                    closeLoading()
+                    $('#modalEliminar').modal('hide');
+                    
+                    if(response.data.success === 1){
+                        toastMensaje('success', 'Detalle eliminado');
+                        recargar();
+                    }else{
+                        toastMensaje('error', 'Error al borrar');
+           
+                    }
+                })
+                
+                .catch(function (error) {
+                        closeLoading()
+                        toastr.error("Error de Servidor!");
+                      }); 
+        }
+
+      
+
+        function nuevaAct(id)
+      {
+        
+        var actividad_economica = document.getElementById('select-actividad_economica').value;
+        var limite_inferior = document.getElementById('limite_inferior').value;
+        var fijo = document.getElementById('fijo').value;
+        var excedente = document.getElementById('excedente').value;
+        var categoria = document.getElementById('categoria').value;
+        var millar = document.getElementById('millar').value;
+
+        if(limite_inferior === ''){
+            toastr.error('El limite inferior es requerido');
+            return;
+        }
+        
+        if(fijo === ''){
+            toastr.error('Fijo es requerido');
+            return;
+        }
+
+        if(excedente === ''){
+            toastr.error('Excedente es requerido');
+            return;
+        }
+       
+        if(categoria === ''){
+            toastr.error('Categoria es requerida');
+            return;
+        }
+        
+        if(millar === ''){
+            toastr.error('Millar es requerido');
+            return;
+        }
+
+        if(actividad_economica === ''){
+            toastr.error('Actividad económica es requerida');
+            return;
+        }
+
+        openLoading();
+      var formData = new FormData();
+      formData.append('actividad_economica', actividad_economica);
+      formData.append('limite_inferior', limite_inferior);
+      formData.append('fijo', fijo);
+      formData.append('excedente', excedente);
+      formData.append('categoria', categoria);
+      formData.append('millar', millar);
+
+      axios.post('/admin/DetalleActividadEconomica/Detalle-Act', formData,
+       {
+            })
+
+            .then((response) => {
+              closeLoading();
+          if (response.data.success === 1)
+          {
+            toastr.success('Guardado exitosamente');
+          }
+          else
+          {
+            toastr.error('¡Error al guardar!');
+          }
+             })
+
+           .catch((error) => {
+              toastr.error('Error al registrar');
+               closeLoading();
+          });
+
+         }
 
 </script>
-
 
 @stop

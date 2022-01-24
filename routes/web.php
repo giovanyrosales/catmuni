@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\Contribuyentes\ContribuyentesController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Backend\Perfil\PerfilController;
 use App\Http\Controllers\Backend\DetalleActividadE\DetalleActividadEController;
+use App\Http\Controllers\Backend\TasaInteres\TasaInteresController;
 
 
 /*
@@ -83,14 +84,20 @@ use App\Http\Controllers\Backend\DetalleActividadE\DetalleActividadEController;
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
 
 
-    // --- ACTIVIDAD ECONÓMICA
-
+    // --- DETALLE ACTIVIDAD ECONÓMICA
     Route::get('/admin/DetalleActividadEconomica/Crear', [DetalleActividadEController::class,'crearActividad'])->name('admin.crear.detalleactividad.index');
-    Route::post('/admin/DetalleActividadEconomica/DetalleActividad', [DetalleActividadEController::class,'nuevaActividad']);
-
+    Route::post('/admin/DetalleActividadEconomica/Detalle-Act', [DetalleActividadEController::class,'nuevaActividad']);
     Route::get('/admin/DetalleActividadEconomica/Listar', [DetalleActividadEController::class,'listarDetalleActividadE'])->name('admin.listarDetalleActividadEconomica.index');
     Route::get('/admin/DetalleActividadEconomica/tabla', [DetalleActividadEController::class,'tablaDetalleActividadEconomica']);
-    
     Route::post('/admin/DetalleActividadEconomica/informacion', [DetalleActividadEController::class, 'informacionDetalle']);
     Route::post('/admin/DetalleActividadEconomica/editar', [DetalleActividadEController::class, 'editarDetalles']);
-    
+    Route::post('/admin/DetalleActividadEconomica/eliminar_detalles', [DetalleActividadEController::class, 'eliminarD']);
+
+    // --- TASA INTERES
+    Route::get('/admin/TasaInteres/ListarInteres', [TasaInteresController::class,'index'])->name('admin.TasaInteres.index');
+    Route::get('/admin/TasaInteres/tabla', [TasaInteresController::class,'tablaTasas']);
+    Route::get('/admin/nuevo/TasaInteres/Listar', [TasaInteresController::class,'listarInteres'])->name('admin.listarInteres.index');
+    Route::post('/admin/nuevo/TasaInteres/nuevo', [TasaInteresController::class,'agregarInteres']);
+    Route::post('/admin/TasaInteres/informacion', [TasaInteresController::class, 'informacionInteres']);
+    Route::post('/admin/TasaInteres/editar', [TasaInteresController::class, 'editarInteres']);
+    Route::post('/admin/TasaInteres/eliminar', [TasaInteresController::class, 'eliminarInteres']);

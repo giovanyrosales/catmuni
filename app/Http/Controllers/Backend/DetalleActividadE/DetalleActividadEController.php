@@ -35,35 +35,40 @@ class DetalleActividadEController extends Controller
     
 //Función para agregar nueva actividad económica
 
-public function nuevaActividad(Request $request){
-
-    $regla = array(
-        'actividad_economica'=>'required',
-        'limite_inferior' => 'required|unique:detalle_actividad_economica,limite_inferior',
-        'fijo' => 'required|unique:detalle_actividad_economica,fijo',
-        'categoria' => 'required',
-        'millar' => 'required',
-    );
+    public function nuevaActividad(Request $request)
+        {
+           
+        $regla = array(
+            'actividad_economica'=>'required',
+            'limite_inferior' => 'required|unique:detalle_actividad_economica,limite_inferior',
+            'fijo' => 'required|unique:detalle_actividad_economica,fijo',
+            'excedente' => 'required',
+            'categoria' => 'required',
+            'millar' => 'required', 
+        );
+    
 
     $validar = Validator::make($request->all(), $regla, 
- //   $message
+       //   $message
     );
        
     if ($validar->fails()){
 
-    return [
+          return [
 
-     'success'=> 0,
+           'success'=> 0,
+  //   'message' => $validar->errors()->first()
 
-    ];
+         ];
     }
 
-    $dato = new DetalleActividad();
-    $dato->limite_inferior = $request->limite_inferior;
-    $dato->fijo = $request->fijo;
-    $dato->categoria = $request->categoria;
-    $dato->millar = $request->millar;
-    $dato->id_actividad_economica = $request->actividad_economica;
+        $dato = new DetalleActividad();
+        $dato->limite_inferior = $request->limite_inferior;
+        $dato->fijo = $request->fijo;
+        $dato->excedente = $request->excedente;
+        $dato->categoria = $request->categoria;
+        $dato->millar = $request->millar;
+        $dato->id_actividad_economica = $request->actividad_economica;
 
     if($dato->save())
     {
@@ -75,65 +80,78 @@ public function nuevaActividad(Request $request){
 
 //Función lista detalle de la actividad económica
 
-public function listarDetalleActividadE()
-{
+    public function listarDetalleActividadE()
+      {
        
     $actividadeconomica = ActividadEconomica::All();
 
     return view('backend.admin.DetalleActividadEconomica.ListarDetalleActividad', compact('actividadeconomica'));
-}
+      }
 
 //Tabla detalless
-public function tablaDetalleActividadEconomica(DetalleActividad $lista)
-{
+    public function tablaDetalleActividadEconomica(DetalleActividad $lista)
+         {
+
          
     $lista=DetalleActividad::join('actividad_economica','detalle_actividad_economica.id_actividad_economica','=','actividad_economica.id')
            
-      ->select('detalle_actividad_economica.id','detalle_actividad_economica.limite_inferior','detalle_actividad_economica.fijo','detalle_actividad_economica.categoria','detalle_actividad_economica.millar',
+      ->select('detalle_actividad_economica.id','detalle_actividad_economica.limite_inferior','detalle_actividad_economica.fijo','detalle_actividad_economica.excedente','detalle_actividad_economica.categoria','detalle_actividad_economica.millar',
       'actividad_economica.rubro as actividad_economica' )
        ->get();
             
+            foreach($lista as $ll)
+            {
+                $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
+                $ll->excedente = number_format($ll->excedente, 2, '.', ',');
+                $ll->fijo = number_format($ll->fijo, 2, '.', ',');
+            }
+
           return view('backend.admin.DetalleActividadEconomica.tabla.tablalistadetalleactividad', compact('lista'));
-}
+        }
 
 //Ver informacón del detalle
-public function informacionDetalle(Request $request)
-{
-    $regla = array(
-        'id' => 'required',
-       
+    public function informacionDetalle(Request $request)
+      {
+    
+        $regla = array(
+            'id' => 'required',
+        
     );
 
-    $validar = Validator::make($request->all(), $regla);
+        $validar = Validator::make($request->all(), $regla);
 
-    if ($validar->fails()){ return ['success' => 0];}
+        if ($validar->fails()){ return ['success' => 0];}
 
-    if ($lista = DetalleActividad::where('id', $request->id)->first())
-    {
-        $actividad_economica = ActividadEconomica::orderby('rubro')->get();
-        
-        return['success' => 1,
-        
-        'detalle_actividad_economica' => $lista,
-        'actividad_economica' => $actividad_economica,
-    ];
-    }else{
-        return ['success' => 2];
-    }
-}
+        if ($lista = DetalleActividad::where('id', $request->id)->first())
+           {
+          
+            $actividad_economica = ActividadEconomica::orderby('rubro')->get();
+                
+                return['success' => 1,
+                'idact_eco' => $lista->id_actividad_economica,
+                'detalle_actividad_economica' => $lista,
+                'actividad_economica' => $actividad_economica,
+            ];
+            }
+            else
+            {
+                return ['success' => 2];
+            }
+        }
 
-public function editarDetalles(Request $request)
-    {
+    public function editarDetalles(Request $request)
+        {
 
-    $regla = array(  
-        'limite_inferior' => 'required',
-        'fijo' => 'required',
-        'categoria' => 'required',
-        'millar' => 'required',
-        'actividad_economica' => 'required',
-    );
+        $regla = array(  
+            'limite_inferior' => 'required',
+            'fijo' => 'required',
+            'fijo' => 'required',
+            'categoria' => 'required',
+            'millar' => 'required',
+            'actividad_economica' => 'required',
+     );
    
-    $validar = Validator::make($request->all(), $regla);
+        $validar = Validator::make($request->all(), $regla);
 
     if ($validar->fails()){ return ['success' => 0];} 
     
@@ -144,6 +162,7 @@ public function editarDetalles(Request $request)
             'id_actividad_economica' => $request->actividad_economica,
             'limite_inferior' => $request->limite_inferior,
             'fijo' => $request->fijo,
+            'excedente' => $request->excedente,
             'categoria' => $request->categoria,
             'millar'=> $request->millar,
        
@@ -154,14 +173,16 @@ public function editarDetalles(Request $request)
         return ['success' => 2];
     }
     }
-public function eliminarD(Request $request)
-{
-    $detalle = DetalleActividad::find($request->id);
-                $detalle->delete();
-             
+
+
+    public function eliminarD(Request $request)
+        {
+
+        $detalle = DetalleActividad::find($request->id);
+             $detalle->delete();
                 return ['success' => 1];
 
-}
+        }
 
 }
 

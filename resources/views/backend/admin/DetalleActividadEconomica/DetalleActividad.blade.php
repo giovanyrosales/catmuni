@@ -49,37 +49,39 @@
               <div class="col-md-6">
               <div class="form-group">
                         <label>Limite Inferior:</label>
-                        <input type="text" name="limite_inferior" id="limite_inferior" class="form-control" required placeholder="Limite Inferior">
+                        <input type="number" name="limite_inferior" id="limite_inferior" class="form-control" required placeholder="Limite Inferior">
                         <input type="hidden" name="id" id="id" class="form-control" >
                       </div>
                 <!-- /.form-group -->
-              
-                <div class="col-md-6">
-                  <div class="form-group">
-                          <label>Fijo:</label>
-                          <input type="text" name="fijo" id="fijo" class="form-control" required placeholder="Fijo" >
-                  </div></div>
-
-                  
-                <div class="col-md-6">
-                  <div class="form-group">
-                          <label>Categoria:</label>
-                          <input type="text" name="categoria" id="categoria" required placeholder="Categoria" class="form-control" >
-                  </div>
-                 </div>
+                   <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Fijo:</label>
+                        <input type="number" name="fijo" id="fijo" class="form-control" required placeholder="Fijo" >
+                     </div>
+                    </div>
                 
-
-                <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
+                
+                   <div class="col-md-6">
+                     <div class="form-group">
+                      <label>Categoria:</label>
+                         <input type="number" name="categoria" id="categoria" required placeholder="Categoria" class="form-control" >
+                    </div>
+                     </div> 
+                  </div> 
+                  </div>
+                  </div>
+            
+                  <div class="row">
+                   <div class="col-md-3">
+                     <div class="form-group">
                     <label>Millar:</label>
-                    <input type="text" name="millar" id="millar" class="form-control" placeholder="Millar"  >
+                    <input type="number" name="millar" id="millar" class="form-control" placeholder="Millar"  >
                   </div>
                  </div>
-                </div> 
+                 
                 <!-- /.form-group -->
-
-                <div class="row">
+                
                 <div class="col-md-6">
                      <div class="form-group">
                           <label>Actividad económica:</label>
@@ -101,13 +103,11 @@
                            </div>
                            <!-- finaliza asignar actividad economica-->
                         </div>
-               
-                    </div>
-                           <!-- finaliza select Asignar Representante-->
+                        </div>
                       </div>
-                  </div>
-              </div>
-            </div>
+                           <!-- finaliza select Asignar Representante-->
+                   </div>
+            
             <div class="form-group">
               <div class="card-footer">
                   <button type="button" class="btn btn-success float-right" onclick="nuevaAct()"> Guardar </button>
@@ -115,15 +115,14 @@
                 </div>
                 </div></div>
             </div>
-          
-            <!-- /.col -->
+           <!-- /.col -->
             </div>
           </div>
         </div>
       <!-- /.card -->
       </form>
       <!-- /form -->
-      </div>
+      </div>  
     <!-- /.container-fluid -->
     </section>
 <!-- Finaliza Formulario Actividad Economica-->
@@ -179,7 +178,6 @@
             return;
         }
 
-        
         if(actividad_economica === ''){
             toastr.error('Actividad económica es requerida');
             return;
@@ -193,7 +191,8 @@
       formData.append('categoria', categoria);
       formData.append('millar', millar);
 
-      axios.post('/admin/DetalleActividadEconomica/DetalleActividad', formData, {
+      axios.post('/admin/DetalleActividadEconomica/DetalleActividad', formData,
+       {
             })
 
             .then((response) => {
@@ -206,13 +205,14 @@
           {
             toastr.error('¡Error al guardar!');
           }
-        })
+             })
+
            .catch((error) => {
               toastr.error('Error al registrar');
                closeLoading();
           });
 
-      }
+         }
    
     </script>
 

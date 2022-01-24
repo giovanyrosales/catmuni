@@ -22,6 +22,7 @@ class CreateDetalleActividadEconomicaTable extends Migration
             $table->string('fijo', 50);
             $table->string('categoria', 50);
             $table->string('millar', 50);
+            $table->string('excedente', 50);
 
             $table->foreign('id_actividad_economica')->references('id')->on('actividad_economica');
 

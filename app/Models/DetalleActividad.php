@@ -16,6 +16,7 @@ class DetalleActividad extends Model
         'fijo',
         'categoria',
         'millar',
+        'excedente',
         
       ];
 }

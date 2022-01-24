@@ -411,10 +411,13 @@
          
             axios.post('/admin/Contribuyentes/editar', formData, {
             })
+
                 .then((response) => {
+                  ///  console.log(response);
                     closeLoading()
 
                    if (response.data.success === 1) 
+                   
                     {
                         toastr.success('Contribuyente actualizado');
                     }
