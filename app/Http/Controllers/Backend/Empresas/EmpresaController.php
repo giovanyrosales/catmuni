@@ -173,15 +173,26 @@ public function show($id)
         if ($ultimo_cobro == null)
         {
             $detectorNull=0;
-            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull'));
+            $detectorCobro=0;
+            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro'));
         }
             
            
     }
     else
     {
-        $detectorNull=1;
-        return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull'));
+
+            $detectorNull=1;
+            if ($ultimo_cobro == null)
+            {
+                $detectorCobro=0;
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro'));
+            }else
+            {
+                $detectorCobro=1;
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro'));
+            }
+                   
     }
       
 }
@@ -231,21 +242,26 @@ public function cobros($id)
         if ($ultimo_cobro == null)
         {
             $detectorNull=0;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','date'));
+            $detectorCobro=0;
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','date','detectorCobro'));
         }
             
            
     }
     else
-    {  if ($ultimo_cobro == null)
+    {  
+        $detectorNull=1;
+        if ($ultimo_cobro == null)
         {
          $detectorNull=0;
-    
-        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date'));
-        }else
+         $detectorCobro=0;
+        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro'));
+        }
+        else
         {
             $detectorNull=1;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date'));
+            $detectorCobro=1;
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro'));
         }
     }
       

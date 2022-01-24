@@ -17,8 +17,8 @@ class CreateTarifaFijaTable extends Migration
             $table->id();
            
             $table->string('nombre_actividad', 50);
-            $table->string('limite_inferior', 50);
-            $table->string('limite_superior', 50);
+            $table->string('limite_inferior', 50)->nullable();
+            $table->string('limite_superior', 50)->nullable();  
             $table->string('impuesto_mensual', 50);
         });
     }

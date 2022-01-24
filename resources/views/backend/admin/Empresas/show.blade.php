@@ -684,11 +684,11 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                  @if($detectorNull=='0')
+                  @if($detectorCobro=='0')
                         <input  type="text" disabled  name="ultimo_cobro" class="form-control" required >
                         <input type="hidden" name="id" id="id-editar" class="form-control text-success" >
                   @else
-                              <input  type="text" value="" disabled  name="ultimo_cobro" class="form-control text-success" required >
+                              <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled  name="ultimo_cobro" class="form-control text-success" required >
                               <input type="hidden" name="id" id="id-editar" class="form-control" >
                   @endif
                   </div>

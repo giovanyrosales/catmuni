@@ -103,7 +103,7 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                    @if($detectorNull=='0')
+                    @if($detectorCobro=='0')
                                 <input  type="text" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
                     @else
                                 <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
