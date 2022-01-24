@@ -16,6 +16,20 @@
  <!-- Para vista detallada fin -->
 
 @stop
+<script>
+function hasta(){
+
+var fecha_pagara=(document.getElementById('fecha_hasta_donde_pagara').value);
+
+hasta_donde_pagara=fecha_pagara;
+
+alert(hasta_donde_pagara);
+
+document.getElementById('hasta').value=hasta_donde_pagara;
+
+}
+</script>
+
 <style>
     table{
         /*Ajustar tablas*/
@@ -147,7 +161,7 @@
             </div><!-- .widget -->
         </a>
     @else
-        <a href="#"  onclick="modalCobro()" id="btnmodalCobro">
+        <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-success">
                     <div class="pull-left">
@@ -192,7 +206,7 @@
                                 <div class="widget stats-widget">
                                     <div class="widget-body clearfix bg-dark">
                                         <div class="pull-left">
-                                            <h3 class="widget-title text-white">Calificación creada {{$calificaciones->fecha_calificacion}}</h3>
+                                            <h3 class="widget-title text-white">Calificación creada  {{$calificaciones->fecha_calificacion}}</h3>
                                         </div>
                                         <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
                                     </div>
@@ -674,7 +688,7 @@
                         <input  type="text" disabled  name="ultimo_cobro" class="form-control" required >
                         <input type="hidden" name="id" id="id-editar" class="form-control text-success" >
                   @else
-                              <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled  name="ultimo_cobro" class="form-control text-success" required >
+                              <input  type="text" value="" disabled  name="ultimo_cobro" class="form-control text-success" required >
                               <input type="hidden" name="id" id="id-editar" class="form-control" >
                   @endif
                   </div>
@@ -689,7 +703,6 @@
                <div class="col-md-6">
                   <div class="form-group">
                         <input  type="date" name="nombre" id="nombre-editar" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -796,186 +809,6 @@
 <!-- Finaliza Modal Recalificacion------------------------------------------------------------------>
 
 
-<!--Inicia Modal Cobro--------------------------------------------------------------------->
-
-<div class="modal fade" id="modalCobro">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              <div class="card-body">
-
-  <!-- Inicia Formulario cobro--> 
-   <section class="content">
-      <div class="container-fluid">
-        <!-- SELECT2 EXAMPLE -->
-
-        <form class="form-horizontal" id="formulario-cobro">
-        @csrf
-
-          <div class="card card-green">
-            <div class="card-header">
-            <h3 class="card-title">Datos generales.</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-            </div>
-          </div>
-          <!-- /.card-header -->
-          <!-- Campos del formulario de cobros -->
-          <div class="card-body"><!-- Card-body -->
-            <div class="row"><!-- /.ROW1 -->
-            
-             <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Número de tarjeta:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha de último pago:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                    @if($detectorNull=='0')
-                                <input  type="text" disabled  name="ultimo_cobro" class="form-control" required >
-                                <input type="hidden" name="id" id="id-editar" class="form-control text-success" >
-                    @else
-                                <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled  name="ultimo_cobro" class="form-control text-success" required >
-                                <input type="hidden" name="id" id="id-editar" class="form-control" >
-                    @endif
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha hasta donde pagará:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input  type="date" name="nombre" id="nombre-editar" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Giro Comercial:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- Inicia Select Giro Comercial -->
-               <div class="col-md-6">
-                      <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                disabled
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial-editar" 
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
-                  </div>
-              <!-- finaliza select Giro Comercial-->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Tasa de interes:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="text" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha del interes moratorio:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input type="date" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Cantidad de meses a pagar:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number" value="cant_meses" name="cant_meses" id="cant_meses" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-              
-            </div> <!-- /.ROW1 -->
-          <!-- /.col1 -->
-          </div> <!-- /.Card-body -->
-
-        <!-- Finaliza campos del formulario de cobros -->
-
-
-         <!-- /.card-body -->
-         <div class="card-footer">
-         <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="far fa-money-bill-alt"></i>&nbsp;Registrar Cobro&nbsp;</button>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-          </div>
-         <!-- /.card-footer -->
-         </div>
-        </div>
-      <!-- /.card -->
-      <!-- /form -->
-      </div>
-    <!-- /.container-fluid -->
-    </section>
-
-     </form> <!-- /.formulario-cobros -->
-    </div> <!-- /.Card-body -->
-   </div> <!-- /.ModalRecalificacion -->
-  </div> <!-- /.modal-dialog modal-xl -->
- </div> <!-- /.modal-content -->
-</div> <!-- /.modal-body -->
-
-<!-- Finaliza Modal Cobros------------------------------------------------------------------>
 
 
 @extends('backend.menus.footerjs')
@@ -995,7 +828,6 @@
 
     
 <script type="text/javascript">
-
 
 function modalRecalificacion(){
             openLoading();
@@ -1021,7 +853,7 @@ function  modalCierresTraspasos(){
 
 function ListarEmpresas(){
             openLoading();
-            window.location.href="{{ url('/admin/nuevo/empresa/Listar') }}/";
+            window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
 
         }
 
@@ -1046,9 +878,10 @@ function NoCalificar(){
   return;
 }
 
-function modalCobro(){
-  document.getElementById("formulario-cobro").reset();
-  $('#modalCobro').modal('show');
+function Cobros(id){
+  openLoading();
+
+  window.location.href="{{ url('/admin/empresas/cobros') }}/"+id;
 }
 
 </script>

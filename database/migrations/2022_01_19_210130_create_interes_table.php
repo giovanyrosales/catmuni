@@ -16,7 +16,6 @@ class CreateInteresTable extends Migration
         Schema::create('interes', function (Blueprint $table) {
             $table->id();
             $table->decimal('monto_interes', 20);
-            $table->Timestamps('created_at');
         });
     }
 

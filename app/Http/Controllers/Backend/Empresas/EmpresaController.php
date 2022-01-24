@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -121,7 +122,7 @@ public function calificacion($id)
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro')
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica')
     ->find($id);
     
     return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones'));
@@ -130,9 +131,8 @@ public function calificacion($id)
 
 // ---------Termina Calificación de empresa ------------------------------------------>
 
-    
 //Vista detallada
-public function show( Request $request, $id)
+public function show($id)
 {
     $contribuyentes = Contribuyentes::All();
     $estadoempresas = EstadoEmpresas::All();
@@ -182,6 +182,71 @@ public function show( Request $request, $id)
     {
         $detectorNull=1;
         return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull'));
+    }
+      
+}
+
+// ---------COBROS ------------------------------------------>
+
+public function cobros($id)
+{
+    $contribuyentes = Contribuyentes::All();
+    $estadoempresas = EstadoEmpresas::All();
+    $giroscomerciales = GiroComercial::All();
+    $actividadeseconomicas = ActividadEconomica::All();
+
+    $calificaciones = calificacion
+    ::join('detalle_actividad_economica','calificacion.id_detalle_actividad_economica','=','detalle_actividad_economica.id')
+    ->join('empresa','calificacion.id_empresa','=','empresa.id')
+    
+    ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tarifa','calificacion.tipo_tarifa','calificacion.estado_calificacion',
+    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'detalle_actividad_economica.id','detalle_actividad_economica.id_actividad_economica','detalle_actividad_economica.limite_inferior','detalle_actividad_economica.fijo','detalle_actividad_economica.categoria','detalle_actividad_economica.millar')
+    ->where('id_empresa', "=", "$id")
+    ->first();
+
+
+    $ultimo_cobro = Cobros::latest()
+    ->where('id_empresa', "=", "$id")
+    ->first();
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica')
+    ->find($id);   
+    
+    $date=Carbon::now();
+
+   if ($calificaciones == null)
+    { 
+        $detectorNull=0;
+        if ($ultimo_cobro == null)
+        {
+            $detectorNull=0;
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','date'));
+        }
+            
+           
+    }
+    else
+    {  if ($ultimo_cobro == null)
+        {
+         $detectorNull=0;
+    
+        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date'));
+        }else
+        {
+            $detectorNull=1;
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date'));
+        }
     }
       
 }
@@ -295,7 +360,55 @@ public function nuevaEmpresa(Request $request){
 
  //Termina editar empresa
 
+ //Calcular la cantidad de meses entre dos fechas
+ public function diffMeses(Request $request)
+ {
+    log::info($request->all());
+    $f1=Carbon::parse($request->ultimo_cobro);
+    $f2=Carbon::parse($request->fechaPagara);
 
+        
+    if($f1->lt($f2))
+    {
+        $CantidadMeses=$f1->diffInMonths($f2);  
+        return ['success' => 1, 'cantidadMeses' => $CantidadMeses];
+    }else
+    {
+        return ['success' => 0];
+    }
+
+}
+
+//Calcular fechas menores a los primeros 3 meses del año...
+public function calculo_calificacion(Request $request)
+{
+   // log::info($request->all());
+  
+   $deducciones= $request->deducciones;
+   $activo_total=$request->activo_total;
+   $activo_imponible=$activo_total-$deducciones;
+   $signo='$';
+
+   $valor= $signo . $activo_imponible;
+
+   if($activo_imponible>2858.14)
+   {
+       $tarifa='Variable';  
+       return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];
+   }
+   else if($activo_imponible<2858.14)
+   {
+        $tarifa='Fija';  
+        return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];   
+   
+   }
+   else
+   {
+    return ['success' => 2];
+   }
+   
+}  
+   
 
 
 }

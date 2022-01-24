@@ -17,61 +17,91 @@
 
 
 @stop
+<!-- Función para calcular la recalificación --------------------------------------------------------->
 
-<style>
-@media
-	  only screen 
-    and (max-width: 760px), (min-device-width: 768px) 
-    and (max-device-width: 1024px)  {
+<script>
+function extraeranio()
+{
+      /*Declaramos variables */
+      var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
+      //*Capturando fecha del date
+      fechaBalance=fecha_pres_balance;
 
-		/* Force table to not be like tables anymore */
-		table, thead, tbody, th, td, tr {
-			display: block;
-		}
+      //*Extraendo el año de la fecha
+      anio=parseInt(String(fechaBalance).substring(0,4));
+      //*alert(anio);
+      document.getElementById('año_calificacion').value=anio;
+}
 
-		/* Hide table headers (but not display: none;, for accessibility) */
-		thead tr {
-			position: absolute;
-			top: -9999px;
-			left: -9999px;
-		}
+function calcular()
+{
 
-    tr {
-      margin: 0 0 1rem 0;
-    }
-      
-    tr:nth-child(odd) {
-      background: #ccc;
-    }
-    
-		td {
-			/* Behave  like a "row" */
-			border: none;
-			border-bottom: 1px solid #eee;
-			position: relative;
-			padding-left: 50%;
-		}
+  var licencia=(document.getElementById('selectLicencia').value);
+  var  monto_pagar=(document.getElementById('monto_pagar').value);
 
-		td:before {
-			/* Now like a table header */
-			position: absolute;
-			/* Top/left values mimic padding */
-			top: 0;
-			left: 6px;
-			width: 45%;
-			padding-right: 10px;
-			white-space: nowrap;
-		}
+        if (licencia=='No')
+        {
+          monto_pagar='$0.00';
+          matricula='$0.00';
+          document.getElementById('monto_pagar').value= monto_pagar;
+          document.getElementById('matricula_imp').innerHTML=matricula;
 
+        }else if(licencia=='Si')
+        {
+          monto_pagar='$250.00';
+          matricula='$5.00';
+          document.getElementById('monto_pagar').value= monto_pagar;
+          document.getElementById('matricula_imp').innerHTML=matricula;
+        }
+      }
+
+function calculo()
+{
+    /*Declaramos variables */
+
+    var deducciones=(document.getElementById('deducciones').value);
+    var activo_total=(document.getElementById('activo_total').value);
+    var anio_calificacion=(document.getElementById('año_calificacion').value);
+    var deducciones_imp=(document.getElementById('deducciones').value);
+    var tipo_tarifa=(document.getElementById('tipo_tarifa').value);
 
 
-    table{
-        /*Ajustar tablas*/
-        table-layout:fixed;
-    }
+var formData = new FormData();
 
-</style>
+formData.append('deducciones', deducciones);
+formData.append('activo_total', activo_total);
 
+axios.post('/admin/empresas/calculo_calificacion', formData, {
+        })
+            .then((response) => {
+              console.log(response);
+                closeLoading();
+                if(response.data.success ===2){
+                  //toastr.error('Muuuuuuuultaaaaaaaaaaaaaaaaaaaaa');
+                } 
+                if(response.data.success === 1){
+
+                        document.getElementById('activo_imponible').value=response.data.valor;
+                        document.getElementById('tipo_tarifa').value=response.data.tarifa;
+                        document.getElementById('act_total').innerHTML= activo_total;
+                        document.getElementById('anio_calificacion').innerHTML=anio_calificacion;
+                        document.getElementById('deducciones_imp').innerHTML=deducciones_imp;
+                        document.getElementById('act_imponible_imp').innerHTML=response.data.valor;
+
+
+                        
+                }  
+            })
+            .catch((error) => {
+                toastr.error('Error');
+                closeLoading();
+            });
+
+
+}
+
+</script>
+<!-- Finaliza función para calcular la recalificación --------------------------------------------------------->
 
 
 <div class="content-wrapper" style="display: none" id="divcontenedor">
@@ -97,7 +127,7 @@
       <div class="container-fluid">
         <!-- SELECT2 EXAMPLE -->
 
-        <form class="form-horizontal" id="form1">
+        <form class="form-horizontal" id="formulario-GenerarCalificacion">
         @csrf
 
         <div class="card card-green">
@@ -131,26 +161,10 @@
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-3">
-                      <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                class="selectpicker"
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select-giro_comercial" 
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
-                  </div>
+                      <div class="form-group">  
+                        <input type="text"  value="{{ $empresa->nombre_giro }}" name="giro_comercial" disabled id="giroc_comercial" class="form-control" required >
+                      </div>
+                </div>
               <!-- finaliza select Giro Comercial-->
                <!-- /.form-group -->
 
@@ -163,7 +177,6 @@
                <div class="col-md-2">
                   <div class="form-group">
                         <input type="text"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
 
@@ -175,8 +188,8 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-success" name="fecha_pres_banlance" id="fecha_pres_banlance" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
+                        <input  type="date" onchange="extraeranio();" class="form-control text-success" name="fecha_pres_balance" id="fecha_pres_balance" class="form-control" required >
+       
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -188,27 +201,12 @@
                         <label>ACTIVIDAD ECONOMICA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <!-- Inicia Select Giro Comercial -->
+               <!-- Inicia Select actividad_economica -->
                <div class="col-md-3">
                       <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                class="selectpicker"
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-actividad_economica" 
-                                required
-                                >
-                                  @foreach($actividadeseconomicas as $act)
-                                  <option value="{{ $giro->id }}"> {{ $act->rubro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
-                  </div>
+                        <input type="text"  value="{{ $empresa->rubro }}" name="rubro" disabled id="rubro" class="form-control" required >
+                      </div>
+                </div>
               <!-- finaliza select Giro Comercial-->
                <!-- /.form-group -->
               
@@ -219,51 +217,53 @@
 
 
 
-        <div class="card"><!-- Panel Multa -->
-         <div class="card-header text-success"><label> II. MULTA </label></div>
-          <div class="card-body"><!-- Card-body -->
-            <div class="row"><!-- /.ROW1 -->
+            <div class="card"><!--  II. LICENCIAS  -->
+             <div class="card-header text-success"><label> II. LICENCIAS </label></div>
+             <div class="card-body"><!-- Card-body -->
+               <div class="row"><!-- /.ROW1 -->
             
 
               <!-- /.form-group -->
               <div class="col-md-3">
                   <div class="form-group">
-                        <label>CARGAR MULTA:</label>
+                        <label>LICENCIA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-3">
                       <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
+                            <!-- Select LICENCIA -live search -->
                                 <div class="input-group mb-9">
                                 <select 
                                 required 
+                                onchange="calcular();"
                                 class="selectpicker"
                                 data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-giro_comercial" 
+                                id="selectLicencia" 
+                                title="-- Seleccione --"
                                 required
                                 >
-                                    <option>No</option>
-                                    <option>Si</option>
+                                    <option value="No">No</option>
+                                    <option value="Si">Si</option>
                                 </select> 
                                 </div>
                           </div>
                   </div>
-              <!-- finaliza select Giro Comercial-->
+              <!-- finaliza select CARGAR MULTA-->
                <!-- /.form-group -->
 
                 <!-- /.form-group -->
                 <div class="col-md-3">
                   <div class="form-group">
-                        <label>MULTA A PAGAR:</label>
+                        <label>MONTO A PAGAR:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input type="number" placeholder="$0.00" name="multa_pagar" id="multa_pagar" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
+                        <input type="text"  disabled placeholder="$0.00" name="monto_pagar" id="monto_pagar" class="form-control" required >
+                    
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->  
@@ -274,10 +274,42 @@
             </div> <!-- /.card-header text-success -->
             </div> <!-- /.Panel Multa -->
         
-         <div class="card border-success mb-3"><!-- Panel Tarifas -->
+            <div class="card"><!--  II. Panel Tarifas  -->
+            <div class="card-header text-success"><label> III. TARIFAS </label></div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
+
+               <!-- /.form-group -->
+               <div class="col-md-3">
+                  <div class="form-group">
+                        <label>ACTIVO TOTAL:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-3">
+                  <div class="form-group">
+                        <input type="number" onchange="calculo();" placeholder="$00,000.00"  name="activo_total" id="activo_total" class="form-control" required >
+                       
+                  </div>
+               </div><!-- /.col-md-6 -->
+              <!-- /.form-group -->
+             
+              <!-- /.form-group -->
+              <div class="col-md-3">
+                  <div class="form-group">
+                        <label>DEDUCCIONES:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-3">
+                  <div class="form-group">
+                        <input type="number" onchange="calculo();" placeholder="$00,000.00"  name="deducciones" id="deducciones" class="form-control" required >
+                       
+                  </div>
+               </div><!-- /.col-md-6 -->
+              <!-- /.form-group -->
+             </div><!-- ROW FILA1 -->
+
+             <div class="row"><!-- /.ROW FILA1 -->
 
                <!-- /.form-group -->
                <div class="col-md-3">
@@ -287,109 +319,122 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                         <!-- Select Giro Comercial -live search -->
-                         <div class="input-group mb-9">
-                                <select 
-                                class="selectpicker"
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-cargar_multa" 
-                                required
-                                >
-                                  <option>Fija</option>
-                                  <option>Variable</option>
-                         
-                                </select> 
-                           </div>
+                        <input type="text" placeholder="Fija o Variable" onchange="select();" disabled name="tipo_tarifa" id="tipo_tarifa" class="form-control" required >
+                       
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
-
+     
               <!-- /.form-group -->
-             
-              <!-- /.form-group -->
-              <div class="col-md-3">
-                  <div class="form-group">
-                        <label>TARIFA: &nbsp;&nbsp;&nbsp;</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number"placeholder="$0.00" disabled name="tarifa" id="tarifa" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-             </div><!-- ROW FILA1 -->
-
-             <div class="row"><!-- /.ROW FILA2 -->
-
-              <!-- /.form-group -->
-              <div class="col-md-3">
-                <div class="form-group">
-                      <label>I. DE OPERACIONES:</label>
-                </div>
-              </div><!-- /.col-md-6 -->
-              <div class="col-md-3">
-                <div class="form-group">
-                       <input type="text" disabled value="{{ $empresa->inicio_operaciones }}" aname="inicio_operaciones" id="inicio_opraciones" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                </div>
-              </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-
-              <!-- /.form-group -->
-      
-              <!-- /.form-group -->
-              <div class="col-md-3">
-                <div class="form-group">
-                      <label>LICENCIA:</label>
-                </div>
-              </div><!-- /.col-md-6 -->
-              <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number" placeholder="$0.00" name="codigo_tarifa" id="codigo_tarifa" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-   
-              <!-- /.form-group -->
-              </div><!-- ROW FILA2 -->
-
-             <div class="row"><!-- /.ROW FILA3 -->
-              <!-- /.form-group -->
-              <div class="col-md-3">
+                <!-- /.form-group -->
+                <div class="col-md-3">
                 <div class="form-group">
                       <label>AÑO CALIFICACIÓN:</label>
                 </div>
               </div><!-- /.col-md-6 -->
               <div class="col-md-3">
                 <div class="form-group">
-                       <input type="text" placeholder="0000" name="año_calificacion" id="año_calificacion" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
+                       <input type="text" disabled placeholder="0000" name="año_calificacion" id="año_calificacion" class="form-control" required >
                 </div>
               </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
-              </div><!-- ROW FILA3 -->        
+             </div><!-- ROW FILA1 -->
 
+             <div class="row"><!-- /.ROW FILA2 -->
+                <!-- /.form-group -->
+                <div class="col-md-3">
+                <div class="form-group">
+                      <label>ACTIVO IMPONIBLE:</label>
+                </div>
+              </div><!-- /.col-md-6 -->
+              <div class="col-md-3">
+                <div class="form-group">
+                       <input type="text" disabled placeholder="$00,000.00" name="activo_imponible" id="activo_imponible" class="form-control" required >
+                      
+                </div>
+              </div><!-- /.col-md-6 -->
+            <!-- /.form-group -->
+            <div class="col-md-3">
+                  <div class="form-group">
+                        <label>ACTIVIDAD ESPECIFICA:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <!-- Inicia Select ACTIVIDAD -->
+               <div class="col-md-3">
+                      <div class="form-group">
+                            <!-- Select ACTIVIDAD -live search -->
+                                <div class="input-group mb-9">
+                                <select 
+                                required 
+                                onchange="calcular();"
+                                class="selectpicker"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="selectLicencia" 
+                                title="-- Seleccione un registro--"
+                                required
+                                >
+                                    <option value="No">No</option>
+                                    <option value="Si">Si</option>
+                                </select> 
+                                </div>
+                          </div>
+                  </div>
+              <!-- finaliza select ACTIVIDAD-->
+               <!-- /.form-group -->
+
+               
+              <!-- /.form-group -->
+              <div class="col-md-3">
+                  <div class="form-group">
+                        <label name="monto_tarifa" id="monto_tarifa">TARIFA: </label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <!-- Inicia Select ACTIVIDAD -->
+               <div class="col-md-3">
+                      <div class="form-group">
+                            <!-- Select ACTIVIDAD -live search -->
+                                <div class="input-group mb-9">
+                                <select 
+                                required 
+                                onchange="calcular();"
+                                class="selectpicker"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="selectLicencia" 
+                                title="-- Seleccione un registro--"
+                                required
+                                >
+                                    <option value="No">No</option>
+                                    <option value="Si">Si</option>
+                                </select> 
+                                </div>
+                          </div>
+                  </div>
+              <!-- finaliza select ACTIVIDAD-->
+              </div><!-- ROW FILA3 -->        
+              </div><!-- /.SUCCESS -->
             </div><!-- /.Panel Tarifas -->
  
   <!-- Finaliza campos del formulario de calificación -->
 
 
-<!-------------------------FINALIZA CONEDIDO (CAMPOS) ----------------------------------------------->
+<!-------------------------FINALIZA CONTEDIDO (CAMPOS) ----------------------------------------------->
+
+
             <!-- Fin /.col -->
             </div>
+            <!-- /.card-body -->
+                  <div class="card-footer">
+                    <button type="button" class="btn btn-success float-right" onclick="GenerarCalificacion()"><i class="fas fa-envelope-open-text"></i>
+                    &nbsp;Generar Calificación&nbsp;</button>
+                    <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )">Volver</button>
+                  </div>
+            <!-- /.card-footer -->
           <!-- /.row -->
           </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            <button type="button" class="btn btn-success float-right" onclick="GenerarCalificacion()"><i class="fas fa-envelope-open-text"></i>
-            &nbsp;Generar Calificación&nbsp;</button>
-            <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )">Volver</button>
-          </div>
-         <!-- /.card-footer -->
          </div>
         </div>
       <!-- /.card -->
@@ -418,7 +463,7 @@
   <!-- Inicia Formulario Calificacion--> 
    <section class="content">
       <div class="container-fluid">
-        <form class="form-horizontal" id="formulario-Calificacion2">
+        <form class="form-horizontal" id="formulario-Calificacion">
         @csrf
 
           <div class="card card-green">
@@ -451,7 +496,6 @@
                <div class="col-md-3">
                   <div class="form-group">
                         <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -473,8 +517,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text"  value="{{ $empresa->nombre }}" name="nombre" disabled id="nombre" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
+                        <input type="text"  value="{{ $empresa->nombre }}" name="nombre" disabled id="nombre_empresa" class="form-control" required >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -484,31 +527,11 @@
                         <label>Giro Comercial:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
-                      <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                disabled
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial-editar" 
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
+                  <div class="form-group">
+                        <input type="text"  value="{{ $empresa->nombre_giro }}" name="nombre_giro" disabled id="nombre_giro" class="form-control" required >
                   </div>
-              <!-- finaliza select Giro Comercial-->
-               <!-- /.form-group -->
+               </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -517,11 +540,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-            
                         <input  type="date" class="form-control text-success" disabled value="{{$empresa->inicio_operaciones}}" name="created_at" id="created_at" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-
-
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -534,7 +553,6 @@
                <div class="col-md-6">
                   <div class="form-group">
                         <input  type="text" disabled value="{{ $empresa->direccion }}" name="direccion" id="direccion" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -548,7 +566,6 @@
                <div class="col-md-6">
                   <div class="form-group">
                         <input type="text" disabled value="{{ $empresa->contribuyente }}&nbsp;{{ $empresa->apellido }}" name="contribuyente" id="contribuyente" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -560,8 +577,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="date" disabled name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
+                        <input type="text" disabled name="fechabalanceodjurada" id="fechabalanceodjurada" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -586,14 +602,14 @@
                             <th scope="col">BASE IMPONIBLE</th>
                             <th scope="col">LICENCIA</th>
                             <th scope="col">MATRICULA</th>
-                            <th scope="col">PAGO POR <br> MAT. O PER.</th>
+                            <th scope="col">PAGO POR MAT. O PER.</th>
                           </tr>
 
                           <tr>
                             <td> </td>
                             <td>1</td>
-                            <td>$365.00</td>
-                            <td>$0.00</td>
+                            <td><h6 name="licencia_imp" id="licencia_imp"> </h6></td>
+                            <td><h6 name="matricula_imp" id="matricula_imp"> </h6></td>
                             <td>$365.00</td>
                           </tr>
 
@@ -689,21 +705,21 @@
                <div class="col-md-12">
                   <div class="form-group">
                         
-                    <table border="1" width:760px;>
+                    <table border="1" width:860px;>
                       <tr>
                         <th scope="col">EMPRESA</th>
                         <th scope="col">ACTIVO TOTAL</th>
                         <th scope="col">DEDUCCIONES</th>
                         <th scope="col">ACTIVO IMPONIBLE</th> 
-                        <th scope="col"> EJERCICIO</th>
+                        <th scope="col">EJERCICIO</th>
                       </tr>
 
                       <tr>
-                        <td>Venta de licor</td>
-                        <td> </td>
-                        <td> </td>
-                        <td>$</td>
-                        <td>2022</td>
+                        <td align="center"><label> {{$empresa->nombre}} </label></td>
+                        <td align="center"><label>$<label name="act_total" id="act_total"> </label></label> </td>
+                        <td align="center"><label>$<label name="deducciones_imp" id="deducciones_imp"></label></label> </td>
+                        <td align="center"><label name="act_imponible_imp" id="act_imponible_imp"> </label></td>
+                        <td align="center"><label name="anio_calificacion" id="anio_calificacion"></label></td>
                       </tr>
 
                       <tr>
@@ -715,8 +731,8 @@
                       </tr>
 
                       <tr>
-                        <td>Comercio</td>
-                        <td>2</td>
+                        <td align="center"><h6 name="actividad_economica" id="actividad_economica"> </h6></td>
+                        <td align="center">{{$empresa->id_act_economica}}</td>
                         <td> </td>
                         <td>$</td>
                         <td>$0.00</td>
@@ -730,7 +746,7 @@
                       </tr>
 
                       <tr>
-                        <td colspan="2">TOTAL IMPUESTO</td>
+                        <td colspan="2"><label> IMPUESTO</label></td>
                         <td><strong>$ </strong></td>
                         <td><strong>$</strong></td>
                       </tr>
@@ -850,9 +866,9 @@
 
                       <tr>
                         <td>&nbsp;</td>
-                        <td>PAGO MENSUA</td>
+                        <td>PAGO MENSUAL</td>
                         <td> $0.00</td>
-                        <td><strong>$ </strong></td>
+                        <td><strong>$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
                         <td><strong>$</strong></td>
                       </tr>
                     </table>
@@ -925,7 +941,34 @@
 <script>
   
 function GenerarCalificacion(){
-            document.getElementById("formulario-Calificacion1").reset();
+            /*Declaramos variables */
+            var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
+            var activo_total=(document.getElementById('activo_total').value);
+            var deducciones=(document.getElementById('deducciones').value);
+            var rubro=(document.getElementById('rubro').value);
+            var licencia_imp=(document.getElementById('monto_pagar').value);
+
+         
+            if(fecha_pres_balance === ''){
+                    toastr.error('La fecha que presenta el balance es requerida.');
+                    return;
+                }
+
+            if(activo_total === ''){
+                    toastr.error('El dato activo activo total es requerido.');
+                    return;
+                }
+              
+              if(deducciones === ''){
+                    toastr.error('El dato deducciones es requerido.');
+                    return;
+                }
+            
+
+            document.getElementById('fechabalanceodjurada').value=fecha_pres_balance;
+            document.getElementById('actividad_economica').innerHTML=rubro; 
+            document.getElementById('licencia_imp').innerHTML=licencia_imp; 
+
             $('#modalCalificacion').modal('show');
         }
 
@@ -1102,6 +1145,57 @@ function nuevo(){
 
 </script> 
 
+<style>
+@media screen 
+    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-device-width: 1024px)  {
+
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+    tr {
+      margin: 0 0 1rem 0;
+    }
+      
+    tr:nth-child(odd) {
+      background: #ccc;
+    }
+    
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			padding-left: 50%;
+		}
+
+		td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 0;
+			left: 6px;
+			width: 45%;
+			padding-right: 10px;
+			white-space: nowrap;
+		}
+
+
+
+    table{
+        /*Ajustar tablas*/
+        table-layout:fixed;
+    }
+  } 
+</style>
     
 @endsection
-

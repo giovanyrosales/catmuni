@@ -23,14 +23,14 @@
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
                         <a href="{{ route('admin.roles.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-user-friends nav-icon"></i>
+                            <i class="fas fa-user-friends"></i>
                             <p>Roles</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="{{ route('admin.permisos.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-user-shield nav-icon"></i>
+                            <i class="fas fa-user-shield"></i>
                             <p>Permisos y usuarios</p>
                         </a>
                     </li>
@@ -71,13 +71,13 @@
                                 <li class="nav-item">
                                 <a href="{{ route('admin.crear.empresa.index') }}" target="frameprincipal" class="nav-link">
                                     <i class="fas fa-plus-circle nav-icon"></i>
-                                    <p>Agregar Empresa</p>
+                                    <p>Agregar nueva empresa</p>
                                     </a>
                                     </li>
                                 <li class="nav-item">
                                     <a href="{{ route('admin.listarEmpresa.index') }}" target="frameprincipal" class="nav-link">
                                     <i class="fas fa-list-ol nav-icon"></i>
-                                    <p>Listar Empresas</p>
+                                    <p>Listar empresas</p>
                                 </a>
                                 </li>
                             </ul>
