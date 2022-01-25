@@ -540,6 +540,7 @@
                 if (response.data.success === 1) 
                     {
                         toastr.success('Detalle actualizado');
+                        recargar();
                     }
                     else 
                     {

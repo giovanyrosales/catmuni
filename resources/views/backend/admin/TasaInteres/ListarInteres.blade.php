@@ -321,6 +321,7 @@
                    
                     {
                         toastr.success('Interés actualizado');
+                        recargar();
                     }
                     else 
                     {

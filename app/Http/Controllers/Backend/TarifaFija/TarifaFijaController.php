@@ -147,4 +147,13 @@ class TarifaFijaController extends Controller
                return['success' => 2];
            }              
        }
+
+    public function eliminarTarifaF(Request $request)
+    {
+ // buscamos el interes el cual queremos eliminar
+        $tasa = TarifaFija::find($request->id);
+        $tasa->delete();
+             
+            return ['success' => 1];
+    }
 }

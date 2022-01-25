@@ -124,7 +124,7 @@ class TasaInteresController extends Controller
     public function eliminarInteres(Request $request)
       {
 
-                // buscamos el contribuyente el cual queremos eliminar
+                // buscamos el interes el cual queremos eliminar
         $tasa = Interes::find($request->id);
         $tasa->delete();
              
