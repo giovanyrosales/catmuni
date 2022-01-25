@@ -7,33 +7,28 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                <th style="width: 20%;">Actividad económica</th>
-                                <th style="width: 10%;">Limite inferior</th>
+                                <th style="width: 15%;">Actividad económica</th>
+                                <th style="width: 15%;">Limite inferior</th>
                                 <th style="width: 15%;">Limite superior</th>
-                                <th style="width: 10%;">Impuesto mensual</th>
-                                <th style="width: 25%;">Acción</th>
+                                <th style="width: 15%;">Impuesto mensual</th>
+                                <th style="width: 15%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($lista as $dato)
+                            @foreach($tarifa_fija as $tarifa_fija)
                                 <tr>
-                                    <td>{{$dato->nombre_actividad}} </td>
-                                    <td>{{$dato->limite_inferior}} </td>
-                                    <td>{{$dato->limite_superior}} </td>
-                                    <td>{{$dato->impuesto_mensual}} </td>
+                                    <td>{{$tarifa_fija->nombre_actividad}} </td>
+                                    <td>{{$tarifa_fija->limite_inferior}} </td>
+                                    <td>{{$tarifa_fija->limite_superior}} </td>
+                                    <td>{{$tarifa_fija->impuesto_mensual}} </td>
                                   
                                     <td style="text-align: center;">
-
-                                    <button type="button" onclick="verDetalles({{$dato->id}} )" class="btn btn-dark btn-xs" >
-                                    <i class="fas fa-search"></i>
-                                    Ver
-                                    </button>
-                                                                    
-                                    <button type="button" class="btn btn-primary btn-xs" onclick="informacionD({{$dato->id}})">
+                                                                   
+                                    <button type="button" class="btn btn-primary btn-xs" onclick="editarTarifa({{ $tarifa_fija->id }})">
                                     <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                     </button>
 
-                                    <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminar({{$dato->id}})">
+                                    <button type="button" class="btn btn-danger btn-xs" onclick="">
                                     <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
                                     </button>
                                     </td>

@@ -111,3 +111,6 @@ use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
     Route::get('/admin/TarifaFija/ListarTarifaFija', [TarifaFijaController::class,'index'])->name('admin.TarifaFija.index');
     Route::get('/admin/TarifaFija/tabla', [TarifaFijaController::class,'tablaTarifa']);
     Route::get('/admin/nuevo/TarifaFija/Listar', [TarifaFijaController::class,'listarTarifaFija'])->name('admin.listarTarifaFija.index');
+    Route::post('/admin/TarifaFija/NuevaT', [TarifaFijaController::class,'nuevaTarifa']);
+    Route::post('/admin/TarifaFija/informacion', [TarifaFijaController::class, 'informacionTarifaF']);
+    Route::post('/admin/TarifaFija/editar', [TarifaFijaController::class, 'editarTarifaF']);
