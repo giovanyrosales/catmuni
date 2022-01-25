@@ -145,9 +145,9 @@
         </div>
       </div>
       
-       <!--Finaliza Modal para agregar actividad economica-->
+<!--Finaliza Modal para agregar tarifa fija-->
 
-        <!--Modal para editar tarifa fija-->
+<!--Modal para editar tarifa fija-->
         <div class="modal fade" id="modalEditarTarifaFija">
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
@@ -161,7 +161,7 @@
                     <form id="formulario-EditarTarifaFija">
                         <div class="card-body">
                         <div class="card-body">
-                          
+
             <div class="row">
                    <div class="col-md-6">
                      <div class="form-group">
@@ -216,7 +216,44 @@
         </div>
       </div>
       
-       <!--Finaliza Modal para editar actividad economica-->
+<!--Finaliza Modal para editar Tarifa-->
+
+ <!-- Inicia Modal Borrar Tarifa-->
+
+ <div class="modal fade" id="modalEliminarTarifa">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Eliminar tarifa fijas</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-EliminarTarifa">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <p>¿Realmente desea eliminar la tarifa fija seleccionada?"</p>
+
+                                    <div class="form-group">
+                                        <input type="hidden" id="idborrar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarD()">Borrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!--Finaliza Modal Borrar Tarifa-->
      
 
 
@@ -297,6 +334,7 @@
           if (response.data.success === 1)
           {
             toastr.success('Guardado exitosamente');
+            recargar();
           }
           else
           {
@@ -350,8 +388,8 @@
             var id = document.getElementById('id-editar').value;
             var nombre_actividad = document.getElementById('nombre_actividad-editar').value;
             var limite_inferior = document.getElementById('limite_inferior-editar').value;
-            var limite_superior = document.getElementById('limite_inferior-editar').value;
-            var impuesto_mensual = document.getElementById('limite_inferior-editar').value;
+            var limite_superior = document.getElementById('limite_superior-editar').value;
+            var impuesto_mensual = document.getElementById('impuesto_mensual-editar').value;
            
             openLoading()
 
@@ -373,6 +411,7 @@
                    
                     {
                         toastr.success('Tarifa fija actualizada');
+                        recargar();
                     }
                     else 
                     {
@@ -385,7 +424,44 @@
                     closeLoading()
                     toastMensaje('error', 'Error');
                 });
+
     }
+
+    function modalEliminarTarifa(id)
+            {
+                $('#idborrar').val(id);
+                $('#modalEliminarTarifa').modal('show');
+            }
+
+            function eliminarD(){
+            openLoading()
+        
+            // se envia el ID del contribuyente
+            var id = document.getElementById('idborrar').value;
+
+            var formData = new FormData();
+            formData.append('id', id);
+
+            axios.post('/admin/TarifaFija/eliminar', formData, {
+            })
+                .then((response) => {
+                    closeLoading()
+                    $('#modalEliminarTarifa').modal('hide');
+                    
+                    if(response.data.success === 1){
+                        toastMensaje('success', 'Detalle eliminado');
+                        recargar();
+                    }else{
+                        toastMensaje('error', 'Error al borrar');
+           
+                    }
+                })
+                
+                .catch(function (error) {
+                        closeLoading()
+                        toastr.error("Error de Servidor!");
+                      }); 
+        }
 
 
 </script>

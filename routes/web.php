@@ -116,3 +116,4 @@ use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
     Route::post('/admin/TarifaFija/NuevaT', [TarifaFijaController::class,'nuevaTarifa']);
     Route::post('/admin/TarifaFija/informacion', [TarifaFijaController::class, 'informacionTarifaF']);
     Route::post('/admin/TarifaFija/editar', [TarifaFijaController::class, 'editarTarifaF']);
+    Route::post('/admin/TarifaFija/eliminar', [TarifaFijaController::class, 'eliminarTarifaF']);
