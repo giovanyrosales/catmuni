@@ -22,7 +22,7 @@
 
 
     function f1(){
-              $('#monto_tarifa').hide();
+                $('#monto_tarifa').hide();
                 $('#selectTarifa').hide();
                 $('#seleccionarTarifa').hide();
                 $('#btntarifa').hide();
@@ -35,6 +35,15 @@ window.onload = f1;
 </script>
 
 <script>
+
+function SeleccionarTarifaFija(valor)
+{
+  signo='$';
+  tarifaFija=signo+valor;
+  $('#modalAsignarTarifaFija').modal('hide');
+  document.getElementById('tarifaAplicada').value=tarifaFija;
+}
+
 function extraeranio()
 {
       /*Declaramos variables */
@@ -115,6 +124,9 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           $('#seleccionarTarifa').show();
                           $('#btntarifa').show();
                           $('#tarifaAplicada').show();
+                          $("#Div_Variable").hide();
+                          $("#Div_Rotulos").hide();
+                          $("#Div_Multas").hide();
                           
                         }
                         else if(response.data.tarifa==='Variable')
@@ -644,7 +656,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               </div> <!-- /.Panel III. LICENCIAS Y PERMISOS -->
         
 
-          <div class="card border-success mb-3"><!-- Panel IV. CALIFICACION DE LA EMPRESA - TARIFA FIJA -->
+          <div class="card border-success mb-3" id="Div_Fija"><!-- Panel IV. CALIFICACION DE LA EMPRESA - TARIFA FIJA -->
            <div class="card-header text-success"><label>IV. CALIFICACION DE LA EMPRESA - TARIFA FIJA</label></div>
             <div class="card-body">
 
@@ -666,7 +678,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         <td> 13623 </td>
                         <td>1</td>
                         <td> ₡50.00 </td>
-                        <td> $5.71</td>
+                        <td><h6 name="tarifaAplicada_imp" id="tarifaAplicada_imp"> </h6></td>
                       </tr>
 
                       <tr>
@@ -704,7 +716,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               </div> <!-- /.card-header text-success -->
           </div><!-- /.Panel IV. CALIFICACION DE LA EMPRESA - TARIFA FIJA -->
 
-          <div class="card border-success mb-3"><!-- Panel V. CALIFICACION DE LA EMPRESA - TARIFA VARIABLE -->
+          <div class="card border-success mb-3" id="Div_Variable"><!-- Panel V. CALIFICACION DE LA EMPRESA - TARIFA VARIABLE -->
            <div class="card-header text-success"><label>V. CALIFICACION DE LA EMPRESA - TARIFA VARIABLE</label></div>
             <div class="card-body">
 
@@ -763,7 +775,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               </div> <!-- /.card-header text-success -->
           </div><!-- /.Panel V. CALIFICACION DE LA EMPRESA - TARIFA VARIABLE -->
 
-          <div class="card border-success mb-3"><!-- PanelVI. ROTULOS -->
+          <div class="card border-success mb-3" id="Div_Rotulos"><!-- PanelVI. ROTULOS -->
            <div class="card-header text-success"><label>VI. ROTULOS</label></div>
             <div class="card-body">
 
@@ -822,7 +834,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               </div> <!-- /.card-header text-success -->
           </div><!-- /.Panel VI. ROTULOS -->
 
-          <div class="card border-success mb-3"><!-- VII. MULTAS -->
+          <div class="card border-success mb-3" id="Div_Multas"><!-- VII. MULTAS -->
            <div class="card-header text-success"><label>VII. MULTAS</label></div>
             <div class="card-body">
 
@@ -956,15 +968,11 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                     <td>{{$tarifa_fija->limite_superior}} </td>
                                     <td>{{$tarifa_fija->impuesto_mensual}} </td>
                                   
-                                    <td style="text-align: center;">
+                                      <td style="text-align: center;">
                                                                    
-                                    <button type="button" class="btn btn-primary btn-xs" onclick="editarTarifa({{ $tarifa_fija->id }})">
-                                    <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
-                                    </button>
-
-                                    <button type="button" class="btn btn-danger btn-xs" onclick="">
-                                    <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
-                                    </button>
+                                      <button type="button" class="btn btn-primary btn-xs" onclick="SeleccionarTarifaFija({{ $tarifa_fija->impuesto_mensual }})">
+                                      <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Seleccionar
+                                      </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -994,17 +1002,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
     <!-- /.container-fluid -->
     </section>
         
-       <!-- /.card-footer -->
-        <div class="card-footer">
-         <button type="button" class="btn btn-secondary" onclick="ImpimirCalificacion()"><i class="fa fa-print">
-         </i>&nbsp; Impimir Calificación&nbsp;</button>
-         <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="fas fa-edit">
-         </i> &nbsp;Registrar Calificación&nbsp;</button>
-         <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-          </div>
-         <!-- /.card-footer -->
-
-
        </form> <!-- /.formulario-AsignarTarifaFija -->
       </div> <!-- /.Card-body -->
      </div> <!-- /.modalAsignarTarifaFija -->
@@ -1055,8 +1052,8 @@ function GenerarCalificacion(){
             var activo_total=(document.getElementById('activo_total').value);
             var deducciones=(document.getElementById('deducciones').value);
             var rubro=(document.getElementById('rubro').value);
-            var licencia_imp=(document.getElementById('monto_pagar').value);
-
+            var licencia_imp=(document.getElementById('monto_pagar').value); 
+            var tarifaAplicada_imp=(document.getElementById('tarifaAplicada').value);
          
             if(fecha_pres_balance === ''){
                     toastr.error('La fecha que presenta el balance es requerida.');
@@ -1077,6 +1074,7 @@ function GenerarCalificacion(){
             document.getElementById('fechabalanceodjurada').value=fecha_pres_balance;
             document.getElementById('actividad_economica').innerHTML=rubro; 
             document.getElementById('licencia_imp').innerHTML=licencia_imp; 
+            document.getElementById('tarifaAplicada_imp').innerHTML=tarifaAplicada_imp;
 
             $('#modalCalificacion').modal('show');
         }
@@ -1084,7 +1082,6 @@ function GenerarCalificacion(){
 function VerEmpresa(id){
       window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 }
-
 
 
 </script> 

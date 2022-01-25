@@ -858,8 +858,6 @@ function ListarEmpresas(){
         }
 
 function CrearCalificacion(id){
-
-              openLoading();
               window.location.href="{{ url('/admin/empresas/calificacion') }}/"+id;
         }
         

@@ -11,6 +11,7 @@ use App\Models\GiroComercial;
 use App\Models\ActividadEconomica;
 use App\Models\Cobros;
 use App\Models\calificacion;
+use App\Models\TarifaFija;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
@@ -112,6 +113,15 @@ public function calificacion($id)
     $actividadeseconomicas = ActividadEconomica::All();
     $calificaciones = calificacion::All();
 
+    $tarifa_fijas = TarifaFija::orderBy('id', 'ASC')->get();  
+    foreach($tarifa_fijas as $ll)
+    {
+        $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
+        $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
+        $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
+       
+    }
+
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -125,7 +135,7 @@ public function calificacion($id)
     'actividad_economica.rubro','actividad_economica.id as id_act_economica')
     ->find($id);
     
-    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones'));
+    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas'));
     
 }
 
