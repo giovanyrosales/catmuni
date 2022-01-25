@@ -43,6 +43,20 @@ class TarifaFijaController extends Controller
         return view('backend.admin.TarifaFija.tabla.tablalistatarifafija', compact('tarifa_fija'));
     
     }
+    public function tablaTarifaModal()
+    {
+        $tarifa_fijas = TarifaFija::orderBy('id', 'ASC')->get();  
+        foreach($tarifa_fijas as $ll)
+        {
+            $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
+            $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
+            $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
+           
+        }
+             
+        return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('tarifa_fijas'));
+    
+    }
 
     public function listarTarifaFija()
     {

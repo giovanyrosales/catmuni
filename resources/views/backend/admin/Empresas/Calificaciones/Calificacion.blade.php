@@ -18,6 +18,21 @@
 
 @stop
 <!-- Función para calcular la recalificación --------------------------------------------------------->
+<script type="text/javascript">
+
+
+    function f1(){
+              $('#monto_tarifa').hide();
+                $('#selectTarifa').hide();
+                $('#seleccionarTarifa').hide();
+                $('#btntarifa').hide();
+                $('#tarifaAplicada').hide();
+               
+}
+ 
+window.onload = f1;
+
+</script>
 
 <script>
 function extraeranio()
@@ -87,7 +102,29 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         document.getElementById('anio_calificacion').innerHTML=anio_calificacion;
                         document.getElementById('deducciones_imp').innerHTML=deducciones_imp;
                         document.getElementById('act_imponible_imp').innerHTML=response.data.valor;
-
+                        if(activo_total==='')
+                        {
+                        vacio='';
+                        document.getElementById('tipo_tarifa').value=vacio;
+                        
+                        } 
+                        if(response.data.tarifa==='Fija')
+                        {
+                         
+                          $("#monto_tarifa").show();
+                          $('#seleccionarTarifa').show();
+                          $('#btntarifa').show();
+                          $('#tarifaAplicada').show();
+                          
+                        }
+                        else if(response.data.tarifa==='Variable')
+                        {
+                      
+                          $("#monto_tarifa").hide();
+                          $('#btntarifa').hide();
+                          $('#tarifaAplicada').hide();
+                         
+                        }
 
                         
                 }  
@@ -349,37 +386,23 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               </div><!-- /.col-md-6 -->
               <div class="col-md-3">
                 <div class="form-group">
-                       <input type="text" disabled placeholder="$00,000.00" name="activo_imponible" id="activo_imponible" class="form-control" required >
-                      
+                       <input type="text" disabled placeholder="$00,000.00" name="activo_imponible" id="activo_imponible" class="form-control" required >    
                 </div>
               </div><!-- /.col-md-6 -->
             <!-- /.form-group -->
             <div class="col-md-3">
                   <div class="form-group">
-                        <label>ACTIVIDAD ESPECIFICA:</label>
+                        <label id="seleccionarTarifa">ACTIVIDAD ESPECIFICA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select ACTIVIDAD -->
                <div class="col-md-3">
                       <div class="form-group">
-                            <!-- Select ACTIVIDAD -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                onchange="calcular();"
-                                class="selectpicker"
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="selectLicencia" 
-                                title="-- Seleccione un registro--"
-                                required
-                                >
-                                    <option value="No">No</option>
-                                    <option value="Si">Si</option>
-                                </select> 
-                                </div>
-                          </div>
+                      <button type="button"onclick="agregarTarifaFija()" id="btntarifa" class="btn btn-success btn-sm" >
+                        <i class="fas fa-pencil-alt"></i>
+                        Asignar tarifa fija
+                      </button>  
+                      </div>
                   </div>
               <!-- finaliza select ACTIVIDAD-->
                <!-- /.form-group -->
@@ -388,30 +411,14 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               <!-- /.form-group -->
               <div class="col-md-3">
                   <div class="form-group">
-                        <label name="monto_tarifa" id="monto_tarifa">TARIFA: </label>
+                        <label name="monto_tarifa" id="monto_tarifa" >TARIFA: </label>
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select ACTIVIDAD -->
                <div class="col-md-3">
                       <div class="form-group">
-                            <!-- Select ACTIVIDAD -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                onchange="calcular();"
-                                class="selectpicker"
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="selectLicencia" 
-                                title="-- Seleccione un registro--"
-                                required
-                                >
-                                    <option value="No">No</option>
-                                    <option value="Si">Si</option>
-                                </select> 
-                                </div>
-                          </div>
+                        <input type="text" disabled placeholder="$00,000.00" name="tarifaAplicada" id="tarifaAplicada" class="form-control" required >    
+                      </div>
                   </div>
               <!-- finaliza select ACTIVIDAD-->
               </div><!-- ROW FILA3 -->        
@@ -910,6 +917,104 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 <!-- Finaliza Modal Registrar Calificación--------------------------------------------------------->
 
 
+<!--Inicia Modal Asignar tarifa fija--------------------------------------------------------------->
+
+<div class="modal fade" id="modalAsignarTarifaFija">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Asignar tarifa fija a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="card-body">
+
+  <!-- Inicia Formulario AsignarTarifaFija--> 
+  <section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="tabla" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                <th style="width: 15%;">Actividad económica</th>
+                                <th style="width: 15%;">Limite inferior</th>
+                                <th style="width: 15%;">Limite superior</th>
+                                <th style="width: 15%;">Impuesto mensual</th>
+                                <th style="width: 15%;">Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($tarifa_fijas as $tarifa_fija)
+                                <tr>
+                                    <td>{{$tarifa_fija->nombre_actividad}} </td>
+                                    <td>{{$tarifa_fija->limite_inferior}} </td>
+                                    <td>{{$tarifa_fija->limite_superior}} </td>
+                                    <td>{{$tarifa_fija->impuesto_mensual}} </td>
+                                  
+                                    <td style="text-align: center;">
+                                                                   
+                                    <button type="button" class="btn btn-primary btn-xs" onclick="editarTarifa({{ $tarifa_fija->id }})">
+                                    <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
+                                    </button>
+
+                                    <button type="button" class="btn btn-danger btn-xs" onclick="">
+                                    <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
+                                    </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+         
+
+  <!-- Finaliza campos del formulario de asignar tarifa fija -->
+
+
+         <!-- /.card-body -->
+        </div>
+      <!-- /.card -->
+      </div>
+    <!-- /.container-fluid -->
+    </section>
+        
+       <!-- /.card-footer -->
+        <div class="card-footer">
+         <button type="button" class="btn btn-secondary" onclick="ImpimirCalificacion()"><i class="fa fa-print">
+         </i>&nbsp; Impimir Calificación&nbsp;</button>
+         <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="fas fa-edit">
+         </i> &nbsp;Registrar Calificación&nbsp;</button>
+         <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+         <!-- /.card-footer -->
+
+
+       </form> <!-- /.formulario-AsignarTarifaFija -->
+      </div> <!-- /.Card-body -->
+     </div> <!-- /.modalAsignarTarifaFija -->
+   </div> <!-- /.modal-dialog modal-xl -->
+  </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-body -->
+
+<!-- Finaliza Modal Asignar Tarifa Fija--------------------------------------------------------->
+
+
 
 
 
@@ -939,7 +1044,11 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
 
 <script>
-  
+function agregarTarifaFija(){
+            
+          //  document.getElementById("formulario-Recalificacion").reset();
+            $('#modalAsignarTarifaFija').modal('show');
+        }
 function GenerarCalificacion(){
             /*Declaramos variables */
             var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
@@ -973,178 +1082,53 @@ function GenerarCalificacion(){
         }
 
 function VerEmpresa(id){
-
-window.location.href="{{ url('/admin/empresas/show') }}/"+id;
-
+      window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 }
-
-function nuevo(){
-  
-
-        var contribuyente = document.getElementById('select-contribuyente').value;
-        var estado_empresa = document.getElementById('select-estado_empresa').value;
-        var giro_comercial = document.getElementById('select-giro_comercial').value;
-        var actividad_economica = document.getElementById('select-actividad_economica').value;
-        var nombre = document.getElementById('nombre').value;
-        var matricula_comercio = document.getElementById('matricula_comercio').value;
-        var nit = document.getElementById('nit').value;
-        var referencia_catastral = document.getElementById('referencia_catastral').value;
-        var tipo_comerciante = document.getElementById('tipo_comerciante').value;
-        var inicio_operaciones = document.getElementById('inicio_operaciones').value;
-        var direccion = document.getElementById('direccion').value;
-        var num_tarjeta = document.getElementById('num_tarjeta').value;
-        var telefono = document.getElementById('telefono').value;
-
-        if(nombre === ''){
-            toastr.error('El nombre de la empresa es requerido');
-            return;
-        }
-
-        if(nombre.length > 50){
-            toastr.error('El nombre no puede contener más de 50 caracteres');
-            return;
-        }
-        
-        if(num_tarjeta === ''){
-            toastr.error('El número de tarjeta de la empresa es requerido');
-            return;
-        }
-                
-        if(inicio_operaciones === ''){
-            toastr.error('El inicio de operaciones de la empresa es requerido');
-            return;
-        }
-        if(direccion === ''){
-            toastr.error('La dirección de la empresa es requerido');
-            return;
-        }
-
-        if(telefono === ''){
-            toastr.error('El número de teléfono de la empresa es requerido');
-            return;
-        }
-        if(telefono.length > 8){
-            toastr.error('El número de teléfono no puede contener más de 8 digitos');
-            return;
-        }
-        if(telefono.length < 8){
-            toastr.error('El número de teléfono no puede contener menos de 8 digitos');
-            return;
-        }
-        
-        if(contribuyente === ''){
-            toastr.error('El dato contribuyente es requerido');
-            return;
-        }
-
-        if(actividad_economica === ''){
-            toastr.error('La actividad económica de la empresa es requerido');
-            return;
-        }
-
-        if(giro_comercial === ''){
-            toastr.error('El giro comercial de la empresa es requerido');
-            return;
-        }
-
-        if(estado_empresa === ''){
-            toastr.error('El estado de la empresa es requerido');
-            return;
-        }
-
-        if(matricula_comercio  != ''){
-          if(matricula_comercio.length < 0){
-              toastr.error('El número de matricula no puede contener números negativos');
-              return;
-          }
-          if(matricula_comercio.length < 10){
-              toastr.error('El número de matricula no puede contener menos de 10 números');
-              return;
-          }
-          if(matricula_comercio.length > 10){
-              toastr.error('El número de matricula no puede contener más de 10 números');
-              return;
-          }
-        }
-        var reglaNumeroDecimal = /^[0-9]\d*(\.\d+)?$/;
-       
-        if(nit  != ''){
-
-                  if(nit.length > 14 ) 
-                        {
-                          toastr.error('El NIT no puede contener más de 14 números');
-                          return;
-                        }
-                   if(nit.length< 14 ) 
-                        {
-                          toastr.error('El NIT debe contener 14 números');
-                          return;
-                        }
-                  if(nit.length < 0)
-                  {
-                          toastr.error('El NIT no puede tener números negativos');
-                          return;
-                  }
-         }
-
-        if(!telefono.match(reglaNumeroDecimal)) {
-            toastr.error('El número de teléfono debe ser un número entero');
-            return;
-        }
-
-        if(telefono < 0){
-            toastr.error('El número de teléfono no puede tener números negativos');
-            return;
-        }
-
-        if(num_tarjeta < 0){
-            toastr.error('El número de tarjeta no puede tener números negativos');
-            return;
-        }
-       
-
-        openLoading();
-        var formData = new FormData();
-        formData.append('contribuyente', contribuyente);
-        formData.append('estado_empresa', estado_empresa);
-        formData.append('giro_comercial', giro_comercial);
-        formData.append('actividad_economica', actividad_economica);
-        formData.append('nombre', nombre);
-        formData.append('matricula_comercio', matricula_comercio);
-        formData.append('nit', nit);
-        formData.append('referencia_catastral', referencia_catastral);
-        formData.append('tipo_comerciante', tipo_comerciante);
-        formData.append('inicio_operaciones', inicio_operaciones);
-        formData.append('direccion', direccion);
-        formData.append('num_tarjeta', num_tarjeta);
-        formData.append('telefono', telefono);
-
-        axios.post('/admin/empresa/nueva', formData, {
-        })
-            .then((response) => {
-                closeLoading();
-                if(response.data.success === 0){
-                    toastr.error(response.data.message);
-                }
-            //       else {
-            //            toastr.error('Error al registrar');
-            //            }
-                if(response.data.success === 1){
-                    toastr.success('Empresa registrada correctamente');
-                    location.reload();
-                }
-               
-            })
-            .catch((error) => {
-                toastr.error('Error al registrar empresa');
-                closeLoading();
-            });
- }
 
 
 
 </script> 
+<script>
 
+    $(function () {
+        $("#tabla").DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+
+            "language": {
+
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+        });
+    });
+
+</script>
 <style>
 @media screen 
     and (max-width: 760px), (min-device-width: 768px) 

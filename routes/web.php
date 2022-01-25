@@ -71,6 +71,8 @@ use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
     Route::get('/admin/empresas/cobros/{empresa}', [EmpresaController::class, 'cobros']);
     Route::post('/admin/empresas/fechapagara', [EmpresaController::class, 'diffMeses']);
     Route::post('/admin/empresas/calculo_calificacion', [EmpresaController::class, 'calculo_calificacion']);
+    Route::get('/admin/empresas/tarifas_fijas', [TarifaFijaController::class, 'tablaTarifaModal']);
+    
     
 
 
