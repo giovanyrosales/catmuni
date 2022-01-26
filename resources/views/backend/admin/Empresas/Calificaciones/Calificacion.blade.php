@@ -59,6 +59,12 @@ function extraeranio()
       //*alert(anio);
       document.getElementById('año_calificacion').value=anio;
 }
+function resetea()
+{
+ vacio='';
+ document.getElementById('tarifaAplicada').value=vacio;
+ document.getElementById('tarifaAplicadaValor').value=vacio; 
+}
 
 function calcular()
 {
@@ -93,7 +99,6 @@ function calculo()
     var tipo_tarifa=(document.getElementById('tipo_tarifa').value);
     var ValortarifaAplicada=(document.getElementById('tarifaAplicadaValor').value);
 
-
 var formData = new FormData();
 
 formData.append('deducciones', deducciones);
@@ -110,6 +115,8 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                 } 
                 if(response.data.success === 1){
 
+
+              
                         document.getElementById('activo_imponible').value=response.data.valor;
                         document.getElementById('tipo_tarifa').value=response.data.tarifa;
                         document.getElementById('act_total').innerHTML= activo_total;
@@ -121,11 +128,30 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         document.getElementById('tarifaenColonesSigno_imp').innerHTML=response.data.tarifaenColonesSigno;
 
                         if(activo_total==='')
+                        {                     
+                          $("#monto_tarifa").hide();
+                          $('#btntarifa').hide();
+                          $('#tarifaAplicada').hide();
+
+                          vacio='';
+                          document.getElementById('tipo_tarifa').value=vacio;
+                          document.getElementById('activo_imponible').value=vacio;
+                          document.getElementById('tarifaAplicada').value=vacio;
+                          document.getElementById('tarifaAplicadaValor').value=vacio;
+                        }
+                        if(deducciones==='')
                         {
-                        vacio='';
-                        document.getElementById('tipo_tarifa').value=vacio;
-                        
-                        } 
+                          $("#monto_tarifa").hide();
+                          $('#btntarifa').hide();
+                          $('#tarifaAplicada').hide();
+                          vacio='';
+                          document.getElementById('tipo_tarifa').value=vacio;
+                          document.getElementById('activo_imponible').value=vacio;
+                          document.getElementById('tarifaAplicada').value=vacio;
+                          document.getElementById('tarifaAplicadaValor').value=vacio;
+                          
+                        }
+                       
                         if(response.data.tarifa==='Fija')
                         {
                          
@@ -145,9 +171,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           $('#btntarifa').hide();
                           $('#tarifaAplicada').hide();
                          
-                        }
-
-                        
+                        }                  
                 }  
             })
             .catch((error) => {
@@ -346,7 +370,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input type="number" onchange="calculo();" placeholder="$00,000.00"  name="activo_total" id="activo_total" class="form-control" required >
+                        <input type="number" onchange="calculo(),resetea();" placeholder="$00,000.00"  name="activo_total" id="activo_total" class="form-control" required >
                        
                   </div>
                </div><!-- /.col-md-6 -->
@@ -360,7 +384,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input type="number" onchange="calculo();" placeholder="$00,000.00"  name="deducciones" id="deducciones" class="form-control" required >
+                        <input type="number" onchange="calculo(),resetea();" placeholder="$00,000.00"  name="deducciones" id="deducciones" class="form-control" required >
                        
                   </div>
                </div><!-- /.col-md-6 -->
@@ -684,7 +708,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                       </tr>
 
                       <tr>
-                        <td>{{$empresa->nombre}}</td>
+                        <td align="center">{{$empresa->nombre}}</td>
                         <td> 13623 </td>
                         <td>1</td>
                         <td> <h6 name="tarifaenColonesSigno_imp" id="tarifaenColonesSigno_imp"> </td>
@@ -964,24 +988,26 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                             <thead>
                                 <tr>
                                 <th style="width: 15%;">Actividad económica</th>
+                                <th style="width: 12%;">Rubro</th>
                                 <th style="width: 15%;">Limite inferior</th>
                                 <th style="width: 15%;">Limite superior</th>
                                 <th style="width: 15%;">Impuesto mensual</th>
-                                <th style="width: 15%;">Acción</th>
+                                <th style="width: 17%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($tarifa_fijas as $tarifa_fija)
                                 <tr>
                                     <td>{{$tarifa_fija->nombre_actividad}} </td>
-                                    <td>{{$tarifa_fija->limite_inferior}} </td>
-                                    <td>{{$tarifa_fija->limite_superior}} </td>
-                                    <td>{{$tarifa_fija->impuesto_mensual}} </td>
+                                    <td>{{$tarifa_fija->nombre_rubro}} </td>
+                                    <td>${{$tarifa_fija->limite_inferior}} </td>
+                                    <td>${{$tarifa_fija->limite_superior}} </td>
+                                    <td>${{$tarifa_fija->impuesto_mensual}} </td>
                                   
                                       <td style="text-align: center;">
                                                                    
                                       <button type="button" class="btn btn-primary btn-xs" onclick="SeleccionarTarifaFija({{ $tarifa_fija->impuesto_mensual }})">
-                                      <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Seleccionar
+                                      <i class="fas fa-mouse-pointer" title="Seleccionar"></i>&nbsp; Seleccionar
                                       </button>
                                     </td>
                                 </tr>
@@ -1078,6 +1104,11 @@ function GenerarCalificacion(){
               
               if(deducciones === ''){
                     toastr.error('El dato deducciones es requerido.');
+                    return;
+                }
+
+              if(tarifaAplicada_imp === ''){
+                    toastr.error('No ha asignado una tarifa fija.');
                     return;
                 }
             

@@ -113,13 +113,18 @@ public function calificacion($id)
     $actividadeseconomicas = ActividadEconomica::All();
     $calificaciones = calificacion::All();
 
-    $tarifa_fijas = TarifaFija::orderBy('id', 'ASC')->get();  
+    $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+            
+    ->select('tarifa_fija.id','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
+    'actividad_economica.rubro as nombre_rubro' )
+     ->get();
+
     foreach($tarifa_fijas as $ll)
     {
         $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
         $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
         $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
-       
+   
     }
 
     $empresa= Empresas
@@ -412,39 +417,58 @@ public function calculo_calificacion(Request $request)
   
    $deducciones= $request->deducciones;
    $activo_total=$request->activo_total;
-   $TarifaFijaMensualValor=$request->ValortarifaAplicada;
-   $activo_imponible=$activo_total-$deducciones;
-
-   $signo='$'; 
-
-   $tarifaenColones=$TarifaFijaMensualValor*8.75;
-   $FondoF= $TarifaFijaMensualValor*0.05;
-   $Total_Impuesto=$FondoF+$TarifaFijaMensualValor;
-   $valor= $signo . $activo_imponible;
-
-   //Redondeando a dos decimales.
-   $FondoF=round($FondoF,2);
-   $Total_Impuesto=round($Total_Impuesto,2);
-   $tarifaenColones=round($tarifaenColones,2);
-
-   $signoC='¢';
-   $tarifaenColonesSigno=$signoC . $tarifaenColones;
-
-   if($activo_imponible>2858.14)
+   if($activo_total==NULL)
    {
-       $tarifa='Variable';  
-       return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];
+    $tarifa='No Calculada'; 
+    return ['success' => 1,'tarifa' =>$tarifa];
    }
-   else if($activo_imponible<2858.14)
+   else if($deducciones==NULL)
    {
-        $tarifa='Fija';  
-        return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno];   
-   
+    $tarifa='No Calculada'; 
+    return ['success' => 1,'tarifa' =>$tarifa];
    }
-   else
-   {
-    return ['success' => 2];
+   else{
+    $TarifaFijaMensualValor=$request->ValortarifaAplicada;
+    $activo_imponible=$activo_total-$deducciones;
+ 
+    $signo='$'; 
+ 
+    $tarifaenColones=$TarifaFijaMensualValor*8.75;
+    $FondoF= $TarifaFijaMensualValor*0.05;
+    $Total_Impuesto=$FondoF+$TarifaFijaMensualValor;
+    $valor= $signo . $activo_imponible;
+ 
+    //Redondeando a dos decimales.
+    $FondoF=round($FondoF,2);
+    $Total_Impuesto=round($Total_Impuesto,2);
+    $tarifaenColones=round($tarifaenColones,2);
+ 
+    $signoC='¢';
+    $tarifaenColonesSigno=$signoC . $tarifaenColones;
+ 
+ 
+    if($activo_imponible>2858.14)
+    {
+        $tarifa='Variable';  
+        return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];
+    }
+    else if($activo_imponible<2858.14)
+    {
+         $tarifa='Fija';  
+         return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno];   
+    
+    }
+    else
+    {
+     return ['success' => 2];
+    }
+
+
+
+
    }
+
+  
    
 }  
    
