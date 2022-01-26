@@ -383,6 +383,7 @@
           if (response.data.success === 1)
           {
             toastr.success('Guardado exitosamente');
+            $('#modalAgregarTarifaFija').modal('hide');
             recargar();
           }
           else
@@ -471,6 +472,7 @@
                    
                     {
                         toastr.success('Tarifa fija actualizada');
+                        $('#modalEditarTarifaFija').modal('hide');
                         recargar();
                     }
                     else 
