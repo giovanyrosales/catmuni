@@ -126,7 +126,7 @@
             
                   <div class="col-md-6">
                      <div class="form-group">
-                          <label>Actividad económica:</label>
+                          <label>Rubro:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-6">
                                 <select 
@@ -218,7 +218,7 @@
               
                 <div class="col-md-4">
                      <div class="form-group">
-                          <label>Actividad económica:</label>
+                          <label>Rubro:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
                                 <select 
