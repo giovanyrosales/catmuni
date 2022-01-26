@@ -79,7 +79,7 @@
 
  <!--Modal para agregar tarifa fija-->
  <div class="modal fade" id="modalAgregarTarifaFija">
-        <div class="modal-dialog" style="width:2000px;">
+        <div class="modal-dialog modal-xl">
         <div class="modal-content">
          <div class="modal-header">
          <h4 class="modal-title">Agregar tarifa fija</h4>
@@ -92,7 +92,7 @@
                         <div class="card-body">
                         <div class="card-body">
             <div class="row">
-                   <div class="col-md-6">
+                   <div class="col-md-4">
                      <div class="form-group">
                         <label>Actividad económica:</label>
                         <input type="text" name="nombre_actividad" id="nombre_actividad" class="form-control" required placeholder="Actividad económica">
@@ -100,31 +100,52 @@
                       </div>
                    </div>
                 <!-- /.form-group -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite inferior:</label>
                         <input type="number" name="limite_inferior" id="limite_inferior" class="form-control" required placeholder="Limite inferior" >
                      </div>
                     </div>
-            </div>
             
-            <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite superior:</label>
                         <input type="number" name="limite_superior" id="limite_superior" class="form-control" required placeholder="Limite superior" >
                      </div>
                     </div>
-                
-                   <div class="col-md-6">
+            </div>    
+
+            <div class="row">
+                   <div class="col-md-4">
                      <div class="form-group">
                       <label>Impuesto mensual:</label>
                          <input type="number" name="impuesto_mensual" id="impuesto_mensual" required placeholder="Impuesto mensual" class="form-control" >
                     </div>
                      </div> 
-                    </div>     
-                   </div>
+                     
+            
+                  <div class="col-md-6">
+                     <div class="form-group">
+                          <label>Actividad económica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-6">
+                                <select 
+                                required
+                                class="selectpicker"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-actividad_economica" 
+                                title="-- Selecione la actividad --"
+                                 >
+                                  @foreach($actividadeconomica as $actE)
+                                  <option value="{{ $actE->id }}"> {{ $actE->rubro }}</option>
+                                  @endforeach 
+                                </select> 
+                           </div>
+                     </div>
                 </div>
+                </div>      
                    
             <div class="form-group">
               <div class="card-footer">
@@ -149,7 +170,7 @@
 
 <!--Modal para editar tarifa fija-->
         <div class="modal fade" id="modalEditarTarifaFija">
-        <div class="modal-dialog" style="width:2000px;">
+        <div class="modal-dialog modal-xl">
         <div class="modal-content">
          <div class="modal-header">
          <h4 class="modal-title">Agregar tarifa fija</h4>
@@ -163,7 +184,7 @@
                         <div class="card-body">
 
             <div class="row">
-                   <div class="col-md-6">
+                   <div class="col-md-4">
                      <div class="form-group">
                         <label>Actividad económica:</label>
                         <input type="text" name="nombre_actividad" id="nombre_actividad-editar" class="form-control" required placeholder="Actividad económica">
@@ -171,32 +192,53 @@
                       </div>
                    </div>
                 <!-- /.form-group -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite inferior:</label>
                         <input type="number" name="limite_inferior" id="limite_inferior-editar" class="form-control" required placeholder="Limite inferior" >
                      </div>
                     </div>
-            </div>
-            
-            <div class="row">
-                    <div class="col-md-6">
+                       
+                    <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite superior:</label>
                         <input type="number" name="limite_superior" id="limite_superior-editar" class="form-control" required placeholder="Limite superior" >
                      </div>
                     </div>
-                
-                   <div class="col-md-6">
+            </div>  
+
+            <div class="row">
+                   <div class="col-md-4">
                      <div class="form-group">
                       <label>Impuesto mensual:</label>
                          <input type="number" name="impuesto_mensual" id="impuesto_mensual-editar" required placeholder="Impuesto mensual" class="form-control" >
                     </div>
                      </div> 
-                    </div>     
-                   </div>
-                </div>
                    
+              
+                <div class="col-md-4">
+                     <div class="form-group">
+                          <label>Actividad económica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-9">
+                                <select 
+                                required
+                                class="form-control" 
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-actividad_economica-editar" 
+                                 >
+                                  @foreach($actividadeconomica as $actEc)
+                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
+                                  @endforeach 
+                                </select>  
+                           </div>
+                        </div>
+                <!-- /.form-group -->  
+                     </div>
+               </div>     
+
             <div class="form-group">
               <div class="card-footer">
                   <button type="button" class="btn btn-success float-right" onclick="actualizarTarifa()"> Guardar </button>
@@ -300,6 +342,7 @@
 
     function nuevaTarifa(id)
     {
+      var actividad_economica = document.getElementById('select-actividad_economica').value;
         var nombre_actividad = document.getElementById('nombre_actividad').value;
         var limite_inferior = document.getElementById('limite_inferior').value;
         var limite_superior = document.getElementById('limite_superior').value;
@@ -317,8 +360,14 @@
             return;
         }
         
+        if(actividad_economica === '')
+        {
+            toastr.error('Actividad económica es requerida');
+            return;
+        }
         openLoading();
       var formData = new FormData();
+      formData.append('actividad_economica', actividad_economica);
       formData.append('nombre_actividad', nombre_actividad);
       formData.append('limite_inferior', limite_inferior);
       formData.append('limite_superior', limite_superior);
@@ -370,6 +419,15 @@
                         $('#limite_inferior-editar').val(response.data.tarifa_fija.limite_inferior);
                         $('#limite_superior-editar').val(response.data.tarifa_fija.limite_superior);
                         $('#impuesto_mensual-editar').val(response.data.tarifa_fija.impuesto_mensual);
+
+                        document.getElementById("select-actividad_economica-editar").options.length = 0;
+                        $.each(response.data.actividad_economica, function( key, val ){
+                            if(response.data.idact_eco == val.id){
+                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
+                            }else{
+                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'">'+val.rubro+'</option>');
+                            }
+                        });
                        
                     }else{
                         toastr.error('Información solicitada no fue encontrada');
@@ -386,6 +444,7 @@
     function actualizarTarifa()
     {
             var id = document.getElementById('id-editar').value;
+            var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
             var nombre_actividad = document.getElementById('nombre_actividad-editar').value;
             var limite_inferior = document.getElementById('limite_inferior-editar').value;
             var limite_superior = document.getElementById('limite_superior-editar').value;
@@ -395,6 +454,7 @@
 
            var formData = new FormData();
               formData.append('id', id);
+              formData.append('actividad_economica', actividad_economica);
               formData.append('nombre_actividad', nombre_actividad);
               formData.append('limite_inferior', limite_inferior);
               formData.append('limite_superior', limite_superior);
@@ -428,39 +488,39 @@
     }
 
     function modalEliminarTarifa(id)
-            {
-                $('#idborrar').val(id);
-                $('#modalEliminarTarifa').modal('show');
-            }
+    {
+        $('#idborrar').val(id);
+        $('#modalEliminarTarifa').modal('show');
+    }
 
-            function eliminarD(){
-            openLoading()
+    function eliminarD(){
+      openLoading()
         
-            // se envia el ID del contribuyente
-            var id = document.getElementById('idborrar').value;
+            // se envia el ID de la tarifa
+      var id = document.getElementById('idborrar').value;
 
-            var formData = new FormData();
-            formData.append('id', id);
+      var formData = new FormData();
+      formData.append('id', id);
 
             axios.post('/admin/TarifaFija/eliminar', formData, {
             })
-                .then((response) => {
-                    closeLoading()
+              .then((response) => {
+                closeLoading()
                     $('#modalEliminarTarifa').modal('hide');
                     
-                    if(response.data.success === 1){
-                        toastMensaje('success', 'Detalle eliminado');
-                        recargar();
-                    }else{
-                        toastMensaje('error', 'Error al borrar');
+               if(response.data.success === 1){
+                  toastMensaje('success', 'Detalle eliminado');
+                  recargar();
+               }else{
+                  toastMensaje('error', 'Error al borrar');
            
                     }
                 })
                 
-                .catch(function (error) {
-                        closeLoading()
-                        toastr.error("Error de Servidor!");
-                      }); 
+           .catch(function (error) {
+              closeLoading()
+              toastr.error("Error de Servidor!");
+               }); 
         }
 
 

@@ -15,11 +15,14 @@ class CreateTarifaFijaTable extends Migration
     {
         Schema::create('tarifa_fija', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('id_actividad_economica')->unsigned();
            
             $table->string('nombre_actividad', 50);
             $table->string('limite_inferior', 50)->nullable();
             $table->string('limite_superior', 50)->nullable();  
             $table->string('impuesto_mensual', 50);
+
+            $table->foreign('id_actividad_economica')->references('id')->on('actividad_economica');
         });
     }
 

@@ -8,6 +8,7 @@
                             <thead>
                                 <tr>
                                 <th style="width: 15%;">Actividad económica</th>
+                                <th style="width: 15%;">Rubro</th>
                                 <th style="width: 15%;">Limite inferior</th>
                                 <th style="width: 15%;">Limite superior</th>
                                 <th style="width: 15%;">Impuesto mensual</th>
@@ -18,6 +19,7 @@
                             @foreach($tarifa_fija as $tarifa_fija)
                                 <tr>
                                     <td>{{$tarifa_fija->nombre_actividad}} </td>
+                                    <td>{{$tarifa_fija->nombre_rubro}} </td>
                                     <td>{{$tarifa_fija->limite_inferior}} </td>
                                     <td>{{$tarifa_fija->limite_superior}} </td>
                                     <td>{{$tarifa_fija->impuesto_mensual}} </td>

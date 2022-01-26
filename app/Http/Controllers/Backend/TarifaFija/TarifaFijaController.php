@@ -26,18 +26,27 @@ class TarifaFijaController extends Controller
 
     public function index()
     {
-        return view('backend.admin.TarifaFija.ListarTarifaFija');
+        $actividadeconomica = ActividadEconomica::All();
+
+        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('actividadeconomica'));
     }
 
-    public function tablaTarifa()
+    public function tablaTarifa(TarifaFija $tarifa_fija)
     {
-        $tarifa_fija = TarifaFija::orderBy('id', 'ASC')->get();  
+        $tarifa_fija= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+            
+        ->select('tarifa_fija.id','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
+        'actividad_economica.rubro as nombre_rubro' )
+         ->get();
+          //  orderBy('id', 'ASC')->get();  
+     
+     
         foreach($tarifa_fija as $ll)
         {
             $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
             $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
             $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
-           
+       
         }
              
         return view('backend.admin.TarifaFija.tabla.tablalistatarifafija', compact('tarifa_fija'));
@@ -47,17 +56,21 @@ class TarifaFijaController extends Controller
 
     public function listarTarifaFija()
     {
-        $tarifa_fija = TarifaFija::All();
-        $infTarifa = TarifaFija::where('id', $tarifa_fija)->first();
+        $actividadeconomica = ActividadEconomica::All();
 
-        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('tarifa_fija'));
+      //  $tarifa_fija = TarifaFija::All();
+        //$infTarifa = TarifaFija::where('id', $tarifa_fija)->first();
+
+        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('actividadeconomica'));
     }
 
+    //función para agregar nueva tarifa fija
     public function nuevaTarifa(Request $request)
     {
         $regla = array(
             'nombre_actividad' => 'required',
             'impuesto_mensual' => 'required',
+            'actividad_economica'=>'required',
         );
 
         $validar = Validator::make($request->all(), $regla);
@@ -76,6 +89,7 @@ class TarifaFijaController extends Controller
         $dato->limite_inferior = $request->limite_inferior;
         $dato->limite_superior = $request->limite_superior;
         $dato->impuesto_mensual = $request->impuesto_mensual;
+        $dato->id_actividad_economica = $request->actividad_economica;
 
         if($dato->save())
          {
@@ -83,7 +97,8 @@ class TarifaFijaController extends Controller
          }
     
     }
-
+    //termina funcion 
+    
     public function informacionTarifaF(Request $request)
     {
            $regla = array(
@@ -95,9 +110,15 @@ class TarifaFijaController extends Controller
      if ($validar->fails()){ return ['success' => 0];}
 
      if($lista = TarifaFija::where('id', $request->id)->first()){
+
+        $actividad_economica = ActividadEconomica::orderby('rubro')->get();
      
      return ['success' => 1,
+
          'tarifa_fija' => $lista,
+         'idact_eco' => $lista->id_actividad_economica,
+         'actividad_economica' => $actividad_economica,
+
         ];
      }else{
          return ['success' => 2];
@@ -110,6 +131,7 @@ class TarifaFijaController extends Controller
        $regla = array(
            'id' => 'required',
            'impuesto_mensual' => 'required',
+           'actividad_economica' => 'required',
                     
         );
 
@@ -121,11 +143,13 @@ class TarifaFijaController extends Controller
        {
 
           TarifaFija::where('id', $request->id)->update([
-
+          
+          'id_actividad_economica' => $request->actividad_economica,
           'nombre_actividad' => $request->nombre_actividad,
           'limite_inferior' => $request->limite_inferior,
           'limite_superior' => $request->limite_superior,
           'impuesto_mensual' => $request->impuesto_mensual,
+          'id_actividad_economica' => $request->actividad_economica,
     
             ]);
 

@@ -502,7 +502,7 @@
                         });
                      
                     }else{
-                        toastr.error('Información ');
+                        toastr.error('La información solicitada no fue encontrada ');
                     }
 
                 })
