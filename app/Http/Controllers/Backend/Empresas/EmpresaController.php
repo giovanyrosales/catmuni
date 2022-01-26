@@ -408,14 +408,27 @@ public function nuevaEmpresa(Request $request){
 //Calcular fechas menores a los primeros 3 meses del año...
 public function calculo_calificacion(Request $request)
 {
-   // log::info($request->all());
+   log::info($request->all());
   
    $deducciones= $request->deducciones;
    $activo_total=$request->activo_total;
+   $TarifaFijaMensualValor=$request->ValortarifaAplicada;
    $activo_imponible=$activo_total-$deducciones;
-   $signo='$';
 
+   $signo='$'; 
+
+   $tarifaenColones=$TarifaFijaMensualValor*8.75;
+   $FondoF= $TarifaFijaMensualValor*0.05;
+   $Total_Impuesto=$FondoF+$TarifaFijaMensualValor;
    $valor= $signo . $activo_imponible;
+
+   //Redondeando a dos decimales.
+   $FondoF=round($FondoF,2);
+   $Total_Impuesto=round($Total_Impuesto,2);
+   $tarifaenColones=round($tarifaenColones,2);
+
+   $signoC='¢';
+   $tarifaenColonesSigno=$signoC . $tarifaenColones;
 
    if($activo_imponible>2858.14)
    {
@@ -425,7 +438,7 @@ public function calculo_calificacion(Request $request)
    else if($activo_imponible<2858.14)
    {
         $tarifa='Fija';  
-        return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];   
+        return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno];   
    
    }
    else
