@@ -56,6 +56,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{ route('admin.LicenciaMatricula.index') }}" target="frameprincipal" class="nav-link">
+                            <i class="far fa-credit-card"></i>
+                            <p>Licencia y matriculas</p>
+                        </a>
+                    </li>
+
                 </ul>
              </li>
             

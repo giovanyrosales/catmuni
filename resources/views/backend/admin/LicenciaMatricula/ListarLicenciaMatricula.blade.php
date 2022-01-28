@@ -21,19 +21,19 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Lista Tasas de Interés.</h1>
+            <h1>Licencias y matriculas</h1>
           </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Tasas de interés</li>
+                            <li class="breadcrumb-item active">Licencias y matriculas</li>
                             </ol>
                         </div>
         </div>
         <br>
-        <button type="button"onclick="agregarInteres()" class="btn btn-success btn-sm" >
+        <button type="button"onclick="agregarLicenciaM()" class="btn btn-success btn-sm" >
                 <i class="fas fa-pencil-alt"></i>
-                Nueva tasa de interés
+                Nueva licencia o matricula
             </button>
       </div>
     </section>
@@ -44,7 +44,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Tasa de interés</h3>
+            <h3 class="card-title">Licencias y matriculas</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -77,33 +77,63 @@
 </div>
 <!--Termina Contenido Frame Principal -->
 
-<!--Modal para agregar interes-->
-      <div class="modal fade" id="modalAgregarInteres">
+<!--Modal para agregar licencia o matriculas-->
+<div class="modal fade" id="modalAgregarLM">
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar Interés</h4>
+         <h4 class="modal-title">Agregar licencia o matricula</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                <div class="modal-body">
-                    <form id="formulario-AgregarInteres"> 
+                    <form id="formulario-AgregarLM"> 
             <div class="row">
               <div class="col-md-10">
               <div class="form-group">
-                     <label>Monto interés:</label>
-                        <input type="number" name="monto_interes" id="monto_interes" class="form-control" required placeholder="Monto">
+                <label>Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Nombre licencia o matricula">
                         <input type="hidden" name="id" id="id" class="form-control" >
-                      </div>
+                </div>
+              </div>
+           
+              <div class="col-md-10">
+                     <div class="form-group">
+                          <label>Tipo de permisos:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-10">
+                                <select 
+                                required
+                                class="selectpicker"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-tipo_permiso" 
+                                title="-- Selecione el tipo de permiso --"
+                                 >
+                                 <option value="licencia">Licencia</option>
+                                 <option value="matricula">Matricula</option>
+                                </select> 
+                           </div>
+                           <!-- finaliza asignar actividad economica-->
+                        </div>
+                          </div>
+                <div class="col-md-10">
+                <div class="form-group">
+                     <label>Monto:</label>
+                        <input type="number" name="monto" id="monto" class="form-control" required placeholder="Monto">
+                </div>
+                </div>
                 <!-- /.form-group -->
                 </div>               
                  </div>
-                   </div>
-              <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="nuevoInteres()"> Guardar </button>
+                  <div class="card-footer">
+                  <button type="button" class="btn btn-success float-right" onclick="nuevaLM()"> Guardar </button>
                   <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
                 </div>
+                   </div>
+             
                 </div>
                    </div>
                     </div>
@@ -113,36 +143,65 @@
       <!-- /.card -->
           </form>
       <!-- /form -->
-       <!--Finaliza Modal para agregar interes-->
+       <!--Finaliza Modal para agregar licencia o matriculas-->
 
-       <!--Modal para editar interes-->
-      <div class="modal fade" id="modalEditarInteres">
+<!--Modal para actualizar licencia o matriculas-->
+       <div class="modal fade" id="modalEditarLM">
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Editar Interés</h4>
+         <h4 class="modal-title">Actualizar licencia o matricula</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                <div class="modal-body">
-                    <form id="formulario-EditarInteres"> 
+                    <form id="formulario-EditarLM"> 
             <div class="row">
               <div class="col-md-10">
               <div class="form-group">
-                     <label>Monto interés:</label>
-                        <input type="number" name="monto_interes" id="monto_interes-editar" class="form-control" required placeholder="Monto">
+                <label>Nombre:</label>
+                        <input type="text" name="nombre" id="nombre-editar" class="form-control" required placeholder="Nombre licencia o matricula">
                         <input type="hidden" name="id" id="id-editar" class="form-control" >
-                      </div>
+                </div>
+              </div>
+              
+                <div class="col-md-10">
+                     <div class="form-group">
+                          <label>Actividad económica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-10">
+                                <select 
+                                required
+                                class="form-control" 
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-tipo_permiso-editar" 
+                                 >
+                                 <option value="licencia">Licencia</option>
+                                 <option value="matricula">Matricula</option>
+                                </select>  
+                           </div>
+                        </div>
+                <!-- /.form-group -->  
+                     </div>
+                     <div class="col-md-10">
+                <div class="form-group">
+                     <label>Monto:</label>
+                        <input type="number" name="monto" id="monto-editar" class="form-control" required placeholder="Monto">
+                </div>
+                </div>
+              </div>
                 <!-- /.form-group -->
-                </div>               
-                 </div>
-                   </div>
-              <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="actualizarInteres()"> Guardar </button>
+                
+                </div>    
+                <div class="card-footer">
+                  <button type="button" class="btn btn-success float-right" onclick="actualizarLM()"> Actualizar </button>
                   <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
-                </div>
-                </div>
+                </div>           
+                   </div>
+                 </div>
                    </div>
                     </div>
                   </div>
@@ -151,11 +210,12 @@
       <!-- /.card -->
           </form>
       <!-- /form -->
-       <!--Finaliza Modal para editar interes-->
+       <!--Finaliza Modal para actualizar licencia o matriculas-->
 
-        <!-- Inicia Modal Borrar Interes-->
+       
+        <!-- Inicia Modal Borrar licencia o matricula-->
 
- <div class="modal fade" id="modalEliminarInteres">
+ <div class="modal fade" id="modalEliminarLM">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -165,12 +225,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formulario-BorrarInteres">
+                    <form id="formulario-BorrarLM">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
 
-                                    <p>¿Realmente desea eliminar el interés seleccionado?"</p>
+                                    <p>¿Realmente desea eliminar la siguiente información seleccionada?"</p>
 
                                     <div class="form-group">
                                         <input type="hidden" id="idborrar">
@@ -182,14 +242,15 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" onclick="eliminarTasa()">Borrar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarLM()">Borrar</button>
                 </div>
             </div>
         </div>
     </div>
 
-        <!--Finaliza Modal Borrar Interes-->
+        <!--Finaliza Modal Borrar licencia o matricula-->
      
+
 
 @extends('backend.menus.footerjs')
 @section('archivos-js')
@@ -209,7 +270,7 @@
     <!-- incluir tabla -->
  <script type="text/javascript">
         $(document).ready(function(){
-            var ruta = "{{ url('/admin/TasaInteres/tabla') }}";
+            var ruta = "{{ url('/admin/LicenciaMatricula/tabla') }}";
             $('#tablaDatatable').load(ruta);
             document.getElementById("divcontenedor").style.display = "block";
         });
@@ -219,36 +280,53 @@
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
         });
-
+    
+        
     function recargar()
     {
-     var ruta = "{{ url('/admin/TasaInteres/tabla') }}";
+     var ruta = "{{ url('/admin/LicenciaMatricula/tabla') }}";
      $('#tablaDatatable').load(ruta);
     }
-
-    function agregarInteres(id)
+        
+    function agregarLicenciaM(id)
     {
-        document.getElementById("formulario-AgregarInteres").reset();
-            $('#modalAgregarInteres').modal('show');
+        document.getElementById("formulario-AgregarLM").reset();
+            $('#modalAgregarLM').modal('show');
     }
 
-    function nuevoInteres(id)
+    function nuevaLM(id)
     {
         
-        var monto_interes = document.getElementById('monto_interes').value;
+        var nombre = document.getElementById('nombre').value;
+        var monto = document.getElementById('monto').value;
+        var tipo_permiso = document.getElementById('select-tipo_permiso').value;
         
 
-        if(monto_interes === ''){
-            toastr.error('El Monto es requerido');
+        if(nombre === '')
+        {
+            toastr.error('El nombre de la licencia o matricula es requerido');
+            return;
+        }
+
+        if(monto === '')
+        {
+            toastr.error('El monto es requerido');
+            return;
+        }
+
+        if(tipo_permiso === '')
+        {
+            toastr.error('El tipo de permiso es requerido');
             return;
         }
      
         openLoading();
       var formData = new FormData();
-      formData.append('monto_interes', monto_interes);
-      
+      formData.append('nombre', nombre);
+      formData.append('monto', monto);
+      formData.append('tipo_permiso', tipo_permiso);
 
-      axios.post('/admin/nuevo/TasaInteres/nuevo', formData,
+      axios.post('/admin/LicenciaMatricula/Nuevas', formData,
        {
             })
 
@@ -257,7 +335,7 @@
           if (response.data.success === 1)
           {
             toastr.success('Guardado exitosamente');
-            $('#modalAgregarInteres').modal('hide');
+            $('#modalAgregarLM').modal('hide');
             recargar();
           }
           else
@@ -273,46 +351,61 @@
 
     }
 
-    function informacionTasas(id)
+    function informacionLicenciaM(id)
     {
             openLoading();
-            document.getElementById("formulario-EditarInteres").reset();
+            document.getElementById("formulario-EditarLM").reset();
 
-            axios.post('/admin/TasaInteres/informacion',{
+            axios.post('/admin/LicenciaMatricula/informacion',{
                 'id': id
             })
                 .then((response) => {
+                    // console.log(response);
                     closeLoading();
                     if(response.data.success === 1){
-                        $('#modalEditarInteres').modal('show');
+                        $('#modalEditarLM').modal('show');
 
-                        $('#id-editar').val(response.data.interes.id);
-                        $('#monto_interes-editar').val(response.data.interes.monto_interes);
+                        $('#id-editar').val(response.data.licencia_matricula.id);
+                        $('#nombre-editar').val(response.data.licencia_matricula.nombre);
+                        $('#monto-editar').val(response.data.licencia_matricula.monto);
+
+                        document.getElementById("select-tipo_permiso-editar").options.length = 0;
+                        $.each(response.data.licencia_matricula, function( key, val ){
+                            if(response.data.tipo_permiso == val.id){
+                                $('#select-tipo_permiso-editar').append('<option value="' +val.id +'" selected="selected">'+val.tipo_permiso+'</option>');
+                            }else{
+                                $('#select-tipo_permiso-editar').append('<option value="' +val.id +'">'+val.tipo_permiso+'</option>');
+                            }
+                        });
                        
                     }else{
-                        toastr.error('Información no encontrada');
+                        toastr.error('La información solicitada no se encuentra');
                     }
                     
                 })
-                .catch((error) => {
-                    closeLoading();
-                    toastr.error('Información no encontrada');
-                });
+           .catch((error) => {
+              closeLoading();
+              toastr.error('Información no encontrada');
+           });
        
     }
 
-    function actualizarInteres()
+    function actualizarLM()
     {
             var id = document.getElementById('id-editar').value;
-            var monto_interes = document.getElementById('monto_interes-editar').value;
+            var nombre = document.getElementById('nombre-editar').value;
+            var monto = document.getElementById('monto-editar').value;
+            var tipo_permiso = document.getElementById('select-tipo_permiso-editar').value;
            
             openLoading()
 
             var formData = new FormData();
             formData.append('id', id);
-            formData.append('monto_interes', monto_interes);  
-            
-            axios.post('/admin/TasaInteres/editar', formData, {
+            formData.append('nombre', nombre);  
+            formData.append('monto', monto);
+            formData.append('tipo_permiso', tipo_permiso);
+
+            axios.post('/admin/LicenciaMatricula/editar', formData, {
             })
 
                 .then((response) => {
@@ -322,30 +415,30 @@
                    if (response.data.success === 1) 
                    
                     {
-                        toastr.success('Interés actualizado');
-                        $('#modalEditarInteres').modal('hide');
+                        toastr.success('Datos actualizados correctamente');
+                        $('#modalEditarLM').modal('hide');
                         recargar();
                     }
                     else 
                     {
                         toastMensaje('Error al actualizar');
-                        $('#modalEditarInteres').modal('hide');
+                        $('#modalEditarLM').modal('hide');
                         recargar();
                     }
                 })
                 .catch((error) => {
-                    closeLoading()
+                  closeLoading()
                     toastMensaje('error', 'Error');
                 });
     }
 
-    function modalEliminarInteres(id)
-            {
-                $('#idborrar').val(id);
-                $('#modalEliminarInteres').modal('show');
-            }
+    function modalEliminarLM(id)
+        {
+          $('#idborrar').val(id);
+          $('#modalEliminarLM').modal('show');
+        }
 
-    function eliminarTasa()
+    function eliminarLM()
     {
        openLoading()
         
@@ -355,14 +448,14 @@
             var formData = new FormData();
             formData.append('id', id);
 
-            axios.post('/admin/TasaInteres/eliminar', formData, {
+            axios.post('/admin/LicenciaMatricula/eliminar', formData, {
             })
                 .then((response) => {
                     closeLoading()
-                    $('#modalEliminarInteres').modal('hide');
+                    $('#modalEliminarLM').modal('hide');
                     
                     if(response.data.success === 1){
-                        toastMensaje('success', 'Interes eliminado');
+                        toastMensaje('success', 'La información ha sido eliminada correctamente');
                         recargar();
                     }else{
                         toastMensaje('error', 'Error al borrar');
@@ -370,11 +463,11 @@
                     }
                 })
                 
-                .catch(function (error) {
-                        closeLoading()
-                        toastr.error("Error de Servidor!");
-                      }); 
+            .catch(function (error) {
+              closeLoading()
+              toastr.error("Error de Servidor!");
+           }); 
     }
-</script>
-
-@stop
+  </script>
+  
+  @stop

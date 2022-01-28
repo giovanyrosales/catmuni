@@ -12,6 +12,7 @@ use App\Http\Controllers\Backend\Perfil\PerfilController;
 use App\Http\Controllers\Backend\DetalleActividadE\DetalleActividadEController;
 use App\Http\Controllers\Backend\TasaInteres\TasaInteresController;
 use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
+use App\Http\Controllers\Backend\LicenciaMatricula\LicenciaMatriculaController;
 
 
 /*
@@ -117,3 +118,12 @@ use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
     Route::post('/admin/TarifaFija/informacion', [TarifaFijaController::class, 'informacionTarifaF']);
     Route::post('/admin/TarifaFija/editar', [TarifaFijaController::class, 'editarTarifaF']);
     Route::post('/admin/TarifaFija/eliminar', [TarifaFijaController::class, 'eliminarTarifaF']);
+
+    // --- LICENCIA Y MATRICULA
+    Route::get('/admin/LicenciaMatricula/ListarLicenciaMatricula', [LicenciaMatriculaController::class, 'index'])->name('admin.LicenciaMatricula.index');
+    Route::get('/admin/LicenciaMatricula/tabla', [LicenciaMatriculaController::class,'tablaLicenciaMatricula']);
+    Route::get('/admin/nuevo/LicenciaMatricula/Listar', [LicenciaMatriculaController::class,'listarLicencia'])->name('admin.listarLicenciaMatricula.index');
+    Route::post('/admin/LicenciaMatricula/Nuevas', [LicenciaMatriculaController::class,'agregarLM']);
+    Route::post('/admin/LicenciaMatricula/informacion', [LicenciaMatriculaController::class, 'informacionLM']);
+    Route::post('/admin/LicenciaMatricula/editar', [LicenciaMatriculaController::class, 'editarLM']);
+    Route::post('/admin/LicenciaMatricula/eliminar', [LicenciaMatriculaController::class, 'eliminarLM']);
