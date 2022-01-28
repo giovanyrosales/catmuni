@@ -179,12 +179,30 @@ formData.append('CantidadMesesAPagar', CantidadMesesAPagar);
                         <label>TASA DE INTERÉS:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
+                <!-- /.form-group -->
+                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" name="tasa_interes" id="tasa_interes" class="form-control" >
-                  </div>
+                          <!-- Select estado - live search -->
+                         
+                                <select 
+                                required
+                                class="selectpicker"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select_interes" 
+                                title="-- Seleccione un interés  --"
+                                 >
+                                 <option value="Ninguno">Ninguno</option>
+                                  @foreach($tasasDeInteres as $dato)
+                                  <option value="{{ $dato->id }}"> {{ $dato->monto_interes }}</option>
+                                  @endforeach 
+                                </select> 
+                 
+                           <!-- finaliza select estado-->
+                      </div>
                </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
+            <!-- /.form-group -->
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">

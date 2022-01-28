@@ -1153,7 +1153,27 @@ function GenerarCalificacion(){
             var matricula_imp=(document.getElementById('monto_pagar_matricula').value);
             var tarifaAplicada_imp=(document.getElementById('tarifaAplicada').value);
             var ValortarifaAplicadaImp=(document.getElementById('tarifaAplicadaValor').value);
-         
+            
+            if(fecha_pres_balance === ''){
+                    toastr.error('La fecha que presenta el balance es requerida.');
+                    return;
+                }
+
+            if(activo_total === ''){
+                    toastr.error('El dato activo activo total es requerido.');
+                    return;
+                }
+              
+              if(deducciones === ''){
+                    toastr.error('El dato deducciones es requerido.');
+                    return;
+                }
+
+                if(tarifaAplicada_imp === ''){
+                    toastr.error('No ha asignado una tarifa fija.');
+                    return;
+                }
+
             
             if(licencia_imp ==='$365.00'){
               licenciaValor_imp=365;
@@ -1169,6 +1189,7 @@ function GenerarCalificacion(){
             if(matricula_imp ==='$0.00'){
               matriculaValor_imp=0;
               }
+
               signodolar="$";
               licenciaMatricula=licenciaValor_imp+matriculaValor_imp;
               PagolicenciaMatricula=signodolar+licenciaMatricula;
@@ -1187,27 +1208,7 @@ function GenerarCalificacion(){
               PagoAnualLicenciasR=Number(PagoAnualLicencias.toFixed(2));
               PagoAnualLicenciasSigno=signodolar+PagoAnualLicencias;
 
-            if(fecha_pres_balance === ''){
-                    toastr.error('La fecha que presenta el balance es requerida.');
-                    return;
-                }
-
-            if(activo_total === ''){
-                    toastr.error('El dato activo activo total es requerido.');
-                    return;
-                }
-              
-              if(deducciones === ''){
-                    toastr.error('El dato deducciones es requerido.');
-                    return;
-                }
-
-              if(tarifaAplicada_imp === ''){
-                    toastr.error('No ha asignado una tarifa fija.');
-                    return;
-                }
-            
-
+ 
             document.getElementById('fechabalanceodjurada').value=fecha_pres_balance;
             document.getElementById('actividad_economica').innerHTML=rubro; 
             document.getElementById('licencia_imp').innerHTML=licencia_imp;
