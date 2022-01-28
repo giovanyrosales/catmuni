@@ -540,6 +540,7 @@
                 if (response.data.success === 1) 
                     {
                         toastr.success('Detalle actualizado');
+                        $('#modalEditarDetalles').modal('hide');
                         recargar();
                     }
                     else 
@@ -622,7 +623,7 @@
                     $('#modalEliminar').modal('hide');
                     
                     if(response.data.success === 1){
-                        toastMensaje('success', 'Detalle eliminado');
+                      toastMensaje('success', 'Detalle eliminado');
                         recargar();
                     }else{
                         toastMensaje('error', 'Error al borrar');
@@ -696,6 +697,8 @@
           if (response.data.success === 1)
           {
             toastr.success('Guardado exitosamente');
+            $('#modalEliminar').modal('hide');
+              recargar();
           }
           else
           {

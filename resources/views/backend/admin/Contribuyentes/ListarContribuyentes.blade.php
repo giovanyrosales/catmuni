@@ -420,6 +420,8 @@
                    
                     {
                         toastr.success('Contribuyente actualizado');
+                        $('#modalEditar').modal('hide');
+                               recargar();
                     }
                     else 
                     {

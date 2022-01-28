@@ -257,6 +257,7 @@
           if (response.data.success === 1)
           {
             toastr.success('Guardado exitosamente');
+            $('#modalAgregarInteres').modal('hide');
           }
           else
           {
@@ -306,10 +307,10 @@
            
             openLoading()
 
-           var formData = new FormData();
-              formData.append('id', id);
-              formData.append('monto_interes', monto_interes);
-           
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('monto_interes', monto_interes);  
+            
             axios.post('/admin/TasaInteres/editar', formData, {
             })
 
@@ -321,13 +322,14 @@
                    
                     {
                         toastr.success('Interés actualizado');
+                        $('#modalEditarInteres').modal('hide');
                         recargar();
                     }
                     else 
                     {
                         toastMensaje('Error al actualizar');
                         $('#modalEditarInteres').modal('hide');
-                               recargar();
+                        recargar();
                     }
                 })
                 .catch((error) => {
@@ -371,12 +373,7 @@
                         closeLoading()
                         toastr.error("Error de Servidor!");
                       }); 
-        
-
     }
-
-    
-
 </script>
 
 @stop
