@@ -11,11 +11,16 @@ class Calificacion extends Model
     public $timestamps = true;
     protected $fillable = [
         'id',
-        'id_detalle_actividad_economica',
         'id_empresa',
         'fecha_calificacion',
-        'tarifa',
         'tipo_tarifa',
-        'estado_calificacion'
+        'tarifa',
+        'estado_calificacion',
+        'licencia',
+        'matricula',
+        'pago_anual_permisos',
+        'año_calificacion',
+        'pago_mensual',
+        'total_impuesto'
       ];
 }

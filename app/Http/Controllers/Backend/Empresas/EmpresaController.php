@@ -155,12 +155,10 @@ public function show($id)
     $actividadeseconomicas = ActividadEconomica::All();
 
     $calificaciones = calificacion
-    ::join('detalle_actividad_economica','calificacion.id_detalle_actividad_economica','=','detalle_actividad_economica.id')
-    ->join('empresa','calificacion.id_empresa','=','empresa.id')
+    ::join('empresa','calificacion.id_empresa','=','empresa.id')
     
     ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tarifa','calificacion.tipo_tarifa','calificacion.estado_calificacion',
-    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-    'detalle_actividad_economica.id','detalle_actividad_economica.id_actividad_economica','detalle_actividad_economica.limite_inferior','detalle_actividad_economica.fijo','detalle_actividad_economica.categoria','detalle_actividad_economica.millar')
+    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
     ->where('id_empresa', "=", "$id")
     ->first();
 
@@ -213,6 +211,48 @@ public function show($id)
 }
 
 // ---------COBROS ------------------------------------------>
+public function calculo_cobros(Request $request, $id)
+{
+        log::info($request->all());
+        $f1=Carbon::parse($request->ultimo_cobro);
+        $f2=Carbon::parse($request->fechaPagara);
+
+        $calificaciones = calificacion::join('empresa','calificacion.id_empresa','=','empresa.id')
+        
+        ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tipo_tarifa','calificacion.tarifa','calificacion.estado_calificacion','calificacion.tipo_tarifa','calificacion.estado_calificacion',
+        'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
+    
+        ->where('id_empresa', "=", "$id")
+        ->first();
+        
+        if($f1->lt($f2))
+        {
+            $CantidadMeses=$f1->diffInMonths($f2);  
+
+            $tarifa=$calificaciones->tarifa;
+            $fechaPagara= $request->fechaPagara;
+          
+ 
+            $signoDollar='$';
+            
+
+            $impuestosValor=round($tarifa*$CantidadMeses,2);
+            $fondoFPValor=round($impuestosValor*0.05,2);
+            $totalPagoValor= round($fondoFPValor+$impuestosValor,2);
+
+            //Le agregamos su signo de dollar para la vista al usuario
+            $fondoFP= $signoDollar. $fondoFPValor;
+            $impuestos= $signoDollar. $impuestosValor;
+            $totalPago=$signoDollar.$totalPagoValor;
+           
+
+            return ['success' => 1, 'cantidadMeses' => $CantidadMeses,'impuestos' => $impuestos,'tarifa'=>$tarifa,'fondoFP'=>$fondoFP,'totalPago'=>$totalPago];
+        }else
+        {
+            return ['success' => 0];
+        }
+
+}
 
 public function cobros($id)
 {
@@ -222,12 +262,11 @@ public function cobros($id)
     $actividadeseconomicas = ActividadEconomica::All();
 
     $calificaciones = calificacion
-    ::join('detalle_actividad_economica','calificacion.id_detalle_actividad_economica','=','detalle_actividad_economica.id')
-    ->join('empresa','calificacion.id_empresa','=','empresa.id')
+    ::join('empresa','calificacion.id_empresa','=','empresa.id')
     
-    ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tarifa','calificacion.tipo_tarifa','calificacion.estado_calificacion',
-    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-    'detalle_actividad_economica.id','detalle_actividad_economica.id_actividad_economica','detalle_actividad_economica.limite_inferior','detalle_actividad_economica.fijo','detalle_actividad_economica.categoria','detalle_actividad_economica.millar')
+    ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tipo_tarifa','calificacion.tarifa','calificacion.estado_calificacion','calificacion.tipo_tarifa','calificacion.estado_calificacion',
+    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
+
     ->where('id_empresa', "=", "$id")
     ->first();
 
@@ -249,7 +288,7 @@ public function cobros($id)
     'actividad_economica.rubro','actividad_economica.id as id_act_economica')
     ->find($id);   
     
-    $date=Carbon::now();
+    $date=Carbon::now()->toDateString();
 
    if ($calificaciones == null)
     { 
@@ -391,29 +430,12 @@ public function nuevaEmpresa(Request $request){
 
  //Termina editar empresa
 
- //Calcular la cantidad de meses entre dos fechas
- public function diffMeses(Request $request)
- {
-    log::info($request->all());
-    $f1=Carbon::parse($request->ultimo_cobro);
-    $f2=Carbon::parse($request->fechaPagara);
 
-        
-    if($f1->lt($f2))
-    {
-        $CantidadMeses=$f1->diffInMonths($f2);  
-        return ['success' => 1, 'cantidadMeses' => $CantidadMeses];
-    }else
-    {
-        return ['success' => 0];
-    }
-
-}
 
 //Calcular fechas menores a los primeros 3 meses del año...
 public function calculo_calificacion(Request $request)
 {
-   log::info($request->all());
+   
   
    $deducciones= $request->deducciones;
    $activo_total=$request->activo_total;
@@ -427,51 +449,90 @@ public function calculo_calificacion(Request $request)
     $tarifa='No Calculada'; 
     return ['success' => 1,'tarifa' =>$tarifa];
    }
-   else{
-    $TarifaFijaMensualValor=$request->ValortarifaAplicada;
-    $activo_imponible=$activo_total-$deducciones;
- 
-    $signo='$'; 
- 
-    $tarifaenColones=$TarifaFijaMensualValor*8.75;
-    $FondoF= $TarifaFijaMensualValor*0.05;
-    $Total_Impuesto=$FondoF+$TarifaFijaMensualValor;
-    $valor= $signo . $activo_imponible;
- 
-    //Redondeando a dos decimales.
-    $FondoF=round($FondoF,2);
-    $Total_Impuesto=round($Total_Impuesto,2);
-    $tarifaenColones=round($tarifaenColones,2);
- 
-    $signoC='¢';
-    $tarifaenColonesSigno=$signoC . $tarifaenColones;
- 
- 
-    if($activo_imponible>2858.14)
-    {
-        $tarifa='Variable';  
-        return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];
-    }
-    else if($activo_imponible<2858.14)
-    {
-         $tarifa='Fija';  
-         return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno];   
+   else
+   {
+        $TarifaFijaMensualValor=$request->ValortarifaAplicada;
+        $activo_imponible=$activo_total-$deducciones;
     
-    }
-    else
-    {
-     return ['success' => 2];
-    }
-
-
-
-
-   }
-
-  
-   
+        $signo='$'; 
+    
+        $tarifaenColones=$TarifaFijaMensualValor*8.75;
+        $FondoF= $TarifaFijaMensualValor*0.05;
+        $Total_Impuesto=$FondoF+$TarifaFijaMensualValor;
+        $valor= $signo . $activo_imponible;
+    
+        //Redondeando a dos decimales.
+        $FondoF=round($FondoF,2);
+        $Total_Impuesto=round($Total_Impuesto,2);
+        $tarifaenColones=round($tarifaenColones,2);
+    
+        $signoC='¢';
+        $tarifaenColonesSigno=$signoC . $tarifaenColones;
+    
+    
+        if($activo_imponible>2858.14)
+        {
+            $tarifa='Variable';  
+            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];
+        }
+        else if($activo_imponible<2858.14)
+        {
+            $tarifa='Fija';  
+            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno];   
+        
+        }
+        else
+        {
+        return ['success' => 2];
+        }
+   }   
 }  
-   
+ 
+
+//Registrar Calificación
+public function nuevaCalificacion(Request $request){
+    
+    $regla = array(
+
+        'fecha_calificacion' => 'required',
+        'tipo_tarifa' => 'required',
+        'tarifa'=>'required',
+        'año_calificacion'=>'required',
+        'pago_mensual'=>'required',
+        'total_impuesto'=>'required',  
+    );
+
+    $validar = Validator::make($request->all(), $regla);
+
+    if ($validar->fails())
+        {
+            return 
+            [
+                'success'=> 0,
+            ];
+        }
+                    
+                $dato = new calificacion();
+                $dato->id_empresa = $request->id_empresa;
+                $dato->fecha_calificacion = $request->fecha_calificacion;
+                $dato->tipo_tarifa = $request->tipo_tarifa;
+                $dato->tarifa = $request->tarifa;
+                $dato->estado_calificacion = $request->estado_calificacion;
+                $dato->licencia = $request->licencia;
+                $dato->matricula = $request->matricula;
+                $dato->año_calificacion = $request->año_calificacion;
+                $dato->pago_mensual = $request->pago_mensual;
+                $dato->total_impuesto = $request->total_impuesto;
+                $dato->pago_anual_permisos = $request->pago_anual_permisos;
+                
+
+                if($dato->save())
+                {
+                    return ['success' => 1];
+                
+                }
+        }
+        //Termina registrar Calificación
 
 
-}
+    }

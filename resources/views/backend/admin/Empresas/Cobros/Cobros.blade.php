@@ -17,20 +17,56 @@
 
 
 @stop
-<!-- Función para calcular el periodo de pago 
+<!-- Función para calcular el pago momentaneo------------------------------------------>
+<script> 
 
-<script>
-function periodo(valor){
-/*Declaramos variables */
-var fechaPagara=valor.value;
+function calculo(id)
+{
+    /*Declaramos variables */
+    var fechaPagara=(document.getElementById('fecha_hasta_donde_pagara').value);
+    var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
+    var CantidadMesesAPagar=(document.getElementById('cant_meses').value);
 
-/* Muestro valor en label */
-document.getElementById('hasta').innerHTML= fechaPagara ;
+
+var formData = new FormData();
+
+formData.append('fechaPagara', fechaPagara);
+formData.append('ultimo_cobro', ultimo_cobro);
+formData.append('CantidadMesesAPagar', CantidadMesesAPagar);
+
+ axios.post('/admin/empresas/calculo_cobros'+id, formData, {
+        })
+        .then((response) => {
+                console.log(response);
+                  closeLoading();
+                  if(response.data.success !=1){
+                    toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
+                    document.getElementById('hasta').innerHTML= '';
+                    document.getElementById('cant_meses').value='';
+                    document.getElementById('impuestos_imp').innerHTML='$-';
+                    document.getElementById('fondoFP_imp').innerHTML='$-';
+                    document.getElementById('totalPago_imp').innerHTML='$-';
+                  } 
+                  if(response.data.success === 1){
+                    document.getElementById('hasta').innerHTML= fechaPagara;
+                    document.getElementById('cant_meses').value=response.data.cantidadMeses;
+                    document.getElementById('impuestos_imp').innerHTML=response.data.impuestos;
+                    document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
+                    document.getElementById('totalPago_imp').innerHTML=response.data.totalPago;
+                  }  
+              })
+              .catch((error) => {
+                  toastr.error('Error');
+                  closeLoading();
+              }); 
+
+
 }
 
-</script>--------------------------------------------------------->
+</script>
 
-<!-- Finaliza función para calcular la recalificación --------------------------------------------------------->
+
+<!-- Finaliza función para calcular el pago momentaneo --------------------------------------------------------->
 
 
 <div class="content-wrapper" style="display: none" id="divcontenedor">
@@ -86,7 +122,7 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>Número de tarjeta:</label>
+                        <label>NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
@@ -98,13 +134,13 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>Fecha de último pago:</label>
+                        <label>FECHA DE ÚLTIMO PAGO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
                     @if($detectorCobro=='0')
-                                <input  type="text" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+                                <input  type="text" value="{{ $calificaciones->fecha_calificacion }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
                     @else
                                 <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
                     @endif
@@ -114,19 +150,19 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                <!-- /.form-group -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <label>Fecha hasta donde pagará:</label>
+                        <label>FECHA HASTA DONDE PAGARÁ:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date"  onchange="CantMeses(this);" class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
+                        <input  type="date"  onchange="calculo({{$empresa->id}});" class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>Giro Comercial:</label>
+                        <label>GIRO COMERCIAL:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
@@ -140,7 +176,7 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                <!-- /.form-group -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <label>Tasa de interes:</label>
+                        <label>TASA DE INTERÉS:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
@@ -152,7 +188,7 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>Fecha del interes moratorio:</label>
+                        <label>FECHA DEL INTERÉS MORATORIO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
@@ -164,12 +200,24 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                <!-- /.form-group -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <label>Cantidad de meses a pagar:</label>
+                        <label>CANTIDAD DE MESES A PAGAR:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" disabled name="cant_meses" id="cant_meses" class="form-control" >
+                        <input type="text" disabled  name="cant_meses" id="cant_meses" class="form-control" >
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <!-- /.form-group -->
+                              <!-- /.form-group -->
+                              <div class="col-md-6">
+                  <div class="form-group">
+                        <br>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-6">
+                  <div class="form-group">
+                        <br>
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -194,7 +242,7 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                         <h5>
                           Periodo del: 
                           @if($detectorNull=='0')
-                          <label class="text-success"> 00/00/0000 </label>
+                          <label class="text-success"> {{ $calificaciones->fecha_calificacion }} </label> 
                            @else
                              <label class="badge badge-info">{{ $ultimo_cobro->fecha_pago }} </label>
                            @endif 
@@ -202,6 +250,79 @@ document.getElementById('hasta').innerHTML= fechaPagara ;
                         </h3>
                   </div>
               <!-- /.form-group -->
+               <!-- /.form-group -->
+               <div class="col-md-12">
+                  <div class="form-group">
+                        
+                  <table class="table table-hover table-sm table-striped" border="1" width:760px;>
+                    <tr class="table-success">
+                      <td class="table-light">
+                      <table class="table table-hover table-sm table-striped" border="1" width:760px;>
+                          <tr class="table-secondary">
+                            <th scope="col">IMPUESTOS</th>
+                            <th scope="col"></th> 
+                            <th scope="col"></th>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td class="table-light">IMPUESTO MORA</td>
+                            <td class="table-light">32201</td>
+                            <td class="table-light">$297.18</td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td>IMPUESTO</td>
+                            <td>11804</td>
+                            <td><h6 name="impuestos_imp" id="impuestos_imp"></h6></td>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td>INTERESES MORATORIOS</td>
+                            <td>15302</td>
+                            <td>$79.83</td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td>MULTA</td>
+                            <td>15313</td>
+                            <td>$29.64</td>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td></td>
+                            <td></td>
+                            <td>$-   </td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td>FONDO F. PATRONALES 5%</td>
+                            <td>12114</td>
+                            <td><h6 name="fondoFP_imp" id="fondoFP_imp"></h6></td>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td></td>
+                            <td></td>
+                            <td>$-   </td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td></td>
+                            <td></td>
+                            <td>$-   </td>
+                          </tr>
+
+                          <tr class="table-secondary">
+                            <th scope="row">TOTAL</th>
+                            <td><label>$<label name="FondoF_imp" id="FondoF_imp"> </label></label></td>
+                            <td><label name="totalPago_imp" id="totalPago_imp"></label><label</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                    </div> <!-- /.ROW1 -->
+                  </div> <!-- /.card-body -->
               </div><!-- ROW FILA3 -->        
 
             </div><!-- /.Panel Tarifas -->
@@ -269,39 +390,6 @@ function VerEmpresa(id){
 
 window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 
-}
-
-function CantMeses(valor){
-  
-/*Declaramos variables */
-var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
-
-var fechaPagara=valor.value;
-
-var formData = new FormData();
-
-formData.append('fechaPagara', fechaPagara);
-formData.append('ultimo_cobro', ultimo_cobro);
-
-axios.post('/admin/empresas/fechapagara', formData, {
-        })
-            .then((response) => {
-              console.log(response);
-                closeLoading();
-                if(response.data.success !=1){
-                  toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
-                  document.getElementById('hasta').innerHTML= '';
-                  document.getElementById('cant_meses').value='';
-                } 
-                if(response.data.success === 1){
-                  document.getElementById('hasta').innerHTML= fechaPagara;
-                  document.getElementById('cant_meses').value=response.data.cantidadMeses;
-                }  
-            })
-            .catch((error) => {
-                toastr.error('Error');
-                closeLoading();
-            });          
 }
 
 </script> 
