@@ -179,8 +179,10 @@
                                 data-live-search="true"   
                                 id="select-tipo_permiso-editar" 
                                  >
+                                
                                  <option value="licencia">Licencia</option>
                                  <option value="matricula">Matricula</option>
+                               
                                 </select>  
                            </div>
                         </div>
@@ -368,21 +370,14 @@
                         $('#id-editar').val(response.data.licencia_matricula.id);
                         $('#nombre-editar').val(response.data.licencia_matricula.nombre);
                         $('#monto-editar').val(response.data.licencia_matricula.monto);
+                        $('#select-tipo_permiso-editar:selected').val(response.data.licencia_matricula.tipo_permiso);
 
-                        document.getElementById("select-tipo_permiso-editar").options.length = 0;
-                        $.each(response.data.licencia_matricula, function( key, val ){
-                            if(response.data.tipo_permiso == val.id){
-                                $('#select-tipo_permiso-editar').append('<option value="' +val.id +'" selected="selected">'+val.+'</option>');
-                            }else{
-                                $('#select-tipo_permiso-editar').append('<option value="' +val.id +'">'+val.tipo_permiso+'</option>');
-                            }
-                        });
                        
                     }else{
                         toastr.error('La información solicitada no se encuentra');
                     }
-                    
-                })
+                
+                })   
            .catch((error) => {
               closeLoading();
               toastr.error('Información no encontrada');

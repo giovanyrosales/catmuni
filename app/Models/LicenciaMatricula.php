@@ -17,10 +17,9 @@ class LicenciaMatricula extends Model
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'nombre_matricula',
-        'monto_matricula',
-        'nombre_licencia',
-        'monto_licencia',
+        'nombre',
+        'tipo_permiso',
+        'monto',
 
       ];
 }

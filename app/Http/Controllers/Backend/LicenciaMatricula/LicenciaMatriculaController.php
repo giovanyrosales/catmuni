@@ -87,6 +87,7 @@ class LicenciaMatriculaController extends Controller
      return ['success' => 1,
      //nombre de la tabla
          'licencia_matricula' => $lista,
+            
         ];
      }else{
          return ['success' => 2];
