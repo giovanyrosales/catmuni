@@ -370,9 +370,9 @@
                         $('#id-editar').val(response.data.licencia_matricula.id);
                         $('#nombre-editar').val(response.data.licencia_matricula.nombre);
                         $('#monto-editar').val(response.data.licencia_matricula.monto);
-                        $('#select-tipo_permiso-editar:selected').val(response.data.licencia_matricula.tipo_permiso);
+                        $('#select-tipo_permiso-editar').val(response.data.licencia_matricula.tipo_permiso);
 
-                       
+
                     }else{
                         toastr.error('La información solicitada no se encuentra');
                     }
