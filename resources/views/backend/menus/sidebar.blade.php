@@ -63,6 +63,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{ route('admin.Multas.index') }}" target="frameprincipal" class="nav-link">
+                             <i class="fas fa-exclamation-triangle"></i>
+                            <p>Multas</p>
+                        </a>
+                    </li>
+
                 </ul>
              </li>
             

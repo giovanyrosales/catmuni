@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\DetalleActividadE\DetalleActividadEController;
 use App\Http\Controllers\Backend\TasaInteres\TasaInteresController;
 use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
 use App\Http\Controllers\Backend\LicenciaMatricula\LicenciaMatriculaController;
+use App\Http\Controllers\Backend\Multas\MultasController;
 
 
 /*
@@ -126,3 +127,12 @@ use App\Http\Controllers\Backend\LicenciaMatricula\LicenciaMatriculaController;
     Route::post('/admin/LicenciaMatricula/informacion', [LicenciaMatriculaController::class, 'informacionLM']);
     Route::post('/admin/LicenciaMatricula/editar', [LicenciaMatriculaController::class, 'editarLM']);
     Route::post('/admin/LicenciaMatricula/eliminar', [LicenciaMatriculaController::class, 'eliminarLM']);
+
+    // --- INGRESOS Y EGRESOS
+    Route::get('/admin/Multas/ListarMultas', [MultasController::class, 'index'])->name('admin.Multas.index');
+    Route::get('/admin/Multas/tabla', [MultasController::class,'tablaMultas']);
+    Route::get('/admin/nuevo/Multas/Listar', [MultasController::class,'listarMultas'])->name('admin.listarMultas.index');
+    Route::post('/admin/Multas/NuevaM', [MultasController::class,'agregarM']);
+    Route::post('/admin/Multas/informacion', [MultasController::class, 'informacionMultas']);
+    Route::post('/admin/Multas/editar', [MultasController::class, 'editarMultas']);
+    Route::post('/admin/Multas/eliminar', [MultasController::class, 'eliminarMultas']);

@@ -384,7 +384,7 @@
           {
             toastr.success('Guardado exitosamente');
             $('#modalAgregarTarifaFija').modal('hide');
-            recargar();
+            location.reload();
           }
           else
           {
