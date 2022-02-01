@@ -404,7 +404,7 @@
                             <div class="row">
                                 <div class="col-md-12">
 
-                                    <p>¿Realmente desea eliminar la tarifa variable seleccionada?"</p>
+                                    <p>¿Realmente desea eliminar la tarifa variable?"</p>
 
                                     <div class="form-group">
                                         <input type="hidden" id="idborrar">
