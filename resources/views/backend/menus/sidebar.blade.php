@@ -38,7 +38,7 @@
                     <li class="nav-item">
                         <a href="{{ route('admin.listarDetalleActividadEconomica.index') }}" target="frameprincipal" class="nav-link">
                             <i class="fas fa-donate"></i>
-                            <p>Actividades económicas</p>
+                            <p>Tarifa variable</p>
                         </a>
                     </li>
 

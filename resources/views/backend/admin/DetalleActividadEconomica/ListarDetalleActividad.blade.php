@@ -21,19 +21,19 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Lista de detalles de actividad económica.</h1>
+            <h1>Tarifa variable.</h1>
           </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Detalle de Actividad Económica</li>
+                            <li class="breadcrumb-item active">Tarifa variable</li>
                             </ol>
                         </div>
         </div>
         <br>
         <button type="button"onclick="agregarDetalles()" class="btn btn-success btn-sm" >
                 <i class="fas fa-pencil-alt"></i>
-                Nuevo detalle de actividad económica
+                Nueva tarifa variable
             </button>
       </div>
     </section>
@@ -44,7 +44,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Detalle Actividad Económica</h3>
+            <h3 class="card-title">Tarifa variable</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -83,7 +83,7 @@
         <div class="modal-dialog" style="width:1300px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Datos detalle actividad económica</h4>
+                    <h4 class="modal-title">Tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -185,7 +185,7 @@
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar detalle actividad económica</h4>
+         <h4 class="modal-title">Agregar tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -294,7 +294,7 @@
         <div class="modal-dialog" style="width:1300px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Datos detalle actividad económica</h4>
+                    <h4 class="modal-title">Tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -393,7 +393,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Eliminar detalles actividad economica</h4>
+                    <h4 class="modal-title">Eliminar tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -404,7 +404,7 @@
                             <div class="row">
                                 <div class="col-md-12">
 
-                                    <p>¿Realmente desea eliminar el detalle seleccionado?"</p>
+                                    <p>¿Realmente desea eliminar la tarifa variable seleccionada?"</p>
 
                                     <div class="form-group">
                                         <input type="hidden" id="idborrar">
