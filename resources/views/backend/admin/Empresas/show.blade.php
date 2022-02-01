@@ -201,7 +201,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                               </div>
                           </div><!-- .widget -->
                           </a>
-                      @elseif($calificaciones->estado_calificacion == 'creado')
+                      @elseif($calificaciones->estado_calificacion == 'calificado')
                       <a href="#" onclick="CalificacionCreada()" >
                                 <div class="widget stats-widget">
                                     <div class="widget-body clearfix bg-dark">
@@ -230,7 +230,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
             </div><!-- .widget -->
         </a>
       @else
-        <a href="#" data-toggle="modal" data-target="#modalRecalificacion" >
+      <a href="#" onclick="CrearRecalificacion({{$empresa->id}} )" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-info">
                     <div class="pull-left">
@@ -860,6 +860,11 @@ function ListarEmpresas(){
 function CrearCalificacion(id){
               window.location.href="{{ url('/admin/empresas/calificacion') }}/"+id;
         }
+
+function CrearRecalificacion(id){
+              window.location.href="{{ url('/admin/empresas/recalificacion') }}/"+id;
+        }
+        
         
 function CalificacionCreada(){
 

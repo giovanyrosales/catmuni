@@ -17,7 +17,7 @@
 
 
 @stop
-<!-- Función para calcular la calificación --------------------------------------------------------->
+<!-- Función para calcular la recalificación --------------------------------------------------------->
 <script type="text/javascript">
 
 
@@ -151,7 +151,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           $('#btntarifa').show();
                           $('#tarifaAplicada').show();
                           $('#tarifa').show();
-                          $("#Div_Fija").show();
                           $("#Div_Variable").hide();
                           $("#Div_Rotulos").hide();
                           $("#Div_Multas").hide();
@@ -164,7 +163,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           $('#btntarifa').hide();
                           $('#tarifaAplicada').show();
                           $('#tarifa').show();
-                          $("#Div_Variable").show();
                           $("#Div_Fija").hide();
                           $("#Div_Rotulos").hide();
                           $("#Div_Multas").hide();
@@ -180,7 +178,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 }
 
 </script>
-<!-- Finaliza función para calcular la calificación --------------------------------------------------------->
+<!-- Finaliza función para calcular la recalificación --------------------------------------------------------->
 
 
 <div class="content-wrapper" style="display: none" id="divcontenedor">
@@ -193,7 +191,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Calificar empresa</li>
+                            <li class="breadcrumb-item active">Recalificar empresa</li>
                         </ol>
                     </div><!-- /.col -->
             </div>
@@ -209,9 +207,9 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
         <form class="form-horizontal" id="formulario-GenerarCalificacion">
         @csrf
 
-        <div class="card card-green">
+        <div class="card card-info">
           <div class="card-header">
-          <h5 class="modal-title">Registrar calificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+          <h5 class="modal-title">Registrar recalificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -644,7 +642,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                <div class="col-md-6">
                   <div class="form-group">
                         <input type="text" disabled name="fechabalanceodjurada" id="fechabalanceodjurada" class="form-control" >
-                        <input type="hidden" name="estado_calificacion" id="estado_calificacion" class="form-control" value="calificado">
+                        <input type="hidden" name="estado_calificacion" id="estado_calificacion" class="form-control" value="recalificado">
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->

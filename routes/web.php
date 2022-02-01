@@ -75,7 +75,7 @@ use App\Http\Controllers\Backend\Multas\MultasController;
     Route::get('/admin/empresas/tarifas_fijas', [EmpresaController::class, 'tablaTarifaModal']);
     Route::post('/admin/empresas/calificacion/nueva', [EmpresaController::class,'nuevaCalificacion']);
     Route::post('/admin/empresas/calculo_cobros{empresa}', [EmpresaController::class, 'calculo_cobros']);
-
+    Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
 
 
     // --- CONTRIBUYENTES ---

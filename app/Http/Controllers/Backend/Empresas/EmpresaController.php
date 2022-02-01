@@ -12,6 +12,7 @@ use App\Models\ActividadEconomica;
 use App\Models\Cobros;
 use App\Models\calificacion;
 use App\Models\Interes;
+use App\Models\LicenciaMatricula;
 use App\Models\TarifaFija;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -109,6 +110,8 @@ class EmpresaController extends Controller
 public function calificacion($id)
 {
     $contribuyentes = Contribuyentes::All();
+    $licencia = LicenciaMatricula::All()->where('tipo_permiso', "=", "Licencia");
+    $matricula = LicenciaMatricula::All()->where('tipo_permiso', "=", "Matrícula");
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
@@ -141,11 +144,56 @@ public function calificacion($id)
     'actividad_economica.rubro','actividad_economica.id as id_act_economica')
     ->find($id);
     
-    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas'));
+    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula'));
     
 }
 
-// ---------Termina Calificación de empresa ------------------------------------------>
+// ---------Termina Recalificación de empresa ------------------------------------------>
+
+// ---------Calificación de empresa ------------------------------------------>
+
+public function Recalificacion($id)
+{
+    $contribuyentes = Contribuyentes::All();
+    $licencia = LicenciaMatricula::All()->where('tipo_permiso', "=", "Licencia");
+    $matricula = LicenciaMatricula::All()->where('tipo_permiso', "=", "Matrícula");
+    $estadoempresas = EstadoEmpresas::All();
+    $giroscomerciales = GiroComercial::All();
+    $actividadeseconomicas = ActividadEconomica::All();
+    $calificaciones = calificacion::All();
+
+    $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+            
+    ->select('tarifa_fija.id','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
+    'actividad_economica.rubro as nombre_rubro' )
+     ->get();
+
+    foreach($tarifa_fijas as $ll)
+    {
+        $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
+        $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
+        $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
+   
+    }
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica')
+    ->find($id);
+    
+    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula'));
+    
+}
+
+// ---------Termina Recalificación de empresa ------------------------------------------>
 
 //Vista detallada
 public function show($id)
@@ -437,10 +485,13 @@ public function nuevaEmpresa(Request $request){
 //Calcular fechas menores a los primeros 3 meses del año...
 public function calculo_calificacion(Request $request)
 {
-   
+    log::info($request->all());
   
    $deducciones= $request->deducciones;
    $activo_total=$request->activo_total;
+   $licencia=$request->licencia;
+   $matricula=$request->matricula;
+
    if($activo_total==NULL)
    {
     $tarifa='No Calculada'; 
@@ -454,9 +505,44 @@ public function calculo_calificacion(Request $request)
    else
    {
         $TarifaFijaMensualValor=$request->ValortarifaAplicada;
+       
+
         $activo_imponible=$activo_total-$deducciones;
-    
+
         $signo='$'; 
+
+        $licenciaMatricula= $licencia+ $matricula;
+        $licenciaMatriculaSigno=$signo . $licenciaMatricula;
+
+        if($licenciaMatricula >0){
+            $fondoFLM=$licenciaMatricula*0.05;
+            $fondoFLMSigno=$signo.$fondoFLM;
+            }
+            else
+            {
+              $fondoFLM=0;
+              $fondoFLMSigno=$signo.$fondoFLM;              
+            }
+            
+           
+
+            if($licencia=='')
+            {
+                $licencia=0;
+            }
+            else{
+                $licencia= $signo.$licencia;
+            }
+            if($matricula=='')
+            {
+                $matricula=0; 
+            }else{
+                $matricula=$signo.$matricula;
+            }
+            
+            
+            $PagoAnualLicenciasValor=round($licenciaMatricula+$fondoFLM,2);
+            $PagoAnualLicenciasSigno=$signo.$PagoAnualLicenciasValor;
     
         $tarifaenColones=$TarifaFijaMensualValor*8.75;
         $FondoF= $TarifaFijaMensualValor*0.05;
@@ -480,7 +566,9 @@ public function calculo_calificacion(Request $request)
         else if($activo_imponible<2858.14)
         {
             $tarifa='Fija';  
-            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno];   
+            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno,
+            'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 'licencia'=> $licencia,'matricula'=>$matricula,'fondoFLMSigno'=>$fondoFLMSigno,'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor
+        ];   
         
         }
         else
