@@ -20,7 +20,7 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="col-sm-12">
-                <h1>Permisos y Usuarios</h1>
+                <h1>Permisos y usuarios</h1>
             </div>
             <br>
             <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
