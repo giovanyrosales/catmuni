@@ -120,62 +120,12 @@ document.getElementById('hasta').value=hasta_donde_pagara;
       </div>
     </section>
     <!-- Cajitas para estadísticas termina aquí -->
+
+<!-- Cajas para Menu aquí -->
     <div class="row">
 
-    <div class="col-md-4 col-sm-8">
-        <a href="{{url('client')}}">
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-primary">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Generar aviso</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-exclamation-circle"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
-
-    </div>
-    <div class="col-md-4 col-sm-8">
-        <a href="{{url('simulator')}}">
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-purple">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Generar notificación</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-envelope-open-text"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
-
-    </div>
-    <div class="col-md-4 col-sm-8">
-    @if($detectorNull== '0')
-    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
-    <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-success">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
-    @else
-        <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-success">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
-    @endif
-        </div>
+  
         <div class="col-md-4 col-sm-8">
-   
-
               @if($detectorNull== '0')
              
                         <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
@@ -253,9 +203,60 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                 </div>
             </div><!-- .widget -->
         </a>
-
+    </div>
+    <div class="col-md-4 col-sm-8">
+        <a href="{{url('client')}}">
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-primary">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Generar aviso</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-exclamation-circle"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
 
     </div>
+    <div class="col-md-4 col-sm-8">
+        <a href="{{url('simulator')}}">
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-purple">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Generar notificación</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-envelope-open-text"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+
+    </div>
+    <div class="col-md-4 col-sm-8">
+    @if($detectorNull== '0')
+    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+    <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-success">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    @else
+        <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-success">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    @endif
+        </div>
+
+
     </div><!-- .ROW -->
 
 
