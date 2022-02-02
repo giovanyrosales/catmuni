@@ -46,7 +46,7 @@ class TarifaFijaController extends Controller
             $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
             $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
             $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
-            $ll->codigo = number_format($ll->codigo,2, ",", ",");
+           
        
         }
              
