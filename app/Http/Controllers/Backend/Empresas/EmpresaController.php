@@ -14,6 +14,7 @@ use App\Models\calificacion;
 use App\Models\Interes;
 use App\Models\LicenciaMatricula;
 use App\Models\TarifaFija;
+use App\Models\TarifaVariable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
@@ -486,7 +487,17 @@ public function nuevaEmpresa(Request $request){
 public function calculo_calificacion(Request $request)
 {
     log::info($request->all());
-  
+
+    $id_act_economica=$request->id_act_economica;
+    
+   //Cargamos todos los registros de la tabla varibales
+   $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')
+           
+   ->select('tarifa_variable.id','tarifa_variable.limite_inferior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+      'actividad_economica.rubro as actividad_economica' )
+   ->where('id_actividad_economica','=',"$id_act_economica")
+   ->first();
+   
    $deducciones= $request->deducciones;
    $activo_total=$request->activo_total;
    $licencia=$request->licencia;
@@ -561,11 +572,24 @@ public function calculo_calificacion(Request $request)
         if($activo_imponible>2858.14)
         {
             $tarifa='Variable';  
-            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor];
+            //comienza calculo para calcular la tarifa fija
+
+            $actividad_economica= $ConsultaTarifasVariables->actividad_economica;
+            $id_actividad_economica= $ConsultaTarifasVariables->id_actividad_economica;
+            $limite_inferior= $ConsultaTarifasVariables->limite_inferior;
+            $fijo= $ConsultaTarifasVariables->fijo;
+            $categoria= $ConsultaTarifasVariables->categoria;
+            $millar= $ConsultaTarifasVariables->millar;
+            $excedente= $ConsultaTarifasVariables->excedente;
+            
+            $tarifaVariable=$actividad_economica;
+
+            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'tarifaVariable'=>$tarifaVariable];
         }
         else if($activo_imponible<2858.14)
         {
             $tarifa='Fija';  
+
             return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno,
             'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 'licencia'=> $licencia,'matricula'=>$matricula,'fondoFLMSigno'=>$fondoFLMSigno,'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor
         ];   

@@ -33,6 +33,7 @@ class TarifaFijaController extends Controller
 
     public function tablaTarifa(TarifaFija $tarifa_fija)
     {
+      
         $tarifa_fija= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
             
         ->select('tarifa_fija.id','tarifa_fija.codigo','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
@@ -49,7 +50,7 @@ class TarifaFijaController extends Controller
            
        
         }
-             
+         
         return view('backend.admin.TarifaFija.tabla.tablalistatarifafija', compact('tarifa_fija'));
     
     }
