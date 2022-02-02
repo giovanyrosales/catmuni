@@ -43,6 +43,13 @@
                     </li>
 
                     <li class="nav-item">
+                        <a href="{{ route('admin.listarTarifaVariable.index') }}" target="frameprincipal" class="nav-link">
+                            <i class="fas fa-donate"></i>
+                            <p>Tarifa variable 2.0</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="{{ route('admin.TarifaFija.index') }}" target="frameprincipal" class="nav-link">
                             <i class="fas fa-percent"></i>
                             <p>Tarifas fijas</p>

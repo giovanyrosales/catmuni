@@ -92,6 +92,14 @@
                         <div class="card-body">
                         <div class="card-body">
             <div class="row">
+                  <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Código:</label>
+                        <input type="number" name="codigo" id="codigo" class="form-control" required placeholder="Código">
+                        <input type="hidden" name="id" id="id" class="form-control" >
+                      </div>
+                   </div>
+
                    <div class="col-md-4">
                      <div class="form-group">
                         <label>Actividad económica:</label>
@@ -106,16 +114,15 @@
                         <input type="number" name="limite_inferior" id="limite_inferior" class="form-control" required placeholder="Limite inferior" >
                      </div>
                     </div>
-            
+            </div> 
+            <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite superior:</label>
                         <input type="number" name="limite_superior" id="limite_superior" class="form-control" required placeholder="Limite superior" >
                      </div>
                     </div>
-            </div>    
-
-            <div class="row">
+           
                    <div class="col-md-4">
                      <div class="form-group">
                       <label>Impuesto mensual:</label>
@@ -124,7 +131,7 @@
                      </div> 
                      
             
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                      <div class="form-group">
                           <label>Rubro:</label>
                           <!-- Select estado - live search -->
@@ -183,7 +190,15 @@
                         <div class="card-body">
                         <div class="card-body">
 
-            <div class="row">
+               <div class="row">
+                   <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Código:</label>
+                        <input type="number" name="codigo" id="codigo-editar" class="form-control" required placeholder="Código">
+                        <input type="hidden" name="id" id="id-editar" class="form-control" >
+                      </div>
+                   </div>
+
                    <div class="col-md-4">
                      <div class="form-group">
                         <label>Actividad económica:</label>
@@ -198,16 +213,16 @@
                         <input type="number" name="limite_inferior" id="limite_inferior-editar" class="form-control" required placeholder="Limite inferior" >
                      </div>
                     </div>
-                       
+                    </div>
+
+                <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite superior:</label>
                         <input type="number" name="limite_superior" id="limite_superior-editar" class="form-control" required placeholder="Limite superior" >
                      </div>
                     </div>
-            </div>  
-
-            <div class="row">
+              
                    <div class="col-md-4">
                      <div class="form-group">
                       <label>Impuesto mensual:</label>
@@ -342,12 +357,19 @@
 
     function nuevaTarifa(id)
     {
-      var actividad_economica = document.getElementById('select-actividad_economica').value;
+        var codigo = document.getElementById('codigo').value;
+        var actividad_economica = document.getElementById('select-actividad_economica').value;
         var nombre_actividad = document.getElementById('nombre_actividad').value;
         var limite_inferior = document.getElementById('limite_inferior').value;
         var limite_superior = document.getElementById('limite_superior').value;
         var impuesto_mensual = document.getElementById('impuesto_mensual').value;
 
+        if(codigo === '')
+        {
+            toastr.error('El código es requerido');
+            return;
+        }
+                
         if(nombre_actividad === '')
         {
             toastr.error('La actividad económica es requerida');
@@ -367,6 +389,7 @@
         }
         openLoading();
       var formData = new FormData();
+      formData.append('codigo', codigo);
       formData.append('actividad_economica', actividad_economica);
       formData.append('nombre_actividad', nombre_actividad);
       formData.append('limite_inferior', limite_inferior);
@@ -416,6 +439,7 @@
                         $('#modalEditarTarifaFija').modal('show');
 
                         $('#id-editar').val(response.data.tarifa_fija.id);
+                        $('#codigo-editar').val(response.data.tarifa_fija.codigo);
                         $('#nombre_actividad-editar').val(response.data.tarifa_fija.nombre_actividad);
                         $('#limite_inferior-editar').val(response.data.tarifa_fija.limite_inferior);
                         $('#limite_superior-editar').val(response.data.tarifa_fija.limite_superior);
@@ -445,6 +469,7 @@
     function actualizarTarifa()
     {
             var id = document.getElementById('id-editar').value;
+            var codigo = document.getElementById('codigo-editar').value;
             var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
             var nombre_actividad = document.getElementById('nombre_actividad-editar').value;
             var limite_inferior = document.getElementById('limite_inferior-editar').value;
@@ -455,6 +480,7 @@
 
            var formData = new FormData();
               formData.append('id', id);
+              formData.append('codigo', codigo);
               formData.append('actividad_economica', actividad_economica);
               formData.append('nombre_actividad', nombre_actividad);
               formData.append('limite_inferior', limite_inferior);

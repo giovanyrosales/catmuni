@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\TasaInteres\TasaInteresController;
 use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
 use App\Http\Controllers\Backend\LicenciaMatricula\LicenciaMatriculaController;
 use App\Http\Controllers\Backend\Multas\MultasController;
+use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 
 
 /*
@@ -100,6 +101,16 @@ use App\Http\Controllers\Backend\Multas\MultasController;
     Route::post('/admin/DetalleActividadEconomica/informacion', [DetalleActividadEController::class, 'informacionDetalle']);
     Route::post('/admin/DetalleActividadEconomica/editar', [DetalleActividadEController::class, 'editarDetalles']);
     Route::post('/admin/DetalleActividadEconomica/eliminar_detalles', [DetalleActividadEController::class, 'eliminarD']);
+
+    // --- TARIFA VARIABLE
+    Route::get('/admin/TarifaVariable/Crear', [TarifaVariableController::class,'index'])->name('admin.crear.tarifavariable.index');
+    Route::post('/admin/TarifaVariable/Detalle-Act', [TarifaVariableController::class,'nuevaTarifaV']);
+    Route::get('/admin/TarifaVariable/Listar', [TarifaVariableController::class,'listarTarifaV'])->name('admin.listarTarifaVariable.index');
+    Route::get('/admin/TarifaVariable/tabla', [TarifaVariableController::class,'tablaTarifaVariable']);
+    Route::post('/admin/TarifaVariable/informacion', [TarifaVariableController::class, 'informacionTarifaV']);
+    Route::post('/admin/TarifaVariable/editar', [TarifaVariableController::class, 'editarTarifaV']);
+    Route::post('/admin/TarifaVariable/eliminar_detalles', [TarifaVariableController::class, 'eliminarTarifaV']);
+
 
     // --- TASA INTERES
     Route::get('/admin/TasaInteres/ListarInteres', [TasaInteresController::class,'index'])->name('admin.TasaInteres.index');

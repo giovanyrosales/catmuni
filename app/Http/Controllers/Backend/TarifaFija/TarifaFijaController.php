@@ -35,7 +35,7 @@ class TarifaFijaController extends Controller
     {
         $tarifa_fija= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
             
-        ->select('tarifa_fija.id','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
+        ->select('tarifa_fija.id','tarifa_fija.codigo','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
         'actividad_economica.rubro as nombre_rubro' )
          ->get();
           //  orderBy('id', 'ASC')->get();  
@@ -46,6 +46,7 @@ class TarifaFijaController extends Controller
             $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
             $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
             $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
+            $ll->codigo = number_format($ll->codigo,2, ",", ",");
        
         }
              
@@ -68,6 +69,7 @@ class TarifaFijaController extends Controller
     public function nuevaTarifa(Request $request)
     {
         $regla = array(
+            'codigo' => 'required',
             'nombre_actividad' => 'required',
             'impuesto_mensual' => 'required',
             'actividad_economica'=>'required',
@@ -85,6 +87,7 @@ class TarifaFijaController extends Controller
       }
 
         $dato = new TarifaFija();
+        $dato->codigo = $request->codigo;
         $dato->nombre_actividad = $request->nombre_actividad;
         $dato->limite_inferior = $request->limite_inferior;
         $dato->limite_superior = $request->limite_superior;
@@ -130,6 +133,7 @@ class TarifaFijaController extends Controller
        
        $regla = array(
            'id' => 'required',
+           'codigo' => 'required',
            'impuesto_mensual' => 'required',
            'actividad_economica' => 'required',
                     
@@ -144,7 +148,7 @@ class TarifaFijaController extends Controller
 
           TarifaFija::where('id', $request->id)->update([
           
-          'id_actividad_economica' => $request->actividad_economica,
+          'codigo' => $request->codigo,
           'nombre_actividad' => $request->nombre_actividad,
           'limite_inferior' => $request->limite_inferior,
           'limite_superior' => $request->limite_superior,
