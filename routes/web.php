@@ -92,16 +92,6 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
     // --- SIN PERMISOS VISTA 403 ---
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
 
-
-    // --- DETALLE ACTIVIDAD ECONÓMICA
-    Route::get('/admin/DetalleActividadEconomica/Crear', [DetalleActividadEController::class,'crearActividad'])->name('admin.crear.detalleactividad.index');
-    Route::post('/admin/DetalleActividadEconomica/Detalle-Act', [DetalleActividadEController::class,'nuevaActividad']);
-    Route::get('/admin/DetalleActividadEconomica/Listar', [DetalleActividadEController::class,'listarDetalleActividadE'])->name('admin.listarDetalleActividadEconomica.index');
-    Route::get('/admin/DetalleActividadEconomica/tabla', [DetalleActividadEController::class,'tablaDetalleActividadEconomica']);
-    Route::post('/admin/DetalleActividadEconomica/informacion', [DetalleActividadEController::class, 'informacionDetalle']);
-    Route::post('/admin/DetalleActividadEconomica/editar', [DetalleActividadEController::class, 'editarDetalles']);
-    Route::post('/admin/DetalleActividadEconomica/eliminar_detalles', [DetalleActividadEController::class, 'eliminarD']);
-
     // --- TARIFA VARIABLE
     Route::get('/admin/TarifaVariable/Crear', [TarifaVariableController::class,'index'])->name('admin.crear.tarifavariable.index');
     Route::post('/admin/TarifaVariable/Detalle-Act', [TarifaVariableController::class,'nuevaTarifaV']);

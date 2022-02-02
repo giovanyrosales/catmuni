@@ -67,7 +67,7 @@ function resetea()
  document.getElementById('tarifaAplicadaValor').value=vacio; 
 }
 
-function calculo()
+function calculo(id_act_economica)
 {
     /*Declaramos variables */
     var  licencia=(document.getElementById('selectLicencia').value);
@@ -87,6 +87,7 @@ formData.append('activo_total', activo_total);
 formData.append('ValortarifaAplicada', ValortarifaAplicada);
 formData.append('licencia', licencia);
 formData.append('matricula', matricula);
+formData.append('id_act_economica', id_act_economica);
 
 axios.post('/admin/empresas/calculo_calificacion', formData, {
         })
@@ -386,7 +387,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input type="number" onchange="calculo(),resetea();" placeholder="$00,000.00"  name="activo_total" id="activo_total" class="form-control" required >
+                        <input type="number" onchange="calculo({{$empresa->id_act_economica}}),resetea();" placeholder="$00,000.00"  name="activo_total" id="activo_total" class="form-control" required >
                        
                   </div>
                </div><!-- /.col-md-6 -->
@@ -400,7 +401,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input type="number" onchange="calculo(),resetea();" placeholder="$00,000.00"  name="deducciones" id="deducciones" class="form-control" required >
+                        <input type="number" onchange="calculo({{$empresa->id_act_economica}}),resetea();" placeholder="$00,000.00"  name="deducciones" id="deducciones" class="form-control" required >
                        
                   </div>
                </div><!-- /.col-md-6 -->
@@ -479,7 +480,17 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                     </div>
                 </div>
               <!-- finaliza select ACTIVIDAD-->
-              </div><!-- ROW FIL4 -->        
+              </div><!-- ROW FIL4 -->   
+                     <!-- Inicia TARIFA FIJA -->
+                      <div class="col-md-3">
+                      <div class="form-group">
+                      <button type="button"onclick="calculo();"  id="btntarifaVariable" class="btn btn-success btn-sm" >
+                        <i class="fas fa-pencil-alt"></i>
+                        Calcular tarifa Variable
+                      </button>  
+                      </div>
+                  </div>
+              <!-- finaliza TARIFA FIJA -->     
               </div><!-- /.SUCCESS -->
             </div><!-- /.Panel Tarifas -->
  
