@@ -7,16 +7,18 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                <th style="width: 15%;">ID</th>
+                                <th style="width: 15%;">Fecha de inicio</th>
                                 <th style="width: 15%;">Tasa de interés</th>
+                                <th style="width: 15%;">Tasa de expiración</th>
                                 <th style="width: 25%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($interes as $interes)
                                 <tr>
-                                    <td>{{$interes->id}} </td>
+                                    <td>{{$interes->fecha_inicio}} </td>
                                     <td>{{$interes->monto_interes}} </td>
+                                    <td>{{$interes->fecha_fin}} </td>
                                     
                                     <td style="text-align: center;">
                                                                 

@@ -95,7 +95,7 @@
                   <div class="col-md-4">
                      <div class="form-group">
                         <label>Código:</label>
-                        <input type="number" name="codigo" id="codigo" class="form-control" required placeholder="Código">
+                        <input type="text" name="codigo" id="codigo" class="form-control" required placeholder="Código">
                         <input type="hidden" name="id" id="id" class="form-control" >
                       </div>
                    </div>
@@ -194,7 +194,7 @@
                    <div class="col-md-4">
                      <div class="form-group">
                         <label>Código:</label>
-                        <input type="number" name="codigo" id="codigo-editar" class="form-control" required placeholder="Código">
+                        <input type="text" name="codigo" id="codigo-editar" class="form-control" required placeholder="Código">
                         <input type="hidden" name="id" id="id-editar" class="form-control" >
                       </div>
                    </div>

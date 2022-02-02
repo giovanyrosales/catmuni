@@ -92,9 +92,19 @@
             <div class="row">
               <div class="col-md-10">
               <div class="form-group">
+                     <label>Fecha de inicio:</label>
+                        <input type="date" id="fecha_inicio" class="form-control" required placeholder="Fecha de inicio">
+                      </div>
+              
+                     <div class="form-group">
                      <label>Monto interés:</label>
                         <input type="number" name="monto_interes" id="monto_interes" class="form-control" required placeholder="Monto">
                         <input type="hidden" name="id" id="id" class="form-control" >
+                      </div>
+
+                    <div class="form-group">
+                     <label>Fecha de expiración:</label>
+                        <input type="date" id="fecha_fin" class="form-control" required placeholder="Fecha de expiración">
                       </div>
                 <!-- /.form-group -->
                 </div>               
@@ -130,10 +140,20 @@
             <div class="row">
               <div class="col-md-10">
               <div class="form-group">
+                     <label>Fecha de inicio:</label>
+                        <input type="date" name="fecha_inicio" id="fecha_inicio-editar" class="form-control" required placeholder="Fecha de inicio">
+                    </div>
+
+              <div class="form-group">
                      <label>Monto interés:</label>
                         <input type="number" name="monto_interes" id="monto_interes-editar" class="form-control" required placeholder="Monto">
                         <input type="hidden" name="id" id="id-editar" class="form-control" >
                       </div>
+
+              <div class="form-group">
+                     <label>Fecha de expiración:</label>
+                        <input type="date" name="fecha_fin" id="fecha_fin-editar" class="form-control" required placeholder="Fecha de inicio">
+                     </div>
                 <!-- /.form-group -->
                 </div>               
                  </div>
@@ -234,18 +254,31 @@
 
     function nuevoInteres(id)
     {
-        
+        var fecha_inicio = document.getElementById('fecha_inicio').value;
         var monto_interes = document.getElementById('monto_interes').value;
-        
+        var fecha_fin = document.getElementById('fecha_fin').value;
 
-        if(monto_interes === ''){
+        if(fecha_inicio === '')
+        {
+            toastr.error('La fecha inicio es requerida');
+            return;
+        }
+        if(monto_interes === '')
+        {
             toastr.error('El Monto es requerido');
+            return;
+        }
+        if(fecha_fin === '')
+        {
+            toastr.error('La fecha de expiracion es requerida');
             return;
         }
      
         openLoading();
       var formData = new FormData();
+      formData.append('fecha_inicio', fecha_inicio);
       formData.append('monto_interes', monto_interes);
+      formData.append('fecha_fin', fecha_fin);
       
 
       axios.post('/admin/nuevo/TasaInteres/nuevo', formData,
@@ -287,8 +320,10 @@
                         $('#modalEditarInteres').modal('show');
 
                         $('#id-editar').val(response.data.interes.id);
+                        $('#fecha_inicio-editar').val(response.data.interes.fecha_inicio);
                         $('#monto_interes-editar').val(response.data.interes.monto_interes);
-                       
+                        $('#fecha_fin-editar').val(response.data.interes.fecha_fin);
+
                     }else{
                         toastr.error('Información no encontrada');
                     }
@@ -304,13 +339,17 @@
     function actualizarInteres()
     {
             var id = document.getElementById('id-editar').value;
+            var fecha_inicio = document.getElementById('fecha_inicio-editar').value;
             var monto_interes = document.getElementById('monto_interes-editar').value;
+            var fecha_fin = document.getElementById('fecha_fin-editar').value;
            
             openLoading()
 
             var formData = new FormData();
             formData.append('id', id);
-            formData.append('monto_interes', monto_interes);  
+            formData.append('fecha_inicio', fecha_inicio);
+            formData.append('monto_interes', monto_interes);
+            formData.append('fecha_fin', fecha_fin);  
             
             axios.post('/admin/TasaInteres/editar', formData, {
             })

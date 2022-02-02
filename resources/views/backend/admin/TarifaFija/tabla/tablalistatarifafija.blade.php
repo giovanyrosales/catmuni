@@ -8,12 +8,12 @@
                             <thead>
                                 <tr>
                                 <th style="width: 10%;">Código</th>
-                                <th style="width: 15%;">Actividad económica</th>
-                                <th style="width: 15%;">Rubro</th>
+                                <th style="width: 20%;">Actividad económica</th>
+                                <th style="width: 10%;">Rubro</th>
                                 <th style="width: 15%;">Limite inferior</th>
                                 <th style="width: 15%;">Limite superior</th>
                                 <th style="width: 15%;">Impuesto mensual</th>
-                                <th style="width: 15%;">Acción</th>
+                                <th style="width: 20%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>

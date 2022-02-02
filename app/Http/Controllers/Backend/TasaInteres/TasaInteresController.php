@@ -63,7 +63,10 @@ class TasaInteresController extends Controller
         if ($validar->fails()){ return ['success' => 0];}
         
             $dato = new Interes();
+            $dato->fecha_inicio = $request->fecha_inicio;
             $dato->monto_interes = $request->monto_interes;
+            $dato->fecha_fin = $request->fecha_fin;
+
 
             if($dato->save()){
                 return ['success' => 1];
@@ -99,7 +102,9 @@ class TasaInteresController extends Controller
        
        $regla = array(
            'id' => 'required',
+           'fecha_inicio' => 'required',
            'monto_interes' => 'required',
+           'fecha_fin' => 'required',
                     
         );
 
@@ -111,7 +116,9 @@ class TasaInteresController extends Controller
        {
 
                 Interes::where('id', $request->id)->update([
+                   'fecha_inicio' => $request->fecha_inicio,
                    'monto_interes' => $request->monto_interes,
+                   'fecha_fin' => $request->fecha_fin,
     
                 ]);
 
