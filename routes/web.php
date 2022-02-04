@@ -78,6 +78,11 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
     Route::post('/admin/empresas/calculo_cobros{empresa}', [EmpresaController::class, 'calculo_cobros']);
     Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
 
+    // --- TRASPASO Y CIERRE
+    Route::post('/admin/empresas/show/traspaso', [EmpresaController::class,'nuevoTraspaso']);
+    Route::post('/admin/empresas/show/cierre', [EmpresaController::class,'nuevoEstado']);
+    Route::post('/admin/empresas/show/informacion', [EmpresaController::class,'infoTraspaso']);
+
 
     // --- CONTRIBUYENTES ---
     Route::get('/admin/nuevo/contribuyentes/Listar', [ContribuyentesController::class,'listarContribuyentes'])->name('admin.listarContribuyentes.index');

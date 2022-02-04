@@ -104,41 +104,47 @@
                       </div>
                         </div>
                 <!-- /.form-group -->
-                   
+                <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Limite superior:</label>
+                        <input type="number" name="limite_superior" id="limite_superior-ver" class="form-control" disabled required placeholder="Limite superior" >
+                     </div>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Fijo:</label>
                         <input type="number" name="fijo" id="fijo-ver" class="form-control" disabled required placeholder="Fijo" >
                      </div>
                     </div>
-                  </div>
-
-
-                    <div class="row">
+               
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Excedente:</label>
                         <input type="number" name="excedente" id="excedente-ver" class="form-control" disabled required placeholder="Fijo" >
                      </div>
                     </div>
+                </div>
 
+                <div class="row"> 
                    <div class="col-md-6">
                      <div class="form-group">
                       <label>Categoria:</label>
                          <input type="number" name="categoria" id="categoria-ver" disabled required placeholder="Categoria" class="form-control" >
                     </div>
                      </div> 
-                  </div> 
-                  
-            
-             <div class="row">
-                   <div class="col-md-6">
+              
+                     <div class="col-md-6">
                      <div class="form-group">
                     <label>Millar:</label>
                     <input type="number" name="millar" id="millar-ver" class="form-control" disabled placeholder="Millar"  >
                   </div>
                  </div>
-                  
+                </div>
+
+                 <div class="row"> 
                 <div class="col-md-6">
                      <div class="form-group">
                           <label>Actividad económica:</label>
@@ -182,7 +188,7 @@
 
       <!--Modal para agregar tarifa variable-->
       <div class="modal fade" id="modalAgregarTarifaVariable">
-        <div class="modal-dialog" style="width:2000px;">
+        <div class="modal-dialog dtr-modal-content">
         <div class="modal-content">
          <div class="modal-header">
          <h4 class="modal-title">Agregar tarifa variable</h4>
@@ -203,41 +209,46 @@
                       </div>
                    </div>
                 <!-- /.form-group -->
-                    <div class="col-md-6">
+                  <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Limite superior:</label>
+                        <input type="number" name="limite_superior" id="limite_superior" class="form-control" required placeholder="Limite superior" >
+                     </div>
+                    </div>
+            </div> 
+            <div class="row">
+                  <div class="col-md-6">
                       <div class="form-group">
                         <label>Fijo:</label>
                         <input type="number" name="fijo" id="fijo" class="form-control" required placeholder="Fijo" >
                      </div>
-                    </div>
-            </div>
-            
-            <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Excedente:</label>
-                        <input type="number" name="excedente" id="excedente" class="form-control" required placeholder="Excedente" >
-                     </div>
-                    </div>
-                
-                   <div class="col-md-6">
-                     <div class="form-group">
-                      <label>Categoria:</label>
-                         <input type="number" name="categoria" id="categoria" required placeholder="Categoria" class="form-control" >
-                    </div>
-                     </div> 
-            </div> 
-                 
-            
-            <div class="row">
-                   <div class="col-md-6">
+                    </div>          
+          
+            <div class="col-md-6">
                      <div class="form-group">
                     <label>Millar:</label>
                     <input type="number" name="millar" id="millar" class="form-control" placeholder="Millar"  >
                   </div>
                  </div>
-                 
+            </div>
+
+            <div class="row">
+                 <div class="col-md-6">
+                     <div class="form-group">
+                      <label>Categoria:</label>
+                         <input type="number" name="categoria" id="categoria" required placeholder="Categoria" class="form-control" >
+                    </div>
+                     </div> 
+
+                     <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Excedente:</label>
+                        <input type="number" name="excedente" id="excedente" class="form-control" required placeholder="Excedente" >
+                     </div>
+                    </div>
+            </div>              
                 <!-- /.form-group -->
-                
+                <div class="row"> 
                 <div class="col-md-6">
                      <div class="form-group">
                           <label>Actividad económica:</label>
@@ -314,39 +325,48 @@
                         <input type="hidden" name="id" id="id-editar" class="form-control" >
                       </div>
                         </div>
+
+                 <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Limite superior:</label>
+                        <input type="number" name="limite_superior" id="limite_superior-editar" class="form-control" required placeholder="Limite superior" >
+                      </div>
+                     </div>    
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Fijo:</label>
                         <input type="number" name="fijo" id="fijo-editar" class="form-control" required placeholder="Fijo" >
                       </div>
                      </div>
-                  </div>
-
-                  <div class="row">
+                  
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Excedente:</label>
                         <input type="number" name="excedente" id="excedente-editar" class="form-control" required placeholder="Excedente" >
                      </div>
                     </div>
+              </div> 
+
+              <div class="row">
                    <div class="col-md-6">
                      <div class="form-group">
                       <label>Categoria:</label>
                          <input type="number" name="categoria" id="categoria-editar" required placeholder="Categoria" class="form-control" >
                       </div>
                      </div> 
-                  </div> 
-                 
-                  <div class="row">
+                   
                    <div class="col-md-6">
                      <div class="form-group">
                     <label>Millar:</label>
                     <input type="number" name="millar" id="millar-editar" class="form-control" placeholder="Millar"  >
                   </div>
                  </div>
-                 
+              </div>
                 <!-- /.form-group -->
-                
+                <div class="row">
                 <div class="col-md-6">
                      <div class="form-group">
                           <label>Actividad económica:</label>
@@ -486,6 +506,7 @@
 
                         $('#id-editar').val(response.data.tarifa_variable.id);
                         $('#limite_inferior-editar').val(response.data.tarifa_variable.limite_inferior);
+                        $('#limite_superior-editar').val(response.data.tarifa_variable.limite_superior);
                         $('#fijo-editar').val(response.data.tarifa_variable.fijo);
                         $('#excedente-editar').val(response.data.tarifa_variable.excedente);
                         $('#categoria-editar').val(response.data.tarifa_variable.categoria);
@@ -518,6 +539,7 @@
         var id = document.getElementById('id-editar').value;
         var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
         var limite_inferior = document.getElementById('limite_inferior-editar').value;
+        var limite_superior = document.getElementById('limite_superior-editar').value;
         var fijo = document.getElementById('fijo-editar').value;
         var excedente = document.getElementById('excedente-editar').value;
         var categoria = document.getElementById('categoria-editar').value;
@@ -528,6 +550,7 @@
             formData.append('id', id);
             formData.append('actividad_economica', actividad_economica);
             formData.append('limite_inferior', limite_inferior);
+            formData.append('limite_superior', limite_superior);
             formData.append('fijo',fijo);
             formData.append('excedente',excedente);
             formData.append('categoria',categoria);
@@ -572,6 +595,7 @@
 
                         $('#id-ver').val(response.data.tarifa_variable.id);
                         $('#limite_inferior-ver').val(response.data.tarifa_variable.limite_inferior);
+                        $('#limite_superior-ver').val(response.data.tarifa_variable.limite_superior);
                         $('#fijo-ver').val(response.data.tarifa_variable.fijo);
                         $('#excedente-ver').val(response.data.tarifa_variable.excedente);
                         $('#categoria-ver').val(response.data.tarifa_variable.categoria);
@@ -644,6 +668,7 @@
         
         var actividad_economica = document.getElementById('select-actividad_economica').value;
         var limite_inferior = document.getElementById('limite_inferior').value;
+        var limite_superior = document.getElementById('limite_superior').value;
         var fijo = document.getElementById('fijo').value;
         var excedente = document.getElementById('excedente').value;
         var categoria = document.getElementById('categoria').value;
@@ -654,6 +679,11 @@
             return;
         }
         
+        if(limite_superior === ''){
+            toastr.error('El limite superior es requerido');
+            return;
+        }
+                
         if(fijo === ''){
             toastr.error('Fijo es requerido');
             return;
@@ -683,6 +713,7 @@
       var formData = new FormData();
       formData.append('actividad_economica', actividad_economica);
       formData.append('limite_inferior', limite_inferior);
+      formData.append('limite_superior', limite_superior);
       formData.append('fijo', fijo);
       formData.append('excedente', excedente);
       formData.append('categoria', categoria);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Backend\TarifaVariable;
 
-use App\Models\DetalleActividad;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use GrahamCampbell\ResultType\Success;
@@ -42,6 +41,7 @@ class TarifaVariableController extends Controller
         $regla = array(
             'actividad_economica'=>'required',
             'limite_inferior' => 'required|unique:tarifa_variable,limite_inferior',
+            'limite_superior' => 'required|unique:tarifa_variable,limite_superior',
             'fijo' => 'required|unique:tarifa_variable,fijo',
             'excedente' => 'required',
             'categoria' => 'required',
@@ -65,6 +65,7 @@ class TarifaVariableController extends Controller
 
         $dato = new TarifaVariable();
         $dato->limite_inferior = $request->limite_inferior;
+        $dato->limite_superior = $request->limite_superior;
         $dato->fijo = $request->fijo;
         $dato->excedente = $request->excedente;
         $dato->categoria = $request->categoria;
@@ -83,8 +84,8 @@ class TarifaVariableController extends Controller
 
     public function listarTarifaV()
       {
-       
-    $tarifavariable = TarifaVariable::All();
+       //nombre del modelo de la llave foranea
+    $tarifavariable = ActividadEconomica::All();
 
     return view('backend.admin.TarifaVariable.ListarTarifaVariable', compact('tarifavariable'));
       }
@@ -96,13 +97,15 @@ class TarifaVariableController extends Controller
          
     $lista=TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')
            
-      ->select('tarifa_variable.id','tarifa_variable.limite_inferior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
-      'actividad_economica.rubro as actividad_economica' )
-       ->get();
+    ->select('tarifa_variable.id','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+    'actividad_economica.rubro as actividad_economica' )
+     ->get();
+          
             
             foreach($lista as $ll)
             {
                 $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
+                $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
                 $ll->excedente = number_format($ll->excedente, 2, '.', ',');
                 $ll->fijo = number_format($ll->fijo, 2, '.', ',');
             }
@@ -145,6 +148,7 @@ class TarifaVariableController extends Controller
 
         $regla = array(  
             'limite_inferior' => 'required',
+            'limite_superior' => 'required',
             'fijo' => 'required',
             'fijo' => 'required',
             'categoria' => 'required',
@@ -162,6 +166,7 @@ class TarifaVariableController extends Controller
 
             'id_actividad_economica' => $request->actividad_economica,
             'limite_inferior' => $request->limite_inferior,
+            'limite_superior' => $request->limite_superior,
             'fijo' => $request->fijo,
             'excedente' => $request->excedente,
             'categoria' => $request->categoria,

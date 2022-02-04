@@ -193,7 +193,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
         @endif
         </div>
         <div class="col-md-4 col-sm-8">
-        <a href="#" data-toggle="modal" data-target="#modalCierresTraspasos" >
+        <a href="#" onclick="informacionTraspaso({{$empresa->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -442,7 +442,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
             </button>
           </div>
           <div class="modal-body">
-            <form id="formulario-Calificacion">
+            <form id="formulario-Traspaso">
             @csrf
               <div class="card-body">
 <!-- Inicia Formulario Cierres y Traspasos--> 
@@ -477,17 +477,17 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                     </div><!-- /.col-md-6 -->
                     <!-- /.form-group -->
 
-                      <div class="col-md-3">
+                      <div class="col-md-6">
                           <div class="form-group">
                             <!-- Select estado - live search -->
                               <div class="input-group mb-9">
                                     <select 
                                     required
-                                    class="selectpicker"
+                                    class="form-control"
                                     data-style="btn-success"
                                     data-show-subtext="true" 
                                     data-live-search="true"   
-                                    id="select-estado_empresa" 
+                                    id="select-contribuyente-traspaso" 
                                     title="-- Seleccione un registro --"
                                     >
                                     @foreach($contribuyentes as $contribuyente)
@@ -521,7 +521,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                   <div class="form-group">
                       <!-- Botón Guardar Traspaso -->
                         <br>
-                        <button type="button"  onclick="GuardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
+                        <button type="button"  onclick="guardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
                         &nbsp; Guardar Traspaso &nbsp;</button>
                       <!-- /.Botón Guardar Traspaso -->
                   </div>
@@ -553,12 +553,12 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                               <div class="input-group mb-9">
                                     <select 
                                     required
-                                    class="selectpicker"
+                                    class="form-control"
                                     data-style="btn-success"
                                     data-show-subtext="true" 
                                     data-live-search="true"   
                                     id="select-estado_empresa" 
-                                    title="-- Selecione el estado  --"
+                                    title="-- Seleccione el estado  --"
                                     >
                                       @foreach($estadoempresas as $estado)
                                       <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
@@ -591,7 +591,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                   <div class="form-group">
                       <!-- Botón Guardar Traspaso -->
                         <br>
-                        <button type="button"  onclick="GuardarCierre()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
+                        <button type="button"  onclick="guardarEstado()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
                         &nbsp; Guardar Cierre &nbsp;</button>
                       <!-- /.Botón Guardar Traspaso -->
                   </div>
@@ -830,17 +830,95 @@ document.getElementById('hasta').value=hasta_donde_pagara;
     
 <script type="text/javascript">
 
+function guardarTraspaso(){
+      
+      var id = {{ $id}};
+      var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
+
+      if(contribuyente === ''){
+            toastr.error('El dato contribuyente es requerido');
+            return;
+        }
+
+        openLoading();
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('contribuyente', contribuyente);
+
+            axios.post('/admin/empresas/show/traspaso', formData, {
+            })
+            .then((response) => {          
+                closeLoading();
+
+                if (response.data.success === 1) 
+                   
+                   {
+                       toastr.success('¡Propietario actualizado!');
+                       $('#modalCierresTraspasos').modal('hide');
+                       recargar();
+                   }
+                   else 
+                   {
+                       toastMensaje('Error al actualizar');
+                       $('#modalCierresTraspasos').modal('hide');
+                              recargar();
+                   }
+             
+            })
+            .catch((error) => {
+                toastr.error('Error al actualizar empresa');
+                closeLoading();
+            });
+    }
+
+    function guardarEstado()
+    {
+      //Llamar la variable id desde el controlador
+      var id = {{ $id}};
+      var estado_empresa = document.getElementById('select-estado_empresa').value;
+
+      if(estado_empresa === ''){
+            toastr.error('El estado de la empresa es requerido');
+            return;
+        }
+
+        openLoading();
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('estado_empresa', estado_empresa);
+
+            axios.post('/admin/empresas/show/cierre', formData, {
+            })
+            .then((response) => {          
+                closeLoading();
+
+                if (response.data.success === 1) 
+                   
+                   {
+                       toastr.success('¡Estado de la empresa actualizado!');
+                       $('#modalCierresTraspasos').modal('hide');
+                       recargar();
+                   }
+                   else 
+                   {
+                       toastMensaje('Error al actualizar');
+                       $('#modalCierresTraspasos').modal('hide');
+                              recargar();
+                   }
+             
+            })
+            .catch((error) => {
+                toastr.error('Error al actualizar empresa');
+                closeLoading();
+            });
+    }
+
 function modalRecalificacion(){
             openLoading();
             document.getElementById("formulario-Recalificacion").reset();
             $('#modalRecalificacion').modal('show');
         }
 
-function  modalCierresTraspasos(){
-            openLoading();
-            document.getElementById("formulario- modalCierresTraspasos").reset();
-            $('#modalCierresTraspasos').modal('show');
-        }
 
 </script>
 
@@ -848,6 +926,60 @@ function  modalCierresTraspasos(){
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
         });
+
+    function recargar()
+    {
+     var ruta = "{{ url('/admin/empresas/tabla') }}";
+     $('#tablaDatatable').load(ruta);
+    }
+
+    
+
+    function informacionTraspaso(id){
+            openLoading();
+            document.getElementById("formulario-Traspaso").reset();
+
+            axios.post('/admin/empresas/show/informacion',{
+                'id': id
+            })
+            .then((response) => {
+              console.log(response);
+                    closeLoading();
+                    if(response.data.success === 1){
+                        $('#modalCierresTraspasos').modal('show');
+
+                        document.getElementById("select-contribuyente-traspaso").options.length = 0;
+                        document.getElementById("select-estado_empresa").options.length = 0;
+
+                        
+                        $.each(response.data.contribuyente, function( key, val ){
+                            if(response.data.idcont == val.id){
+                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                            }else{
+                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                            }
+                        });
+
+                        $.each(response.data.estado_empresa, function( key, val ){
+                            if(response.data.idesta == val.id){
+                                $('#select-estado_empresa').append('<option value="' +val.id +'" selected="selected">'+val.estado+'</option>');
+                            }else{
+                                $('#select-estado_empresa').append('<option value="' +val.id +'">'+val.estado+'</option>');
+                            }
+                        }); 
+
+                      }else{
+                        toastr.error('Información no encontrada');
+                    }
+
+                })
+                .catch((error) => {
+                    closeLoading();
+                    toastr.error('Información no encontrada');
+                });
+
+    }
+
 
 </script>
 <script>
@@ -887,6 +1019,7 @@ function Cobros(id){
 
   window.location.href="{{ url('/admin/empresas/cobros') }}/"+id;
 }
+
 
 </script>
 @stop

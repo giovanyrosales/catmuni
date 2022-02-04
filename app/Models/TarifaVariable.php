@@ -13,6 +13,7 @@ class TarifaVariable extends Model
         'id',
         'id_actividad_economica',
         'limite_inferior',
+        'limite_superior',
         'fijo',
         'categoria',
         'millar',

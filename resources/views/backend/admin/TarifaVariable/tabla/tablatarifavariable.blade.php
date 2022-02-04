@@ -8,10 +8,11 @@
                             <thead>
                                 <tr>
                                 <th style="width: 20%;">Limite inferior</th>
+                                <th style="width: 20%;">Limite superior</th>
                                 <th style="width: 10%;">Fijo</th>
                                 <th style="width: 15%;">Excedente</th>
                                 <th style="width: 10%;">Millar</th>
-                                <th style="width: 25%;">Actividad económica</th>
+                                <th style="width: 20%;">Actividad económica</th>
                                 <th style="width: 25%;">Acción</th>
                             </tr>
                             </thead>
@@ -19,6 +20,7 @@
                             @foreach($lista as $dato)
                                 <tr>
                                     <td>{{$dato->limite_inferior}} </td>
+                                    <td>{{$dato->limite_superior}} </td>
                                     <td>{{$dato->fijo}} </td>
                                     <td>{{$dato->excedente}} </td>
                                     <td>{{$dato->millar}} </td>

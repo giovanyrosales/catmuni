@@ -54,7 +54,9 @@ class TasaInteresController extends Controller
     public function agregarInteres(Request $request)
     {
         $regla = array(
+            'fecha_inicio' => 'Required',
             'monto_interes' => 'Required',
+            'fecha_fin' => 'Required',
         );
 
         $validar = Validator::make($request->all(), $regla);

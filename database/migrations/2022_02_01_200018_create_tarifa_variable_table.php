@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use phpDocumentor\Reflection\Types\Nullable;
 
 class CreateTarifaVariableTable extends Migration
 {
@@ -18,6 +19,7 @@ class CreateTarifaVariableTable extends Migration
             $table->bigInteger('id_actividad_economica')->unsigned();
             
             $table->string('limite_inferior', 50);
+            $table->string('limite_superior', 50)->Nullable();
             $table->string('fijo', 50);
             $table->string('categoria', 50);
             $table->string('millar', 50);

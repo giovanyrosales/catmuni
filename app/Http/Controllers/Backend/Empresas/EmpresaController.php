@@ -237,7 +237,7 @@ public function show($id)
         {
             $detectorNull=0;
             $detectorCobro=0;
-            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro'));
+            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id'));
         }
             
            
@@ -249,11 +249,11 @@ public function show($id)
             if ($ultimo_cobro == null)
             {
                 $detectorCobro=0;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro'));
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id'));
             }else
             {
                 $detectorCobro=1;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro'));
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id'));
             }
                    
     }
@@ -493,9 +493,9 @@ public function calculo_calificacion(Request $request)
    //Cargamos todos los registros de la tabla varibales
    $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')
            
-   ->select('tarifa_variable.id','tarifa_variable.limite_inferior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+   ->select ('tarifa_variable.id','tarifa_variable.limite_inferior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
       'actividad_economica.rubro as actividad_economica' )
-   ->where('id_actividad_economica','=',"$id_act_economica")
+   ->where ('id_actividad_economica','=',"$id_act_economica")
    ->first();
    
    $deducciones= $request->deducciones;
@@ -649,4 +649,99 @@ public function nuevaCalificacion(Request $request){
         //Termina registrar Calificación
 
 
+
+        //Realizar traspaso
+        public function infoTraspaso(Request $request)
+        {
+            $regla = array(
+                'id' => 'required',
+            );
+
+            $validar = Validator::make($request->all(), $regla);
+
+            if ($validar->fails()){ return ['success' => 0];}
+
+            if($lista = Empresas::where('id', $request->id)->first()){
+               
+                $contribuyente = Contribuyentes::orderBy('nombre')->get();
+                $estado_empresa = EstadoEmpresas::orderBy('estado')->get();
+                return ['success' => 1,
+
+                'idcont' => $lista->id_contribuyente,
+                'idesta' => $lista->id_estado_empresa,
+                'contribuyente' => $contribuyente,
+                'estado_empresa' => $estado_empresa,
+                
+            ];
+        }else{
+            return ['success' => 2];
+        }
+        }
+
+        public function nuevoTraspaso(Request $request)
+        {
+      
+            $regla = array(  
+                'id' => 'required',
+                'contribuyente' => 'required',
+            );
+          
+            $validar = Validator::make($request->all(), $regla,
+          
+            );
+
+            if ($validar->fails()){ 
+                return ['success' => 0,
+                'message' => $validar->errors()->first()
+            ];
+            }
+            if(Empresas::where('id', $request->id)->first()){
+
+                Empresas::where('id', $request->id)->update([
+         
+                     'id_contribuyente' => $request->contribuyente,
+
+                     
+        ]);
+
+        return ['success' => 1];
+    }else{
+        return ['success' => 2];
     }
+        }
+
+        public function nuevoEstado(Request $request)
+        {
+      
+            $regla = array(  
+                'id' => 'required',
+                'estado_empresa' => 'required',
+            );
+          
+            $validar = Validator::make($request->all(), $regla,
+          
+            );
+
+            if ($validar->fails()){ 
+                return ['success' => 0,
+                'message' => $validar->errors()->first()
+            ];
+            }
+            if(Empresas::where('id', $request->id)->first()){
+
+                Empresas::where('id', $request->id)->update([
+         
+                     'id_estado_empresa' => $request->estado_empresa,
+
+                     
+        ]);
+
+        return ['success' => 1];
+    }else{
+        return ['success' => 2];
+    }
+        }
+
+
+    
+} 
