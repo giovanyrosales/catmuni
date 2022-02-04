@@ -406,15 +406,7 @@ function nuevo(){
             toastr.error('El número de tarjeta no puede tener números negativos');
             return;
         }
-       
-     //*  foreach($ConsultaEmpresa)
-                                      
-     //*   if($ConsultaEmpresa->nit >0)
-                //*  {
-                         //* toastr.error('El NIT ya esta registrado con otra empresa');
-                         //* return;
-                //*  }
-     //*   endforeach     
+         
 
         openLoading();
         var formData = new FormData();
