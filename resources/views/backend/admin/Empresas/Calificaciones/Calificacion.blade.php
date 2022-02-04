@@ -80,6 +80,7 @@ function calculo(id_act_economica)
     var tipo_tarifa=(document.getElementById('tipo_tarifa').value);
     var ValortarifaAplicada=(document.getElementById('tarifaAplicadaValor').value);
 
+
 var formData = new FormData();
 
 formData.append('deducciones', deducciones);
@@ -114,9 +115,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         document.getElementById('anio_calificacion').innerHTML=anio_calificacion;
                         document.getElementById('deducciones_imp').innerHTML=deducciones_imp;
                         document.getElementById('act_imponible_imp').innerHTML=response.data.valor;
-                        document.getElementById('FondoF_imp').innerHTML=response.data.FondoF; 
-                        document.getElementById('Total_Impuesto_imp').innerHTML=response.data.Total_Impuesto;
-                        document.getElementById('tarifaenColonesSigno_imp').innerHTML=response.data.tarifaenColonesSigno;
+                       
 
                         if(activo_total==='')
                         {                     
@@ -146,6 +145,14 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                        
                         if(response.data.tarifa==='Fija')
                         {
+                        //**Estos dos campos son versatiles ya que se usan tambien en variable *//
+                        var ValortarifaAplicadaImp=(document.getElementById('tarifaAplicadaValor').value);
+                        document.getElementById('tarifaAplicadaMensualValor_imp').value=ValortarifaAplicadaImp;
+                        document.getElementById('Total_ImpuestoValor_imp').value=response.data.Total_Impuesto;
+
+                        document.getElementById('FondoF_imp').innerHTML=response.data.FondoF; 
+                        document.getElementById('Total_Impuesto_imp').innerHTML=response.data.Total_Impuesto;
+                        document.getElementById('tarifaenColonesSigno_imp').innerHTML=response.data.tarifaenColonesSigno;
                          
                           $("#monto_tarifa").show();
                           $('#seleccionarTarifa').show();
@@ -160,7 +167,20 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         }
                         else if(response.data.tarifa==='Variable')
                         {
-                      
+                          
+                          document.getElementById('tarifaAplicada').value=response.data.ImpuestoMensualVariableDolarSigno;
+                          document.getElementById('tarifaAplicadaValor').value=response.data.ImpuestoMensualVariableDolar;
+                          document.getElementById('fondoFPVMensualDolar_imp').innerHTML=response.data.fondoFPVMensualDolar;
+                          document.getElementById('fondoFPVAnualDolar_imp').innerHTML=response.data.fondoFPVAnualDolar;
+                          document.getElementById('ImpuestoAnualVariableDolar_imp').innerHTML=response.data.ImpuestoAnualVariableDolar;
+                          document.getElementById('ImpuestoMensualVariableDolar_imp').innerHTML=response.data.ImpuestoMensualVariableDolar;
+                          document.getElementById('ImpuestoTotalMensualDolar_imp').innerHTML=response.data.ImpuestoTotalMensualDolar;
+                          document.getElementById('ImpuestoTotalAnualDolar_imp').innerHTML=response.data.ImpuestoTotalAnualDolar;
+                         
+                          //**Estos dos campos son versatiles ya que se usan tambien en fija *//
+                          document.getElementById('Total_ImpuestoValor_imp').value=response.data.ImpuestoTotalMensualDolar;
+                          document.getElementById('tarifaAplicadaMensualValor_imp').value=response.data.ImpuestoMensualVariableDolar;
+
                           $("#monto_tarifa").hide();
                           $('#btntarifa').hide();
                           $('#tarifaAplicada').show();
@@ -316,6 +336,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                 <div class="input-group mb-9">
                                 <select 
                                 required 
+                                onchange="calculo({{$empresa->id_act_economica}});"
                                 class="selectpicker"
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -326,7 +347,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                 >
                                 <option value=" " >Ninguna</option>
                                 @foreach($licencia as $dato)
-                                    <option value="{{$dato->monto}}">{{ $dato->nombre}} &nbsp; ${{$dato->monto}}</option>                                  
+                                    <option value="{{$dato->monto}}">{{ $dato->nombre}} ${{$dato->monto}}</option>                                  
                                 @endforeach
                                 </select> 
                                 <input type="hidden" class="form-control" required disabled name="monto_pagar" id="monto_pagar" > 
@@ -348,6 +369,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                 <div class="input-group mb-9">
                                 <select 
                                 required 
+                                onchange="calculo({{$empresa->id_act_economica}});"
                                 class="selectpicker"
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -358,7 +380,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                 >
                                 <option value=" " >Ninguna</option>
                                 @foreach($matricula as $dato)
-                                    <option value="{{$dato->monto}}" >{{ $dato->nombre}} &nbsp; ${{$dato->monto}}</option>                                  
+                                    <option value="{{$dato->monto}}" >{{ $dato->nombre}} ${{$dato->monto}}</option>                                  
                                 @endforeach
                                 </select> 
                                 <input type="hidden" class="form-control" required disabled name="monto_pagar_matricula" id="monto_pagar_matricula">
@@ -481,16 +503,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                 </div>
               <!-- finaliza select ACTIVIDAD-->
               </div><!-- ROW FIL4 -->   
-                     <!-- Inicia TARIFA FIJA -->
-                      <div class="col-md-3">
-                      <div class="form-group">
-                      <button type="button"onclick="calculo();"  id="btntarifaVariable" class="btn btn-success btn-sm" >
-                        <i class="fas fa-pencil-alt"></i>
-                        Calcular tarifa Variable
-                      </button>  
-                      </div>
-                  </div>
-              <!-- finaliza TARIFA FIJA -->     
+   
               </div><!-- /.SUCCESS -->
             </div><!-- /.Panel Tarifas -->
  
@@ -504,7 +517,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
             </div>
             <!-- /.card-body -->
                   <div class="card-footer">
-                    <button type="button" class="btn btn-success float-right" onclick="GenerarCalificacion(), calculo();"><i class="fas fa-envelope-open-text"></i>
+                    <button type="button" class="btn btn-success float-right" onclick="GenerarCalificacion(), calculo({{$empresa->id_act_economica}});"><i class="fas fa-envelope-open-text"></i>
                     &nbsp;Generar Calificación&nbsp;</button>
                     <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )">Volver</button>
                   </div>
@@ -728,7 +741,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         <th scope="col">ACTIVIDAD ECONOMICA</th>
                         <th scope="col"> </th>
                         <th scope="col"> BASE IMPONIBLE </th>
-                        <th scope="col">TARIFA (COLONES)</th> 
+                        <th scope="col">TARIFA (Dolar)</th> 
                         <th scope="col">TARIFA (DOLARES)</th>
                       </tr>
 
@@ -765,9 +778,9 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
                       <tr>
                         <th scope="row">MENSUAL</th>
-                        <td colspan="2"><label name="tarifaAplicadaMensual_imp" id="tarifaAplicadaMensual_imp"></label><input type="hidden" name="tarifaAplicadaMensualValor_imp" id="tarifaAplicadaMensualValor_imp"></td>
+                        <td colspan="2"><label name="tarifaAplicadaMensual_imp" id="tarifaAplicadaMensual_imp"></label><input type="text" name="tarifaAplicadaMensualValor_imp" id="tarifaAplicadaMensualValor_imp"></td>
                         <td><label>$<label name="FondoF_imp" id="FondoF_imp"> </label></label></td>
-                        <td><label>$<label name="Total_Impuesto_imp" id="Total_Impuesto_imp"></label><label</td>
+                        <td><label>$<label name="Total_Impuesto_imp" id="Total_Impuesto_imp"></label></label><input type="text" name="Total_ImpuestoValor_imp" id="Total_ImpuestoValor_imp"></td>
                       </tr>
                     </table>
                     </div> <!-- /.ROW1 -->
@@ -812,21 +825,21 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         <td align="center"><h6 name="actividad_economica" id="actividad_economica"> </h6></td>
                         <td align="center">{{$empresa->id_act_economica}}</td>
                         <td> </td>
-                        <td>$</td>
-                        <td>$0.00</td>
+                        <td><label>$<label name="ImpuestoMensualVariableDolar_imp" id="ImpuestoMensualVariableDolar_imp"></label></label></td>
+                        <td><label>$<label name="ImpuestoAnualVariableDolar_imp" id="ImpuestoAnualVariableDolar_imp"></label></label></td>
                       </tr>
 
                       <tr>
                         <td rowspan="2"></td>
                         <td colspan="2">Fondo Fiestas Patronales 5%</td>
-                        <td>$ </td>
-                        <td>$</td>
+                        <td><label>$<label name="fondoFPVMensualDolar_imp" id="fondoFPVMensualDolar_imp"></label></label></td>
+                        <td><label>$<label name="fondoFPVAnualDolar_imp" id="fondoFPVAnualDolar_imp"></label></label></td>
                       </tr>
 
                       <tr>
                         <td colspan="2"><label> IMPUESTO</label></td>
-                        <td><strong>$ </strong></td>
-                        <td><strong>$</strong></td>
+                        <td><label>$<label name="ImpuestoTotalMensualDolar_imp" id="ImpuestoTotalMensualDolar_imp"></label></label></td>
+                        <td><label>$<label name="ImpuestoTotalAnualDolar_imp" id="ImpuestoTotalAnualDolar_imp"></label></label></td>
                       </tr>
                     </table>
                         </div> <!-- /.ROW1 -->
@@ -1114,7 +1127,7 @@ function GenerarCalificacion(){
             var deducciones=(document.getElementById('deducciones').value);
             var rubro=(document.getElementById('rubro').value);
             var tarifaAplicada_imp=(document.getElementById('tarifaAplicada').value);
-            var ValortarifaAplicadaImp=(document.getElementById('tarifaAplicadaValor').value);
+          
             
             if(fecha_pres_balance === ''){
                     toastr.error('La fecha que presenta el balance es requerida.');
@@ -1142,7 +1155,7 @@ function GenerarCalificacion(){
             document.getElementById('actividad_economica').innerHTML=rubro; 
             document.getElementById('tarifaAplicada_imp').innerHTML=tarifaAplicada_imp;
             document.getElementById('tarifaAplicadaMensual_imp').innerHTML=tarifaAplicada_imp;
-            document.getElementById('tarifaAplicadaMensualValor_imp').value=ValortarifaAplicadaImp;
+        
 
             $('#modalCalificacion').modal('show');
         }
@@ -1162,7 +1175,7 @@ function nuevo(){
   var matricula = document.getElementById('monto_pagar_matricula_imp').innerHTML;
   var año_calificacion = document.getElementById('año_calificacion').value;
   var pago_mensual = document.getElementById('tarifaAplicadaMensualValor_imp').value;
-  var total_impuesto = document.getElementById('Total_Impuesto_imp').innerHTML;
+  var total_impuesto = document.getElementById('Total_ImpuestoValor_imp').value;
   var pago_anual_permisos = document.getElementById('PagoAnualPermisos_imp').value;
 
   openLoading();

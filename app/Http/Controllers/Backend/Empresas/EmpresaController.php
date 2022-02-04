@@ -488,6 +488,7 @@ public function calculo_calificacion(Request $request)
 {
     log::info($request->all());
 
+<<<<<<< HEAD
     $id_act_economica=$request->id_act_economica;
     
    //Cargamos todos los registros de la tabla varibales
@@ -498,10 +499,42 @@ public function calculo_calificacion(Request $request)
    ->where ('id_actividad_economica','=',"$id_act_economica")
    ->first();
    
+=======
+>>>>>>> 6d18b0a321f9b73734f357131490c978204f3b49
    $deducciones= $request->deducciones;
    $activo_total=$request->activo_total;
    $licencia=$request->licencia;
    $matricula=$request->matricula;
+
+   $signoC='¢';
+   $signo='$'; 
+
+   $licenciaMatricula= $licencia+ $matricula;
+   $licenciaMatriculaSigno=$signo . $licenciaMatricula;
+
+   if($licenciaMatricula >0){
+       $fondoFLM=$licenciaMatricula*0.05;
+       $fondoFLMSigno=$signo.$fondoFLM;
+       }
+       else
+       {
+         $fondoFLM=0;
+         $fondoFLMSigno=$signo.$fondoFLM;              
+       }
+
+       if($licencia=='')
+       {
+           $licencia=0;
+       }
+       else{
+           $licencia= $signo.$licencia;
+       }
+       if($matricula=='')
+       {
+           $matricula=0; 
+       }else{
+           $matricula=$signo.$matricula;
+       }
 
    if($activo_total==NULL)
    {
@@ -515,45 +548,23 @@ public function calculo_calificacion(Request $request)
    }
    else
    {
+       //Este dato sólo se ocupa para tarifa fija ya calculada...................]
         $TarifaFijaMensualValor=$request->ValortarifaAplicada;
-       
 
+        //*** EL activo total y deducciones viene en dolares.....................]
+        //*** y se obtiene un activo imponible en dolares........................]
         $activo_imponible=$activo_total-$deducciones;
 
-        $signo='$'; 
+        //*** Convirtiendo a Colones el activo imponible.........................]
+        $activo_imponibleColones=$activo_imponible*8.75;
+        // $activo_imponibleColones=$signoC.$activo_imponibleColones;
 
-        $licenciaMatricula= $licencia+ $matricula;
-        $licenciaMatriculaSigno=$signo . $licenciaMatricula;
+        //*** Recuperamos el id de la actividad economica de la empresa..........]
+        $id_act_economica=$request->id_act_economica;
 
-        if($licenciaMatricula >0){
-            $fondoFLM=$licenciaMatricula*0.05;
-            $fondoFLMSigno=$signo.$fondoFLM;
-            }
-            else
-            {
-              $fondoFLM=0;
-              $fondoFLMSigno=$signo.$fondoFLM;              
-            }
-            
-           
 
-            if($licencia=='')
-            {
-                $licencia=0;
-            }
-            else{
-                $licencia= $signo.$licencia;
-            }
-            if($matricula=='')
-            {
-                $matricula=0; 
-            }else{
-                $matricula=$signo.$matricula;
-            }
-            
-            
-            $PagoAnualLicenciasValor=round($licenciaMatricula+$fondoFLM,2);
-            $PagoAnualLicenciasSigno=$signo.$PagoAnualLicenciasValor;
+        $PagoAnualLicenciasValor=round($licenciaMatricula+$fondoFLM,2);
+        $PagoAnualLicenciasSigno=$signo.$PagoAnualLicenciasValor;
     
         $tarifaenColones=$TarifaFijaMensualValor*8.75;
         $FondoF= $TarifaFijaMensualValor*0.05;
@@ -565,34 +576,182 @@ public function calculo_calificacion(Request $request)
         $Total_Impuesto=round($Total_Impuesto,2);
         $tarifaenColones=round($tarifaenColones,2);
     
-        $signoC='¢';
+        
         $tarifaenColonesSigno=$signoC . $tarifaenColones;
     
-    
-        if($activo_imponible>2858.14)
+ //....................................TARIFA VARIABLE..................................................//
+
+        if($activo_imponibleColones>25000)
         {
             $tarifa='Variable';  
-            //comienza calculo para calcular la tarifa fija
 
-            $actividad_economica= $ConsultaTarifasVariables->actividad_economica;
-            $id_actividad_economica= $ConsultaTarifasVariables->id_actividad_economica;
-            $limite_inferior= $ConsultaTarifasVariables->limite_inferior;
-            $fijo= $ConsultaTarifasVariables->fijo;
-            $categoria= $ConsultaTarifasVariables->categoria;
-            $millar= $ConsultaTarifasVariables->millar;
-            $excedente= $ConsultaTarifasVariables->excedente;
-            
-            $tarifaVariable=$actividad_economica;
+    //************* Comienza calculo para calcular la tarifa variable *************//
 
-            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'tarifaVariable'=>$tarifaVariable];
+
+    //*** Comparamos la actividad economica de la empresa para saber.........]
+        //*** que consulta le toca y poder sacar los datos de tarifas variables..]
+        if($id_act_economica==1)
+        {
+
+                //Cargamos todos los registros de la tabla tarifa varibales.
+                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'actividad_economica.rubro as actividad_economica' )
+                ->where('id_actividad_economica','=',"$id_act_economica")
+                ->where(function ($query)use ($activo_imponibleColones)
+                {
+                   $query->where('limite_superior','>',$activo_imponibleColones)
+                      ->orwhere('limite_superior','=',"5000000.01");
+                })
+                ->first();
         }
-        else if($activo_imponible<2858.14)
+        else if($id_act_economica==2)
+        {
+                //Cargamos todos los registros de la tabla tarifa varibales.
+                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'actividad_economica.rubro as actividad_economica' )
+                ->where('id_actividad_economica','=',"$id_act_economica")
+                ->where(function ($query)use ($activo_imponibleColones)
+                {
+                   $query->where('limite_superior','>',$activo_imponibleColones)
+                      ->orwhere('limite_superior','=',"5000000.01");
+                })
+                ->first();
+        }
+        else if($id_act_economica==3)
+        {
+                //Cargamos todos los registros de la tabla tarifa varibales.
+                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'actividad_economica.rubro as actividad_economica' )
+                ->where('id_actividad_economica','=',"$id_act_economica")
+                ->where(function ($query)use ($activo_imponibleColones)
+                {
+                   $query->where('limite_superior','>',$activo_imponibleColones)
+                   ->orwhere('limite_superior','=',"10000000.01");
+                })
+                ->first();
+        }       
+        else if($id_act_economica==4)
+        {
+            
+                //Cargamos todos los registros de la tabla tarifa varibales.
+                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'actividad_economica.rubro as actividad_economica' )
+                ->where('id_actividad_economica','=',$id_act_economica)
+                ->where(function ($query)use ($activo_imponibleColones)
+                {
+                   $query->where('limite_superior','>',$activo_imponibleColones)
+                      ->orwhere('limite_superior','=',"5000000.01");
+                })
+                ->first();
+        }
+        
+        //***Sacando datos de la consulta........................................]
+        $actividad_economica= $ConsultaTarifasVariables->actividad_economica;
+        $categoria= $ConsultaTarifasVariables->categoria;
+        $id_actividad_economica= $ConsultaTarifasVariables->id_actividad_economica;
+        $limite_inferior= $ConsultaTarifasVariables->limite_inferior;
+        $fijo= $ConsultaTarifasVariables->fijo;
+        $millar= $ConsultaTarifasVariables->millar;
+        $excedente= $ConsultaTarifasVariables->excedente;
+        //***Termina sacando datos de la consulta................................]
+       
+
+        $fijo; //50.0
+        $millar; //0.80
+        $excedente; //25,000
+        $MontoFijodelImpuesto=$fijo;
+        $ValorExcedente_en_millares=($activo_imponibleColones-$excedente)/1000;
+        $MontoVariable_del_Impuesto=$millar*$ValorExcedente_en_millares;
+
+        $ImpuestoMensualVariableColones=round($MontoFijodelImpuesto+$MontoVariable_del_Impuesto,2);
+        $ImpuestoAnualVariableColones= $ImpuestoMensualVariableColones*12;
+
+        //*** Convirtiendo el impuesto en dolares *//  
+        $ImpuestoMensualVariableDolar=round($ImpuestoMensualVariableColones/8.75,2);
+        $ImpuestoMensualVariableDolarSigno=$signo . $ImpuestoMensualVariableDolar;
+        $ImpuestoAnualVariableDolar=round($ImpuestoAnualVariableColones/8.75,2);
+
+
+        //*** Calculando los fondos para fiestas patronales *//
+        $fondoFPVMensual=round($ImpuestoMensualVariableColones*0.05,2);
+        $fondoFPVAnual=round($ImpuestoAnualVariableColones*0.05,2);
+
+        //*** Convirtiendo a dolar los fondos para fiestas patronales *//
+        $fondoFPVMensualDolar=round($fondoFPVMensual/8.75,2);
+        $fondoFPVAnualDolar=round($fondoFPVAnual/8.75,2);
+
+        //*** Calculando el impuesto total en colones *//
+        $ImpuestoTotalMensualColones=round($fondoFPVMensual+$ImpuestoMensualVariableColones,2);
+        $ImpuestoTotalAnualColones=round(($fondoFPVMensual+$ImpuestoMensualVariableColones)*12,2);
+
+        //*** Convirtiendo a dolar el impuesto total *//
+        $ImpuestoTotalMensualDolar=round($ImpuestoTotalMensualColones/8.75,2);
+        $ImpuestoTotalAnualDolar=round($ImpuestoTotalAnualColones/8.75,2);
+
+
+            return [
+                  
+                        'success' => 1, 
+
+                        'tarifa' =>$tarifa, 
+                        'valor'=>$valor, 
+                        'FondoF'=>$FondoF,
+                        'Total_Impuesto'=>$Total_Impuesto,
+                        'tarifaenColonesSigno'=>$tarifaenColonesSigno,
+                        'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 
+                        'licencia'=> $licencia,
+                        'matricula'=>$matricula,
+                        'fondoFLMSigno'=>$fondoFLMSigno,
+                        'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,
+                        'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor,
+                        'activo_imponibleColones'=>$activo_imponibleColones,
+
+                        'categoria'=>$categoria,
+                        'limite_inferior'=>$limite_inferior,
+                        'fijo'=>$fijo,
+                        'millar'=> $millar,
+                        'excedente'=>$excedente,
+                        'id_actividad_economica'=>$id_actividad_economica,
+                        'id_act_economica'=>$id_act_economica,
+                        'actividad_economica'=>$actividad_economica,
+                        'ImpuestoMensualVariableColones'=>$ImpuestoMensualVariableColones,
+                        'ImpuestoMensualVariableDolar'=>$ImpuestoMensualVariableDolar,
+                        'ImpuestoAnualVariableDolar'=>$ImpuestoAnualVariableDolar,
+                        'ImpuestoMensualVariableDolarSigno'=>$ImpuestoMensualVariableDolarSigno,
+
+                        'ImpuestoTotalMensualDolar'=>$ImpuestoTotalMensualDolar,
+                        'ImpuestoTotalAnualDolar'=>$ImpuestoTotalAnualDolar,
+                        'fondoFPVMensualDolar'=>$fondoFPVMensualDolar,
+                        'fondoFPVAnualDolar'=>$fondoFPVAnualDolar,
+                      
+                    ];
+        }
+   //.............................TARIFA FIJA.......................................
+
+        else if($activo_imponibleColones<25000)
         {
             $tarifa='Fija';  
-
-            return ['success' => 1, 'tarifa' =>$tarifa, 'valor'=>$valor, 'FondoF'=>$FondoF,'Total_Impuesto'=>$Total_Impuesto,'tarifaenColonesSigno'=>$tarifaenColonesSigno,
-            'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 'licencia'=> $licencia,'matricula'=>$matricula,'fondoFLMSigno'=>$fondoFLMSigno,'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor
-        ];   
+        
+            return [
+                    'success' => 1, 
+                    'tarifa' =>$tarifa, 
+                    'valor'=>$valor, 
+                    'FondoF'=>$FondoF,
+                    'Total_Impuesto'=>$Total_Impuesto,
+                    'tarifaenColonesSigno'=>$tarifaenColonesSigno,
+                    'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 
+                    'licencia'=> $licencia,
+                    'matricula'=>$matricula,
+                    'fondoFLMSigno'=>$fondoFLMSigno,
+                    'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,
+                    'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor,
+                    'activo_imponibleColones'=>$activo_imponibleColones,
+    
+                  ];   
         
         }
         else
