@@ -16,6 +16,7 @@ use App\Models\Interes;
 use App\Models\LicenciaMatricula;
 use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
@@ -58,8 +59,6 @@ class EmpresaController extends Controller
         $actividadespecifica = ActividadEspecifica::ALL();
 
 
-
-
         return view('backend.admin.Empresas.ListarEmpresas', compact('contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas','actividadespecifica'));
     }
     public function tablaEmpresas(Empresas $lista){
@@ -74,7 +73,7 @@ class EmpresaController extends Controller
         'contribuyente.nombre as contribuyente','contribuyente.apellido',
         'estado_empresa.estado',
         'giro_comercial.nombre_giro',
-        'actividad_especifica.nom_actividad_especifica as nombre_actividad')
+        'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
         ->get();
                 
         return view('backend.admin.Empresas.tabla.tablalistaempresas', compact('lista'));
@@ -110,6 +109,7 @@ class EmpresaController extends Controller
                 'actividad_especifica' => $actividad_especifica,
                 'idact_esp' => $lista->id_actividad_especifica,
                 ];
+            
         }else{
             return ['success' => 2];
         }
@@ -128,9 +128,11 @@ public function calificacion($id)
     $calificaciones = calificacion::All();
 
     $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
-            
-    ->select('tarifa_fija.id','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
-    'actividad_economica.rubro as nombre_rubro' )
+    ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
+
+    ->select('tarifa_fija.id','tarifa_fija.id_actividad_especifica','tarifa_fija.codigo','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
+    'actividad_economica.rubro as nombre_rubro',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica' )
      ->get();
 
     foreach($tarifa_fijas as $ll)
@@ -146,12 +148,14 @@ public function calificacion($id)
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
     
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro','actividad_economica.id as id_act_economica')
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);
     
     return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula'));
@@ -173,9 +177,11 @@ public function Recalificacion($id)
     $calificaciones = calificacion::All();
 
     $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
-            
-    ->select('tarifa_fija.id','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
-    'actividad_economica.rubro as nombre_rubro' )
+    ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
+
+    ->select('tarifa_fija.id','tarifa_fija.id_actividad_especifica','tarifa_fija.codigo','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
+    'actividad_economica.rubro as nombre_rubro',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica' )
      ->get();
 
     foreach($tarifa_fijas as $ll)
@@ -191,12 +197,14 @@ public function Recalificacion($id)
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro','actividad_economica.id as id_act_economica')
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);
     
     return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula'));
@@ -231,13 +239,14 @@ public function show($id)
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
     
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro')
+    'actividad_economica.rubro',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);    
 
    if ($calificaciones == null)
@@ -341,12 +350,14 @@ public function cobros($id)
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro','actividad_economica.id as id_act_economica')
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);   
     
     $date=Carbon::now()->toDateString();
@@ -425,7 +436,6 @@ public function nuevaEmpresa(Request $request){
     $dato->id_estado_empresa = $request->estado_empresa;
     $dato->id_giro_comercial = $request->giro_comercial;
     $dato->id_actividad_economica = $request->actividad_economica;
-    $dato->id_actividad_especifica = $request->actividad_especifica;
     $dato->nombre = $request->nombre;
     $dato->matricula_comercio = $request->matricula_comercio;
     $dato->nit = $request->nit;
@@ -471,7 +481,6 @@ public function nuevaEmpresa(Request $request){
             'id_estado_empresa' => $request->estado_empresa,
             'id_giro_comercial' => $request->giro_comercial,
             'id_actividad_economica' => $request->actividad_economica,
-            'id_actividad_especifica' => $request->actividad_especifica,
             'nombre' => $request->nombre,
             'matricula_comercio' => $request->matricula_comercio,
             'nit' => $request->nit,
@@ -548,7 +557,9 @@ public function calculo_calificacion(Request $request)
    else
    {
        //Este dato sólo se ocupa para tarifa fija ya calculada...................]
-        $TarifaFijaMensualValor=$request->ValortarifaAplicada;
+       // $TarifaFijaMensualValor=$request->ValortarifaAplicada;
+        $id_actividad_especifica=$request->id_actividad_especifica;
+        
 
         //*** EL activo total y deducciones viene en dolares.....................]
         //*** y se obtiene un activo imponible en dolares........................]
@@ -565,18 +576,10 @@ public function calculo_calificacion(Request $request)
         $PagoAnualLicenciasValor=round($licenciaMatricula+$fondoFLM,2);
         $PagoAnualLicenciasSigno=$signo.$PagoAnualLicenciasValor;
     
-        $tarifaenColones=$TarifaFijaMensualValor*8.75;
-        $FondoF= $TarifaFijaMensualValor*0.05;
-        $Total_Impuesto=$FondoF+$TarifaFijaMensualValor;
+
         $valor= $signo . $activo_imponible;
-    
-        //Redondeando a dos decimales.
-        $FondoF=round($FondoF,2);
-        $Total_Impuesto=round($Total_Impuesto,2);
-        $tarifaenColones=round($tarifaenColones,2);
-    
-        
-        $tarifaenColonesSigno=$signoC . $tarifaenColones;
+
+
     
  //....................................TARIFA VARIABLE..................................................//
 
@@ -698,9 +701,6 @@ public function calculo_calificacion(Request $request)
 
                         'tarifa' =>$tarifa, 
                         'valor'=>$valor, 
-                        'FondoF'=>$FondoF,
-                        'Total_Impuesto'=>$Total_Impuesto,
-                        'tarifaenColonesSigno'=>$tarifaenColonesSigno,
                         'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 
                         'licencia'=> $licencia,
                         'matricula'=>$matricula,
@@ -734,13 +734,61 @@ public function calculo_calificacion(Request $request)
         else if($activo_imponibleColones<25000)
         {
             $tarifa='Fija';  
+
+           
+                //Cargamos todos los registros de la tarifas fijas.
+                $ConsultaTarifasFijas = TarifaFija:: where('id_actividad_economica','=',$id_act_economica)
+                ->where('id_actividad_especifica','=',"$id_actividad_especifica")
+                ->where(function ($query)use ($activo_imponibleColones)
+
+                {
+                    $query->where('limite_superior','>',"$activo_imponibleColones")
+                   ->orwhere('limite_superior','=',null);
+          
+                   
+                })
+                ->first();
+
+
+
+
+         //***Sacando datos de la consulta........................................]
+         $impuesto_mensualFijo=  $ConsultaTarifasFijas->impuesto_mensual;
+         $limite_superior=  $ConsultaTarifasFijas->limite_superior;
+         $id_actividad_economica=  $ConsultaTarifasFijas->id_actividad_economica;
+         $codigo=  $ConsultaTarifasFijas->codigo;
+         //***Termina sacando datos de la consulta................................]
+         
+         //***Convirtiendo a dolar................................................]
+            $tarifaFijaDolar=$impuesto_mensualFijo/8.75;
+
+         //***Calculando impuesto total dolares...................................]
+            $FondoF= $tarifaFijaDolar*0.05;
+            $Total_ImpuestoFijoDolar=$FondoF+$tarifaFijaDolar;
+            
+        
+        //***Redondeando a dos decimales..........................................]
+            $Total_ImpuestoFijoDolarValor=round( $Total_ImpuestoFijoDolar,2);
+            $FondoF=round( $FondoF,2);
+
+            $Total_ImpuestoFijoDolarSigno=$signo. $Total_ImpuestoFijoDolar;
+            $tarifaenColonesSigno=$signoC . $impuesto_mensualFijo;
+
+
+
         
             return [
                     'success' => 1, 
                     'tarifa' =>$tarifa, 
                     'valor'=>$valor, 
                     'FondoF'=>$FondoF,
-                    'Total_Impuesto'=>$Total_Impuesto,
+                    'codigo'=>$codigo,
+                    'limite_superior'=>$limite_superior,
+                    'id_actividad_economica'=>$id_actividad_economica,
+                    'Total_ImpuestoFijoDolar'=>$Total_ImpuestoFijoDolar,
+                    'Total_ImpuestoFijoDolarValor'=> $Total_ImpuestoFijoDolarValor,
+                    'Total_ImpuestoFijoDolarSigno'=> $Total_ImpuestoFijoDolarSigno,
+                    'id_actividad_especifica'=>$id_actividad_especifica,
                     'tarifaenColonesSigno'=>$tarifaenColonesSigno,
                     'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 
                     'licencia'=> $licencia,
@@ -761,7 +809,7 @@ public function calculo_calificacion(Request $request)
 }  
  
 
-//Registrar Calificación
+//Registrar Calificación y recalificación
 public function nuevaCalificacion(Request $request){
     
     $regla = array(

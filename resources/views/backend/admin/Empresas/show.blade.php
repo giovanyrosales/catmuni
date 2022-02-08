@@ -323,7 +323,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                         </tr>
                         <tr>
                           <th>Actividad Específica</th>
-                          <td>{{$empresa->nombre_actividad}}</span></td>
+                          <td>{{$empresa->nom_actividad_especifica}}</span></td>
                         </tr>
                         <tr>
                           <th>N° de tarjeta</th>

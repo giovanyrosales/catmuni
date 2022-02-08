@@ -24,8 +24,6 @@
     function f1(){
                 $('#monto_tarifa').hide();
                 $('#selectTarifa').hide();
-                $('#seleccionarTarifa').hide();
-                $('#btntarifa').hide();
                 $('#tarifaAplicada').hide();
                 $('#tarifa').hide();
                
@@ -37,16 +35,7 @@ window.onload = f1;
 
 <script>
 
-function SeleccionarTarifaFija(valor)
-{
-  signo="$";
-  TarifaAplicadaSigno=signo+valor;
-  tarifaFija=valor;
-  $('#modalAsignarTarifaFija').modal('hide');
-  document.getElementById('tarifaAplicada').value=TarifaAplicadaSigno;
-  document.getElementById('tarifaAplicadaValor').value=tarifaFija;
 
-}
 
 function extraeranio()
 {
@@ -79,7 +68,7 @@ function calculo(id_act_economica)
     var deducciones_imp=(document.getElementById('deducciones').value);
     var tipo_tarifa=(document.getElementById('tipo_tarifa').value);
     var ValortarifaAplicada=(document.getElementById('tarifaAplicadaValor').value);
-
+    var id_actividad_especifica={{$empresa->id_actividad_especifica}};
 
 var formData = new FormData();
 
@@ -89,6 +78,7 @@ formData.append('ValortarifaAplicada', ValortarifaAplicada);
 formData.append('licencia', licencia);
 formData.append('matricula', matricula);
 formData.append('id_act_economica', id_act_economica);
+formData.append('id_actividad_especifica', id_actividad_especifica);
 
 axios.post('/admin/empresas/calculo_calificacion', formData, {
         })
@@ -120,7 +110,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         if(activo_total==='')
                         {                     
                           $("#monto_tarifa").hide();
-                          $('#btntarifa').hide();
                           $('#tarifaAplicada').hide();
                           $('#tarifa').hide();
 
@@ -132,7 +121,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         if(deducciones==='')
                         {
                           $("#monto_tarifa").hide();
-                          $('#btntarifa').hide();
                           $('#tarifaAplicada').hide();
                           $('#tarifa').hide();
                           vacio='';
@@ -148,15 +136,16 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         //**Estos dos campos son versatiles ya que se usan tambien en variable *//
                         var ValortarifaAplicadaImp=(document.getElementById('tarifaAplicadaValor').value);
                         document.getElementById('tarifaAplicadaMensualValor_imp').value=ValortarifaAplicadaImp;
-                        document.getElementById('Total_ImpuestoValor_imp').value=response.data.Total_Impuesto;
+                        document.getElementById('Total_ImpuestoValor_imp').value=response.data.Total_ImpuestoFijoDolarSigno;
 
                         document.getElementById('FondoF_imp').innerHTML=response.data.FondoF; 
-                        document.getElementById('Total_Impuesto_imp').innerHTML=response.data.Total_Impuesto;
+                        document.getElementById('Total_Impuesto_imp').innerHTML=response.data.Total_ImpuestoFijoDolarSigno;
                         document.getElementById('tarifaenColonesSigno_imp').innerHTML=response.data.tarifaenColonesSigno;
-                         
+                        
+                        document.getElementById('tarifaAplicada').value=response.data.Total_ImpuestoFijoDolarSigno;
+                        document.getElementById('tarifaAplicadaValor').value=response.data.Total_ImpuestoFijoDolarValor; 
+
                           $("#monto_tarifa").show();
-                          $('#seleccionarTarifa').show();
-                          $('#btntarifa').show();
                           $('#tarifaAplicada').show();
                           $('#tarifa').show();
                           $("#Div_Fija").show();
@@ -182,7 +171,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           document.getElementById('tarifaAplicadaMensualValor_imp').value=response.data.ImpuestoMensualVariableDolar;
 
                           $("#monto_tarifa").hide();
-                          $('#btntarifa').hide();
+                        
                           $('#tarifaAplicada').show();
                           $('#tarifa').show();
                           $("#Div_Variable").show();
@@ -293,7 +282,18 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-
+               <!-- /.form-group -->
+               <div class="col-md-3">
+                  <div class="form-group">
+                        <label>ACT. ESPECIFICA:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-3">
+                  <div class="form-group">
+                  <input type="text"  value="{{ $empresa->nom_actividad_especifica }}" disabled id="nom_actividad_especifica" class="form-control" required >                               
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <!-- /.form-group -->
               <!-- /.form-group -->
                             <!-- /.form-group -->
                             <div class="col-md-3">
@@ -473,21 +473,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                        <input type="text" disabled placeholder="$00,000.00" name="activo_imponible" id="activo_imponible" class="form-control" required >    
                 </div>
               </div><!-- /.col-md-6 -->
-               <!-- Inicia TARIFA FIJA -->
-               <div class="col-md-3">
-                      <div class="form-group">
-                      <button type="button"onclick="agregarTarifaFija()"  id="btntarifa" class="btn btn-success btn-sm" >
-                        <i class="fas fa-pencil-alt"></i>
-                        Asignar tarifa fija
-                      </button>  
-                      </div>
-                  </div>
-              <!-- finaliza TARIFA FIJA -->
-               <!-- /.form-group -->
-               </div><!-- ROW FILA3 -->  
-              
-               <div class="row"><!-- /.ROW FILA3 -->
-               
+  
               <!-- /.form-group -->
               <div class="col-md-3">
                   <div class="form-group">
@@ -741,7 +727,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         <th scope="col">ACTIVIDAD ECONOMICA</th>
                         <th scope="col"> </th>
                         <th scope="col"> BASE IMPONIBLE </th>
-                        <th scope="col">TARIFA (Dolar)</th> 
+                        <th scope="col">TARIFA (COLONES)</th> 
                         <th scope="col">TARIFA (DOLARES)</th>
                       </tr>
 
@@ -778,9 +764,9 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
                       <tr>
                         <th scope="row">MENSUAL</th>
-                        <td colspan="2"><label name="tarifaAplicadaMensual_imp" id="tarifaAplicadaMensual_imp"></label><input type="text" name="tarifaAplicadaMensualValor_imp" id="tarifaAplicadaMensualValor_imp"></td>
+                        <td colspan="2"><label name="tarifaAplicadaMensual_imp" id="tarifaAplicadaMensual_imp"></label><input type="hidden" name="tarifaAplicadaMensualValor_imp" id="tarifaAplicadaMensualValor_imp"></td>
                         <td><label>$<label name="FondoF_imp" id="FondoF_imp"> </label></label></td>
-                        <td><label>$<label name="Total_Impuesto_imp" id="Total_Impuesto_imp"></label></label><input type="text" name="Total_ImpuestoValor_imp" id="Total_ImpuestoValor_imp"></td>
+                        <td><label name="Total_Impuesto_imp" id="Total_Impuesto_imp"></label><input type="hidden" name="Total_ImpuestoValor_imp" id="Total_ImpuestoValor_imp"></td>
                       </tr>
                     </table>
                     </div> <!-- /.ROW1 -->
@@ -999,94 +985,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
  </div> <!-- /.modal-body -->
 
 <!-- Finaliza Modal Registrar Calificación--------------------------------------------------------->
-
-
-<!--Inicia Modal Asignar tarifa fija--------------------------------------------------------------->
-
-<div class="modal fade" id="modalAsignarTarifaFija">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Asignar tarifa fija a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              <div class="card-body">
-
-  <!-- Inicia Formulario AsignarTarifaFija--> 
-  <section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <table id="tabla" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                <th style="width: 15%;">Actividad económica</th>
-                                <th style="width: 12%;">Rubro</th>
-                                <th style="width: 15%;">Limite inferior</th>
-                                <th style="width: 15%;">Limite superior</th>
-                                <th style="width: 15%;">Impuesto mensual</th>
-                                <th style="width: 17%;">Acción</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($tarifa_fijas as $tarifa_fija)
-                                <tr>
-                                    <td>{{$tarifa_fija->nombre_actividad}} </td>
-                                    <td>{{$tarifa_fija->nombre_rubro}} </td>
-                                    <td>${{$tarifa_fija->limite_inferior}} </td>
-                                    <td>${{$tarifa_fija->limite_superior}} </td>
-                                    <td>${{$tarifa_fija->impuesto_mensual}} </td>
-                                  
-                                      <td style="text-align: center;">
-                                                                   
-                                      <button type="button" class="btn btn-primary btn-xs" onclick="SeleccionarTarifaFija({{ $tarifa_fija->impuesto_mensual }})">
-                                      <i class="fas fa-mouse-pointer" title="Seleccionar"></i>&nbsp; Seleccionar
-                                      </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-
-                            </tbody>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-
-         
-
-  <!-- Finaliza campos del formulario de asignar tarifa fija -->
-
-
-         <!-- /.card-body -->
-        </div>
-      <!-- /.card -->
-      </div>
-    <!-- /.container-fluid -->
-    </section>
-        
-       </form> <!-- /.formulario-AsignarTarifaFija -->
-      </div> <!-- /.Card-body -->
-     </div> <!-- /.modalAsignarTarifaFija -->
-   </div> <!-- /.modal-dialog modal-xl -->
-  </div> <!-- /.modal-content -->
- </div> <!-- /.modal-body -->
-
-<!-- Finaliza Modal Asignar Tarifa Fija--------------------------------------------------------->
-
-
-
 
 
 @extends('backend.menus.footerjs')
