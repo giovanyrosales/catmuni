@@ -13,7 +13,7 @@
                                 <th style="width: 15%;">Excedente</th>
                                 <th style="width: 10%;">Millar</th>
                                 <th style="width: 20%;">Actividad económica</th>
-                                <th style="width: 25%;">Acción</th>
+                                <th style="width: 30%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
