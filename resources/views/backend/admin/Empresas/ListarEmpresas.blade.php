@@ -191,8 +191,8 @@
                     </div>
                </div> 
                <!-- finaliza asignar actividad economica-->
-                 
-            </div> <!-- /.ROW -->
+
+             </div> <!-- /.ROW -->
               <!-- /.col -->
 
               <div class="col-md-6">
@@ -219,7 +219,8 @@
                       </div>
               <!-- /.form-group -->
               <!-- Inicia Select Giro Comercial -->
-                <div class="col-md-14">
+              <div class="row">
+                <div class="col-md-7">
                       <div class="form-group">
                         <label>Giro comercial:</label>
                             <!-- Select Giro Comercial -live search -->
@@ -243,7 +244,7 @@
                   </div>
               <!-- finaliza select Giro Comercial-->
               <!-- Select estado - live search -->
-                <div class="col-md-14">
+                <div class="col-md-5">
                      <div class="form-group">
                           <label>Estado:</label>           
                           <div class="input-group mb-9">
@@ -263,7 +264,34 @@
                         </div>
                     </div>
         <!-- finaliza select estado-->
-            
+      <!-- cierra div de row-->       
+           </div>
+
+            <!-- asignar actividad específica-->
+            <div class="col-md-14">
+                     <div class="form-group">
+                          <label>Actividad específica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-6">
+                                <select 
+                                required
+                                class="form-control"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-actividad_especifica-editar" 
+                                title="-- Selecione la actividad --"
+                                 >
+                                  @foreach($actividadespecifica as $actEsp)
+                                  <option value="{{ $actEsp->id }}"> {{ $actEsp->nom_actividad_especifica }}</option>
+                                  @endforeach 
+                                </select> 
+                           </div>
+                     </div>
+                </div>
+              <!-- finaliza asignar actividad específica-->        
+        </div>
+              </div>
             <!-- Fin /.col -->
             </div>
           <!-- /.row -->
@@ -365,6 +393,7 @@ function informacion(id){
                         document.getElementById("select-estado_empresa-editar").options.length = 0;
                         document.getElementById("select-giro_comercial-editar").options.length = 0;
                         document.getElementById("select-actividad_economica-editar").options.length = 0;
+                        document.getElementById("select-actividad_especifica-editar").options.length = 0;
                         
 
                         $.each(response.data.contribuyente, function( key, val ){
@@ -398,6 +427,14 @@ function informacion(id){
                                 $('#select-actividad_economica-editar').append('<option value="' +val.id +'">'+val.rubro+'</option>');
                             }
                         });
+
+                        $.each(response.data.actividad_especifica, function( key, val ){
+                            if(response.data.idact_esp == val.id){
+                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'" selected="selected">'+val.nom_actividad_especifica+'</option>');
+                            }else{
+                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>');
+                            }
+                        });
                    
                     }else{
                         toastr.error('Información no encontrada');
@@ -417,6 +454,7 @@ function editar(){
         var estado_empresa = document.getElementById('select-estado_empresa-editar').value;
         var giro_comercial = document.getElementById('select-giro_comercial-editar').value;
         var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
+        var actividad_especifica = document.getElementById('select-actividad_especifica-editar').value;
         var nombre = document.getElementById('nombre-editar').value;
         var matricula_comercio = document.getElementById('matricula_comercio-editar').value;
         var nit = document.getElementById('nit-editar').value;
@@ -542,6 +580,7 @@ function editar(){
               formData.append('estado_empresa', estado_empresa);
               formData.append('giro_comercial', giro_comercial);
               formData.append('actividad_economica', actividad_economica);
+              formData.append('actividad_especifica', actividad_especifica);
               formData.append('nombre', nombre);
               formData.append('matricula_comercio', matricula_comercio);
               formData.append('nit', nit);

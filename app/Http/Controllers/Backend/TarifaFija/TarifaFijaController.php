@@ -15,6 +15,7 @@ use Illuminate\Validation\Rules\Unique;
 use Symfony\Contracts\Service\Attribute\Required;
 use function PHPUnit\Framework\isEmpty;
 use App\Models\ActividadEconomica;
+use App\Models\ActividadEspecifica;
 use App\Models\TarifaFija;
 
 class TarifaFijaController extends Controller
@@ -27,17 +28,22 @@ class TarifaFijaController extends Controller
     public function index()
     {
         $actividadeconomica = ActividadEconomica::All();
+        $actividadespecifica = ActividadEspecifica::ALL();
 
-        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('actividadeconomica'));
+        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('actividadeconomica','actividadespecifica'));
     }
 
     public function tablaTarifa(TarifaFija $tarifa_fija)
     {
       
-        $tarifa_fija= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+        $tarifa_fija = 
+        TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+        ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
+                                
             
-        ->select('tarifa_fija.id','tarifa_fija.codigo','tarifa_fija.nombre_actividad','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
-        'actividad_economica.rubro as nombre_rubro' )
+        ->select('tarifa_fija.id','tarifa_fija.codigo','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
+        'actividad_economica.rubro as nombre_rubro',
+        'actividad_especifica.nom_actividad_especifica as nombre_actividad')
          ->get();
           //  orderBy('id', 'ASC')->get();  
      
@@ -59,11 +65,12 @@ class TarifaFijaController extends Controller
     public function listarTarifaFija()
     {
         $actividadeconomica = ActividadEconomica::All();
+        $actividadespecifica = ActividadEspecifica::ALL();
 
       //  $tarifa_fija = TarifaFija::All();
         //$infTarifa = TarifaFija::where('id', $tarifa_fija)->first();
 
-        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('actividadeconomica'));
+        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('actividadeconomica','actividadespecifica'));
     }
 
     //función para agregar nueva tarifa fija
@@ -71,7 +78,7 @@ class TarifaFijaController extends Controller
     {
         $regla = array(
             'codigo' => 'required',
-            'nombre_actividad' => 'required',
+            'actividad_especifica' => 'required',
             'impuesto_mensual' => 'required',
             'actividad_economica'=>'required',
         );
@@ -89,7 +96,7 @@ class TarifaFijaController extends Controller
 
         $dato = new TarifaFija();
         $dato->codigo = $request->codigo;
-        $dato->nombre_actividad = $request->nombre_actividad;
+        $dato->id_actividad_especifica = $request->actividad_especifica;
         $dato->limite_inferior = $request->limite_inferior;
         $dato->limite_superior = $request->limite_superior;
         $dato->impuesto_mensual = $request->impuesto_mensual;
@@ -116,13 +123,15 @@ class TarifaFijaController extends Controller
      if($lista = TarifaFija::where('id', $request->id)->first()){
 
         $actividad_economica = ActividadEconomica::orderby('rubro')->get();
+        $actividad_especifica = ActividadEspecifica::orderby('nom_actividad_especifica')->get();
      
      return ['success' => 1,
 
          'tarifa_fija' => $lista,
          'idact_eco' => $lista->id_actividad_economica,
          'actividad_economica' => $actividad_economica,
-
+         'idact_esp' =>$lista->id_actividad_especifica,
+         'actividad_especifica' => $actividad_especifica,
         ];
      }else{
          return ['success' => 2];
@@ -137,6 +146,7 @@ class TarifaFijaController extends Controller
            'codigo' => 'required',
            'impuesto_mensual' => 'required',
            'actividad_economica' => 'required',
+           'actividad_especifica' => 'required',
                     
         );
 
@@ -150,7 +160,7 @@ class TarifaFijaController extends Controller
           TarifaFija::where('id', $request->id)->update([
           
           'codigo' => $request->codigo,
-          'nombre_actividad' => $request->nombre_actividad,
+          'id_actividad_especifica' => $request->actividad_especifica,
           'limite_inferior' => $request->limite_inferior,
           'limite_superior' => $request->limite_superior,
           'impuesto_mensual' => $request->impuesto_mensual,

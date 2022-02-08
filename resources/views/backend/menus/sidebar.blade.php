@@ -34,6 +34,13 @@
                             <p>Permisos y usuarios</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.ActividadEspecifica.index') }}" target="frameprincipal" class="nav-link">
+                            <i class="fas fa-donate"></i>
+                            <p>Actividad específica</p>
+                        </a>
+                    </li>
                                     
                     <li class="nav-item">
                         <a href="{{ route('admin.listarTarifaVariable.index') }}" target="frameprincipal" class="nav-link">

@@ -9,6 +9,7 @@ use App\Models\Empresas;
 use App\Models\EstadoEmpresas;
 use App\Models\GiroComercial;
 use App\Models\ActividadEconomica;
+use App\Models\ActividadEspecifica;
 use App\Models\Cobros;
 use App\Models\calificacion;
 use App\Models\Interes;
@@ -42,8 +43,9 @@ class EmpresaController extends Controller
         $giroscomerciales = GiroComercial::All();
         $actividadeseconomicas = ActividadEconomica::All();
         $ConsultaEmpresa = Empresas::All();
+        $actividadespecifica = ActividadEspecifica::ALL();
 
-        return view('backend.admin.Empresas.Crear_Empresa', compact('contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas','ConsultaEmpresa'));
+        return view('backend.admin.Empresas.Crear_Empresa', compact('contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas','ConsultaEmpresa','actividadespecifica'));
     }
 
     public function listarEmpresas()
@@ -53,10 +55,12 @@ class EmpresaController extends Controller
         $estadoempresas = EstadoEmpresas::All();
         $giroscomerciales = GiroComercial::All();
         $actividadeseconomicas = ActividadEconomica::All();
+        $actividadespecifica = ActividadEspecifica::ALL();
 
 
 
-        return view('backend.admin.Empresas.ListarEmpresas', compact('contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas'));
+
+        return view('backend.admin.Empresas.ListarEmpresas', compact('contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas','actividadespecifica'));
     }
     public function tablaEmpresas(Empresas $lista){
 
@@ -64,11 +68,13 @@ class EmpresaController extends Controller
         $lista=Empresas::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
                         ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
                         ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+                        ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
 
         ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
         'contribuyente.nombre as contribuyente','contribuyente.apellido',
         'estado_empresa.estado',
-        'giro_comercial.nombre_giro')
+        'giro_comercial.nombre_giro',
+        'actividad_especifica.nom_actividad_especifica as nombre_actividad')
         ->get();
                 
         return view('backend.admin.Empresas.tabla.tablalistaempresas', compact('lista'));
@@ -90,6 +96,7 @@ class EmpresaController extends Controller
             $estado_empresa = EstadoEmpresas::orderBy('estado')->get();
             $giro_comercial = GiroComercial::orderBy('nombre_giro')->get();
             $actividad_economica = ActividadEconomica::orderBy('rubro')->get();
+            $actividad_especifica = ActividadEspecifica::orderBy('nom_actividad_especifica')->get();
             return ['success' => 1,
                 'empresa' => $lista,
                 'idcont' => $lista->id_contribuyente,
@@ -99,7 +106,9 @@ class EmpresaController extends Controller
                 'contribuyente' => $contribuyente,
                 'estado_empresa' => $estado_empresa,
                 'giro_comercial' => $giro_comercial,
-                'actividad_economica' => $actividad_economica
+                'actividad_economica' => $actividad_economica,
+                'actividad_especifica' => $actividad_especifica,
+                'idact_esp' => $lista->id_actividad_especifica,
                 ];
         }else{
             return ['success' => 2];
@@ -222,6 +231,7 @@ public function show($id)
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
     
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
@@ -415,6 +425,7 @@ public function nuevaEmpresa(Request $request){
     $dato->id_estado_empresa = $request->estado_empresa;
     $dato->id_giro_comercial = $request->giro_comercial;
     $dato->id_actividad_economica = $request->actividad_economica;
+    $dato->id_actividad_especifica = $request->actividad_especifica;
     $dato->nombre = $request->nombre;
     $dato->matricula_comercio = $request->matricula_comercio;
     $dato->nit = $request->nit;
@@ -460,6 +471,7 @@ public function nuevaEmpresa(Request $request){
             'id_estado_empresa' => $request->estado_empresa,
             'id_giro_comercial' => $request->giro_comercial,
             'id_actividad_economica' => $request->actividad_economica,
+            'id_actividad_especifica' => $request->actividad_especifica,
             'nombre' => $request->nombre,
             'matricula_comercio' => $request->matricula_comercio,
             'nit' => $request->nit,
@@ -488,19 +500,6 @@ public function calculo_calificacion(Request $request)
 {
     log::info($request->all());
 
-<<<<<<< HEAD
-    $id_act_economica=$request->id_act_economica;
-    
-   //Cargamos todos los registros de la tabla varibales
-   $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')
-           
-   ->select ('tarifa_variable.id','tarifa_variable.limite_inferior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
-      'actividad_economica.rubro as actividad_economica' )
-   ->where ('id_actividad_economica','=',"$id_act_economica")
-   ->first();
-   
-=======
->>>>>>> 6d18b0a321f9b73734f357131490c978204f3b49
    $deducciones= $request->deducciones;
    $activo_total=$request->activo_total;
    $licencia=$request->licencia;

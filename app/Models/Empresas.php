@@ -25,7 +25,8 @@ class Empresas extends Model
         'id_contribuyente',
         'id_estado_empresa',
         'id_giro_comercial',
-        'id_actividad_economica'
+        'id_actividad_economica',
+        'id_actividad_especifica'
       ];
 
 

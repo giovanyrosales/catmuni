@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\TarifaFija\TarifaFijaController;
 use App\Http\Controllers\Backend\LicenciaMatricula\LicenciaMatriculaController;
 use App\Http\Controllers\Backend\Multas\MultasController;
 use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
+use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
 
 
 /*
@@ -142,3 +143,12 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
     Route::post('/admin/Multas/informacion', [MultasController::class, 'informacionMultas']);
     Route::post('/admin/Multas/editar', [MultasController::class, 'editarMultas']);
     Route::post('/admin/Multas/eliminar', [MultasController::class, 'eliminarMultas']);
+
+    // --- ACTIVIDAD ESPECÍFICA
+    Route::get('/admin/ActividadEspecifica/ListarAE', [ActividadEspecificaController::class, 'index'])->name('admin.ActividadEspecifica.index');
+    Route::get('/admin/ActividadEspecifica/tabla', [ActividadEspecificaController::class,'tablaActividadEspecifica']);
+    Route::get('/admin/nuevo/ActividadEspecifica/Listar', [ActividadEspecificaController::class,'listarActividadEspecifica'])->name('admin.listarActividadEspecifica.index');
+    Route::post('/admin/ActividadEspecifica/NuevaM', [ActividadEspecificaController::class,'agregarActividadE']);
+    Route::post('/admin/ActividadEspecifica/informacion', [ActividadEspecificaController::class, 'informacionActividadEspecifica']);
+    Route::post('/admin/ActividadEspecifica/editar', [ActividadEspecificaController::class, 'editarActividadEspecifica']);
+    Route::post('/admin/ActividadEspecifica/eliminar', [ActividadEspecificaController::class, 'eliminarActividadEspecifica']);

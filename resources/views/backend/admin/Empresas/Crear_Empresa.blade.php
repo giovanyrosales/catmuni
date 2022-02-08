@@ -162,24 +162,51 @@
                 </div>
               <!-- /.form-group -->
                 <!-- /.form-group -->
+                <div class="row"> 
+                <div class="col-md-6">
                       <div class="form-group">
                           <label>Inicio de Operaciones:</label>
                           <input type="date" name="inicio_operaciones" id="inicio_operaciones" required class="form-control" >
                       </div>
+                      </div>
               <!-- /.form-group --> 
-                <div class="row"> 
                   <div class="col-md-6">
                       <div class="form-group">
                           <label>Teléfono:</label>
                           <input type="number" name="telefono" id="telefono" class="form-control"  required placeholder="7777-7777"  >
                       </div>
                   </div>
+                
+                </div>
+                <div class="row">
                   <div class="col-md-6">
                       <div class="form-group">
                         <label>Matricula de Comercio:</label>
                         <input type="number" name="matricula_comercio" id="matricula_comercio" class="form-control"  placeholder="Matricula de Comercio">
                       </div>
                   </div>
+                  
+                  <div class="col-md-4">
+                     <div class="form-group">
+                          <label>Actividad específica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-6">
+                                <select 
+                                required
+                                class="selectpicker"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-actividad_especifica" 
+                                title="-- Selecione la actividad --"
+                                 >
+                                  @foreach($actividadespecifica as $actEsp)
+                                  <option value="{{ $actEsp->id }}"> {{ $actEsp->nom_actividad_especifica }}</option>
+                                  @endforeach 
+                                </select> 
+                           </div>
+                     </div>
+                </div>
                 </div>
               <!-- /.form-group -->
             <div class="row"> 
@@ -290,6 +317,7 @@ function nuevo(){
         var estado_empresa = document.getElementById('select-estado_empresa').value;
         var giro_comercial = document.getElementById('select-giro_comercial').value;
         var actividad_economica = document.getElementById('select-actividad_economica').value;
+        var actividad_especifica = document.getElementById('select-actividad_especifica').value;
         var nombre = document.getElementById('nombre').value;
         var matricula_comercio = document.getElementById('matricula_comercio').value;
         var nit = document.getElementById('nit').value;
@@ -344,6 +372,11 @@ function nuevo(){
 
         if(actividad_economica === ''){
             toastr.error('La actividad económica de la empresa es requerido');
+            return;
+        }
+
+        if(actividad_especifica === ''){
+            toastr.error('La actividad específica de la empresa es requerido');
             return;
         }
 
@@ -414,6 +447,7 @@ function nuevo(){
         formData.append('estado_empresa', estado_empresa);
         formData.append('giro_comercial', giro_comercial);
         formData.append('actividad_economica', actividad_economica);
+        formData.append('actividad_especifica', actividad_especifica);
         formData.append('nombre', nombre);
         formData.append('matricula_comercio', matricula_comercio);
         formData.append('nit', nit);

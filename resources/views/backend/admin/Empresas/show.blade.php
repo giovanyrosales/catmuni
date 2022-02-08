@@ -322,6 +322,10 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                           <td>{{$empresa->rubro}}</span></td>
                         </tr>
                         <tr>
+                          <th>Actividad Específica</th>
+                          <td>{{$empresa->nombre_actividad}}</span></td>
+                        </tr>
+                        <tr>
                           <th>N° de tarjeta</th>
                           <td id="num_tarjeta-ver">{{$empresa->num_tarjeta}}</td>
                         </tr>

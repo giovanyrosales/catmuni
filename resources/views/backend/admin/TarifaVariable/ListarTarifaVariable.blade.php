@@ -280,7 +280,7 @@
             <div class="form-group">
               <div class="card-footer">
                   <button type="button" class="btn btn-success float-right" onclick="nuevaTarifaV()"> Guardar </button>
-                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
                 </div>
                 </div>
            <!-- /.col -->
