@@ -436,6 +436,7 @@ public function nuevaEmpresa(Request $request){
     $dato->id_estado_empresa = $request->estado_empresa;
     $dato->id_giro_comercial = $request->giro_comercial;
     $dato->id_actividad_economica = $request->actividad_economica;
+    $dato->id_actividad_especifica = $request->actividad_especifica;
     $dato->nombre = $request->nombre;
     $dato->matricula_comercio = $request->matricula_comercio;
     $dato->nit = $request->nit;
@@ -481,6 +482,7 @@ public function nuevaEmpresa(Request $request){
             'id_estado_empresa' => $request->estado_empresa,
             'id_giro_comercial' => $request->giro_comercial,
             'id_actividad_economica' => $request->actividad_economica,
+            'id_actividad_especifica' => $request->actividad_especifica,
             'nombre' => $request->nombre,
             'matricula_comercio' => $request->matricula_comercio,
             'nit' => $request->nit,
