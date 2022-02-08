@@ -13,7 +13,7 @@
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
-  
+    <link rel="stylesheet" href="sweetalert2.min.css">
 
 
 @stop
@@ -293,12 +293,14 @@
 
     <script src="{{ asset('js/jquery.dataTables.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.js') }}" type="text/javascript"></script>
+
     <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
-    <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
-
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
+ 
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
 
 
     <script type="text/javascript">
@@ -456,7 +458,7 @@ function nuevo(){
         formData.append('inicio_operaciones', inicio_operaciones);
         formData.append('direccion', direccion);
         formData.append('num_tarjeta', num_tarjeta);
-        formData.append('telefono', telefono);
+        formData.append('telefonos', telefono);
 
         axios.post('/admin/empresa/nueva', formData, {
         })
@@ -464,19 +466,30 @@ function nuevo(){
                 closeLoading();
                 if(response.data.success === 0){
                     toastr.error(response.data.message);
+          
                 }
             //       else {
             //            toastr.error('Error al registrar');
             //            }
                 if(response.data.success === 1){
-                    toastr.success('Empresa registrada correctamente');
-                    location.reload();
+                  Swal.fire(
+                            'Empresa registrada correctamente!',
+                            'Presiona el botón Ok!',
+                            'success'
+                          )
+                   // toastr.success('Empresa registrada correctamente');
+                    
                 }
                
             })
             .catch((error) => {
-                toastr.error('Error al registrar empresa');
-                closeLoading();
+               // toastr.error('Error al registrar empresa');
+                Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error al registrar empresa!', 
+                        })
+                
             });
  }
 

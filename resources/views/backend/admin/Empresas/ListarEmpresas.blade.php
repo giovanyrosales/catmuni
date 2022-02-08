@@ -7,6 +7,7 @@
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="sweetalert2.min.css">
 @stop
 <style>
     table{
@@ -328,6 +329,9 @@
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
+ 
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
     
 <script>
 function modalAgregar(){
@@ -598,17 +602,24 @@ function editar(){
                 if(response.data.success === 0){
                     toastr.error(response.data.message);
                 }
-       //        else {
-          //          toastr.error('Error al actualizar');
-         //       }
                 if(response.data.success === 1){
-                    toastr.success('Empresa actualizada correctamente');
-                    location.reload();
+                  Swal.fire(
+                            'Registro Actualizado!',
+                            'Presiona el botón Ok!',
+                            'success'
+                          )
+                          $('#modalEditar').modal('hide');
+                          recargar();
                 }
                
             })
             .catch((error) => {
-                toastr.error('Error al actualizar empresa');
+              Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error al actualizar empresa!', 
+                        })
+               // toastr.error('Error al actualizar empresa');
                 closeLoading();
             });
         }
