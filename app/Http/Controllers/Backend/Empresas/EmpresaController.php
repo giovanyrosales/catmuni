@@ -803,7 +803,7 @@ public function calculo_calificacion(Request $request)
 }  
  
 
-//Registrar Calificación
+//Registrar Calificación y recalificación
 public function nuevaCalificacion(Request $request){
     
     $regla = array(
