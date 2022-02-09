@@ -458,7 +458,7 @@ function nuevo(){
         formData.append('inicio_operaciones', inicio_operaciones);
         formData.append('direccion', direccion);
         formData.append('num_tarjeta', num_tarjeta);
-        formData.append('telefonos', telefono);
+        formData.append('telefono', telefono);
 
         axios.post('/admin/empresa/nueva', formData, {
         })

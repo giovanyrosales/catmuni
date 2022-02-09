@@ -4,6 +4,7 @@
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="sweetalert2.min.css">
 @stop
 <style>
     table{
@@ -320,6 +321,9 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
+
  <!-- incluir tabla -->
  <script type="text/javascript">
         $(document).ready(function(){
@@ -419,13 +423,21 @@
                    if (response.data.success === 1) 
                    
                     {
-                        toastr.success('Contribuyente actualizado');
-                        $('#modalEditar').modal('hide');
-                               recargar();
+                        Swal.fire(
+                                    'Registro Actualizado!',
+                                    'Presiona el botón Ok!',
+                                    'success'
+                                 )
+                                 $('#modalEditar').modal('hide');
+                                 recargar();
                     }
                     else 
                     {
-                        toastMensaje('Error al actualizar');
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error al actualizar!', 
+                        })
                         $('#modalEditar').modal('hide');
                                recargar();
                     }
@@ -460,11 +472,19 @@
                     $('#modalEliminar').modal('hide');
                     
                     if(response.data.success === 1){
-                        toastMensaje('success', 'Contribuyente eliminado');
+                        Swal.fire(
+                                    'Contribuyente Eliminado!',
+                                    'Presiona el botón Ok!',
+                                    'success'
+                                 )
                         recargar();
                     }else{
-                        toastMensaje('error', 'Error al borrar');
-           
+                       
+                        Swal.fire(
+                                    'Error al borrar!',
+                                    'Presiona el botón Ok!',
+                                    'success'
+                                 )
                     }
                 })
                 

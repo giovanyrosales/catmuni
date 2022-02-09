@@ -8,6 +8,7 @@
     <link href="{{ asset('css/buttons.bootstrap4.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('plugins/toastr/toastr.min.css') }}" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="sweetalert2.min.css">
 
 @stop
 
@@ -149,7 +150,8 @@
 
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
-   
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
    
 
 
@@ -284,16 +286,29 @@
           closeLoading();
           if (response.data.success === 1)
           {
-            toastr.success('Guardado exitosamente');
-      
+          
+            Swal.fire(
+                            'Guardado correctamente!',
+                            'Presiona el botón Ok!',
+                            'success'
+                          )
+                          recargar();
           }
           else
           {
-            toastr.error('¡Error al guardar');
+            Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error al registrar contribuyente!', 
+                        })
           }
         })
            .catch((error) => {
-              toastr.error('Error al registrar');
+            Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error al registrar!', 
+                        })
                closeLoading();
           });
       }
