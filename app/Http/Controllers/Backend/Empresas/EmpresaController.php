@@ -286,7 +286,9 @@ public function calculo_cobros(Request $request, $id)
         $f1=Carbon::parse($request->ultimo_cobro);
         $f2=Carbon::parse($request->fechaPagara);
 
-        $calificaciones = calificacion::join('empresa','calificacion.id_empresa','=','empresa.id')
+        $calificaciones = calificacion::latest()
+        
+        ->join('empresa','calificacion.id_empresa','=','empresa.id')
         
         ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tipo_tarifa','calificacion.tarifa','calificacion.estado_calificacion','calificacion.tipo_tarifa','calificacion.estado_calificacion',
         'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
@@ -331,8 +333,8 @@ public function cobros($id)
     $actividadeseconomicas = ActividadEconomica::All();
     $tasasDeInteres = Interes::All();
 
-    $calificaciones = calificacion
-    ::join('empresa','calificacion.id_empresa','=','empresa.id')
+    $calificaciones = calificacion::latest()
+    ->join('empresa','calificacion.id_empresa','=','empresa.id')
     
     ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tipo_tarifa','calificacion.tarifa','calificacion.estado_calificacion','calificacion.tipo_tarifa','calificacion.estado_calificacion',
     'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
@@ -362,14 +364,14 @@ public function cobros($id)
     
     $date=Carbon::now()->toDateString();
 
-   if ($calificaciones == null)
+    if ($calificaciones == null)
     { 
         $detectorNull=0;
         if ($ultimo_cobro == null)
         {
             $detectorNull=0;
             $detectorCobro=0;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','date','detectorCobro','tasasDeInteres'));
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('detectorNull','detectorCobro'));
         }
             
            

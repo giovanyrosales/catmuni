@@ -292,7 +292,7 @@
                             'Presiona el botón Ok!',
                             'success'
                           )
-                          recargar();
+                          location.reload();
           }
           else
           {
