@@ -434,7 +434,13 @@
               closeLoading();
           if (response.data.success === 1)
           {
-            toastr.success('Guardado exitosamente');
+            Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: '¡Tarifa fija registrada correctamente!',
+                  showConfirmButton: false,
+                  timer: 2000
+                     })
             $('#modalAgregarTarifaFija').modal('hide');
             location.reload();
           }
@@ -533,9 +539,14 @@
                     closeLoading()
 
                    if (response.data.success === 1) 
-                   
                     {
-                        toastr.success('Tarifa fija actualizada');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Tarifa fija actualizada correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         $('#modalEditarTarifaFija').modal('hide');
                         recargar();
                     }
@@ -575,7 +586,13 @@
                     $('#modalEliminarTarifa').modal('hide');
                     
                if(response.data.success === 1){
-                  toastMensaje('success', 'Detalle eliminado');
+                Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Tarifa fija eliminada correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                   recargar();
                }else{
                   toastMensaje('error', 'Error al borrar');

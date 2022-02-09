@@ -337,7 +337,13 @@
               closeLoading();
           if (response.data.success === 1)
           {
-            toastr.success('Guardado exitosamente');
+            Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: '¡Multa registrada correctamente!',
+                  showConfirmButton: false,
+                  timer: 2000
+                        })
             $('#modalAgregarMultas').modal('hide');
             location.reload();
             //recargar();
@@ -410,10 +416,15 @@
                     closeLoading()
 
                    if (response.data.success === 1) 
-                   
                     {
-                        toastr.success('Datos actualizados correctamente');
-                        $('#modalEditarMultas').modal('hide');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Multa actualizada correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
+                      $('#modalEditarMultas').modal('hide');
                         recargar();
                     }
                     else 
@@ -452,7 +463,13 @@
                     $('#modalEliminarMultas').modal('hide');
                     
                     if(response.data.success === 1){
-                        toastMensaje('success', 'La información ha sido eliminada correctamente');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Multa eliminada correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         recargar();
                     }else{
                         toastMensaje('error', 'Error al borrar');

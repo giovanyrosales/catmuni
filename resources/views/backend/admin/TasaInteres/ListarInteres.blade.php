@@ -289,7 +289,13 @@
               closeLoading();
           if (response.data.success === 1)
           {
-            toastr.success('Guardado exitosamente');
+            Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: '¡Interés agregado correctamente!',
+                    showConfirmButton: false,
+                    timer: 2000
+                        })
             $('#modalAgregarInteres').modal('hide');
             recargar();
           }
@@ -361,7 +367,13 @@
                    if (response.data.success === 1) 
                    
                     {
-                        toastr.success('Interés actualizado');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Interés actualizado correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         $('#modalEditarInteres').modal('hide');
                         recargar();
                     }
@@ -401,7 +413,13 @@
                     $('#modalEliminarInteres').modal('hide');
                     
                     if(response.data.success === 1){
-                        toastMensaje('success', 'Interes eliminado');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Interés eliminado correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         recargar();
                     }else{
                         toastMensaje('error', 'Error al borrar');

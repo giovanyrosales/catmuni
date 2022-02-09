@@ -147,12 +147,12 @@ class ActividadEspecificaController extends Controller
     public function eliminarActividadEspecifica(Request $request)
     {
     // buscamos actividad especifica a eliminar
-        $tasa = ActividadEspecifica::find($request->id);
-        $tasa->delete();
+        $actividadEsp = ActividadEspecifica::find($request->id);
+        $actividadEsp->delete();
             
             return ['success' => 1];
     }
-    }
+ }
 
 
     

@@ -562,7 +562,13 @@
                 closeLoading();
                 if (response.data.success === 1) 
                     {
-                        toastr.success('Detalle actualizado');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Tarifa Variable actualizada correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         $('#modalEditarTarifaVariable').modal('hide');
                         recargar();
                     }
@@ -727,7 +733,13 @@
               closeLoading();
           if (response.data.success === 1)
           {
-            toastr.success('Guardado exitosamente');
+            Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: '¡Tarifa Variable agregada correctamente!',
+                    showConfirmButton: false,
+                    timer: 2000
+                        })
             $('#modalAgregarTarifaVariable').modal('hide');
               recargar();
           }

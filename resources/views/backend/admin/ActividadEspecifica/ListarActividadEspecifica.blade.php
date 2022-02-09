@@ -229,7 +229,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Eliminar tarifa fijas</h4>
+                    <h4 class="modal-title">Eliminar actividad específica</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -338,9 +338,16 @@
               closeLoading();
           if (response.data.success === 1)
           {
-            toastr.success('Guardado exitosamente');
+            Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: '¡Registro guardado correctamente!',
+            showConfirmButton: false,
+            timer: 2000
+          })
+           // toastr.success('Guardado exitosamente');
             $('#modalAgregarActividadEspecifica').modal('hide');
-            location.reload();
+           recargar();
           }
           else
           {
@@ -414,9 +421,14 @@
                     closeLoading()
 
                    if (response.data.success === 1) 
-                   
                     {
-                        toastr.success('Actividad específica actualizada');
+                          Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Datos actualizados correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         $('#modalEditarActividadEspecifica').modal('hide');
                         recargar();
                     }
@@ -442,8 +454,7 @@
 
     function eliminarActividadE(){
       openLoading()
-        
-            // se envia el ID de la tarifa
+          // se envia el ID de la tarifa
       var id = document.getElementById('idborrar').value;
 
       var formData = new FormData();
@@ -456,7 +467,13 @@
                     $('#modalEliminarActividadEspecifica').modal('hide');
                     
                if(response.data.success === 1){
-                  toastMensaje('success', 'Actividad específica eliminada');
+                Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Datos eliminados correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                   recargar();
                }else{
                   toastMensaje('error', 'Error al borrar');

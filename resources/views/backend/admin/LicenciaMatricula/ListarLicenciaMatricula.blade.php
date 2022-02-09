@@ -336,7 +336,13 @@
               closeLoading();
           if (response.data.success === 1)
           {
-            toastr.success('Guardado exitosamente');
+            Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Datos registrados correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
             $('#modalAgregarLM').modal('hide');
             recargar();
           }
@@ -410,7 +416,13 @@
                    if (response.data.success === 1) 
                    
                     {
-                        toastr.success('Datos actualizados correctamente');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Datos actualizados correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         $('#modalEditarLM').modal('hide');
                         recargar();
                     }
@@ -450,7 +462,13 @@
                     $('#modalEliminarLM').modal('hide');
                     
                     if(response.data.success === 1){
-                        toastMensaje('success', 'La información ha sido eliminada correctamente');
+                      Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Información eliminada correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
                         recargar();
                     }else{
                         toastMensaje('error', 'Error al borrar');
