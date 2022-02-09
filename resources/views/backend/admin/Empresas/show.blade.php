@@ -859,7 +859,7 @@ function guardarTraspaso(){
                    {
                        toastr.success('¡Propietario actualizado!');
                        $('#modalCierresTraspasos').modal('hide');
-                       recargar();
+                       location.reload();
                    }
                    else 
                    {
@@ -901,7 +901,7 @@ function guardarTraspaso(){
                    {
                        toastr.success('¡Estado de la empresa actualizado!');
                        $('#modalCierresTraspasos').modal('hide');
-                       recargar();
+                       location.reload();
                    }
                    else 
                    {
