@@ -8,7 +8,7 @@
                             <thead>
                                 <tr>
                                 <th style="width: 20%;">Actividad económica</th>
-                                <th style="width: 20%;">Actividad específica</th>
+                                <th style="width: 50%;">Actividad específica</th>
                                 <th style="width: 25%;">Acción</th>
                             </tr>
                             </thead>

@@ -37,8 +37,8 @@
 
                     <li class="nav-item">
                         <a href="{{ route('admin.ActividadEspecifica.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-donate"></i>
-                            <p>Actividad específica</p>
+                        <i class="fas fa-network-wired"></i>
+                            <p>Actividades específicas</p>
                         </a>
                     </li>
                                     
