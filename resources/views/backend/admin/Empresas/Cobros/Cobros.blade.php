@@ -25,14 +25,16 @@ function calculo(id)
     /*Declaramos variables */
     var fechaPagara=(document.getElementById('fecha_hasta_donde_pagara').value);
     var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
-    var CantidadMesesAPagar=(document.getElementById('cant_meses').value);
+    var tasa_interes=(document.getElementById('select_interes').value);
+    var fecha_interesMoratorio=(document.getElementById('fecha_interes_moratorio').value);
 
 
 var formData = new FormData();
 
 formData.append('fechaPagara', fechaPagara);
 formData.append('ultimo_cobro', ultimo_cobro);
-formData.append('CantidadMesesAPagar', CantidadMesesAPagar);
+formData.append('tasa_interes', tasa_interes);
+formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
  axios.post('/admin/empresas/calculo_cobros'+id, formData, {
         })
@@ -195,7 +197,7 @@ formData.append('CantidadMesesAPagar', CantidadMesesAPagar);
                                  >
                                  <option value="Ninguno">Ninguno</option>
                                   @foreach($tasasDeInteres as $dato)
-                                  <option value="{{ $dato->id }}"> {{ $dato->monto_interes }}</option>
+                                  <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
                                   @endforeach 
                                 </select> 
                  
@@ -285,7 +287,7 @@ formData.append('CantidadMesesAPagar', CantidadMesesAPagar);
                           <tr class="table-light">
                             <td class="table-light">IMPUESTO MORA</td>
                             <td class="table-light">32201</td>
-                            <td class="table-light">$297.18</td>
+                            <td class="table-light">$ Iran aquí</td>
                           </tr>
 
                           <tr class="table-success">
@@ -297,13 +299,13 @@ formData.append('CantidadMesesAPagar', CantidadMesesAPagar);
                           <tr class="table-light">
                             <td>INTERESES MORATORIOS</td>
                             <td>15302</td>
-                            <td>$79.83</td>
+                            <td>$Iran aquí</td>
                           </tr>
 
                           <tr class="table-success">
                             <td>MULTA</td>
                             <td>15313</td>
-                            <td>$29.64</td>
+                            <td>$Iran aquí</td>
                           </tr>
 
                           <tr class="table-light">

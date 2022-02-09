@@ -477,6 +477,7 @@ function nuevo(){
                             'Presiona el botón Ok!',
                             'success'
                           )
+                          location.reload();
                    // toastr.success('Empresa registrada correctamente');
                     
                 }
