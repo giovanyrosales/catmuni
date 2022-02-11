@@ -141,32 +141,41 @@
                     <input type="text" name="direccion" id="direccion-editar" class="form-control" required placeholder="Dirección de la empresa"  >
                   </div> </div>   
                 <!-- /.form-group -->
-                <div class="col-md-14">
+            <!-- inicia row telefono estado -->
+                <div class="row">
+                <div class="col-md-6">
                       <div class="form-group">
                           <label>Teléfono:</label>
                           <input type="number" name="telefono" id="telefono-editar" class="form-control"  required placeholder="7777-7777"  >
                       </div>
                   </div>
-      <!-- Asignar Representante-->  
-            <div class="col-md-14">
+                  <div class="col-md-6">
                       <div class="form-group">
-                      <label>Asignar representante legal:</label>
-                              <!-- Select live search -->
-                              <div class="input-group mb-14">
+                        <label>Giro comercial:</label>
+                            <!-- Select Giro Comercial -live search -->
+                                <div class="input-group mb-9">
                                 <select 
-                                required
+                                required 
                                 class="form-control" 
                                 data-style="btn-success"
                                 data-show-subtext="true" 
-                                data-live-search="true" 
-                                id="select-contribuyente-editar"                             
+                                data-live-search="true"  
+                                id="select-giro_comercial-editar" 
+                                required
                                 >
-                                  @foreach($contribuyentes as $contribuyente)
-                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
+                                  @foreach($giroscomerciales as $giro)
+                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
+                                  </option>
                                   @endforeach 
                                 </select> 
                                 </div>
                           </div>
+                  </div>
+           <!-- cierra div row-->       
+                </div>
+      <!-- Asignar Representante-->  
+            <div class="col-md-14">
+                      
                     <!-- finaliza select Asignar Representante-->
 
                     <!--asignar actividad economica -->
@@ -220,53 +229,14 @@
                       </div>
               <!-- /.form-group -->
               <!-- Inicia Select Giro Comercial -->
-              <div class="row">
-                <div class="col-md-7">
-                      <div class="form-group">
-                        <label>Giro comercial:</label>
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial-editar" 
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
-                  </div>
+             
+               
               <!-- finaliza select Giro Comercial-->
               <!-- Select estado - live search -->
-                <div class="col-md-5">
-                     <div class="form-group">
-                          <label>Estado:</label>           
-                          <div class="input-group mb-9">
-                                <select 
-                                required
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select-estado_empresa-editar" 
-                                 >
-                                  @foreach($estadoempresas as $estado)
-                                  <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
-                                  @endforeach 
-                                </select> 
-                           </div>
-                        </div>
-                    </div>
+               
         <!-- finaliza select estado-->
       <!-- cierra div de row-->       
-           </div>
+          
 
             <!-- asignar actividad específica-->
             <div class="col-md-14">
@@ -393,13 +363,13 @@ function informacion(id){
                         $('#direccion-editar').val(response.data.empresa.direccion);
                         $('#telefono-editar').val(response.data.empresa.telefono);
 
-                        document.getElementById("select-contribuyente-editar").options.length = 0;
-                        document.getElementById("select-estado_empresa-editar").options.length = 0;
+                    //    document.getElementById("select-contribuyente-editar").options.length = 0;
+                      //  document.getElementById("select-estado_empresa-editar").options.length = 0;
                         document.getElementById("select-giro_comercial-editar").options.length = 0;
                         document.getElementById("select-actividad_economica-editar").options.length = 0;
                         document.getElementById("select-actividad_especifica-editar").options.length = 0;
                         
-
+                        /*
                         $.each(response.data.contribuyente, function( key, val ){
                             if(response.data.idcont == val.id){
                                 $('#select-contribuyente-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
@@ -415,7 +385,7 @@ function informacion(id){
                                 $('#select-estado_empresa-editar').append('<option value="' +val.id +'">'+val.estado+'</option>');
                             }
                         }); 
-                        
+                        */
                         $.each(response.data.giro_comercial, function( key, val ){
                             if(response.data.idgiro_co == val.id){
                                 $('#select-giro_comercial-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre_giro+'</option>');
@@ -454,8 +424,8 @@ function informacion(id){
 
 function editar(){
         var id = document.getElementById('id-editar').value;
-        var contribuyente = document.getElementById('select-contribuyente-editar').value;
-        var estado_empresa = document.getElementById('select-estado_empresa-editar').value;
+    //    var contribuyente = document.getElementById('select-contribuyente-editar').value;
+    //    var estado_empresa = document.getElementById('select-estado_empresa-editar').value;
         var giro_comercial = document.getElementById('select-giro_comercial-editar').value;
         var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
         var actividad_especifica = document.getElementById('select-actividad_especifica-editar').value;
@@ -598,6 +568,14 @@ function editar(){
             axios.post('/admin/empresas/editar', formData, {
             })
             .then((response) => {
+             
+                var actividad_economica = document.getElementById("select-actividad_economica");
+                for (i = 0; i < Object.keys(resp.data).length; i++) {
+                  var option = document.createElement('option');
+                  option.value = resp.data[i].id;
+                  option.text = resp.data[i].apeynom;
+                  actividad_economica.appendChild(option);
+                }
                 closeLoading();
                 if(response.data.success === 0){
                     toastr.error(response.data.message);

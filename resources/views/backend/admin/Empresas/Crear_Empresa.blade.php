@@ -330,6 +330,11 @@ function nuevo(){
         var num_tarjeta = document.getElementById('num_tarjeta').value;
         var telefono = document.getElementById('telefono').value;
 
+
+            
+    
+           
+
         if(nombre === ''){
             toastr.error('El nombre de la empresa es requerido');
             return;
@@ -441,8 +446,8 @@ function nuevo(){
             toastr.error('El número de tarjeta no puede tener números negativos');
             return;
         }
-         
 
+       
         openLoading();
         var formData = new FormData();
         formData.append('contribuyente', contribuyente);
@@ -472,6 +477,7 @@ function nuevo(){
             //            toastr.error('Error al registrar');
             //            }
                 if(response.data.success === 1){
+             
                   Swal.fire(
                             'Empresa registrada correctamente!',
                             'Presiona el botón Ok!',

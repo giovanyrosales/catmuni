@@ -150,7 +150,7 @@
         </div>
         </div>
       
-       <!--Finaliza Modal para agregar tarifa variable-->
+    <!--Finaliza Modal para agregar tarifa variable-->
 
 
    <!--Modal para editar tarifa fija-->

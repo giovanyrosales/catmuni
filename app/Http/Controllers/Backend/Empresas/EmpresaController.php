@@ -91,19 +91,13 @@ class EmpresaController extends Controller
         if ($validar->fails()){ return ['success' => 0];}
 
         if($lista = Empresas::where('id', $request->id)->first()){
-            $contribuyente = Contribuyentes::orderBy('nombre')->get();
-            $estado_empresa = EstadoEmpresas::orderBy('estado')->get();
             $giro_comercial = GiroComercial::orderBy('nombre_giro')->get();
             $actividad_economica = ActividadEconomica::orderBy('rubro')->get();
             $actividad_especifica = ActividadEspecifica::orderBy('nom_actividad_especifica')->get();
             return ['success' => 1,
                 'empresa' => $lista,
-                'idcont' => $lista->id_contribuyente,
-                'idesta' => $lista->id_estado_empresa,
                 'idgiro_co' => $lista->id_giro_comercial,
                 'idact_eco' => $lista->id_actividad_economica,
-                'contribuyente' => $contribuyente,
-                'estado_empresa' => $estado_empresa,
                 'giro_comercial' => $giro_comercial,
                 'actividad_economica' => $actividad_economica,
                 'actividad_especifica' => $actividad_especifica,
@@ -449,11 +443,13 @@ public function nuevaEmpresa(Request $request){
     $dato->num_tarjeta = $request->num_tarjeta;
     $dato->telefono = $request->telefono;
 
+
     if($dato->save()){
         return ['success' => 1];
     
     }
 }
+
  //Termina registrar empresa
 
  //Editar empresa
@@ -480,8 +476,6 @@ public function nuevaEmpresa(Request $request){
 
        Empresas::where('id', $request->id)->update([
 
-            'id_contribuyente' => $request->contribuyente,
-            'id_estado_empresa' => $request->estado_empresa,
             'id_giro_comercial' => $request->giro_comercial,
             'id_actividad_economica' => $request->actividad_economica,
             'id_actividad_especifica' => $request->actividad_especifica,
