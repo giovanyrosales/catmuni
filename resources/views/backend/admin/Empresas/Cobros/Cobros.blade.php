@@ -55,6 +55,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                     document.getElementById('impuestos_imp').innerHTML=response.data.impuestos;
                     document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
                     document.getElementById('totalPago_imp').innerHTML=response.data.totalPago;
+                    document.getElementById('fechahasta_imp').innerHTML=fechaPagara;
                   }  
               })
               .catch((error) => {
@@ -377,6 +378,207 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
     </section>
 <!-- Finaliza Formulario Calificar Empresa-->
 
+<!--Inicia Modal Registrar Cobros--------------------------------------------------------------->
+
+<div class="modal fade" id="modalregistrarCobros">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formulario-registrarCobro">
+              <div class="card-body">
+
+  <!-- Inicia Formulario Calificacion--> 
+   <section class="content">
+      <div class="container-fluid">
+        <form class="form-horizontal" id="formulario-registrarCobros">
+        @csrf
+
+          <div class="card card-green">
+            <div class="card-header">
+            <h3 class="card-title">MANDAMIENTO DE PAGO.</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+            </div>
+          </div>
+          <!-- /.card-header -->
+
+
+          <!-- Campos del formulario de cobros -->
+
+         <div class="card border-success mb-3"><!-- Panel Datos generales de la empresa -->
+         <div class="card-header text-success"><label>II. DATOS GENERALES DE LA EMPRESA</label></div>
+          <div class="card-body"><!-- Card-body -->
+            <div class="row"><!-- /.ROW1 -->
+             
+             <!-- /.form-group -->
+               <div class="col-md-6">
+                  <div class="form-group">
+                        <label>Empresa:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-6">
+                  <div class="form-group">
+                        <input type="text"  value="{{ $empresa->nombre }}" name="nombre" disabled id="nombre_empresa" class="form-control" required >
+                        <input type="hidden"  value="{{ $empresa->id }}" name="id_empresa" disabled id="id_empresa" class="form-control" required >
+                  </div>
+               </div><!-- /.col-md-6 -->
+                <!-- /.form-group -->
+              <div class="col-md-6">
+                  <div class="form-group">
+                        <label>Número de tarjeta:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-3">
+                  <div class="form-group">
+                        <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
+                  </div>
+               </div><!-- /.col-md-6 -->
+              <!-- /.form-group -->
+             
+               <!-- /.form-group -->
+               <div class="col-md-6">
+                  <div class="form-group">
+                        <label>Contribuyente:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-6">
+                  <div class="form-group">
+                        <input type="text" disabled value="{{ $empresa->contribuyente }}&nbsp;{{ $empresa->apellido }}" name="contribuyente" id="contribuyente" class="form-control" >
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <!-- /.form-group -->
+                <!-- /.form-group -->
+                <div class="col-md-12">
+                  <div class="form-group">
+                        <h6>
+                          Periodo del: 
+                          @if($detectorNull=='0')
+                          <label> {{ $calificaciones->fecha_calificacion }} </label> 
+                           @else
+                             <label>{{ $ultimo_cobro->fecha_pago }} </label>
+                           @endif 
+                          &nbsp; al &nbsp;<label   id="fechahasta_imp"></label>
+                        </h6>
+                  </div>
+              <!-- /.form-group -->
+              
+      
+              <table class="table table-hover table-sm table-striped" border="1" width:760px;>
+                    <tr class="table-success">
+                      <td class="table-light">
+                      <table class="table table-hover table-sm table-striped" border="1" width:760px;>
+                          <tr class="table-secondary">
+                            <th scope="col">IMPUESTOS</th>
+                            <th scope="col"></th> 
+                            <th scope="col"></th>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td class="table-light">IMPUESTO MORA</td>
+                            <td class="table-light">32201</td>
+                            <td class="table-light">$aquí</td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td>IMPUESTO</td>
+                            <td>11804</td>
+                            <td><h6 name="impuestos_imp" id="impuestos_imp"></h6></td>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td>INTERESES MORATORIOS</td>
+                            <td>15302</td>
+                            <td>$aquí</td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td>MULTA</td>
+                            <td>15313</td>
+                            <td>$aquí</td>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td></td>
+                            <td></td>
+                            <td>$-   </td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td>FONDO F. PATRONALES 5%</td>
+                            <td>12114</td>
+                            <td><h6 name="fondoFP_imp" id="fondoFP_imp"></h6></td>
+                          </tr>
+
+                          <tr class="table-light">
+                            <td></td>
+                            <td></td>
+                            <td>$-   </td>
+                          </tr>
+
+                          <tr class="table-success">
+                            <td></td>
+                            <td></td>
+                            <td>$-   </td>
+                          </tr>
+
+                          <tr class="table-secondary">
+                            <th scope="row">TOTAL</th>
+                            <td><label>$<label name="FondoF_imp" id="FondoF_imp"> </label></label></td>
+                            <td><label name="totalPago_imp" id="totalPago_imp"></label><label</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+
+
+            </div> <!-- /.ROW1 -->
+            </div> 
+            </div> <!-- /.card-header text-success -->
+            </div> <!-- /.Panel datos generales de la empresa -->
+          
+            <!-- /.col1 -->
+
+        
+
+  <!-- Finaliza campos del formulario de calificación -->
+
+
+         <!-- /.card-body -->
+         <div class="card-footer">
+            <button type="button" class="btn btn-secondary" id="btImprimirCobro" onclick="ImpimirCobro()"><i class="fa fa-print">
+            </i>&nbsp; Impimir Calificación&nbsp;</button>
+            <button type="button" class="btn btn-success float-right" onclick="nuevoCobro()"><i class="fas fa-edit">
+            </i> &nbsp;Registrar Cobro&nbsp;</button>
+            <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+         <!-- /.card-footer -->
+         </div>
+        </div>
+ 
+      <!-- /.card -->
+      </form>
+      <!-- /form1 -->
+      </div>
+    <!-- /.container-fluid -->
+    </section>
+
+       </form> <!-- /.formulario-Modal Registrar Cobro -->
+      </div> <!-- /.Card-body -->
+     </div> <!-- /.modalModalRegistrarCobro -->
+   </div> <!-- /.modal-dialog modal-xl -->
+  </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-body -->
+
+<!-- Finaliza Modal Registrar Cobro--------------------------------------------------------->
 
 
 @extends('backend.menus.footerjs')
@@ -411,6 +613,12 @@ function VerEmpresa(id){
 window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 
 }
+
+function GenerarCobro()
+        {
+            $('#modalregistrarCobros').modal('show');
+            $('#btImprimirCobro').hide();
+        }
 
 </script> 
 
