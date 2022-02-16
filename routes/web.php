@@ -151,5 +151,3 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/ActividadEspecifica/informacion', [ActividadEspecificaController::class, 'informacionActividadEspecifica']);
     Route::post('/admin/ActividadEspecifica/editar', [ActividadEspecificaController::class, 'editarActividadEspecifica']);
     Route::post('/admin/ActividadEspecifica/eliminar', [ActividadEspecificaController::class, 'eliminarActividadEspecifica']);
-
-    Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
