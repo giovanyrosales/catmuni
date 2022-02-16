@@ -276,9 +276,20 @@ public function show($id)
 // ---------COBROS ------------------------------------------>
 public function calculo_cobros(Request $request, $id)
 {
-        log::info($request->all());
-        $f1=Carbon::parse($request->ultimo_cobro);
-        $f2=Carbon::parse($request->fechaPagara);
+    log::info($request->all());
+    $f1=Carbon::parse($request->ultimo_cobro);
+    $f2=Carbon::parse($request->fechaPagara);
+    $f3=Carbon::parse($request->fecha_interesMoratorio);
+
+    
+    $DiasinteresMoratorio=$f1->diffInDays($f3);
+   
+
+    $fechaPrimerMulta=Carbon::parse($f1)->add('60 days')->calendar();
+    $fechaSegundaMulta=Carbon::parse( $fechaPrimerMulta)->add('60 days')->calendar();
+    $f4=Carbon::parse($fechaPrimerMulta);
+
+    $DiasdespuesDePrimerMulta=$f4->diffInDays($f3);
 
         $calificaciones = calificacion::latest()
         
@@ -311,7 +322,17 @@ public function calculo_cobros(Request $request, $id)
             $totalPago=$signoDollar.$totalPagoValor;
            
 
-            return ['success' => 1, 'cantidadMeses' => $CantidadMeses,'impuestos' => $impuestos,'tarifa'=>$tarifa,'fondoFP'=>$fondoFP,'totalPago'=>$totalPago];
+            return ['success' => 1, 
+                    'cantidadMeses' => $CantidadMeses,
+                    'impuestos' => $impuestos,
+                    'tarifa'=>$tarifa,
+                    'fondoFP'=>$fondoFP,
+                    'totalPago'=>$totalPago,
+                    'DiasinteresMoratorio'=>$DiasinteresMoratorio,
+                    'fechaPrimerMulta'=>$fechaPrimerMulta,
+                    'fechaSegundaMulta'=>$fechaSegundaMulta,
+                    'DiasdespuesDePrimerMulta'=>$DiasdespuesDePrimerMulta,
+                    ];
         }else
         {
             return ['success' => 0];
@@ -390,8 +411,11 @@ public function cobros($id)
 }
 
 
+
  //Registrar empresa
 public function nuevaEmpresa(Request $request){
+
+
 
     $regla = array(
 
@@ -440,33 +464,32 @@ public function nuevaEmpresa(Request $request){
     $dato->num_tarjeta = $request->num_tarjeta;
     $dato->telefono = $request->telefono;
 
-    
+
     if($dato->save()){
         return ['success' => 1];
     
     }
 }
+
  //Termina registrar empresa
 
-//Función para llenar el select Actividad Especifica
-    public function buscarActividadEsp(Request $request)
-    {
-    
-        $actividad_especifica = ActividadEspecifica::
-        where('id_actividad_economica',$request->id_select)
-        ->orderBy('nom_actividad_especifica', 'ASC')
-        ->get();
+ //Función para llenar el select Actividad Especifica
+ public function buscarActividadEsp(Request $request)
+ {
+ 
+     $actividad_especifica = ActividadEspecifica::
+     where('id_actividad_economica',$request->id_select)
+     ->orderBy('nom_actividad_especifica', 'ASC')
+     ->get();
 
-        return ['success' => 1,
-        'actividad_especifica' => $actividad_especifica
+     return ['success' => 1,
+     'actividad_especifica' => $actividad_especifica
 
-    ];
+ ];
 
-    }
+ }
 
- //Terminar llenar select
-
-
+//Terminar llenar select
 
  //Editar empresa
  public function editarEmpresas(Request $request){
@@ -527,14 +550,15 @@ public function calculo_calificacion(Request $request)
    $activo_total=$request->activo_total;
    $licencia=$request->licencia;
    $matricula=$request->matricula;
+   $estado_calificacion=$request->estado_calificacion;
+   $fecha_pres_balance=$request->fecha_pres_balance;
+   $año_calificacion=$request->año_calificacion;
 
    $signoC='¢';
    $signo='$'; 
 
    $licenciaMatricula= $licencia+ $matricula;
    $licenciaMatriculaSigno=$signo . $licenciaMatricula;
-<<<<<<< HEAD
-=======
 
 
 
@@ -548,7 +572,6 @@ public function calculo_calificacion(Request $request)
    $f2=Carbon::createFromDate($Year, $month, $day);
 
 
->>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
 
    if($licenciaMatricula >0){
        $fondoFLM=$licenciaMatricula*0.05;
@@ -590,6 +613,8 @@ public function calculo_calificacion(Request $request)
    }
    else
    {
+
+
        //Este dato sólo se ocupa para tarifa fija ya calculada...................]
        // $TarifaFijaMensualValor=$request->ValortarifaAplicada;
         $id_actividad_especifica=$request->id_actividad_especifica;
@@ -726,15 +751,6 @@ public function calculo_calificacion(Request $request)
 
         //*** Convirtiendo a dolar el impuesto total *//
         $ImpuestoTotalMensualDolar=round($ImpuestoTotalMensualColones/8.75,2);
-<<<<<<< HEAD
-        $ImpuestoTotalAnualDolar=round($ImpuestoTotalAnualColones/8.75,2);
-
-
-            return [
-                  
-                        'success' => 1, 
-
-=======
         $ImpuestoTotalAnualDolar=round(($ImpuestoAnualVariableDolar+$fondoFPVAnualDolar),2);
    
         //************* Calculando y determinando Multa por Balance *************//
@@ -791,7 +807,6 @@ public function calculo_calificacion(Request $request)
                         'anioActual'=>$anioActual,
                         'DeterminacionDeMulta'=>$DeterminacionDeMulta,
                         'multabalance'=>$multabalance,
->>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
                         'tarifa' =>$tarifa, 
                         'valor'=>$valor, 
                         'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 
@@ -832,7 +847,6 @@ public function calculo_calificacion(Request $request)
         {
             $tarifa='Fija';  
 
-           
                 //Cargamos todos los registros de la tarifas fijas.
                 $ConsultaTarifasFijas = TarifaFija:: where('id_actividad_economica','=',$id_act_economica)
                 ->where('id_actividad_especifica','=',"$id_actividad_especifica")
@@ -866,13 +880,13 @@ public function calculo_calificacion(Request $request)
         
         //***Redondeando a dos decimales..........................................]
             $Total_ImpuestoFijoDolarValor=round( $Total_ImpuestoFijoDolar,2);
+            $tarifaFijaDolar=round($tarifaFijaDolar,2);
             $FondoF=round( $FondoF,2);
 
             $Total_ImpuestoFijoDolarSigno=$signo. $Total_ImpuestoFijoDolar;
+            $tarifaFijaMensualDolarSigno= $signo .$tarifaFijaDolar;
             $tarifaenColonesSigno=$signoC . $impuesto_mensualFijo;
 
-<<<<<<< HEAD
-=======
        //************* Calculando y determinando Multa por Balance *************//
        if( $estado_calificacion=='calificado')
        {
@@ -883,7 +897,6 @@ public function calculo_calificacion(Request $request)
        else if ( $estado_calificacion=='recalificado')
        {
        //*........ Calculando Multa por Balance .............................]
->>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
 
        if($f1->lt($f2))
        {
@@ -922,21 +935,19 @@ public function calculo_calificacion(Request $request)
         
             return [
                     'success' => 1, 
-<<<<<<< HEAD
-=======
                     'CantMesesMulta'=>$CantMesesMulta,
                     'anioActual'=>$anioActual,
                     'f2'=>$f2,
                     'DeterminacionDeMulta'=>$DeterminacionDeMulta,
                     'multabalance'=>$multabalance,
->>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
                     'tarifa' =>$tarifa, 
                     'valor'=>$valor, 
                     'FondoF'=>$FondoF,
                     'codigo'=>$codigo,
                     'limite_superior'=>$limite_superior,
                     'id_actividad_economica'=>$id_actividad_economica,
-                    'Total_ImpuestoFijoDolar'=>$Total_ImpuestoFijoDolar,
+                    'tarifaFijaDolar'=>$tarifaFijaDolar,
+                    'tarifaFijaMensualDolarSigno'=>$tarifaFijaMensualDolarSigno,
                     'Total_ImpuestoFijoDolarValor'=> $Total_ImpuestoFijoDolarValor,
                     'Total_ImpuestoFijoDolarSigno'=> $Total_ImpuestoFijoDolarSigno,
                     'id_actividad_especifica'=>$id_actividad_especifica,
