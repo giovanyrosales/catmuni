@@ -16,19 +16,7 @@
  <!-- Para vista detallada fin -->
 
 @stop
-<script>
-function hasta(){
 
-var fecha_pagara=(document.getElementById('fecha_hasta_donde_pagara').value);
-
-hasta_donde_pagara=fecha_pagara;
-
-alert(hasta_donde_pagara);
-
-document.getElementById('hasta').value=hasta_donde_pagara;
-
-}
-</script>
 
 <style>
     table{
@@ -176,7 +164,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                         <h3 class="widget-title text-white">Registrar Recalificación</h3>
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
-                </div>
+                  </div>
             </div><!-- .widget -->
         </a>
       @else
@@ -187,7 +175,7 @@ document.getElementById('hasta').value=hasta_donde_pagara;
                         <h3 class="widget-title text-white">Registrar Recalificación</h3>
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
-                </div>
+                    </div>
             </div><!-- .widget -->
         </a>
         @endif
@@ -995,10 +983,12 @@ function ListarEmpresas(){
         }
 
 function CrearCalificacion(id){
+  openLoading();
               window.location.href="{{ url('/admin/empresas/calificacion') }}/"+id;
         }
 
 function CrearRecalificacion(id){
+  openLoading();
               window.location.href="{{ url('/admin/empresas/recalificacion') }}/"+id;
         }
         

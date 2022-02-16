@@ -333,7 +333,7 @@ function recargar(){
 
 
 function VerEmpresa(id){
-
+  openLoading();
         window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 
         }

@@ -533,6 +533,22 @@ public function calculo_calificacion(Request $request)
 
    $licenciaMatricula= $licencia+ $matricula;
    $licenciaMatriculaSigno=$signo . $licenciaMatricula;
+<<<<<<< HEAD
+=======
+
+
+
+   //************* Declarando variables globales para operacion Multa por Balance *************//
+   $Year=$año_calificacion;
+   $month='03';
+   $day='31';
+   $anioActual=Carbon::now()->year;
+   $CantMesesMulta=0;
+   $f1=Carbon::parse($fecha_pres_balance);
+   $f2=Carbon::createFromDate($Year, $month, $day);
+
+
+>>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
 
    if($licenciaMatricula >0){
        $fondoFLM=$licenciaMatricula*0.05;
@@ -547,15 +563,19 @@ public function calculo_calificacion(Request $request)
        if($licencia=='')
        {
            $licencia=0;
+           $licenciaSigno= $signo.$licencia;
        }
        else{
-           $licencia= $signo.$licencia;
+           $licencia=$licencia;
+           $licenciaSigno= $signo.$licencia;
        }
        if($matricula=='')
        {
            $matricula=0; 
+           $matriculaSigno=$signo.$matricula;
        }else{
-           $matricula=$signo.$matricula;
+           $matricula=$matricula;
+           $matriculaSigno=$signo.$matricula;
        }
 
    if($activo_total==NULL)
@@ -680,21 +700,21 @@ public function calculo_calificacion(Request $request)
         $millar; //0.80
         $excedente; //25,000
         $MontoFijodelImpuesto=$fijo;
-        $ValorExcedente_en_millares=($activo_imponibleColones-$excedente)/1000;
-        $MontoVariable_del_Impuesto=$millar*$ValorExcedente_en_millares;
+        $ValorExcedente_en_millares=round(($activo_imponibleColones-$excedente)/1000);
+        $MontoVariable_del_Impuesto=($millar*$ValorExcedente_en_millares);
 
-        $ImpuestoMensualVariableColones=round($MontoFijodelImpuesto+$MontoVariable_del_Impuesto,2);
-        $ImpuestoAnualVariableColones= $ImpuestoMensualVariableColones*12;
+        $ImpuestoMensualVariableColones=($MontoFijodelImpuesto+$MontoVariable_del_Impuesto);
+        $ImpuestoAnualVariableColones= round($ImpuestoMensualVariableColones*12);
 
         //*** Convirtiendo el impuesto en dolares *//  
         $ImpuestoMensualVariableDolar=round($ImpuestoMensualVariableColones/8.75,2);
         $ImpuestoMensualVariableDolarSigno=$signo . $ImpuestoMensualVariableDolar;
-        $ImpuestoAnualVariableDolar=round($ImpuestoAnualVariableColones/8.75,2);
+        $ImpuestoAnualVariableDolar=round(($ImpuestoMensualVariableDolar*12),2);
 
 
         //*** Calculando los fondos para fiestas patronales *//
-        $fondoFPVMensual=round($ImpuestoMensualVariableColones*0.05,2);
-        $fondoFPVAnual=round($ImpuestoAnualVariableColones*0.05,2);
+        $fondoFPVMensual=$ImpuestoMensualVariableColones*0.05;
+        $fondoFPVAnual=$ImpuestoAnualVariableColones*0.05;
 
         //*** Convirtiendo a dolar los fondos para fiestas patronales *//
         $fondoFPVMensualDolar=round($fondoFPVMensual/8.75,2);
@@ -706,6 +726,7 @@ public function calculo_calificacion(Request $request)
 
         //*** Convirtiendo a dolar el impuesto total *//
         $ImpuestoTotalMensualDolar=round($ImpuestoTotalMensualColones/8.75,2);
+<<<<<<< HEAD
         $ImpuestoTotalAnualDolar=round($ImpuestoTotalAnualColones/8.75,2);
 
 
@@ -713,11 +734,72 @@ public function calculo_calificacion(Request $request)
                   
                         'success' => 1, 
 
+=======
+        $ImpuestoTotalAnualDolar=round(($ImpuestoAnualVariableDolar+$fondoFPVAnualDolar),2);
+   
+        //************* Calculando y determinando Multa por Balance *************//
+         if( $estado_calificacion=='calificado')
+         {
+             $multabalance='0.00';
+             $DeterminacionDeMulta='No Aplica multas por ser Calificación';
+         
+         }
+         else if ( $estado_calificacion=='recalificado')
+         {
+        //*........ Calculando Multa por Balance .............................]
+
+                if($f1->lt($f2))
+                {
+                    if($Year != $anioActual)
+                    {
+                        $DeterminacionDeMulta='Aplica multa';
+
+                        $CantMesesMulta=ceil(($f1->floatDiffInRealMonths($f2)));
+                        $multabalance=round((($CantMesesMulta*$ImpuestoMensualVariableDolar)*0.02),2);
+                        if($multabalance<2.86)
+                        {
+                          $multabalance=2.86;
+                        }
+
+                    }
+                    else
+                    {
+                        $DeterminacionDeMulta='No aplica multa';
+                        $CantMesesMulta=0;
+                        $multabalance='0.00';
+                    }
+                    
+                }else
+                { 
+                        $DeterminacionDeMulta='Aplica multa';
+                        $CantMesesMulta=ceil(($f1->floatDiffInRealMonths($f2)));
+                        $multabalance=round((($CantMesesMulta*$ImpuestoMensualVariableDolar)*0.02),2);
+                        if($multabalance<2.86)
+                        {
+                          $multabalance=2.86;
+                        }
+                }   
+         }
+   //************* Fin de calculando Multa por Balance *************//
+
+            return [
+                  
+                        'success' => 1,
+                        'ValorExcedente_en_millares'=>$ValorExcedente_en_millares,
+                        'CantMesesMulta'=>$CantMesesMulta,
+                        'f2'=>$f2,
+                        'anioActual'=>$anioActual,
+                        'DeterminacionDeMulta'=>$DeterminacionDeMulta,
+                        'multabalance'=>$multabalance,
+>>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
                         'tarifa' =>$tarifa, 
                         'valor'=>$valor, 
                         'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 
+                        'matriculaSigno'=>$matriculaSigno,
+                        'licenciaSigno'=>$licenciaSigno,
                         'licencia'=> $licencia,
                         'matricula'=>$matricula,
+
                         'fondoFLMSigno'=>$fondoFLMSigno,
                         'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,
                         'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor,
@@ -731,6 +813,7 @@ public function calculo_calificacion(Request $request)
                         'id_actividad_economica'=>$id_actividad_economica,
                         'id_act_economica'=>$id_act_economica,
                         'actividad_economica'=>$actividad_economica,
+                        'ImpuestoAnualVariableColones'=>$ImpuestoAnualVariableColones,
                         'ImpuestoMensualVariableColones'=>$ImpuestoMensualVariableColones,
                         'ImpuestoMensualVariableDolar'=>$ImpuestoMensualVariableDolar,
                         'ImpuestoAnualVariableDolar'=>$ImpuestoAnualVariableDolar,
@@ -788,11 +871,65 @@ public function calculo_calificacion(Request $request)
             $Total_ImpuestoFijoDolarSigno=$signo. $Total_ImpuestoFijoDolar;
             $tarifaenColonesSigno=$signoC . $impuesto_mensualFijo;
 
+<<<<<<< HEAD
+=======
+       //************* Calculando y determinando Multa por Balance *************//
+       if( $estado_calificacion=='calificado')
+       {
+           $multabalance='0.00';
+           $DeterminacionDeMulta='No Aplica multas por ser Calificación';
+       
+       }
+       else if ( $estado_calificacion=='recalificado')
+       {
+       //*........ Calculando Multa por Balance .............................]
+>>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
 
+       if($f1->lt($f2))
+       {
+           if($Year != $anioActual)
+           {
+            $DeterminacionDeMulta='Aplica multa';
+
+               $CantMesesMulta=ceil(($f1->floatDiffInRealMonths($f2)));
+               $multabalance=round((($CantMesesMulta*$tarifaFijaDolar)*0.02),2);
+               if($multabalance<2.86)
+               {
+                 $multabalance=2.86;
+               }
+
+           }
+           else
+           {
+               $DeterminacionDeMulta='No aplica multa';
+               $CantMesesMulta=0;
+               $multabalance='0.00';
+           }
+           
+       }else
+       { 
+               $DeterminacionDeMulta='Aplica multa';
+               $CantMesesMulta=ceil(($f1->floatDiffInRealMonths($f2)));
+               $multabalance=round((($CantMesesMulta*$tarifaFijaDolar)*0.02),2);
+               if($multabalance<2.86)
+               {
+                 $multabalance=2.86;
+               }
+       }   
+}
+//************* Fin de calculando Multa por Balance *************//
 
         
             return [
                     'success' => 1, 
+<<<<<<< HEAD
+=======
+                    'CantMesesMulta'=>$CantMesesMulta,
+                    'anioActual'=>$anioActual,
+                    'f2'=>$f2,
+                    'DeterminacionDeMulta'=>$DeterminacionDeMulta,
+                    'multabalance'=>$multabalance,
+>>>>>>> 5ae5859a8dff7be4fed1e370f1b2adac0c33b5a6
                     'tarifa' =>$tarifa, 
                     'valor'=>$valor, 
                     'FondoF'=>$FondoF,
@@ -805,6 +942,8 @@ public function calculo_calificacion(Request $request)
                     'id_actividad_especifica'=>$id_actividad_especifica,
                     'tarifaenColonesSigno'=>$tarifaenColonesSigno,
                     'PagoAnualLicenciasSigno'=>$PagoAnualLicenciasSigno, 
+                    'matriculaSigno'=>$matriculaSigno,
+                    'licenciaSigno'=>$licenciaSigno,
                     'licencia'=> $licencia,
                     'matricula'=>$matricula,
                     'fondoFLMSigno'=>$fondoFLMSigno,
@@ -833,7 +972,8 @@ public function nuevaCalificacion(Request $request){
         'tarifa'=>'required',
         'año_calificacion'=>'required',
         'pago_mensual'=>'required',
-        'total_impuesto'=>'required',  
+        'total_impuesto'=>'required', 
+        'multaBalance'=>'required'
     );
 
     $validar = Validator::make($request->all(), $regla);
@@ -858,6 +998,7 @@ public function nuevaCalificacion(Request $request){
                 $dato->pago_mensual = $request->pago_mensual;
                 $dato->total_impuesto = $request->total_impuesto;
                 $dato->pago_anual_permisos = $request->pago_anual_permisos;
+                $dato->multa_balance = $request->multaBalance;
                 
 
                 if($dato->save())
@@ -866,7 +1007,8 @@ public function nuevaCalificacion(Request $request){
                 
                 }
         }
-        //Termina registrar Calificación
+
+//Termina registrar Calificación.................................]
 
 
 
