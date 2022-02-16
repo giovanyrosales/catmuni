@@ -14,6 +14,7 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
   
+    <link rel="stylesheet" href="sweetalert2.min.css">
 
 
 @stop
@@ -26,6 +27,12 @@
                 $('#selectTarifa').hide();
                 $('#tarifaAplicada').hide();
                 $('#tarifa').hide();
+
+                //**** Para llenar el select de año de calificación *****//
+                var n = (new Date()).getFullYear()
+                var select = document.getElementById("año_calificacion");
+                for(var i = n; i>=1900; i--)select.options.add(new Option(i,i)); 
+
                
 }
  
@@ -36,19 +43,6 @@ window.onload = f1;
 <script>
 
 
-
-function extraeranio()
-{
-      /*Declaramos variables */
-      var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
-      //*Capturando fecha del date
-      fechaBalance=fecha_pres_balance;
-
-      //*Extraendo el año de la fecha
-      anio=parseInt(String(fechaBalance).substring(0,4));
-      //*alert(anio);
-      document.getElementById('año_calificacion').value=anio;
-}
 function resetea()
 {
  vacio='';
@@ -70,6 +64,8 @@ function calculo(id_act_economica)
     var ValortarifaAplicada=(document.getElementById('tarifaAplicadaValor').value);
     var id_actividad_especifica={{$empresa->id_actividad_especifica}};
     var estado_calificacion=(document.getElementById('estado_calificacion').value);
+    var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
+    var año_calificacion=(document.getElementById('año_calificacion').value);
 
 var formData = new FormData();
 
@@ -81,6 +77,8 @@ formData.append('matricula', matricula);
 formData.append('id_act_economica', id_act_economica);
 formData.append('id_actividad_especifica', id_actividad_especifica);
 formData.append('estado_calificacion', estado_calificacion);
+formData.append('fecha_pres_balance', fecha_pres_balance);
+formData.append('año_calificacion', año_calificacion);
 
 axios.post('/admin/empresas/calculo_calificacion', formData, {
         })
@@ -92,15 +90,17 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                 } 
                 if(response.data.success === 1){
 
-            //Impresioines en tabla licencias y permisos.
+            //Impresiones en tabla licencias y permisos.
             document.getElementById('pagolicenciaMatricula_imp').innerHTML=response.data.licenciaMatriculaSigno;
             document.getElementById('fondoFM_imp').innerHTML=response.data.fondoFLMSigno;
             document.getElementById('PagoAnualLicencias_imp').innerHTML=response.data.PagoAnualLicenciasSigno;
             document.getElementById('PagoAnualPermisos_imp').value=response.data.PagoAnualLicenciasValor;
- 	          document.getElementById('licencia_imp').innerHTML=response.data.licencia;
-            document.getElementById('monto_pagar_matricula_imp').innerHTML=response.data.matricula;
+ 	          document.getElementById('licencia_imp').innerHTML=response.data.licenciaSigno;
+            document.getElementById('monto_pagar_matricula_imp').innerHTML=response.data.matriculaSigno;
             document.getElementById('multaBalance_imp').innerHTML=response.data.multabalance; 
-            //Terminan Impresioines en tabla licencias y permisos.
+            document.getElementById('monto_pagar_matriculaValor_imp').value=response.data.matricula;
+            document.getElementById('monto_pagar_licenciaValor_imp').value=response.data.licencia;
+            //Terminan Impresiones en tabla licencias y permisos.
               
                         document.getElementById('activo_imponible').value=response.data.valor;
                         document.getElementById('tipo_tarifa').value=response.data.tarifa;
@@ -136,18 +136,23 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                        
                         if(response.data.tarifa==='Fija')
                         {
-                        //**Estos dos campos son versatiles ya que se usan tambien en variable *//
-                        var ValortarifaAplicadaImp=(document.getElementById('tarifaAplicadaValor').value);
-                        document.getElementById('tarifaAplicadaMensualValor_imp').value=ValortarifaAplicadaImp;
-                        document.getElementById('Total_ImpuestoValor_imp').value=response.data.Total_ImpuestoFijoDolarSigno;
+                          //**Estos dos campos son versatiles ya que se usan tambien en fija *//
+                          document.getElementById('tarifaAplicadaMensualValor_imp').value=response.data.tarifaFijaDolar; 
+                          document.getElementById('Total_ImpuestoValor_imp').value=response.data.Total_ImpuestoFijoDolarValor;
 
-                        document.getElementById('FondoF_imp').innerHTML=response.data.FondoF; 
-                        document.getElementById('Total_Impuesto_imp').innerHTML=response.data.Total_ImpuestoFijoDolarSigno;
-                        document.getElementById('tarifaenColonesSigno_imp').innerHTML=response.data.tarifaenColonesSigno;
-                        
+                       
+                        //** Se cargan los datos en el formulario *//
                         document.getElementById('tarifaAplicada').value=response.data.tarifaFijaMensualDolarSigno;
                         document.getElementById('tarifaAplicadaValor').value=response.data.tarifaFijaDolar; 
-
+                        
+                        //** Se cargan los datos en el modal generado de la calificación *//
+                        document.getElementById('FondoF_imp').innerHTML=response.data.FondoF; 
+                        document.getElementById('Total_Impuesto_imp').innerHTML=response.data.Total_ImpuestoFijoDolarSigno;
+                        document.getElementById('tarifaenColonesSigno_imp').innerHTML=response.data.tarifaenColonesSigno;                      
+                        document.getElementById('tarifaAplicadaMensual_imp').innerHTML=response.data.tarifaFijaMensualDolarSigno;
+                        document.getElementById('tarifaAplicada_imp').innerHTML=response.data.tarifaFijaMensualDolarSigno;
+                       
+                        
                           $("#monto_tarifa").show();
                           $('#tarifaAplicada').show();
                           $('#tarifa').show();
@@ -280,7 +285,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input  type="date" onchange="extraeranio();" class="form-control text-success" name="fecha_pres_balance" id="fecha_pres_balance" class="form-control" required >
+                        <input  type="date"  class="form-control text-success" name="fecha_pres_balance" id="fecha_pres_balance" class="form-control" required >
        
                   </div>
                </div><!-- /.col-md-6 -->
@@ -319,9 +324,17 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                 </div>
               </div><!-- /.col-md-6 -->
               <div class="col-md-2">
-                <div class="form-group">
-                       <input type="text" disabled placeholder="0000" name="año_calificacion" id="año_calificacion" class="form-control" required >
-                </div>
+                <div class="form-group">  
+                <select name="año_calificacion" id="año_calificacion" 
+                    class="selectpicker"
+                    data-style="btn-success"
+                    data-width="auto"
+                    data-show-subtext="true" 
+                    data-live-search="true" 
+                    title="-- Seleccione el año --"
+                    >       
+                    </select>
+                      </div>
               </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
             </div> <!-- /.ROW1 -->
@@ -363,9 +376,8 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                 @foreach($licencia as $dato)
                                     <option value="{{$dato->monto}}">{{ $dato->nombre}} ${{$dato->monto}}</option>                                  
                                 @endforeach
-                                </select> 
-                                <input type="hidden" class="form-control" required disabled name="monto_pagar" id="monto_pagar" > 
-                                </div>
+                                </select>                   
+                              </div>
                           </div>
                   </div>
               <!-- finaliza select CARGAR MULTA-->
@@ -397,7 +409,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                     <option value="{{$dato->monto}}" >{{ $dato->nombre}} ${{$dato->monto}}</option>                                  
                                 @endforeach
                                 </select> 
-                                <input type="hidden" class="form-control" required disabled name="monto_pagar_matricula" id="monto_pagar_matricula">
+                                
                                 </div>
                           </div>
                   </div>
@@ -686,8 +698,8 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           <tr>
                             <td align="center">{{$empresa->nombre}}</td>
                             <td>1</td>
-                            <td><h6 name="licencia_imp" id="licencia_imp"> </h6></td>
-                            <td><h6 name="monto_pagar_matricula_imp" id="monto_pagar_matricula_imp"> </h6></td>
+                            <td><h6 name="licencia_imp" id="licencia_imp"> </h6> <input type="hidden" class="form-control" required disabled  id="monto_pagar_licenciaValor_imp" > </td>
+                            <td><h6 name="monto_pagar_matricula_imp" id="monto_pagar_matricula_imp"> </h6><input type="hidden" class="form-control" required disabled id="monto_pagar_matriculaValor_imp"></td>
                             <td><h6 name="pagolicenciaMatricula_imp" id="pagolicenciaMatricula_imp"> </h6></td>
                           </tr>
 
@@ -967,7 +979,8 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
-
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -988,13 +1001,19 @@ function GenerarCalificacion(){
             var activo_total=(document.getElementById('activo_total').value);
             var deducciones=(document.getElementById('deducciones').value);
             var rubro=(document.getElementById('rubro').value);
-            var tarifaAplicada_imp=(document.getElementById('tarifaAplicada').value);
+            var año_calificacion=(document.getElementById('año_calificacion').value);
           
             
             if(fecha_pres_balance === ''){
                     toastr.error('La fecha que presenta el balance es requerida.');
                     return;
                 }
+
+            if(año_calificacion === ''){
+                    toastr.error('El año a calificar es requerido.');
+                    return;
+                }
+
 
             if(activo_total === ''){
                     toastr.error('El dato activo activo total es requerido.');
@@ -1015,9 +1034,6 @@ function GenerarCalificacion(){
  
             document.getElementById('fechabalanceodjurada').value=fecha_pres_balance;
             document.getElementById('actividad_economica').innerHTML=rubro; 
-            document.getElementById('tarifaAplicada_imp').innerHTML=tarifaAplicada_imp;
-            document.getElementById('tarifaAplicadaMensual_imp').innerHTML=tarifaAplicada_imp;
-        
 
             $('#modalCalificacion').modal('show');
         }
@@ -1033,12 +1049,13 @@ function nuevo(){
   var tipo_tarifa = document.getElementById('tipo_tarifa').value;
   var tarifa = document.getElementById('tarifaAplicadaValor').value;
   var estado_calificacion = document.getElementById('estado_calificacion').value;
-  var licencia = document.getElementById('licencia_imp').innerHTML;
-  var matricula = document.getElementById('monto_pagar_matricula_imp').innerHTML;
+  var licencia = document.getElementById('monto_pagar_licenciaValor_imp').value;
+  var matricula = document.getElementById('monto_pagar_matriculaValor_imp').value;
   var año_calificacion = document.getElementById('año_calificacion').value;
   var pago_mensual = document.getElementById('tarifaAplicadaMensualValor_imp').value;
   var total_impuesto = document.getElementById('Total_ImpuestoValor_imp').value;
   var pago_anual_permisos = document.getElementById('PagoAnualPermisos_imp').value;
+  var multaBalance = document.getElementById('multaBalance_imp').innerHTML;
 
   openLoading();
   var formData = new FormData();
@@ -1053,6 +1070,7 @@ function nuevo(){
   formData.append('pago_mensual', pago_mensual);
   formData.append('total_impuesto', total_impuesto);
   formData.append('pago_anual_permisos', pago_anual_permisos);
+  formData.append('multaBalance', multaBalance);
   
 
   axios.post('/admin/empresas/calificacion/nueva', formData, {
@@ -1063,13 +1081,24 @@ function nuevo(){
               toastr.error(response.data.message);
           }
           if(response.data.success === 1){
-              toastr.success('Calificación registrada correctamente.');
-              window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
+            Swal.fire(
+                            'Calificación registrada correctamente!',
+                            'Presiona el botón Ok!',
+                            'success'
+                     )
+
+                     $('#modalCalificacion').modal('hide');
+                     window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
+          
           }
          
       })
       .catch((error) => {
-          toastr.error('Error al registrar la calificación.');
+        Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error al registrar empresa!', 
+                        })
           closeLoading();
       });
 }

@@ -108,7 +108,6 @@
                                 <select 
                                 required
                                 class="selectpicker"
-                                data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
                                 id="select-actividad_especifica" 
@@ -152,8 +151,7 @@
                           <div class="input-group mb-6">
                                 <select 
                                 required
-                                class="selectpicker"
-                                data-style="btn-success"
+                                class="selectpicker"  
                                 data-show-subtext="true" 
                                 data-live-search="true"   
                                 id="select-actividad_economica" 
