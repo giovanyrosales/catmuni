@@ -15,11 +15,9 @@
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
     
     <link rel="stylesheet" href="sweetalert2.min.css">
-
-
+    
+ 
 @stop
-
-
 
 
 
@@ -91,61 +89,63 @@
 
       <!-- Asignar Representante-->  
        <!-- /.form-group -->
-       <div class="row"> 
-            <div class="col-md-6">
-                      <div class="form-group">
-                      <label>Asignar representante legal:</label>
-                              <!-- Select live search -->
-                              <div class="input-group mb-14">
-                                <select 
-                                required
-                                class="selectpicker show-tick" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true" 
-                                id="select-contribuyente" 
-                                title="-- Seleccione un registro --"
-                                
-                                >
-                                  @foreach($contribuyentes as $contribuyente)
-                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                           <!-- finaliza select Asignar Representante-->
-                      </div>
-                  </div>
+                 <div class="row">     
               <!-- /.form-group -->
                         <!--asignar actividad economica -->
                         <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Giro comercial:</label>
+                            <!-- Select Giro Comercial -live search -->
+                                <div class="input-group mb-9">
+                                <select 
+                                required 
+                                class="selectpicker"
+                                data-show-subtext="true" 
+                                data-live-search="true"  
+                                id="select-giro_comercial" 
+                                title="--  Selecione un giro  --"
+
+                                required
+                                >
+                                  @foreach($giroscomerciales as $giro)
+                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
+                                  </option>
+                                  @endforeach 
+                                </select> 
+                                </div>
+                           <!-- finaliza select Giro Comercial-->
+                      </div>
+                  </div>
+              <!-- /.form-group -->
+                  <!-- /.form-group -->
+                    <div class="col-md-6">
                      <div class="form-group">
-                          <label>Actividad económica:</label>
+                          <label>Estado:</label>
                           
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
                                 <select 
                                 required
                                 class="selectpicker"
-                                data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-actividad_economica" 
-                                title="-- Selecione la actividad --"
+                                id="select-estado_empresa" 
+                                title="-- Selecione el estado  --"
                                  >
-                                  @foreach($actividadeseconomicas as $actEc)
-                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
+                                  @foreach($estadoempresas as $estado)
+                                  <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
                                   @endforeach 
                                 </select> 
                            </div>
-                           <!-- finaliza asignar actividad economica-->
+                           <!-- finaliza select estado-->
                         </div>
                     </div>
-               </div> 
+               </div> <!-- /.ROW -->
                <!-- /.form-group -->
-            </div> <!-- /.ROW -->
+            </div> 
               <!-- /.col -->
 
-              <div class="col-md-6">
+           <div class="col-md-6">
               <!-- /.form-group --> 
               <div class="row"> 
                   <div class="col-md-6">
@@ -186,80 +186,72 @@
                         <input type="number" name="matricula_comercio" id="matricula_comercio" class="form-control"  placeholder="Matricula de Comercio">
                       </div>
                   </div>
-                  
-                  <div class="col-md-4">
-                     <div class="form-group">
-                          <label>Actividad específica:</label>
-                          <!-- Select estado - live search -->
-                          <div class="input-group mb-6">
+                  <div class="col-md-6">
+                      <div class="form-group">
+                      <label>Asignar representante legal:</label>
+                              <!-- Select live search -->
+                              <div class="input-group mb-14">
                                 <select 
                                 required
-                                class="selectpicker"
-                                data-style="btn-success"
+                                class="selectpicker show-tick" 
                                 data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select-actividad_especifica" 
-                                title="-- Selecione la actividad --"
-                                 >
-                                  @foreach($actividadespecifica as $actEsp)
-                                  <option value="{{ $actEsp->id }}"> {{ $actEsp->nom_actividad_especifica }}</option>
+                                data-live-search="true" 
+                                id="select-contribuyente" 
+                                title="-- Seleccione un registro --"
+                                
+                                >
+                                  @foreach($contribuyentes as $contribuyente)
+                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
                                   @endforeach 
                                 </select> 
-                           </div>
-                     </div>
-                </div>
+                                </div>
+                           <!-- finaliza select Asignar Representante-->
+                      </div>
+                  </div>
+                  
                 </div>
               <!-- /.form-group -->
             <div class="row"> 
             <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Giro comercial:</label>
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                class="selectpicker"
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial" 
-                                title="--  Selecione un giro  --"
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                           <!-- finaliza select Giro Comercial-->
-                      </div>
-                  </div>
-              <!-- /.form-group -->
-                  <!-- /.form-group -->
-                    <div class="col-md-6">
                      <div class="form-group">
-                          <label>Estado:</label>
+                          <label>Actividad económica:</label>
                           
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
                                 <select 
                                 required
                                 class="selectpicker"
-                                data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-estado_empresa" 
-                                title="-- Selecione el estado  --"
+                                id="select-actividad_economica" 
+                                title="-- Selecione la actividad --"
+                                onchange="llenarSelect()"
+                              
                                  >
-                                  @foreach($estadoempresas as $estado)
-                                  <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
+                                  @foreach($actividadeseconomicas as $actEc)
+                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
                                   @endforeach 
                                 </select> 
                            </div>
-                           <!-- finaliza select estado-->
+                           <!-- finaliza asignar actividad economica-->
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                     <div class="form-group" id= "actividad-especificaDIV"> 
+                          <label>Actividad específica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-6" >
+                        
+                          <select class="form-control"  id="select-actividad_especifica"
+                         
+                          >
+                           </select>
+
+                         </div>
+                     </div>
+                 </div>
+           
                </div>
             <!-- /.form-group -->
             
@@ -304,14 +296,24 @@
     <script src="sweetalert2.min.js"></script>
 
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
     <script type="text/javascript">
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
-        });
+           // document.getElementById("select-actividad_especifica").style.backgroundColor = 'green';
+          
+           $('#actividad-especificaDIV').hide();
+        
+          });
+
+
     </script>
 
-
 <script>
+
 
 function nuevo(){
   
@@ -332,9 +334,7 @@ function nuevo(){
         var telefono = document.getElementById('telefono').value;
 
 
-            
-    
-           
+               
 
         if(nombre === ''){
             toastr.error('El nombre de la empresa es requerido');
@@ -466,6 +466,7 @@ function nuevo(){
         formData.append('num_tarjeta', num_tarjeta);
         formData.append('telefono', telefono);
 
+
         axios.post('/admin/empresa/nueva', formData, {
         })
             .then((response) => {
@@ -502,7 +503,41 @@ function nuevo(){
  }
 
 
+// Función para llenar select
 
+      function llenarSelect()
+          {
+             var id_select = document.getElementById('select-actividad_economica').value;
+          
+           
+             var formData = new FormData();
+             formData.append('id_select', id_select);
+             
+             axios.post('/admin/empresa/buscar', formData, {
+              })
+            .then((response) => {
+            
+               document.getElementById("select-actividad_especifica").options.length = 0;
+               $('#actividad-especificaDIV').show();
+          
+            
+                $.each(response.data.actividad_especifica, function( key, val ){
+                       $('#select-actividad_especifica').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>').select2();
+                       
+                            
+                    });
+
+               })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });
+            
+             
+          }
+
+// Termina función
+      
 </script> 
 
     

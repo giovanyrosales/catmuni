@@ -78,6 +78,9 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/empresas/calculo_cobros{empresa}', [EmpresaController::class, 'calculo_cobros']);
     Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
 
+    // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
+    Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
+
     // --- TRASPASO Y CIERRE
     Route::post('/admin/empresas/show/traspaso', [EmpresaController::class,'nuevoTraspaso']);
     Route::post('/admin/empresas/show/cierre', [EmpresaController::class,'nuevoEstado']);
@@ -151,3 +154,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/ActividadEspecifica/informacion', [ActividadEspecificaController::class, 'informacionActividadEspecifica']);
     Route::post('/admin/ActividadEspecifica/editar', [ActividadEspecificaController::class, 'editarActividadEspecifica']);
     Route::post('/admin/ActividadEspecifica/eliminar', [ActividadEspecificaController::class, 'eliminarActividadEspecifica']);
+
+
+    
+    
