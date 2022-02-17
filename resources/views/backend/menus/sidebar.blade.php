@@ -122,6 +122,28 @@
                             </li>
                         </ul>
                 <!-- Finaliza Grupo Contribuyentes -->
+
+                 <!-- Grupo Contribuyentes -->
+                 <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                <i class="fas fa-people-arrows"></i>
+                                <p>Rótulos <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.crear.contribuyentes.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Agregar Rótulo</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.listarContribuyentes.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-id-badge nav-icon"></i>
+                                <p>Listar Rótulos</p>
+                                </a>
+                            </li>
+                        </ul>
+                <!-- Finaliza Grupo Contribuyentes -->
                     </ul>
                 </li>
 

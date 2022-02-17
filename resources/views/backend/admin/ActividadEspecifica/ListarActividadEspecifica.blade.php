@@ -78,19 +78,28 @@
 <!--Termina Contenido Frame Principal -->
 
    <!--Modal para agregar tarifa variable-->
+   
    <div class="modal fade" id="modalAgregarActividadEspecifica">
         <div class="modal-dialog dtr-modal-content">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar actividad específica</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
                <div class="modal-body">
-                    <form id="formulario-AgregarActividadEspecifica">
-                        <div class="card-body">
-                        <div class="card-body">
+            <form id="formulario-AgregarActividadEspecifica">
+            <div class="card card-green">
+            <div class="card-header">
+            <h3 class="card-title">Agregar actividad específica</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+            </div>
+          </div>
+            <div class="card-body">
+             <div class="card-body">
             <div class="row">
                    <div class="col-md-10">
                      <div class="form-group">
@@ -111,7 +120,7 @@
                                 <select 
                                 required
                                 class="selectpicker"
-                                data-style="btn-success"
+                              
                                 data-show-subtext="true" 
                                 data-live-search="true"   
                                 id="select-actividad_economica" 
@@ -165,6 +174,15 @@
                 </div>
                <div class="modal-body">
                     <form id="formulario-EditarActividadEspecifica">
+                    <div class="card card-green">
+                    <div class="card-header">
+                    <h3 class="card-title">Actualizar actividad específica</h3>
+
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+                    </div>
+                  </div>
                         <div class="card-body">
                         <div class="card-body">
 

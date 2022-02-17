@@ -91,7 +91,15 @@
                <div class="modal-body">
                     <form id="formulario-editar">
                         <div class="card-body">
-                                                          
+                        <div class="card card-green">
+                        <div class="card-header">
+                        <h3 class="card-title">Datos del Contribuyente</h3>
+
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+                        </div>
+                      </div>     
                 <!--inicia los campos del formulario-->
                  <!-- /.card-header -->
                  <div class="card-body">
@@ -187,7 +195,14 @@
                <div class="modal-body">
                     <form id="formulario-ver">
                         <div class="card-body">
-                                                          
+                        <div class="card-header">
+                        <h3 class="card-title">Datos del Contribuyente</h3>
+
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+                        </div>
+                      </div>            
                 <!--inicia los campos del formulario ver-->
                  <!-- /.card-header -->
                  <div class="card-body">
