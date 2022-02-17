@@ -31,12 +31,13 @@ function calculo(id)
 
 var formData = new FormData();
 
+formData.append('id', id);
 formData.append('fechaPagara', fechaPagara);
 formData.append('ultimo_cobro', ultimo_cobro);
 formData.append('tasa_interes', tasa_interes);
 formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
- axios.post('/admin/empresas/calculo_cobros'+id, formData, {
+ axios.post('/admin/empresas/calculo_cobros', formData, {
         })
         .then((response) => {
                 console.log(response);

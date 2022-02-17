@@ -67,7 +67,7 @@
             <div class="small-box bg-info">
               <div class="inner">
                 <h3> </h3>
-                <p> Avisos: 0</p>
+                <p> Avisos: <span class="badge badge-pill badge-light">0</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -81,7 +81,7 @@
             <div class="small-box bg-warning">
               <div class="inner">
                 <h3> </h3>
-                <p>Notificaciones: 0</p>
+                <p>Notificaciones: <span class="badge badge-pill badge-light">0</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -95,7 +95,7 @@
             <div class="small-box bg-danger">
               <div class="inner">
                 <h3> </h3>
-                <p>Multas: 0</p>
+                <p>Multas: <span class="badge badge-pill badge-light">0</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -144,7 +144,7 @@
                                 <div class="widget stats-widget">
                                     <div class="widget-body clearfix bg-dark">
                                         <div class="pull-left">
-                                            <h3 class="widget-title text-white">Calificación creada  {{$calificaciones->fecha_calificacion}}</h3>
+                                            <h3 class="widget-title text-white">Calificación creada <span class="badge badge-pill badge-info"> {{$calificaciones->fecha_calificacion}}</span></h3>
                                         </div>
                                         <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
                                     </div>
@@ -175,7 +175,8 @@
                         <h3 class="widget-title text-white">Registrar Recalificación</h3>
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
-                    </div>
+                  
+                  </div>
             </div><!-- .widget -->
         </a>
         @endif

@@ -274,13 +274,13 @@ public function show($id)
 }
 
 // ---------COBROS ------------------------------------------>
-public function calculo_cobros(Request $request, $id)
+public function calculo_cobros(Request $request)
 {
     log::info($request->all());
     $f1=Carbon::parse($request->ultimo_cobro);
     $f2=Carbon::parse($request->fechaPagara);
     $f3=Carbon::parse($request->fecha_interesMoratorio);
-
+    $id=$request->id;
     
     $DiasinteresMoratorio=$f1->diffInDays($f3);
    
@@ -300,7 +300,7 @@ public function calculo_cobros(Request $request, $id)
     
         ->where('id_empresa', "=", "$id")
         ->first();
-        
+        $nombre_empresa=$calificaciones->nombre;
         if($f1->lt($f2))
         {
             $CantidadMeses=$f1->diffInMonths($f2);  
@@ -322,7 +322,8 @@ public function calculo_cobros(Request $request, $id)
             $totalPago=$signoDollar.$totalPagoValor;
            
 
-            return ['success' => 1, 
+            return ['success' => 1,
+                    'nombre_empresa'=>$nombre_empresa, 
                     'cantidadMeses' => $CantidadMeses,
                     'impuestos' => $impuestos,
                     'tarifa'=>$tarifa,

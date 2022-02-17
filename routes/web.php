@@ -75,7 +75,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::get('/admin/empresas/cobros/{empresa}', [EmpresaController::class, 'cobros']);
     Route::post('/admin/empresas/calculo_calificacion', [EmpresaController::class, 'calculo_calificacion']);
     Route::post('/admin/empresas/calificacion/nueva', [EmpresaController::class,'nuevaCalificacion']);
-    Route::post('/admin/empresas/calculo_cobros{empresa}', [EmpresaController::class, 'calculo_cobros']);
+    Route::post('/admin/empresas/calculo_cobros', [EmpresaController::class, 'calculo_cobros']);
     Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
 
     // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
