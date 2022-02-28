@@ -204,8 +204,8 @@
                 </div>
             </div><!-- .widget -->
         </a>
-
     </div>
+
     <div class="col-md-4 col-sm-8">
         <a href="{{url('simulator')}}">
             <div class="widget stats-widget">
@@ -244,7 +244,18 @@
         </a>
     @endif
         </div>
-
+    <div class="col-md-4 col-sm-8">
+    <a href="#" onclick="matriculas()" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-warning">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-black">Matrículas</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"> <i class="fas fa-file-signature"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    </div>
 
     </div><!-- .ROW -->
 
@@ -1015,6 +1026,11 @@ function Cobros(id){
   window.location.href="{{ url('/admin/empresas/cobros') }}/"+id;
 }
 
+function matriculas(){
+  var id={{$id}};
+  openLoading();
+              window.location.href="{{ url('/admin/matriculas_detalle/index') }}/"+id;
+        }
 
 </script>
 @stop

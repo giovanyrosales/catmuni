@@ -16,7 +16,7 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 
-    <link rel="stylesheet" href="sweetalert2.min.css">
+
 
 
 @stop
@@ -56,7 +56,7 @@ function calculo(id_act_economica)
 {
     /*Declaramos variables */
     var  licencia=(document.getElementById('selectLicencia').value);
-    var  matricula=(document.getElementById('selectMatricula').value);
+    var  matricula=(document.getElementById('matriculaValorTotal').value);
 
     var deducciones=(document.getElementById('deducciones').value);
     var activo_total=(document.getElementById('activo_total').value);
@@ -88,7 +88,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               console.log(response);
                 closeLoading();
                 if(response.data.success ===2){
-                  //toastr.error('Muuuuuuuultaaaaaaaaaaaaaaaaaaaaa');
+                  //toastr.error('Error');
                 } 
                 if(response.data.success === 1){
 
@@ -98,9 +98,9 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
             document.getElementById('PagoAnualLicencias_imp').innerHTML=response.data.PagoAnualLicenciasSigno;
             document.getElementById('PagoAnualPermisos_imp').value=response.data.PagoAnualLicenciasValor;
  	          document.getElementById('licencia_imp').innerHTML=response.data.licenciaSigno;
-            document.getElementById('monto_pagar_matricula_imp').innerHTML=response.data.matriculaSigno;
+            document.getElementById('monto_pagar_matricula_imp').innerHTML='{{$montoMatriculaValor}}';
             document.getElementById('multaBalance_imp').innerHTML=response.data.multabalance; 
-            document.getElementById('monto_pagar_matriculaValor_imp').value=response.data.matricula;
+            document.getElementById('monto_pagar_matriculaValor_imp').value='{{$monto}}';
             document.getElementById('monto_pagar_licenciaValor_imp').value=response.data.licencia;
             //Terminan Impresiones en tabla licencias y permisos.
               
@@ -357,7 +357,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
-               <div class="col-md-3">
+               <div class="col-md-6">
                       <div class="form-group">
                             <!-- Select LICENCIA -live search -->
                                 <div class="input-group mb-9">
@@ -369,53 +369,78 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                 data-show-subtext="true" 
                                 data-live-search="true"   
                                 id="selectLicencia" 
-                                title="-- Seleccione matrícula --"
-                                required
-                                >
-                                <option value=" " >Ninguna</option>
-                                @foreach($licencia as $dato)
-                                    <option value="{{$dato->monto}}">{{ $dato->nombre}} ${{$dato->monto}}</option>                                  
-                                @endforeach
-                                </select>                                
-                                </div>
-                          </div>
-                  </div>
-              <!-- finaliza select CARGAR MULTA-->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <label>MATRICULA:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- Inicia Select Giro Comercial -->
-               <div class="col-md-3">
-                      <div class="form-group">
-                            <!-- Select MATRICULA -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                onchange="calculo({{$empresa->id_act_economica}});"
-                                class="selectpicker"
-                                data-style="btn-info"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="selectMatricula" 
                                 title="-- Seleccione licencia --"
                                 required
                                 >
                                 <option value=" " >Ninguna</option>
-                                @foreach($matricula as $dato)
-                                    <option value="{{$dato->monto}}" >{{ $dato->nombre}} ${{$dato->monto}}</option>                                  
+                                @foreach($licencia as $dato)
+                                    <option value="{{$dato->monto}}">{{ $dato->nombre}} (${{$dato->monto}})</option>                                  
                                 @endforeach
-                                </select>                               
-                                </div>
+                                </select>                   
+                              </div>
                           </div>
                   </div>
+              <!-- finaliza select CARGAR MULTA-->
+               <!-- /.form-group -->
+               </div> <!-- /.ROW1 -->
+               <hr>
+               @if($detectorNull== '1')
+               <label>MATRICULAS:</label>
+                                <section class="content-header" id="aviso">
+                                    <div class="container-fluid">
+                                        <div>
+                                       
+                                            <br>
+                                            <div class="callout callout-info">
+                                                <h5><i class="fas fa-info"></i> Nota:</h5>
+                                                <h5> No hay matrículas registradas para <span class="badge badge-warning">{{$empresa->nombre}}</span></h5> 
+                                                <h6><i>(Puede agregarlas en la vista detallada de la empresa, sección</i> <span class="badge badge-dark">Matrículas</span>)</h6>                                                 
+                                                <input type="hidden" value="{{$monto}}" id="matriculaValorTotal" class="form-control" required >                      
+                                              </div>
+                                        </div>
+                                    </div>
+                                </section>
+              @else 
+               <div class="row"><!-- /.ROW1 -->
+               <!-- /.form-group -->
+               <div class="col-md-12">
+                     <div class="form-group">
+                        <label>MATRICULAS REGISTRADAS:</label>
+                           
+                                <!-- Tabla matriculas -->
+                                <div class="col-auto  p-5 text-center" > <!-- id="tablaDatatable" --->
+                                <input type="hidden" value="{{$monto}}" id="matriculaValorTotal" class="form-control" required > 
+                                <table id="tabla" class="table table-bordered table-striped" border= "1" data-toggle="table" width="80%">
+
+                                  <thead>
+                                      <tr>
+                                      <th style="width: 50%;">Tipo de Matricula</th>
+                                      <th style="width: 25%;">Cantidad</th>
+                                      <th style="width: 25%;">Monto</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  @foreach($matriculas as $dato)
+                                      <tr>
+                                          <td>{{$dato->tipo_matricula}}</td>
+                                          <td>{{$dato->cantidad}}</td>
+                                          <td value="{{$dato->monto}}">${{$dato->monto}}</td>
+                                      </tr>
+                                      @endforeach
+                                  </tbody>
+                                  </table>
+
+
+                                </div> <!--div de cierre tabla --->
+                               
+                      </div>
+               </div><!-- /.col-md-6 -->
+               <!-- Inicia Select Giro Comercial -->
+                 
               <!-- finaliza select MATRICULA-->
                <!-- /.form-group -->
-              
-            </div> <!-- /.ROW1 -->
+               </div> <!-- /.ROW1 -->
+               @endif
 
             </div> <!-- /.card-header text-success -->
             </div> <!-- /.Panel Multa -->
@@ -535,7 +560,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
 <!--Inicia Modal Registrar Recalificación--------------------------------------------------------------->
 
-<div class="modal fade" id="modalCalificacion">
+<div class="modal fade" id="modalRecalificacion">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
@@ -685,41 +710,50 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
-      
                   <table border="1" width:760px;>
                           <tr>
-                            <th scope="col">ACTIVIDAD ECONOMICA </th>
-                            <th scope="col">BASE IMPONIBLE</th>
+                            <th scope="col">MARTRICULAS</th>
+                            <th scope="col">CANTIDAD</th>
+                            <th scope="col">MONTO</th>
                             <th scope="col">LICENCIA</th>
                             <th scope="col">MATRICULA</th>
                             <th scope="col">PAGO POR MAT. O PER.</th>
                           </tr>
 
                           <tr>
-                            <td align="center">{{$empresa->nombre}}</td>
-                            <td>1</td>
-                            <td><h6 name="licencia_imp" id="licencia_imp"> </h6><input type="hidden" class="form-control" required disabled  id="monto_pagar_licenciaValor_imp" ></td>
+                          @if($detectorNull==1)
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><h6 name="licencia_imp" id="licencia_imp"> </h6> <input type="hidden" class="form-control" required disabled  id="monto_pagar_licenciaValor_imp" > </td>
                             <td><h6 name="monto_pagar_matricula_imp" id="monto_pagar_matricula_imp"> </h6><input type="hidden" class="form-control" required disabled id="monto_pagar_matriculaValor_imp"></td>
                             <td><h6 name="pagolicenciaMatricula_imp" id="pagolicenciaMatricula_imp"> </h6></td>
                           </tr>
-
-                          <tr>
-                            <td> </td>
-                            <td rowspan="3" colspan="2">&nbsp; </td>
-                            <td colspan="2">&nbsp;</td>
+                          @else
+                          @foreach($matriculas as $dato)
+                            <td>{{$dato->tipo_matricula}}</td>
+                            <td align="center">{{$dato->cantidad}}</td>
+                            <td><h6>${{$dato->monto}}</h6></td>
+                            <td><h6 name="licencia_imp" id="licencia_imp"> </h6> <input type="hidden" class="form-control" required disabled  id="monto_pagar_licenciaValor_imp" > </td>
+                            <td><h6 name="monto_pagar_matricula_imp" id="monto_pagar_matricula_imp"> </h6><input type="hidden" class="form-control" required disabled id="monto_pagar_matriculaValor_imp"></td>
+                            <td><h6 name="pagolicenciaMatricula_imp" id="pagolicenciaMatricula_imp"> </h6></td>
+                          </tr>
+                          @endforeach
+                          @endif
+                          <tr>               
+                            <td rowspan="6" colspan="4">&nbsp; </td>
                           </tr>
 
                           <tr>
-                            <td> </td>
                             <td><strong>Fondo F. P. </strong></td>
                             <td><h6 name="fondoFM_imp" id="fondoFM_imp"></h6></td>
                           </tr>
                           <tr>
-                            <th scope="row"> </th>
                             <td><strong>Pago Anual </strong></td>
                             <td><h6 name="PagoAnualLicencias_imp" id="PagoAnualLicencias_imp"></h6><input type="hidden" name="PagoAnualPermisos_imp" id="PagoAnualPermisos_imp"></td>
                           </tr>
                         </table>
+                      
                       
                    </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
@@ -735,7 +769,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                <div class="col-md-12">
                   <div class="form-group">
                         
-                  <table border="1" width:760px;>
+                  <table border="1" data-toggle="table" width:760px;>
                       <tr>
                         <th scope="col">ACTIVIDAD ECONOMICA</th>
                         <th scope="col"> </th>
@@ -955,7 +989,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
        </form> <!-- /.formulario-Calificacion2 -->
       </div> <!-- /.Card-body -->
-     </div> <!-- /.modalCalificacion -->
+     </div> <!-- /.modalRecalificacion -->
    </div> <!-- /.modal-dialog modal-xl -->
   </div> <!-- /.modal-content -->
  </div> <!-- /.modal-body -->
@@ -979,8 +1013,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
-    <script src="sweetalert2.all.min.js"></script>
-    <script src="sweetalert2.min.js"></script>
+
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -1040,7 +1073,7 @@ function GenerarCalificacion(){
 
         
 
-            $('#modalCalificacion').modal('show');
+            $('#modalRecalificacion').modal('show');
         }
 
 function VerEmpresa(id){
@@ -1085,14 +1118,18 @@ function nuevo(){
               toastr.error(response.data.message);
           }
           if(response.data.success === 1){
-            Swal.fire(
-                            'Recalificación registrada correctamente!',
-                            'Presiona el botón Ok!',
-                            'success'
-                     )
-                     $('#modalCalificacion').modal('hide');
-                     window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
-                     
+            Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Recalificación registrada correctamente!',
+                          showConfirmButton: true,
+                         
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#modalRecalificacion').modal('hide');
+                             window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
+                            }
+                        });
           }
          
       })
@@ -1100,9 +1137,14 @@ function nuevo(){
         Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Error al registrar empresa!', 
-                        })
-          closeLoading();
+                          text: '¡Error al registrar la recalificación!', 
+                          showConfirmButton: true,
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                          $('#modalRecalificacion').modal('hide');
+                                    closeLoading();
+                                  }
+                        });
       });
      
 }
@@ -1115,11 +1157,11 @@ function nuevo(){
 
     $(function () {
         $("#tabla").DataTable({
-            "paging": true,
+            "paging": false,
             "lengthChange": true,
-            "searching": true,
+            "searching":false,
             "ordering": true,
-            "info": true,
+            "info": false,
             "autoWidth": false,
 
             "language": {

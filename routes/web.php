@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\LicenciaMatricula\LicenciaMatriculaController;
 use App\Http\Controllers\Backend\Multas\MultasController;
 use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
+use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 
 
 /*
@@ -77,6 +78,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/empresas/calificacion/nueva', [EmpresaController::class,'nuevaCalificacion']);
     Route::post('/admin/empresas/calculo_cobros', [EmpresaController::class, 'calculo_cobros']);
     Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
+    Route::get('/admin/empresas/calificaciones/tabla_matriculas/{empresa}', [EmpresaController::class,'tablaMatriculas']);
 
     // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
     Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
@@ -155,6 +157,12 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/ActividadEspecifica/editar', [ActividadEspecificaController::class, 'editarActividadEspecifica']);
     Route::post('/admin/ActividadEspecifica/eliminar', [ActividadEspecificaController::class, 'eliminarActividadEspecifica']);
 
-
+    // ---MATRICULAS DETALLES
+    Route::get('/admin/matriculas_detalle/index/{empresa}', [MatriculasDetalleController::class,'index']);
+    Route::post('/admin/matriculas_detalle/agregar', [MatriculasDetalleController::class,'agregar_matriculas']);
+    Route::get('/admin/matriculas_detalle/tabla/{empresa}', [MatriculasDetalleController::class,'tablaMatriculas']);
+    Route::post('/admin/matriculas_detalle/eliminar', [MatriculasDetalleController::class, 'eliminarM']);
+    Route::post('/admin/matriculas_detalle/informacion', [MatriculasDetalleController::class, 'informacionMatricula']);
+    Route::post('/admin/matriculas_detalle/editar', [MatriculasDetalleController::class, 'editarMatricula']);
     
     

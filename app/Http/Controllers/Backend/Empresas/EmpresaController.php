@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Empresas;
 
+use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Controller;
 use App\Models\Contribuyentes;
 use App\Models\Usuario;
@@ -14,8 +15,10 @@ use App\Models\Cobros;
 use App\Models\calificacion;
 use App\Models\Interes;
 use App\Models\LicenciaMatricula;
+use App\Models\MatriculasDetalle;
 use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -121,6 +124,7 @@ public function calificacion($id)
     $actividadeseconomicas = ActividadEconomica::All();
     $calificaciones = calificacion::All();
 
+
     $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
     ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
 
@@ -151,14 +155,55 @@ public function calificacion($id)
     'actividad_economica.rubro','actividad_economica.id as id_act_economica',
     'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);
-    
-    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula'));
+
+    $matriculasRegistradas=MatriculasDetalle
+    ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+    ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                    
+    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+            'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'matriculas.nombre as tipo_matricula')
+    ->where('id_empresa', "=", "$id")     
+    ->first($id);
+
+    if ($matriculasRegistradas == null)
+         { 
+             $detectorNull=1;
+         }else 
+         {
+            $detectorNull=0;
+         }
+
+         $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                         
+         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+                 'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                 'matriculas.nombre as tipo_matricula')
+         ->where('id_empresa', "=", "$id")     
+         ->get();
+        
+         $monto = 0;
+         if($matriculas==null){
+            $monto = 0;
+
+        }
+        else
+        {
+            foreach($matriculas as $dato){
+                                          $monto = $monto + $dato->monto;
+                                         } 
+        }
+
+        $monto = number_format((float)$monto, 2, '.', ',');
+        $montoMatriculaValor='$'. $monto;
+    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('id','empresa','giroscomerciales', 'monto', 'contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','detectorNull','matriculas','montoMatriculaValor'));
     
 }
 
-// ---------Termina Recalificación de empresa ------------------------------------------>
+// ---------Termina Calificación de empresa ------------------------------------------>
 
-// ---------Calificación de empresa ------------------------------------------>
+// ---------Relificación de empresa ------------------------------------------>
 
 public function Recalificacion($id)
 {
@@ -200,8 +245,50 @@ public function Recalificacion($id)
     'actividad_economica.rubro','actividad_economica.id as id_act_economica',
     'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);
+
+    $matriculasRegistradas=MatriculasDetalle
+    ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+    ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                    
+    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+            'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'matriculas.nombre as tipo_matricula')
+    ->where('id_empresa', "=", "$id")     
+    ->first($id);
+
+    if ($matriculasRegistradas == null)
+         { 
+             $detectorNull=1;
+         }else 
+         {
+            $detectorNull=0;
+         }
+
+         $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                         
+         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+                 'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                 'matriculas.nombre as tipo_matricula')
+         ->where('id_empresa', "=", "$id")     
+         ->get();
+        
+         $monto = 0;
+         if($matriculas==null){
+            $monto = 0;
+
+        }
+        else
+        {
+            foreach($matriculas as $dato){
+                                          $monto = $monto + $dato->monto;
+                                         } 
+        }
+
+        $monto = number_format((float)$monto, 2, '.', ',');
+        $montoMatriculaValor='$'. $monto;
     
-    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula'));
+    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('monto','montoMatriculaValor','detectorNull','empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','matriculas'));
     
 }
 
@@ -586,21 +673,23 @@ public function calculo_calificacion(Request $request)
 
        if($licencia=='')
        {
-           $licencia=0;
+           $licencia=0.00;
+           $licencia=number_format((float)$licencia, 2, '.', ',');
            $licenciaSigno= $signo.$licencia;
        }
        else{
-           $licencia=$licencia;
+           $licencia=number_format((float)$licencia, 2, '.', ',');
            $licenciaSigno= $signo.$licencia;
        }
        if($matricula=='')
        {
-           $matricula=0; 
+           $matricula=0.00; 
            $matriculaSigno=$signo.$matricula;
        }else{
            $matricula=$matricula;
            $matriculaSigno=$signo.$matricula;
        }
+       
 
    if($activo_total==NULL)
    {
@@ -1117,5 +1206,22 @@ public function nuevaCalificacion(Request $request){
         }
 
 
+    public function tablaMatriculas($id){
+
+                
+        $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+        ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                        
+        ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+                'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                'matriculas.nombre as tipo_matricula')
+        ->where('id_empresa', "=", "$id")     
+        ->get();
+                    
+            return view('backend.admin.Empresas.Calificaciones.tabla.tabla_matriculas', compact('matriculas'));
+    }
+
+
+
     
-} 
+} //* Cierre final

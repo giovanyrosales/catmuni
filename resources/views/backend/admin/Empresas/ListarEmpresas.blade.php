@@ -7,7 +7,7 @@
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
-    <link rel="stylesheet" href="sweetalert2.min.css">
+
 @stop
 <style>
     table{
@@ -299,9 +299,7 @@
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
- 
-    <script src="sweetalert2.all.min.js"></script>
-    <script src="sweetalert2.min.js"></script>
+
     
 <script>
 function modalAgregar(){
@@ -362,30 +360,11 @@ function informacion(id){
                         $('#inicio_operaciones-editar').val(response.data.empresa.inicio_operaciones);
                         $('#direccion-editar').val(response.data.empresa.direccion);
                         $('#telefono-editar').val(response.data.empresa.telefono);
-
-                    //    document.getElementById("select-contribuyente-editar").options.length = 0;
-                      //  document.getElementById("select-estado_empresa-editar").options.length = 0;
+                        
                         document.getElementById("select-giro_comercial-editar").options.length = 0;
                         document.getElementById("select-actividad_economica-editar").options.length = 0;
                         document.getElementById("select-actividad_especifica-editar").options.length = 0;
-                        
-                        /*
-                        $.each(response.data.contribuyente, function( key, val ){
-                            if(response.data.idcont == val.id){
-                                $('#select-contribuyente-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }else{
-                                $('#select-contribuyente-editar').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }
-                        });
 
-                        $.each(response.data.estado_empresa, function( key, val ){
-                            if(response.data.idesta == val.id){
-                                $('#select-estado_empresa-editar').append('<option value="' +val.id +'" selected="selected">'+val.estado+'</option>');
-                            }else{
-                                $('#select-estado_empresa-editar').append('<option value="' +val.id +'">'+val.estado+'</option>');
-                            }
-                        }); 
-                        */
                         $.each(response.data.giro_comercial, function( key, val ){
                             if(response.data.idgiro_co == val.id){
                                 $('#select-giro_comercial-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre_giro+'</option>');
@@ -424,8 +403,6 @@ function informacion(id){
 
 function editar(){
         var id = document.getElementById('id-editar').value;
-    //    var contribuyente = document.getElementById('select-contribuyente-editar').value;
-    //    var estado_empresa = document.getElementById('select-estado_empresa-editar').value;
         var giro_comercial = document.getElementById('select-giro_comercial-editar').value;
         var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
         var actividad_especifica = document.getElementById('select-actividad_especifica-editar').value;

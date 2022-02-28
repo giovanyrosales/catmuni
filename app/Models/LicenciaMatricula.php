@@ -13,7 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 class LicenciaMatricula extends Model
 {
 
-    protected $table = 'licencia_matricula';
+    protected $table = 'matriculas';
     public $timestamps = false;
     protected $fillable = [
         'id',
