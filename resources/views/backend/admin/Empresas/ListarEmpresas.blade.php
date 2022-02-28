@@ -453,12 +453,7 @@ function editar(){
             toastr.error('El número de teléfono no puede contener menos de 8 digitos');
             return;
         }
-        
-        if(contribuyente === ''){
-            toastr.error('El dato contribuyente es requerido');
-            return;
-        }
-
+       
         if(actividad_economica === ''){
             toastr.error('La actividad económica de la empresa es requerido');
             return;
@@ -466,11 +461,6 @@ function editar(){
 
         if(giro_comercial === ''){
             toastr.error('El giro comercial de la empresa es requerido');
-            return;
-        }
-
-        if(estado_empresa === ''){
-            toastr.error('El estado de la empresa es requerido');
             return;
         }
 
@@ -527,8 +517,6 @@ function editar(){
             openLoading();
             var formData = new FormData();
               formData.append('id', id);
-              formData.append('contribuyente', contribuyente);
-              formData.append('estado_empresa', estado_empresa);
               formData.append('giro_comercial', giro_comercial);
               formData.append('actividad_economica', actividad_economica);
               formData.append('actividad_especifica', actividad_especifica);
