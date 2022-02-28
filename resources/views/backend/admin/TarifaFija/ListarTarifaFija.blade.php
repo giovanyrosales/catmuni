@@ -99,43 +99,22 @@
                         <input type="hidden" name="id" id="id" class="form-control" >
                       </div>
                    </div>
-
-                   <div class="col-md-4">
-                     <div class="form-group">
-                          <label>Actividad específica:</label>
-                          <!-- Select estado - live search -->
-                          <div class="input-group mb-6">
-                                <select 
-                                required
-                                class="selectpicker"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select-actividad_especifica" 
-                                title="-- Selecione la actividad --"
-                                 >
-                                  @foreach($actividadespecifica as $actEsp)
-                                  <option value="{{ $actEsp->id }}"> {{ $actEsp->nom_actividad_especifica }}</option>
-                                  @endforeach 
-                                </select> 
-                           </div>
-                     </div>
-                </div>
-                <!-- /.form-group -->
+              <!-- /.form-group -->
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite inferior:</label>
                         <input type="number" name="limite_inferior" id="limite_inferior" class="form-control" required placeholder="Limite inferior" >
                      </div>
                     </div>
-            </div> 
-            <div class="row">
+
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Limite superior:</label>
                         <input type="number" name="limite_superior" id="limite_superior" class="form-control" required placeholder="Limite superior" >
                      </div>
                     </div>
-           
+             </div> 
+            <div class="row">        
                    <div class="col-md-4">
                      <div class="form-group">
                       <label>Impuesto mensual:</label>
@@ -156,11 +135,26 @@
                                 data-live-search="true"   
                                 id="select-actividad_economica" 
                                 title="-- Selecione la actividad --"
+                                onchange="llenarSelect()"                              
                                  >
                                   @foreach($actividadeconomica as $actE)
                                   <option value="{{ $actE->id }}"> {{ $actE->rubro }}</option>
                                   @endforeach 
                                 </select> 
+                           </div>
+                     </div>
+                </div>
+
+                <div class="col-md-4">
+                     <div class="form-group" id= "actividad-especificaDIV">
+                          <label>Actividad específica:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-6" >
+                        
+                          <select class="form-control"  id="select-actividad_especifica"
+                       
+                        >
+                         </select>
                            </div>
                      </div>
                 </div>
@@ -211,9 +205,55 @@
                       </div>
                    </div>
 
-                  
-                   <div class="col-md-4">
+                <!-- /.form-group -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Limite inferior:</label>
+                        <input type="number" name="limite_inferior" id="limite_inferior-editar" class="form-control" required placeholder="Limite inferior" >
+                     </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Limite superior:</label>
+                        <input type="number" name="limite_superior" id="limite_superior-editar" class="form-control" required placeholder="Limite superior" >
+                     </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Impuesto mensual:</label>
+                         <input type="number" name="impuesto_mensual" id="impuesto_mensual-editar" required placeholder="Impuesto mensual" class="form-control" >
+                    </div>
+                  </div> 
+                              
+                <div class="col-md-4">
                      <div class="form-group">
+                          <label>Rubro:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-9">
+                                <select 
+                                required
+                                class="form-control" 
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-actividad_economica-editar" 
+                                onchange="llenarSelect()"
+                                 >
+                                  @foreach($actividadeconomica as $actEc)
+                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
+                                  @endforeach 
+                                </select>  
+                           </div>
+                        </div>
+                <!-- /.form-group -->  
+                 </div>
+
+                <div class="col-md-4">
+                   <div class="form-group">
                           <label>Actividad específica:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-6">
@@ -233,52 +273,6 @@
                            </div>
                      </div>
                 </div>
-                <!-- /.form-group -->
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Limite inferior:</label>
-                        <input type="number" name="limite_inferior" id="limite_inferior-editar" class="form-control" required placeholder="Limite inferior" >
-                     </div>
-                    </div>
-                    </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Limite superior:</label>
-                        <input type="number" name="limite_superior" id="limite_superior-editar" class="form-control" required placeholder="Limite superior" >
-                     </div>
-                    </div>
-              
-                   <div class="col-md-4">
-                     <div class="form-group">
-                      <label>Impuesto mensual:</label>
-                         <input type="number" name="impuesto_mensual" id="impuesto_mensual-editar" required placeholder="Impuesto mensual" class="form-control" >
-                    </div>
-                     </div> 
-                   
-              
-                <div class="col-md-4">
-                     <div class="form-group">
-                          <label>Rubro:</label>
-                          <!-- Select estado - live search -->
-                          <div class="input-group mb-9">
-                                <select 
-                                required
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select-actividad_economica-editar" 
-                                 >
-                                  @foreach($actividadeconomica as $actEc)
-                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
-                                  @endforeach 
-                                </select>  
-                           </div>
-                        </div>
-                <!-- /.form-group -->  
-                     </div>
                </div>     
 
             <div class="form-group">
@@ -355,6 +349,9 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
 
     <!-- incluir tabla -->
  <script type="text/javascript">
@@ -362,6 +359,7 @@
             var ruta = "{{ url('/admin/TarifaFija/tabla') }}";
             $('#tablaDatatable').load(ruta);
             document.getElementById("divcontenedor").style.display = "block";
+            $('#actividad-especificaDIV').hide();
         });
 </script>
 
@@ -466,7 +464,7 @@
                 'id': id
             })
                 .then((response) => {
-//console.log(response)
+                //console.log(response)
                     closeLoading();
                     if(response.data.success === 1){
                         $('#modalEditarTarifaFija').modal('show');
@@ -490,9 +488,9 @@
 
                         $.each(response.data.actividad_especifica, function( key, val ){
                             if(response.data.idact_esp == val.id){
-                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'" selected="selected">'+val.nom_actividad_especifica+'</option>');
+                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'" selected="selected">'+val.nom_actividad_especifica+'</option>').select2();
                             }else{
-                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>');
+                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>').select2();
                             }
                         });
                        
@@ -520,7 +518,7 @@
            
             openLoading()
 
-           var formData = new FormData();
+          var formData = new FormData();
               formData.append('id', id);
               formData.append('codigo', codigo);
               formData.append('actividad_economica', actividad_economica);
@@ -568,7 +566,8 @@
         $('#modalEliminarTarifa').modal('show');
     }
 
-    function eliminarD(){
+    function eliminarD()
+    {
       openLoading()
         
             // se envia el ID de la tarifa
@@ -601,10 +600,42 @@
               closeLoading()
               toastr.error("Error de Servidor!");
                }); 
-        }
+    }
 
+    // Función para llenar select
+
+    function llenarSelect()
+          {
+             var id_select = document.getElementById('select-actividad_economica').value;
+                     
+             var formData = new FormData();
+             formData.append('id_select', id_select);
+             
+             axios.post('/admin/TarifaFija/buscar', formData, {
+              })
+            .then((response) => {
+            
+               document.getElementById("select-actividad_especifica").options.length = 0;
+               $('#actividad-especificaDIV').show();
+          
+            
+                $.each(response.data.actividad_especifica, function( key, val ){
+                       $('#select-actividad_especifica').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>').select2();
+                       
+                            
+                    });
+
+               })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });
+            
+             
+          }
+
+// Termina función
 
 </script>
-
 
 @stop

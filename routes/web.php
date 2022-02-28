@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\LicenciaMatricula\LicenciaMatriculaController;
 use App\Http\Controllers\Backend\Multas\MultasController;
 use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
+use App\Http\Controllers\Backend\Rotulos\RotulosController;
 
 
 /*
@@ -81,7 +82,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
     Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
 
-    // --- TRASPASO Y CIERRE
+    // --- TRASPASO Y CIERRE EMPRESA
     Route::post('/admin/empresas/show/traspaso', [EmpresaController::class,'nuevoTraspaso']);
     Route::post('/admin/empresas/show/cierre', [EmpresaController::class,'nuevoEstado']);
     Route::post('/admin/empresas/show/informacion', [EmpresaController::class,'infoTraspaso']);
@@ -109,7 +110,6 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/TarifaVariable/editar', [TarifaVariableController::class, 'editarTarifaV']);
     Route::post('/admin/TarifaVariable/eliminar_detalles', [TarifaVariableController::class, 'eliminarTarifaV']);
 
-
     // --- TASA INTERES
     Route::get('/admin/TasaInteres/ListarInteres', [TasaInteresController::class,'index'])->name('admin.TasaInteres.index');
     Route::get('/admin/TasaInteres/tabla', [TasaInteresController::class,'tablaTasas']);
@@ -127,6 +127,10 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/TarifaFija/informacion', [TarifaFijaController::class, 'informacionTarifaF']);
     Route::post('/admin/TarifaFija/editar', [TarifaFijaController::class, 'editarTarifaF']);
     Route::post('/admin/TarifaFija/eliminar', [TarifaFijaController::class, 'eliminarTarifaF']);
+
+    
+    // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
+    Route::post('/admin/TarifaFija/buscar', [TarifaFijaController::class,'buscarActividadEsp'] );
 
     // --- LICENCIA Y MATRICULA
     Route::get('/admin/LicenciaMatricula/ListarLicenciaMatricula', [LicenciaMatriculaController::class, 'index'])->name('admin.LicenciaMatricula.index');
@@ -155,6 +159,17 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
     Route::post('/admin/ActividadEspecifica/editar', [ActividadEspecificaController::class, 'editarActividadEspecifica']);
     Route::post('/admin/ActividadEspecifica/eliminar', [ActividadEspecificaController::class, 'eliminarActividadEspecifica']);
 
+    // --- RÓTULOS
+    Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');
+   // Route::get('/admin/rotulos/Crear', [RotulosController::class,'Prueba'])->name('admin.crear.rotulos.nuevo');
+    Route::post('/admin/Rotulos/CrearRotulos', [RotulosController::class,'nuevoRotulo']);
+    Route::get('/admin/Rotulos/tabla', [RotulosController::class,'tablaRotulos']);
+    Route::get('/admin/Rotulos/Listar', [RotulosController::class,'listarRotulos'])->name('admin.listarRotulos.index');
+    Route::post('/admin/Rotulos/Ver', [RotulosController::class, 'informacionRotulo']); 
+    Route::post('/admin/Rotulos/Editar', [RotulosController::class, 'editarRotulos']);
+    Route::post('/admin/Rotulos/Borrar', [RotulosController::class, 'eliminarRotulo']);
 
-    
-    
+    Route::get('/admin/Rotulos/vista/{rotulo}', [RotulosController::class, 'showRotulos']);
+    Route::post('/admin/Rotulos/vista/cierre', [RotulosController::class, 'nuevoEstadoR']);
+    Route::post('/admin/Rotulos/vista/inf-cierre', [RotulosController::class, 'infoCierre']);
+    Route::post('/admin/Rotulos/vista/traspaso', [RotulosController::class, 'traspasoR']);

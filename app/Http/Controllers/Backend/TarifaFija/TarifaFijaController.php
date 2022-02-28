@@ -182,4 +182,22 @@ class TarifaFijaController extends Controller
              
             return ['success' => 1];
     }
+
+    //Función para llenar el select Actividad Especifica
+    public function buscarActividadEsp(Request $request)
+     {
+ 
+     $actividad_especifica = ActividadEspecifica::
+        where('id_actividad_economica',$request->id_select)
+        ->orderBy('nom_actividad_especifica', 'ASC')
+        ->get();
+
+        return ['success' => 1,
+        'actividad_especifica' => $actividad_especifica
+
+        ];
+
+    }
+    //Terminar llenar select
+
 }
