@@ -194,7 +194,7 @@
                 </div>
                <div class="modal-body">
                     <form id="formulario-ver">
-                        <div class="card-body">
+                        <div class="card-body card-green">
                         <div class="card-header">
                         <h3 class="card-title">Datos del Contribuyente</h3>
 
@@ -281,6 +281,7 @@
                 </div>
               </div>
            </div>
+           
 
         <!--Finaliza Modal ver datos del contribuyente -->
 
