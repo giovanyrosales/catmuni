@@ -54,15 +54,28 @@
     <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h5 class="card-category-">Vista detallada del rótulo <span class="badge badge-warning">&nbsp; {{$rotulo->nom_rotulo}}&nbsp;</span>&nbsp; </h5>
+            <h5 class="card-category-">Vista detallada del rótulo <span class="badge badge-warning">&nbsp; {{$lista->nom_rotulo}}&nbsp;</span>&nbsp; </h5>
           </div>
       <!--body-->
         </div>
-    </div>    
+       
 
-
+    <div class="row">
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="informacionCierre({{$rotulo->id}})" >
+        <a href="#" onclick=" CrearInspeccion({{$lista->id}})" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-blue">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Inspección del Rótulo</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    </div>
+    
+    <div class="col-md-4 col-sm-8">
+        <a href="#" onclick="informacionCierre({{$lista->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -74,6 +87,8 @@
         </a>
     </div>
 </div>
+</div>
+</div> 
     
 <!-- Cuadro para datos del rótulo inicia aquí ----------------------------------------------> 
 <!-- seccion frame -->
@@ -99,47 +114,47 @@
                     
                       <tr>
                         <th>Nombre</th>
-                        <td >{{$rotulo->nom_rotulo}}</td>
+                        <td >{{$lista->nom_rotulo}}</td>
                         
                       </tr>
                       <tr>
                         <th>Actividad económica</th>
-                        <td>{{$rotulo->actividad_economica}}</td>
+                        <td>{{$lista->actividad_economica}}</td>
                       </tr>
                       <tr>
                         <th>Dirección</th>
-                        <td> {{$rotulo->direccion}} </span></td>
+                        <td> {{$lista->direccion}} </span></td>
                       </tr>
                       <xtr>
                         <th>Fecha apertura</th>
-                        <td>{{$rotulo->fecha_apertura}} </td>
+                        <td>{{$lista->fecha_apertura}} </td>
                       </tr>
                       <tr>
                         <th>Número de tarjeta</th>
-                        <td>{{$rotulo->num_tarjeta}}</td>
+                        <td>{{$lista->num_tarjeta}}</td>
                       </tr>
                       
                       <tr>
                         <th>Permiso Instalación</th>
-                        <td>{{$rotulo->permiso_instalacion}}</span></td>
+                        <td>{{$lista->permiso_instalacion}}</span></td>
                       </tr>
 
                       <tr>
                         <th>Estado</th>
-                        <td>{{$rotulo->estado}}</span></td>
+                        <td>{{$lista->estado}}</span></td>
                       </tr>
 
                       <tr>
                         <th>Medidas</th>
-                        <td>{{$rotulo->medidas}}</span></td>
+                        <td>{{$lista->medidas}}</span></td>
                       </tr>
                       <tr>
                         <th>Propietario</th>
-                        <td>{{$rotulo->contribuyente}}&nbsp;{{$rotulo->apellido}}</span></td>
+                        <td>{{$contri}}</span></td>
                       </tr>
                       <tr>
                         <th>Empresa</th>
-                        <td>{{$rotulo->empresa}}</td>
+                        <td>{{$emp}}</td>
                       </tr>
                       
                     </tbody>
@@ -190,8 +205,8 @@
                                 <div class = "row">
                                   <div class = "col-md-6">
                                     <div class = "form-group">
-                                      <label>Nombre del Rótulo: <span class="badge badge"> {{$rotulo->nom_rotulo}}&nbsp;</span></label>
-                                      <label>Dirección del rótulo: <span class="badge badge"> {{$rotulo->direccion}}&nbsp;</span>&nbsp;</label>
+                                      <label>Nombre del Rótulo: <span class="badge badge"> {{$lista->nom_rotulo}}&nbsp;</span></label>
+                                      <label>Dirección del rótulo: <span class="badge badge"> {{$lista->direccion}}&nbsp;</span>&nbsp;</label>
                                       
                                      </div>
                                    </div>
@@ -249,75 +264,71 @@
                             </div>
 
                             <div class="card border-success mb-3"><!-- Panel TRASPASO DE EMPRESA -->
-           <div class="card-header text-success"><label>II. TRASPASO DE RÓTULO</label></div>
-              <div class="card-body">
+                         <div class="card-header text-success"><label>II. TRASPASO DE RÓTULO</label></div>
+                       <div class="card-body">
 
-                <div class="row"><!-- /.ROW2 -->
+                       <div class="row"><!-- /.ROW2 -->
 
-                  <!-- /.form-group -->
-                  <div class="col-md-6">
-                      <div class="form-group">
-                            <label>TRASPASO A NOMBRE DE:</label>
-                      </div>
-                    </div><!-- /.col-md-6 -->
+                          <!-- /.form-group -->
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                    <label>TRASPASO A NOMBRE DE:</label>
+                              </div>
+                            </div><!-- /.col-md-6 -->
                     <!-- /.form-group -->
 
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <!-- Select estado - live search -->
-                              <div class="input-group mb-9">
-                                    <select 
-                                    required
-                                    class="form-control"
-                                    data-style="btn-success"
-                                    data-show-subtext="true" 
-                                    data-live-search="true"   
-                                    id="select-contribuyente-traspaso" 
-                                    title="-- Seleccione un registro --"
-                                    >
-                                    @foreach($contribuyentes as $contribuyente)
-                                    <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
-                                    @endforeach
-                                    </select>
-                              </div>
-                            <!-- finaliza select estado-->  
-                      </div><!-- /.col-md-3 -->
-                    </div><!-- /.form-group -->
-                  <!-- /.form-group -->
-
-                </div><!--  /.ROW2 -->
-
-              <!-- /.form-group -->
-              <div class="row"><!-- /.ROW3 -->
-              <!-- /.form-group -->
-              <div class="col-md-6">
-                  <div class="form-group">
-                       
-                    <!-- Botón Imprimir Traspaso-->
-                    <br>
-                      <button type="button"  onclick="ImpimirTraspaso()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
-                        &nbsp; Imprimir resolución de traspaso&nbsp;</button>
-                      </button>
+                              <div class="col-md-6">
+                                  <div class="form-group">
+                                    <!-- Select estado - live search -->
+                                      <div class="input-group mb-9">
+                                            <select 
+                                            required
+                                            class="form-control"
+                                            data-style="btn-success"
+                                            data-show-subtext="true" 
+                                            data-live-search="true"   
+                                            id="select-contribuyente-traspaso" 
+                                            title="-- Seleccione un registro --"
+                                            >
+                                            @foreach($contribuyentes as $contribuyente)
+                                            <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
+                                            @endforeach
+                                            </select>
+                                      </div>
+                                    <!-- finaliza select estado-->  
+                                    </div><!-- /.col-md-3 -->
+                                  </div><!-- /.form-group -->
+                                <!-- /.form-group -->
+                                    </div><!--  /.ROW2 -->
+                                  <!-- /.form-group -->
+                                  <div class="row"><!-- /.ROW3 -->
+                                  <!-- /.form-group -->
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                    
+                                  <!-- Botón Imprimir Traspaso-->
+                                  <br>
+                                    <button type="button"  onclick="ImpimirTraspaso()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                                      &nbsp; Imprimir resolución de traspaso&nbsp;</button>
+                                    </button>
                     <!-- /.Botón Imprimir Traspaso -->
 
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                      <!-- Botón Guardar Traspaso -->
-                        <br>
-                        <button type="button"  onclick="guardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
-                        &nbsp; Guardar Traspaso &nbsp;</button>
-                      <!-- /.Botón Guardar Traspaso -->
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              </div><!-- /.ROW3 -->
+                                </div>
+                                  </div><!-- /.col-md-6 -->
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <!-- Botón Guardar Traspaso -->
+                                            <br>
+                                            <button type="button"  onclick="guardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
+                                            &nbsp; Guardar Traspaso &nbsp;</button>
+                                          <!-- /.Botón Guardar Traspaso -->
+                                      </div>
+                                    </div><!-- /.col-md-6 -->
+                                  <!-- /.form-group -->
+                                  </div><!-- /.ROW3 -->
 
-          </div><!--  /.card-header text-success -->
-        </div> <!-- /.Panel CIERRE DE EMPRESA --> 
-
-
+                              </div><!--  /.card-header text-success -->
+                            </div> <!-- /.Panel CIERRE DE EMPRESA --> 
                          </div>
                       </div>
                     </section>
@@ -356,7 +367,13 @@
      var ruta = "{{ url('/admin/Rotulos/tabla') }}";
      $('#tablaDatatable').load(ruta);
     }
-
+    
+    function CrearInspeccion(id)
+    {
+      openLoading();
+      window.location.href="{{ url('/admin/Rotulos/inspeccion') }}/"+id;
+    }
+        
     function informacionCierre(id)
     {
       
@@ -372,7 +389,6 @@
                     if(response.data.success === 1){
                         $('#modalCierreRotulos').modal('show');
                         
-
                         $('#fecha_cierre').val(response.data.rotulos.fecha_cierre);
                         $('#select-estado-cierre').val(response.data.rotulos.estado);
                        
@@ -397,9 +413,8 @@
                 });
     
     }
-
-    
     </script>
+
 
     <script>
 
@@ -503,6 +518,9 @@
                 closeLoading();
             });
     }
+
+    
+   
     
     </script>
 @stop

@@ -82,15 +82,25 @@
         <div class="modal-dialog modal-xl">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar tarifa fija</h4>
+         <h6 class="modal-title">Agregar tarifa fija</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                <div class="modal-body">
                     <form id="formulario-AgregarTarifaFija">
-                        <div class="card-body">
-                        <div class="card-body">
+                    <div class="card card-green">
+            <div class="card-header">
+            <h3 class="card-title">Agregar tarifa fija</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+            </div>
+          </div>
+                    </div>
+                    <div class="card-body">
+             <div class="card-body">
             <div class="row">
                   <div class="col-md-4">
                      <div class="form-group">
@@ -156,9 +166,12 @@
                         >
                          </select>
                            </div>
-                     </div>
+                       </div>
+                    </div>
+                  </div>    
+                
                 </div>
-                </div>      
+             </div>
                    
             <div class="form-group">
               <div class="card-footer">
@@ -177,7 +190,8 @@
          </div>
         </div>
         </div>
-      </div>
+        </div>
+     
       
 <!--Finaliza Modal para agregar tarifa fija-->
 
@@ -241,7 +255,7 @@
                                 data-show-subtext="true" 
                                 data-live-search="true"   
                                 id="select-actividad_economica-editar" 
-                                onchange="llenarSelect()"
+                                onchange="llenarSelectEditar()"
                                  >
                                   @foreach($actividadeconomica as $actEc)
                                   <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
@@ -414,12 +428,12 @@
         }
         openLoading();
       var formData = new FormData();
-      formData.append('codigo', codigo);
-      formData.append('actividad_economica', actividad_economica);
-      formData.append('actividad_especifica', actividad_especifica);
-      formData.append('limite_inferior', limite_inferior);
-      formData.append('limite_superior', limite_superior);
-      formData.append('impuesto_mensual', impuesto_mensual);
+          formData.append('codigo', codigo);
+          formData.append('actividad_economica', actividad_economica);
+          formData.append('actividad_especifica', actividad_especifica);
+          formData.append('limite_inferior', limite_inferior);
+          formData.append('limite_superior', limite_superior);
+          formData.append('impuesto_mensual', impuesto_mensual);
      
       axios.post('/admin/TarifaFija/NuevaT', formData,
        {
@@ -574,7 +588,7 @@
       var id = document.getElementById('idborrar').value;
 
       var formData = new FormData();
-      formData.append('id', id);
+          formData.append('id', id);
 
             axios.post('/admin/TarifaFija/eliminar', formData, {
             })
@@ -605,7 +619,7 @@
     // Función para llenar select
 
     function llenarSelect()
-          {
+    {
              var id_select = document.getElementById('select-actividad_economica').value;
                      
              var formData = new FormData();
@@ -613,7 +627,7 @@
              
              axios.post('/admin/TarifaFija/buscar', formData, {
               })
-            .then((response) => {
+              .then((response) => {
             
                document.getElementById("select-actividad_especifica").options.length = 0;
                $('#actividad-especificaDIV').show();
@@ -621,7 +635,7 @@
             
                 $.each(response.data.actividad_especifica, function( key, val ){
                        $('#select-actividad_especifica').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>').select2();
-                       
+                     
                             
                     });
 
@@ -632,8 +646,40 @@
             });
             
              
-          }
+    }
+// Termina función
 
+function llenarSelectEditar()
+    {
+            var id_select = document.getElementById('select-actividad_economica-editar').value;
+                     
+            var formData = new FormData();
+                formData.append('id_select', id_select);
+             
+             axios.post('/admin/TarifaFija/buscar', formData, {
+              })
+              .then((response) => {
+            
+               document.getElementById("select-actividad_especifica-editar").options.length = 0;
+              
+          
+            
+               $.each(response.data.actividad_especifica, function( key, val ){
+                            if(response.data.idact == val.id){
+                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'" selected="selected">'+val.nom_actividad_especifica+'</option>').select2();
+                            }else{
+                                $('#select-actividad_especifica-editar').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>').select2();
+                            }
+                        });
+
+              })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });
+            
+             
+    }
 // Termina función
 
 </script>

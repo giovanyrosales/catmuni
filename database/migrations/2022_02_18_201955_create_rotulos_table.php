@@ -28,7 +28,9 @@ class CreateRotulosTable extends Migration
             $table->string('estado', 50);
 
             $table->foreign('id_contribuyente')->references('id')->on('contribuyente');
-            $table->foreign('id_empresa')->references('id')->on('empresa');
+            $table->foreign('id_empresa')
+            ->nullable()
+            ->references('id')->on('empresa');
         });
     }
 

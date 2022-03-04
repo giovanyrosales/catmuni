@@ -191,6 +191,7 @@
                                 data-show-subtext="true" 
                                 data-live-search="true"   
                                 id="select-actividad_economica-editar" 
+                                onchange="llenarSelectE()"
                                  >
                                   @foreach($actividadeseconomicas as $actEc)
                                   <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
@@ -299,6 +300,9 @@
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
     
 <script>
@@ -566,6 +570,35 @@ function editar(){
                 closeLoading();
             });
         }
+
+      function llenarSelectE()
+      {
+            var id_select = document.getElementById('select-actividad_economica-editar').value;
+                     
+            var formData = new FormData();
+                formData.append('id_select', id_select);
+                      
+                 axios.post('/admin/empresa/buscarEditar', formData, {
+                  })
+                   .then((response) => {
+                     
+             document.getElementById("select-actividad_especifica-editar").options.length = 0;
+                                   
+                  $.each(response.data.actividad_especifica, function( key, val ){
+                         if(response.data.idact == val.id){
+                            $('#select-actividad_especifica-editar').append('<option value="' +val.id +'" selected="selected">'+val.nom_actividad_especifica+'</option>').select2();
+                               }else{
+                            $('#select-actividad_especifica-editar').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>').select2();
+                              }
+                      });
+         
+                       })
+                     .catch((error) => {
+                        // toastr.error('Error al registrar empresa');
+                        
+                     });
+                     
+      }
 
 
 </script>

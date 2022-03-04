@@ -186,7 +186,7 @@
                         <div class="card-body">
                         <div class="card-body">
 
-               <div class="row">
+              <div class="row">
                    <div class="col-md-10">
                      <div class="form-group">
                         <label>Actividad específica:</label>
@@ -194,7 +194,7 @@
                         <input type="hidden" name="id" id="id-editar" class="form-control" >
                       </div>
                    </div>
-               </div>
+              </div>
                 
                <div class="row">
                 <div class="col-md-10">

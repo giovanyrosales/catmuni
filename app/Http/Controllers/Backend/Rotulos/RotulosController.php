@@ -91,7 +91,7 @@ class RotulosController extends Controller
     //Función Tabla Rótulos
     public function tablaRotulos(Rotulos $lista){
 
-                
+    /*          
         $lista=Rotulos::join('contribuyente','rotulos.id_contribuyente','=','contribuyente.id')
                       ->join('empresa','rotulos.id_empresa','=','empresa.id')
                       
@@ -99,7 +99,27 @@ class RotulosController extends Controller
         'contribuyente.nombre as contribuyente','contribuyente.apellido',
         'empresa.nombre as empresas')
         ->get();
-                
+    */
+        
+    $lista = Rotulos::orderBy('nom_rotulo')->get();
+         foreach($lista as $dato) 
+         {
+             $nom_apellido = ' ';
+             $nom_empresa = ' ';
+             if ($info = Contribuyentes::where ('id', $dato->id_contribuyente)->first())
+             {
+                $nom_apellido = $info->nombre . ' ' . $info->apellido;
+             }
+             if ($info = Empresas::where ('id',$dato->id_empresa)->first())
+             {
+                 $nom_empresa = $info->nombre;
+             }
+             $dato->cont = $nom_apellido;
+             $dato->empr = $nom_empresa;
+         }
+
+      
+
         return view('backend.admin.Rotulos.tabla.tablalistarotulos', compact('lista'));
     }
     //Termina función tabla Rótulos
@@ -205,9 +225,11 @@ class RotulosController extends Controller
     //Función vista detallada
     public function showRotulos($id)
     {
+      
         $contribuyentes = Contribuyentes::All();
         $empresas = Empresas::ALL();
 
+        /*
         $rotulo= Rotulos
                 ::join('contribuyente','rotulos.id_contribuyente','=','contribuyente.id')
                 ->join('empresa','rotulos.id_empresa','=','empresa.id')
@@ -215,10 +237,27 @@ class RotulosController extends Controller
         ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.direccion','rotulos.fecha_apertura','rotulos.permiso_instalacion','rotulos.medidas','rotulos.num_tarjeta','rotulos.estado',
         'contribuyente.nombre as contribuyente','contribuyente.apellido',
         'empresa.nombre as empresa')
-   
         ->find($id);
+        */
 
-        return view('backend.admin.Rotulos.vistaRotulos', compact('id','rotulo','contribuyentes','empresas'));
+        $lista = Rotulos::where ('id', $id)->first();
+
+            $contri = ' ';
+            $emp = '';
+
+            if ($contribuyente = Contribuyentes::where('id', $lista->id_contribuyente)->first())
+            {
+                $contri  = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+            }
+
+            if ($empresa = Empresas::where('id', $lista->id_empresa)->first())
+            {
+                $emp = $empresa->nombre;
+            }
+
+                      
+
+        return view('backend.admin.Rotulos.vistaRotulos', compact('id','lista','contribuyentes','empresas', 'contri', 'emp'));
     }
     //Termina vista detallada
     
@@ -312,4 +351,31 @@ class RotulosController extends Controller
             return ['success' => 2];
         }
     }
+
+    public function inspeccionRotulo($id)
+    {
+        
+        $contribuyentes = Contribuyentes::All();
+        $empresas = Empresas::All();
+     
+        $rotulo = Rotulos::where ('id', $id)->first();
+
+            $contri = ' ';
+            $emp = '';
+
+            if ($contribuyente = Contribuyentes::where('id', $rotulo->id_contribuyente)->first())
+            {
+                $contri  = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+            }
+
+            if ($empresa = Empresas::where('id', $rotulo->id_empresa)->first())
+            {
+                $emp = $empresa->nombre;
+            }
+
+         return view('backend.admin.Rotulos.InspeccionRotulos', compact('id','rotulo','contribuyentes', 'empresas'));
+    
+    }
+
+   
 }

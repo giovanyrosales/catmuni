@@ -83,6 +83,7 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
 
     // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
     Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
+    Route::post('/admin/empresa/buscarEditar', [EmpresaController::class,'buscarActividadEditar'] );
 
     // --- TRASPASO Y CIERRE EMPRESA
     Route::post('/admin/empresas/show/traspaso', [EmpresaController::class,'nuevoTraspaso']);
@@ -131,7 +132,7 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/TarifaFija/eliminar', [TarifaFijaController::class, 'eliminarTarifaF']);
 
     
-    // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
+    // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM TARIFA FIJA
     Route::post('/admin/TarifaFija/buscar', [TarifaFijaController::class,'buscarActividadEsp'] );
 
     // --- LICENCIA Y MATRICULA
@@ -184,3 +185,7 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/Rotulos/vista/cierre', [RotulosController::class, 'nuevoEstadoR']);
     Route::post('/admin/Rotulos/vista/inf-cierre', [RotulosController::class, 'infoCierre']);
     Route::post('/admin/Rotulos/vista/traspaso', [RotulosController::class, 'traspasoR']);
+
+    Route::get('/admin/Rotulos/inspeccion/{rotulo}', [RotulosController::class, 'inspeccionRotulo']);
+
+   

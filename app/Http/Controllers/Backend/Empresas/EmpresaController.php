@@ -572,11 +572,32 @@ public function nuevaEmpresa(Request $request){
 
         return ['success' => 1,
         'actividad_especifica' => $actividad_especifica
+        
 
         ];
 
     }
 //Terminar llenar select
+
+//Función para llenar el select Actividad Especifica
+public function buscarActividadEditar(Request $request)
+{
+
+$actividad_especifica = ActividadEspecifica::
+   where('id_actividad_economica',$request->id_select)
+   ->orderBy('nom_actividad_especifica', 'ASC')
+   ->get();
+
+   return ['success' => 1,
+   'actividad_especifica' => $actividad_especifica,
+
+
+   ];
+
+}
+//Terminar llenar select
+
+
 
  //Editar empresa
  public function editarEmpresas(Request $request){
@@ -622,7 +643,7 @@ public function nuevaEmpresa(Request $request){
         return ['success' => 2];
     }
 }
-
+ 
 
  //Termina editar empresa
 

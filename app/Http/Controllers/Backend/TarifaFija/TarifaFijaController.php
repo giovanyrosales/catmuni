@@ -176,7 +176,7 @@ class TarifaFijaController extends Controller
 
     public function eliminarTarifaF(Request $request)
     {
- // buscamos el interes el cual queremos eliminar
+    //buscamos el interes el cual queremos eliminar
         $tasa = TarifaFija::find($request->id);
         $tasa->delete();
              
@@ -185,7 +185,7 @@ class TarifaFijaController extends Controller
 
     //Función para llenar el select Actividad Especifica
     public function buscarActividadEsp(Request $request)
-     {
+    {
  
      $actividad_especifica = ActividadEspecifica::
         where('id_actividad_economica',$request->id_select)
@@ -199,5 +199,23 @@ class TarifaFijaController extends Controller
 
     }
     //Terminar llenar select
+
+    
+      //Función para llenar el select Actividad Especifica
+      public function buscarActividadEditar(Request $request)
+        {
+   
+       $actividad_especifica = ActividadEspecifica::
+          where('id_actividad_economica',$request->id_select)
+          ->orderBy('nom_actividad_especifica', 'ASC')
+          ->get();
+  
+          return ['success' => 1,
+          'actividad_especifica' => $actividad_especifica,
+          'idact' =>$actividad_especifica->id_actividad_especifica,
+          ];
+  
+        }
+      //Terminar llenar select
 
 }
