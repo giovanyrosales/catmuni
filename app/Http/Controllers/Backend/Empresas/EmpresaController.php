@@ -19,7 +19,8 @@ use App\Models\MatriculasDetalle;
 use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
 
-
+use DateInterval;
+use DatePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
@@ -302,6 +303,25 @@ public function show($id)
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
 
+    //** Para determinar la cantidad de multas por empresa */
+    $multas=calificacion::select('multa_balance')
+       ->where('id_empresa',$id)
+           ->get();
+
+           $Cantidad_multas=0;
+
+           foreach($multas as $dato){
+               $multa=$dato->multa_balance;
+
+                    if ($multa>0)
+                    {
+                    $Cantidad_multas=$Cantidad_multas+1;
+                    }
+           
+                    log::info($multa);
+        } 
+        //** Fin- Determinar la cantidad de multas por empresa */ 
+        
     $calificaciones = calificacion
     ::join('empresa','calificacion.id_empresa','=','empresa.id')
     
@@ -337,7 +357,7 @@ public function show($id)
         {
             $detectorNull=0;
             $detectorCobro=0;
-            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id'));
+            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas'));
         }
             
            
@@ -349,11 +369,11 @@ public function show($id)
             if ($ultimo_cobro == null)
             {
                 $detectorCobro=0;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id'));
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas'));
             }else
             {
                 $detectorCobro=1;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id'));
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas'));
             }
                    
     }
@@ -364,62 +384,145 @@ public function show($id)
 public function calculo_cobros(Request $request)
 {
     log::info($request->all());
+    $id=$request->id;
     $f1=Carbon::parse($request->ultimo_cobro);
     $f2=Carbon::parse($request->fechaPagara);
     $f3=Carbon::parse($request->fecha_interesMoratorio);
-    $id=$request->id;
     
+    //** Inicia - Para determinar el intervalo de años a pagar */
+    $monthInicio='01';
+    $dayInicio='01';
+    $monthFinal='12';
+    $dayFinal='31';
+    $AñoInicio=$f1->format('Y');
+    $AñoFinal=$f2->format('Y');
+    $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+    $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+    //** Finaliza - Para determinar el intervalo de años a pagar */
+
     $DiasinteresMoratorio=$f1->diffInDays($f3);
    
 
-    $fechaPrimerMulta=Carbon::parse($f1)->add('60 days')->calendar();
-    $fechaSegundaMulta=Carbon::parse( $fechaPrimerMulta)->add('60 days')->calendar();
-    $f4=Carbon::parse($fechaPrimerMulta);
+  //  $fechaPrimerMulta=Carbon::parse($f1)->add('60 days')->calendar();
+ //   $fechaSegundaMulta=Carbon::parse( $fechaPrimerMulta)->add('60 days')->calendar();
+  //  $f4=Carbon::parse($fechaPrimerMulta);
 
-    $DiasdespuesDePrimerMulta=$f4->diffInDays($f3);
+   // $DiasdespuesDePrimerMulta=$f4->diffInDays($f3);
 
         $calificaciones = calificacion::latest()
         
         ->join('empresa','calificacion.id_empresa','=','empresa.id')
         
-        ->select('calificacion.id','calificacion.fecha_calificacion','calificacion.tipo_tarifa','calificacion.tarifa','calificacion.estado_calificacion','calificacion.tipo_tarifa','calificacion.estado_calificacion',
+        ->select('calificacion.id','calificacion.multa_balance','calificacion.fecha_calificacion','calificacion.tipo_tarifa','calificacion.tarifa','calificacion.estado_calificacion','calificacion.tipo_tarifa','calificacion.estado_calificacion',
         'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
     
         ->where('id_empresa', "=", "$id")
         ->first();
         $nombre_empresa=$calificaciones->nombre;
+        $multa_balance=$calificaciones->multa_balance;
+   
+
         if($f1->lt($f2))
         {
-            $CantidadMeses=$f1->diffInMonths($f2);  
 
-            $tarifa=$calificaciones->tarifa;
-            $fechaPagara= $request->fechaPagara;
-          
- 
-            $signoDollar='$';
+            $intervalo = DateInterval::createFromDateString('1 Year');
+            $periodo = new DatePeriod ($FechaInicio, $intervalo, $FechaFinal);
+
+            $Cantidad_MesesTotal=0;
+            $impuestoTotal=0;
+            $impuestos_mora=0;
+            $impuesto_año_actual=0;
+
+            //** Inicia Foreach para cálculo */
+            foreach ($periodo as $dt) {
+
+                $AñoPago =$dt->format('Y');
+               
+                $AñoSumado=Carbon::createFromDate($AñoPago, 12, 31);
+
+                $tarifa=calificacion::where('año_calificacion','=',$AñoPago)
+                 ->where('id_empresa','=',$id) 
+                    ->pluck('pago_mensual') 
+                        ->first();
+                
+         
+                        if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la canrtidad de meses en la última vuelta del foreach...
+                            {
+                                $CantidadMeses=ceil(($f1->floatDiffInRealMonths($f2)));
+                            }
+                        else
+                            {
+                                $CantidadMeses=ceil(($f1->floatDiffInRealMonths($AñoSumado)));  
+                                $f1=$f1->addYears(1)->month(1);
+                            }
+
+                //*** calculo */
+     
+                
+                $impuestosValor=(round($tarifa*$CantidadMeses,2));
+                $impuestoTotal=$impuestoTotal+$impuestosValor;
+                $Cantidad_MesesTotal=$Cantidad_MesesTotal+$CantidadMeses;
+
+                if($AñoPago==$AñoFinal)
+                {
+                        $impuestos_mora=$impuestos_mora;
+                        $impuesto_año_actual=$impuestosValor;
+                }
+                else
+                    {
+                        $impuestos_mora=$impuestos_mora+$impuestosValor;
+                        $impuesto_año_actual=$impuesto_año_actual;
+                    }
+
+                $linea="_____________________<<::>>";
+                Log::info($AñoPago);
+                Log::info($CantidadMeses);
+                Log::info($tarifa);
+                Log::info($impuestosValor);
+                Log::info($impuestos_mora);
+                Log::info($impuesto_año_actual);
+                Log::info($linea);
+               
+            }   //** Termina el foreach */
             
+            if ($multa_balance==0)
+            {
+                $estado_multas="bueno";
+                $multa_balance=$multa_balance;
+            }else{
 
-            $impuestosValor=round($tarifa*$CantidadMeses,2);
-            $fondoFPValor=round($impuestosValor*0.05,2);
-            $totalPagoValor= round($fondoFPValor+$impuestosValor,2);
+                //if(cobros::where('id',$request->id_empresa)->pluck('estado_multas')->last()){
+                         //  $estado_multas=cobros::where('id',$request->tipo_matricula)->pluck('estado_multas')->last();
+                //}
+                $multa_balance=$multa_balance;
+                $estado_multas="malo";
+
+            }//Cierre de if Multa balance...
+
+     
+            $fondoFPValor=round($impuestoTotal*0.05,2);
+            $totalPagoValor= round($fondoFPValor+$multa_balance+$impuestoTotal,2);
 
             //Le agregamos su signo de dollar para la vista al usuario
-            $fondoFP= $signoDollar. $fondoFPValor;
-            $impuestos= $signoDollar. $impuestosValor;
-            $totalPago=$signoDollar.$totalPagoValor;
-           
+            $fondoFP= "$". $fondoFPValor;     
+            $totalPago="$".$totalPagoValor;
+            $impuestos_mora_Dollar="$".$impuestos_mora;
+            $impuesto_año_actual_Dollar="$".$impuesto_año_actual;
 
             return ['success' => 1,
-                    'nombre_empresa'=>$nombre_empresa, 
-                    'cantidadMeses' => $CantidadMeses,
-                    'impuestos' => $impuestos,
+                    'impuestoTotal'=>$impuestoTotal,
+                    'impuestos_mora_Dollar'=>$impuestos_mora_Dollar,
+                    'impuesto_año_actual_Dollar'=>$impuesto_año_actual_Dollar,
+                    'Cantidad_MesesTotal'=>$Cantidad_MesesTotal,
+                    'nombre_empresa'=>$nombre_empresa,              
                     'tarifa'=>$tarifa,
+                    'multa_balance'=>$multa_balance,
                     'fondoFP'=>$fondoFP,
                     'totalPago'=>$totalPago,
                     'DiasinteresMoratorio'=>$DiasinteresMoratorio,
-                    'fechaPrimerMulta'=>$fechaPrimerMulta,
-                    'fechaSegundaMulta'=>$fechaSegundaMulta,
-                    'DiasdespuesDePrimerMulta'=>$DiasdespuesDePrimerMulta,
+                    //'fechaPrimerMulta'=>$fechaPrimerMulta,
+                    //'fechaSegundaMulta'=>$fechaSegundaMulta,
+                   // 'DiasdespuesDePrimerMulta'=>$DiasdespuesDePrimerMulta,
                     ];
         }else
         {
@@ -461,7 +564,7 @@ public function cobros($id)
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
     'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);   
     
@@ -580,7 +683,7 @@ public function nuevaEmpresa(Request $request){
 
  //Editar empresa
  public function editarEmpresas(Request $request){
-
+    log::info($request->all());
     $regla = array(  
         'num_tarjeta' => 'required|unique:empresa,num_tarjeta,'.$request->id,
     );

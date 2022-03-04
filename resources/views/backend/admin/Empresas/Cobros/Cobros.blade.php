@@ -46,17 +46,21 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                     toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
                     document.getElementById('hasta').innerHTML= '';
                     document.getElementById('cant_meses').value='';
-                    document.getElementById('impuestos_imp').innerHTML='$-';
                     document.getElementById('fondoFP_imp').innerHTML='$-';
                     document.getElementById('totalPago_imp').innerHTML='$-';
+                    document.getElementById('multa_balanceImp').innerHTML='$-';
+                    document.getElementById('impuestos_mora_imp').innerHTML='$-';
+                    document.getElementById('impuesto_año_actual_imp').innerHTML='$-';
                   } 
                   if(response.data.success === 1){
                     document.getElementById('hasta').innerHTML= fechaPagara;
-                    document.getElementById('cant_meses').value=response.data.cantidadMeses;
-                    document.getElementById('impuestos_imp').innerHTML=response.data.impuestos;
+                    document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
                     document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
                     document.getElementById('totalPago_imp').innerHTML=response.data.totalPago;
                     document.getElementById('fechahasta_imp').innerHTML=fechaPagara;
+                    document.getElementById('multa_balanceImp').innerHTML=response.data.multa_balance;
+                    document.getElementById('impuestos_mora_imp').innerHTML=response.data.impuestos_mora_Dollar;
+                    document.getElementById('impuesto_año_actual_imp').innerHTML=response.data.impuesto_año_actual_Dollar;
                   }  
               })
               .catch((error) => {
@@ -101,7 +105,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
         <div class="card card-green">
           <div class="card-header">
-          <h5 class="modal-title">Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -118,8 +122,8 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
         <!-- Campos del formulario de cobros -->
          <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
-         <div class="card card-success">
-         <div class="card-header">DATOS GENERALES.</div>
+         <div class="card card">
+         <div class="card-header text-success"><b>DATOS GENERALES</b>.</div>
           <div class="card-body"><!-- Card-body -->
             <div class="row"><!-- /.ROW1 -->
             
@@ -130,24 +134,34 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
-                  <div class="form-group">
+                  <div class="input-group mb-3">
                         <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
+                        
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-archive"></i></span>
+                        </div>
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>FECHA DE ÚLTIMO PAGO:</label>
+                        <label>FECHA DE ÚLTIMO PAGO:</label>            
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="input-group mb-3">
                     @if($detectorCobro=='0')
-                                <input  type="text" value="{{ $calificaciones->fecha_calificacion }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
-                    @else
+                                <input  type="text" value="{{ $calificaciones->inicio_operaciones }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                  </div>
+                                @else
                                 <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
-                    @endif
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                  </div>
+                     @endif
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -171,8 +185,11 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
-                      <div class="form-group">  
+                <div class="input-group mb-3">  
                         <input type="text"  value="{{ $empresa->nombre_giro }}" name="giro_comercial" disabled id="giroc_comercial" class="form-control" required >
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
+                            </div>
                       </div>
                 </div>
               <!-- finaliza select Giro Comercial-->
@@ -184,13 +201,13 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                   </div>
                </div><!-- /.col-md-6 -->
                 <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
+                <div class="col-md-5">
+                  <div  class="input-group mb-3">
                           <!-- Select estado - live search -->
                          
                                 <select 
                                 required
-                                class="selectpicker"
+                                class="form-control"
                                 data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
@@ -202,7 +219,9 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                                   <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
                                   @endforeach 
                                 </select> 
-                 
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                                  </div>
                            <!-- finaliza select estado-->
                       </div>
                </div><!-- /.col-md-6 -->
@@ -213,10 +232,13 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                         <label>FECHA DEL INTERÉS MORATORIO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
+               <div class="col-md-5">
+                  <div class="input-group mb-3">
                         <input type="text" value="{{ $date}}" name="fecha_interes_moratorio" id="fecha_interes_moratorio" class="form-control" disabled >
-                  </div>
+                          <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
+                          </div>
+                    </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
                <!-- /.form-group -->
@@ -225,10 +247,13 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                         <label>CANTIDAD DE MESES A PAGAR:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
+               <div class="col-md-3">
+                  <div class="input-group mb-3">
                         <input type="text" disabled  name="cant_meses" id="cant_meses" class="form-control" >
-                  </div>
+                          <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calculator"></i></span>
+                           </div>
+                      </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
                               <!-- /.form-group -->
@@ -271,13 +296,14 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                           &nbsp; al &nbsp;<label class="badge badge-success" name="hasta" id="hasta"></label>
                         </h3>
                   </div>
+                  <hr>
               <!-- /.form-group -->
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
                         
                   <table class="table table-hover table-sm table-striped" border="1" width:760px;>
-                    <tr class="table-success">
+                    <tr class="table-primary">
                       <td class="table-light">
                       <table class="table table-hover table-sm table-striped" border="1" width:760px;>
                           <tr class="table-secondary">
@@ -288,14 +314,14 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
                           <tr class="table-light">
                             <td class="table-light">IMPUESTO MORA</td>
-                            <td class="table-light">32201</td>
-                            <td class="table-light">$ Iran aquí</td>
+                            <td class="table-light">{{$empresa->mora}}</td>
+                            <td class="table-light"><p id="impuestos_mora_imp"></td>
                           </tr>
 
                           <tr class="table-success">
                             <td>IMPUESTO</td>
-                            <td>11804</td>
-                            <td><h6 name="impuestos_imp" id="impuestos_imp"></h6></td>
+                            <td>{{$empresa->codigo_atc_economica}}</td>
+                            <td><h6 id="impuesto_año_actual_imp"></h6></td>
                           </tr>
 
                           <tr class="table-light">
@@ -307,7 +333,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                           <tr class="table-success">
                             <td>MULTA</td>
                             <td>15313</td>
-                            <td>$Iran aquí</td>
+                            <td><h6 id="multa_balanceImp"></h6></td>
                           </tr>
 
                           <tr class="table-light">
@@ -366,7 +392,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
             <div class="card-footer">
             <button type="button" class="btn btn-success float-right" onclick="GenerarCobro()"><i class="fas fa-envelope-open-text"></i>
             &nbsp;Generar Cobro&nbsp;</button>
-            <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )">Volver</button>
+            <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )"><i class="fas fa-chevron-circle-left"></i> &nbsp; Volver</button>
           </div>
         <!-- /.card-footer -->
 
@@ -491,7 +517,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                           <tr class="table-success">
                             <td>IMPUESTO</td>
                             <td>11804</td>
-                            <td><h6 name="impuestos_imp" id="impuestos_imp"></h6></td>
+                            <td> </h6></td>
                           </tr>
 
                           <tr class="table-light">
