@@ -95,7 +95,7 @@
             <div class="small-box bg-danger">
               <div class="inner">
                 <h3> </h3>
-                <p>Multas: <span class="badge badge-pill badge-light">0</span></p>
+                <p>Multas: <span class="badge badge-pill badge-light">{{$Cantidad_multas}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>

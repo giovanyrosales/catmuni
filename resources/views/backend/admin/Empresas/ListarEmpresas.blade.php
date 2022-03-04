@@ -7,7 +7,8 @@
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
-
+    <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 @stop
 <style>
     table{
@@ -293,13 +294,14 @@
     <script src="{{ asset('js/bootstrap-select.min.js') }}" type="text/javascript"></script>
   <!-- Finaliza el select live search -->
 
-    <script src="{{ asset('js/jquery.dataTables.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('js/jquery.dataTables.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.js') }}" type="text/javascript"></script>
-
     <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
+    <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
+
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
@@ -537,37 +539,47 @@ function editar(){
             axios.post('/admin/empresas/editar', formData, {
             })
             .then((response) => {
-             
-                var actividad_economica = document.getElementById("select-actividad_economica");
-                for (i = 0; i < Object.keys(resp.data).length; i++) {
-                  var option = document.createElement('option');
-                  option.value = resp.data[i].id;
-                  option.text = resp.data[i].apeynom;
-                  actividad_economica.appendChild(option);
-                }
+            //* codigo de Vanessa y esta maloo no sabemos que hace.... 
+            //*   var actividad_economica = document.getElementById("select-actividad_economica");
+            //*    for (i = 0; i < Object.keys(resp.data).length; i++) {
+            //*      var option = document.createElement('option');
+            //*     option.value = resp.data[i].id;
+            //*      option.text = resp.data[i].apeynom;
+            //*      actividad_economica.appendChild(option);
+            //*  }
+            //.codigo de Vanessa y esta maloo no sabemos que hace.... 
+
                 closeLoading();
                 if(response.data.success === 0){
                     toastr.error(response.data.message);
                 }
                 if(response.data.success === 1){
-                  Swal.fire(
-                            'Registro Actualizado!',
-                            'Presiona el botón Ok!',
-                            'success'
-                          )
+                  Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: 'Registro Actualizado!',
+                          showConfirmButton: true,
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+
                           $('#modalEditar').modal('hide');
                           recargar();
+                        }
+                      });
                 }
-               
             })
             .catch((error) => {
               Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
                           text: 'Error al actualizar empresa!', 
-                        })
-               // toastr.error('Error al actualizar empresa');
-                closeLoading();
+                          showConfirmButton: true,
+                        }).then((result) => {
+                        if (result.isConfirmed) 
+                        {
+                          closeLoading();
+                        }
+                      });
             });
         }
 

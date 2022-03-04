@@ -4,7 +4,7 @@
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
-    <link rel="stylesheet" href="sweetalert2.min.css">
+  
 @stop
 <style>
     table{
@@ -337,8 +337,6 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
-    <script src="sweetalert2.all.min.js"></script>
-    <script src="sweetalert2.min.js"></script>
 
  <!-- incluir tabla -->
  <script type="text/javascript">
@@ -439,13 +437,18 @@
                    if (response.data.success === 1) 
                    
                     {
-                        Swal.fire(
-                                    'Registro Actualizado!',
-                                    'Presiona el botón Ok!',
-                                    'success'
-                                 )
-                                 $('#modalEditar').modal('hide');
+                      Swal.fire({
+                          icon: 'success',
+                          title: '!Contribuyente actualizado correctamente!',
+                          showConfirmButton: true,
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+
+                                $('#modalEditar').modal('hide');
                                  recargar();
+                        }
+                      });
+                                
                     }
                     else 
                     {
@@ -488,19 +491,29 @@
                     $('#modalEliminar').modal('hide');
                     
                     if(response.data.success === 1){
-                        Swal.fire(
-                                    'Contribuyente Eliminado!',
-                                    'Presiona el botón Ok!',
-                                    'success'
-                                 )
-                        recargar();
+                      Swal.fire({
+                          icon: 'success',
+                          title: '!Contribuyente eliminado correctamente!',
+                          showConfirmButton: true,
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+ 
+                                 recargar();
+                        }
+                      });
                     }else{
                        
-                        Swal.fire(
-                                    'Error al borrar!',
-                                    'Presiona el botón Ok!',
-                                    'success'
-                                 )
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error al actualizar contribuyente!', 
+                          showConfirmButton: true,
+                        }).then((result) => {
+                        if (result.isConfirmed) 
+                        {
+                          closeLoading();
+                        }
+                      });
                     }
                 })
                 

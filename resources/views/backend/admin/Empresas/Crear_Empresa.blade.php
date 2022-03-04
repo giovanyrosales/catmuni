@@ -14,7 +14,7 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
     
-    <link rel="stylesheet" href="sweetalert2.min.css">
+ 
     
  
 @stop
@@ -292,9 +292,6 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
  
-    <script src="sweetalert2.all.min.js"></script>
-    <script src="sweetalert2.min.js"></script>
-
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
@@ -475,30 +472,35 @@ function nuevo(){
                     toastr.error(response.data.message);
           
                 }
-            //       else {
-            //            toastr.error('Error al registrar');
-            //            }
                 if(response.data.success === 1){
              
-                  Swal.fire(
-                            'Empresa registrada correctamente!',
-                            'Presiona el botón Ok!',
-                            'success'
-                          )
-                          location.reload();
-                   // toastr.success('Empresa registrada correctamente');
-                    
+                  Swal.fire({
+                          position:'top-end',
+                          icon: 'success',
+                          title: '¡Empresa registrada correctamente!',
+                          showConfirmButton: true,
+                         
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                              location.reload();
+                            }
+                        });
+                          
+                   
                 }
                
             })
             .catch((error) => {
-               // toastr.error('Error al registrar empresa');
+                
                 Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
                           text: 'Error al registrar empresa!', 
-                        })
-                
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                              location.reload();
+                            }
+                        });
             });
  }
 
