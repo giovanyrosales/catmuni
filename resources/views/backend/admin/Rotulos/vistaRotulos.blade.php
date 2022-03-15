@@ -58,22 +58,64 @@
           </div>
       <!--body-->
         </div>
+   
+      <div class="row">
+        <div class="col-md-4 col-sm-8">
+              @if($detectorNull== '0')
+             
+                        <a href="#" onclick="CrearInspeccion({{$lista->id}} )" >
+                            <div class="widget stats-widget">
+                              <div class="widget-body clearfix bg-info">
+                                  <div class="pull-left">
+                                      <h3 class="widget-title text-white">Realizar Inspección</h3>
+                                  </div>
+                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                              </div>
+                          </div><!-- .widget -->
+                        </a>
+        
+              @else 
+                      @if($inspecciones->estado_inspeccion == '')
+                        <a href="#" onclick="CrearInspeccion({{$lista->id}} )" >
+                            <div class="widget stats-widget">
+                              <div class="widget-body clearfix bg-info">
+                                  <div class="pull-left">
+                                      <h3 class="widget-title text-white">Realizar Inspección</h3>
+                                  </div>
+                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                              </div>
+                          </div><!-- .widget -->
+                          </a>
+                      @elseif($inspecciones->estado_inspeccion == 'realizado')
+                      <a href="#" onclick="InspeccionRealizada()">
+                                <div class="widget stats-widget">
+                                    <div class="widget-body clearfix bg-info">
+                                        <div class="pull-left">
+                                            <h3 class="widget-title text-white">Inspección realizada <span class="badge badge-pill badge-dark"> {{$inspecciones->fecha_inspeccion}}</span></h3>
+                                        </div>
+                                        <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
+                                    </div>
+                                </div><!-- .widget -->
+                                </a>
+                      @endif
+ 
+              @endif
        
-
-    <div class="row">
+        </div>
+    
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick=" CrearInspeccion({{$lista->id}})" >
+        <a href="#" onclick="informacionCierre({{$lista->id}})" >
             <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-blue">
+                <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Inspección del Rótulo</h3>
+                        <h3 class="widget-title text-white">Calificación</h3>
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
             </div><!-- .widget -->
         </a>
     </div>
-    
+   
     <div class="col-md-4 col-sm-8">
         <a href="#" onclick="informacionCierre({{$lista->id}})" >
             <div class="widget stats-widget">
@@ -148,6 +190,17 @@
                         <th>Medidas</th>
                         <td>{{$lista->medidas}}</span></td>
                       </tr>
+
+                      <tr>
+                        <th>Total Medidas</th>
+                        <td>{{$lista->total_medidas}}</span></td>
+                      </tr>
+
+                      <tr>
+                        <th>Total Caras</th>
+                        <td>{{$lista->total_caras}}</span></td>
+                      </tr>
+
                       <tr>
                         <th>Propietario</th>
                         <td>{{$contri}}</span></td>
@@ -519,8 +572,13 @@
             });
     }
 
+    function InspeccionRealizada()
+    {
+      toast.success('La inspeccion ya fue realizada');
+      return;
+    }
+
     
-   
     
     </script>
 @stop

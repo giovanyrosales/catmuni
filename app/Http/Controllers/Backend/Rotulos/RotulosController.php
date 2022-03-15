@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Backend\Rotulos;
 
-use App\Models\Contribuyentes;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Contribuyentes;
+use App\Models\InspeccionRotulos;
+use App\Models\Rotulos;
 use App\Models\Empresas;
 use App\Models\Usuario;
-use App\Models\Rotulos;
+use Illuminate\Http\Request;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Unique;
 use Symfony\Contracts\Service\Attribute\Required;
 use Whoops\Run;
-
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use function PHPUnit\Framework\isEmpty;
 
 class RotulosController extends Controller
@@ -49,6 +51,8 @@ class RotulosController extends Controller
             'fecha_apertura' => 'required',
             'actividad_economica' => 'required',
             'medidas' => 'required',
+            'total_medidas' => 'required',
+            'total_caras' => 'required',
             'estado' => 'required'
         );
     
@@ -77,6 +81,8 @@ class RotulosController extends Controller
         $dato->actividad_economica = $request->actividad_economica;
         $dato->fecha_apertura = $request->fecha_apertura;
         $dato->medidas = $request->medidas;
+        $dato->total_medidas = $request->total_medidas;
+        $dato->total_caras = $request->total_caras;
         $dato->num_tarjeta = $request->num_tarjeta;
         $dato->estado = $request->estado;
        
@@ -112,7 +118,7 @@ class RotulosController extends Controller
              }
              if ($info = Empresas::where ('id',$dato->id_empresa)->first())
              {
-                 $nom_empresa = $info->nombre;
+                $nom_empresa = $info->nombre;
              }
              $dato->cont = $nom_apellido;
              $dato->empr = $nom_empresa;
@@ -180,6 +186,8 @@ class RotulosController extends Controller
             'num_tarjeta' => 'required',
             'permiso_instalacion' => 'required',
             'medidas' => 'required',
+            'total_medidas' => 'required',
+            'total_caras' => 'required',
             'empresa' => 'required',
           
         );
@@ -199,7 +207,9 @@ class RotulosController extends Controller
                 'fecha_apertura' => $request->fecha_apertura,
                 'num_tarjeta'=> $request->num_tarjeta,
                 'permiso_instalacion'=> $request->permiso_instalacion,
-                'medidas'=> $request->medidas,             
+                'medidas'=> $request->medidas,   
+                'total_medidas' => $request->total_medidas,
+                'total_caras' => $request->total_caras,          
         
             ]);
           
@@ -225,9 +235,9 @@ class RotulosController extends Controller
     //Función vista detallada
     public function showRotulos($id)
     {
-      
         $contribuyentes = Contribuyentes::All();
         $empresas = Empresas::ALL();
+        
 
         /*
         $rotulo= Rotulos
@@ -239,6 +249,16 @@ class RotulosController extends Controller
         'empresa.nombre as empresa')
         ->find($id);
         */
+
+                
+    $inspecciones = InspeccionRotulos
+    ::join('rotulos','inspeccion_rotulos.id_rotulos','=','rotulos.id')
+    
+    ->select('inspeccion_rotulos.id','inspeccion_rotulos.hora_inspeccion','inspeccion_rotulos.fecha_inspeccion','inspeccion_rotulos.coordenadas','inspeccion_rotulos.imagen','inspeccion_rotulos.estado_inspeccion',
+    'rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.direccion','rotulos.fecha_apertura','rotulos.num_tarjeta','rotulos.permiso_instalacion','rotulos.medidas','rotulos.total_medidas','rotulos.total_caras','rotulos.estado','rotulos.fecha_cierre')
+    ->where('id_rotulos', "=", "$id")
+    ->first();
+
 
         $lista = Rotulos::where ('id', $id)->first();
 
@@ -253,11 +273,21 @@ class RotulosController extends Controller
             if ($empresa = Empresas::where('id', $lista->id_empresa)->first())
             {
                 $emp = $empresa->nombre;
+                
             }
+
+            if ($inspecciones == null)
+            {
+                $detectorNull = 0;
+            }
+            else
+            {
+            $detectorNull =1;
+              }
 
                       
 
-        return view('backend.admin.Rotulos.vistaRotulos', compact('id','lista','contribuyentes','empresas', 'contri', 'emp'));
+        return view('backend.admin.Rotulos.vistaRotulos', compact('id','detectorNull','inspecciones','lista','contribuyentes','empresas', 'contri', 'emp'));
     }
     //Termina vista detallada
     
@@ -354,15 +384,19 @@ class RotulosController extends Controller
 
     public function inspeccionRotulo($id)
     {
-        
+      
         $contribuyentes = Contribuyentes::All();
         $empresas = Empresas::All();
-     
+        $inspeccionR = InspeccionRotulos::ALL();
+ 
+
+  
+    
         $rotulo = Rotulos::where ('id', $id)->first();
 
             $contri = ' ';
             $emp = '';
-
+          
             if ($contribuyente = Contribuyentes::where('id', $rotulo->id_contribuyente)->first())
             {
                 $contri  = $contribuyente->nombre . ' ' . $contribuyente->apellido;
@@ -373,9 +407,92 @@ class RotulosController extends Controller
                 $emp = $empresa->nombre;
             }
 
-         return view('backend.admin.Rotulos.InspeccionRotulos', compact('id','rotulo','contribuyentes', 'empresas'));
+        
+        return view('backend.admin.Rotulos.InspeccionRotulos', compact('id','inspeccionR','rotulo','contri','emp','contribuyentes', 'empresas'));
     
     }
 
-   
+    public function crear_inspeccion(Request $request )
+    {  
+        log::info($request->all());
+           
+        $regla = array(
+           
+            'fecha_inspeccion' => 'required',
+            'coordenadas' => 'required',
+           
+        );
+        
+      
+
+        $validar = Validator::make($request->all(), $regla, 
+       
+    
+        );
+           
+        if ($validar->fails()){
+    
+        return [
+    
+         'success'=> 0,
+    
+        'message' => $validar->errors()->first()
+    
+        ];
+        }
+        
+        if($request->hasFile('imagen')){
+            $cadena = Str::random(15);
+            $tiempo = microtime();
+            $union = $cadena.$tiempo;
+            $nombre = str_replace(' ', '_', $union);
+
+            $extension = '.'.$request->imagen->getClientOriginalExtension();
+            $nomImagen = $nombre.strtolower($extension);
+            $avatar = $request->file('imagen');
+            $estado = Storage::disk('archivos')->put($nomImagen, \File::get($avatar));
+
+            if($estado){
+                
+                $dato = new InspeccionRotulos();
+                $dato->id_rotulos = $request->id_rotulos;
+                $dato->fecha_inspeccion = $request->fecha_inspeccion;
+                $dato->hora_inspeccion = $request->hora_inspeccion;
+                $dato->coordenadas = $request->coordenadas;
+                $dato->imagen = $nomImagen;
+                $dato->estado_inspeccion = $request->estado_inspeccion;
+                $dato->nom_inspeccion = $request->nom_inspeccion;
+                $dato->cargo_inspeccion = $request->cargo_inspeccion;
+
+                if($dato->save()){
+
+                    return ['success' => 1];
+                }else{return ['success' => 2];}
+            }else{
+                return ['success' => 2];
+            }
+     
+      
+        }else 
+        {
+     
+          
+        $dato = new InspeccionRotulos();
+        $dato->id_rotulos = $request->id_rotulos;
+        $dato->fecha_inspeccion = $request->fecha_inspeccion;
+        $dato->hora_inspeccion = $request->hora_inspeccion;
+        $dato->coordenadas = $request->coordenadas;
+        $dato->estado_inspeccion = $request->estado_inspeccion;
+        $dato->nom_inspeccion = $request->nom_inspeccion;
+        $dato->cargo_inspeccion = $request->cargo_inspeccion;
+      
+      
+        if($dato->save()){
+
+            return ['success' => 1];
+        }else{return ['success' => 2];}
+
+    }
+       
+    }   
 }

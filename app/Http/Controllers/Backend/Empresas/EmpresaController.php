@@ -747,8 +747,7 @@ $actividad_especifica = ActividadEspecifica::
     }
 }
  
-
- //Termina editar empresa
+//Termina editar empresa
 
 
 

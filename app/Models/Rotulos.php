@@ -24,6 +24,8 @@ class Rotulos extends Model
           'num_tarjeta',
           'permiso_instalacion',
           'medidas',
+          'total_medidas',
+          'total_caras',
           'id_contribuyente',
           'id_empresa',
           'estado',
