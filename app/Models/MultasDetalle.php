@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cobros extends Model
+class MultasDetalle extends Model
 {
-    protected $table = 'cobros';
-    public $timestamps = true;
+    protected $table = 'multas_detalle';
+    public $timestamps = false;
     protected $fillable = [
         'id',
+        'id_multas',
         'id_empresa',
-        'id_usuario',
-        'monto_pagado',
-        'monto_multaPE',
-        'fecha_pago',
+        'id_estado_multa',
+        'año_multa',
+        'monto_multa',
       ];
 }

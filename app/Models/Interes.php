@@ -14,11 +14,10 @@ class Interes extends Model
 {
 
     protected $table = 'interes';
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
         'id',
         'monto_interes'
-
       ];
 }
  

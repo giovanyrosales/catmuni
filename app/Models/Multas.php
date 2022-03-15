@@ -19,7 +19,6 @@ class Multas extends Model
         'id',
         'codigo',
         'tipo_multa',
-        'nombre',
 
       ];
 }

@@ -543,7 +543,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                   <div class="card-footer">
                     <button type="button" class="btn btn-success float-right" onclick="GenerarCalificacion(), calculo({{$empresa->id_act_economica}});"><i class="fas fa-envelope-open-text"></i>
                     &nbsp;Generar Calificación&nbsp;</button>
-                    <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )">Volver</button>
+                    <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
                   </div>
             <!-- /.card-footer -->
           <!-- /.row -->

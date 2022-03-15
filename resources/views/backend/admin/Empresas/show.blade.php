@@ -61,8 +61,9 @@
            <br><br>
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-4 col-8">
+        <div class="m-0 row justify-content-center" >
+    
+          <div class="col-lg-3 col-8">
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
@@ -76,7 +77,7 @@
             </div>
           </div>
            <!-- ./col -->
-           <div class="col-lg-4 col-8">
+           <div class="col-lg-3 col-8">
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
@@ -90,7 +91,7 @@
             </div>
           </div>
   
-          <div class="col-lg-4 col-8">
+          <div class="col-lg-3 col-8">
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
@@ -108,7 +109,7 @@
       </div>
     </section>
     <!-- Cajitas para estadísticas termina aquí -->
-
+<hr>
 <!-- Cajas para Menu aquí -->
     <div class="row">
 
@@ -256,9 +257,9 @@
             </div><!-- .widget -->
         </a>
     </div>
-
+   
     </div><!-- .ROW -->
-
+    <hr>
 
 <!-- Cuadro para datos de la empresa inicia aquí ----------------------------------------------> 
 <!-- seccion frame -->
@@ -422,7 +423,7 @@
 <!-- seccion frame -->
 <!-- Cuadro para datos del contribuyente termina aquí ------------------------------------------>
 <div class="card-footer">
-            <button type="button" onclick="ListarEmpresas()" class="btn btn-default">Volver</button>
+            <button type="button" onclick="ListarEmpresas()" class="btn btn-default"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
           </div>
             </div>
           </div>

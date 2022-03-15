@@ -51,7 +51,7 @@ function f4(){
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3>Agregar Matrículas</h3>
+                    <h4><i class="far fa-plus-square"></i>&nbsp;Agregar Matrículas</h4>
                 </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -153,7 +153,7 @@ function f4(){
                        <!-- /.Inclución de tabla -->
                   
                             <div class="card-footer">
-                                <button type="button" class="btn btn-default" onclick="VerEmpresa()">Volver</button>
+                                <button type="button" class="btn btn-default" onclick="VerEmpresa()"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
                             </div>
                          </div>
                         </div>
@@ -168,7 +168,7 @@ function f4(){
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Eliminar Matrículas</h4>
+                    <h4 class="modal-title"><i class="far fa-minus-square"></i>&nbsp;Eliminar Matrículas</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -206,7 +206,7 @@ function f4(){
             <div class="modal-content">
               <!--Contenido del modal-->
                <div class="modal-header">
-                    <h4 class="modal-title">Editar Matrícula</h4>
+                    <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;Editar Matrícula</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

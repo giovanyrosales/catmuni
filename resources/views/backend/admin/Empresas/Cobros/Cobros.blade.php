@@ -17,6 +17,17 @@
 
 
 @stop
+<script>
+    function f1()
+        {
+           document.getElementById('select_interes').disabled=true;
+           $('#periodo').hide();
+        }
+
+window.onload = f1;
+
+</script>
+
 <!-- Función para calcular el pago momentaneo------------------------------------------>
 <script> 
 
@@ -51,16 +62,28 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                     document.getElementById('multa_balanceImp').innerHTML='$-';
                     document.getElementById('impuestos_mora_imp').innerHTML='$-';
                     document.getElementById('impuesto_año_actual_imp').innerHTML='$-';
+                    document.getElementById('fechaInicioPago_imp').innerHTML='';
+                    document.getElementById('multaPagoExtemporaneo_imp').innerHTML='$-';
+                    document.getElementById('InteresTotal_imp').innerHTML='$-';
                   } 
                   if(response.data.success === 1){
-                    document.getElementById('hasta').innerHTML= fechaPagara;
+                    $('#periodo').show();
+                    document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
                     document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
                     document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
                     document.getElementById('totalPago_imp').innerHTML=response.data.totalPago;
                     document.getElementById('fechahasta_imp').innerHTML=fechaPagara;
-                    document.getElementById('multa_balanceImp').innerHTML=response.data.multa_balance;
+                    document.getElementById('multa_balanceImp').innerHTML=response.data.multas_balance;
                     document.getElementById('impuestos_mora_imp').innerHTML=response.data.impuestos_mora_Dollar;
                     document.getElementById('impuesto_año_actual_imp').innerHTML=response.data.impuesto_año_actual_Dollar;
+                    document.getElementById('fechaInicioPago_imp').innerHTML=response.data.InicioPeriodo;
+                    document.getElementById('multaPagoExtemporaneo_imp').innerHTML=response.data.multaPagoExtemporaneoDollar;
+                    document.getElementById('InteresTotal_imp').innerHTML=response.data.InteresTotalDollar;
+                      if(response.data.totalMultaPagoExtemporaneos>=2.86)
+                      {
+                        document.getElementById('select_interes').disabled=false;
+                        modalMensaje('Multa', 'Esta empresa tiene una multa por pago extemporaneo');
+                      }
                   }  
               })
               .catch((error) => {
@@ -149,7 +172,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                         <label>FECHA DE ÚLTIMO PAGO:</label>            
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
+               <div class="col-md-5">
                   <div class="input-group mb-3">
                     @if($detectorCobro=='0')
                                 <input  type="text" value="{{ $calificaciones->inicio_operaciones }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
@@ -286,15 +309,15 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                 <!-- /.form-group -->
                 <div class="col-md-12">
                   <div class="form-group">
-                        <h5>
+                        <h6 id="periodo">
                           Periodo del: 
                           @if($detectorNull=='0')
-                          <label class="text-success"> {{ $calificaciones->fecha_calificacion }} </label> 
+                          <label id="fechaInicioPago_imp" class="text-success">  </label> 
                            @else
                              <label class="badge badge-info">{{ $ultimo_cobro->fecha_pago }} </label>
                            @endif 
-                          &nbsp; al &nbsp;<label class="badge badge-success" name="hasta" id="hasta"></label>
-                        </h3>
+                          &nbsp; al &nbsp;<label class="badge badge-success" id="hasta"></label>
+                        </h6>
                   </div>
                   <hr>
               <!-- /.form-group -->
@@ -302,73 +325,69 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                <div class="col-md-12">
                   <div class="form-group">
                         
-                  <table class="table table-hover table-sm table-striped" border="1" width:760px;>
-                    <tr class="table-primary">
-                      <td class="table-light">
-                      <table class="table table-hover table-sm table-striped" border="1" width:760px;>
-                          <tr class="table-secondary">
+                
+                      <table class="table table-hover table-sm table-striped"  width:760px;>
+                          <tr>
                             <th scope="col">IMPUESTOS</th>
                             <th scope="col"></th> 
                             <th scope="col"></th>
                           </tr>
 
-                          <tr class="table-light">
+                          <tr>
                             <td class="table-light">IMPUESTO MORA</td>
                             <td class="table-light">{{$empresa->mora}}</td>
                             <td class="table-light"><p id="impuestos_mora_imp"></td>
                           </tr>
 
-                          <tr class="table-success">
+                          <tr>
                             <td>IMPUESTO</td>
                             <td>{{$empresa->codigo_atc_economica}}</td>
                             <td><h6 id="impuesto_año_actual_imp"></h6></td>
                           </tr>
 
-                          <tr class="table-light">
+                          <tr>
                             <td>INTERESES MORATORIOS</td>
                             <td>15302</td>
-                            <td>$Iran aquí</td>
+                            <td><h6 id="InteresTotal_imp"></td>
                           </tr>
 
-                          <tr class="table-success">
-                            <td>MULTA</td>
+                          <tr>
+                            <td>MULTAS POR BALANCE</td>
                             <td>15313</td>
                             <td><h6 id="multa_balanceImp"></h6></td>
                           </tr>
 
-                          <tr class="table-light">
-                            <td></td>
-                            <td></td>
-                            <td>$-   </td>
+                          <tr>
+                            <td>MULTAS P. EXTEMPORANEOS</td>
+                            <td>15313</td>
+                            <td><h6 id="multaPagoExtemporaneo_imp"></td>
                           </tr>
 
-                          <tr class="table-success">
+                          <tr>
                             <td>FONDO F. PATRONALES 5%</td>
                             <td>12114</td>
                             <td><h6 name="fondoFP_imp" id="fondoFP_imp"></h6></td>
                           </tr>
 
-                          <tr class="table-light">
+                          <tr>
                             <td></td>
                             <td></td>
-                            <td>$-   </td>
+                            <td>-   </td>
                           </tr>
 
-                          <tr class="table-success">
+                          <tr>
                             <td></td>
                             <td></td>
-                            <td>$-   </td>
+                            <td>-   </td>
                           </tr>
 
-                          <tr class="table-secondary">
+                          <tr>
                             <th scope="row">TOTAL</th>
                             <td><label>$<label name="FondoF_imp" id="FondoF_imp"> </label></label></td>
                             <td><label name="totalPago_imp" id="totalPago_imp"></label><label</td>
                           </tr>
                         </table>
-                      </td>
-                    </tr>
-                  </table>
+                      <hr>
                     </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
               </div><!-- ROW FILA3 -->        
@@ -488,7 +507,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                         <h6>
                           Periodo del: 
                           @if($detectorNull=='0')
-                          <label> {{ $calificaciones->fecha_calificacion }} </label> 
+                          <label id="fechaInicioPago_imp"> </label> 
                            @else
                              <label>{{ $ultimo_cobro->fecha_pago }} </label>
                            @endif 
@@ -646,6 +665,22 @@ function GenerarCobro()
             $('#modalregistrarCobros').modal('show');
             $('#btImprimirCobro').hide();
         }
+
+function modalMensaje(titulo, mensaje){
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            });          
+}//Fin- Modal Mensaje.
+
 
 </script> 
 
