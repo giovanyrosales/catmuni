@@ -114,10 +114,24 @@
             </div>
         
             <div class="row">
-                  <div class="col-md-8">
+                  <div class="col-md-3">
                     <div class="form-group"> 
-                    <label for="medidas" class="form-label">Medidas</label>
-                     <textarea class="form-control" id="medidas" rows="3"></textarea>
+                    <label for="medidas" class="form-label">Medidas:</label>
+                     <textarea class="form-control" id="medidas" rows="2"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group"> 
+                    <label for="medidas" class="form-label">Total metros cuadrados:</label>
+                      <input type="text" name="total_medidas" id="total_medidas" class="form-control" required placeholder="Total metros cuadrados">
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <div class="form-group"> 
+                    <label for="medidas" class="form-label">Caras del rótulo:</label>
+                      <input type="number" name="total_caras" id="total_caras" class="form-control" required placeholder="">
                     </div>
                   </div>
 
@@ -279,6 +293,8 @@
             var direccion = document.getElementById('direccion').value;
             var permiso_instalacion = document.getElementById('select-tipo_permiso').value;
             var medidas = document.getElementById('medidas').value;
+            var total_medidas = document.getElementById('total_medidas').value;
+            var total_caras = document.getElementById('total_caras').value;
             var fecha_apertura = document.getElementById('fecha_apertura').value;
             var num_tarjeta = document.getElementById('num_tarjeta').value;
             var actividad_economica = document.getElementById('select-actividad_economica').value;
@@ -294,6 +310,18 @@
             if (direccion === '')
             {
               toastr.error('La dirección es requerida');
+              return;
+            }
+
+            if (total_medidas === '')
+            {
+              toastr.error('Total medidas es requerida');
+              return;
+            }
+
+            if (total_caras === '')
+            {
+              toastr.error('La cantidad de caras del rótulo es requerida');
               return;
             }
 
@@ -335,6 +363,8 @@
             formData.append('direccion', direccion);
             formData.append('permiso_instalacion', permiso_instalacion);
             formData.append('medidas', medidas);
+            formData.append('total_medidas', total_medidas);
+            formData.append('total_caras', total_caras);
             formData.append('fecha_apertura', fecha_apertura);
             formData.append('num_tarjeta', num_tarjeta);
             formData.append('actividad_economica', actividad_economica);

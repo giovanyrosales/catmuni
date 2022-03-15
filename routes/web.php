@@ -18,7 +18,7 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
-
+use App\Http\Controllers\Backend\Rotulos\InspeccionRotulosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -187,5 +187,5 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/Rotulos/vista/traspaso', [RotulosController::class, 'traspasoR']);
 
     Route::get('/admin/Rotulos/inspeccion/{rotulo}', [RotulosController::class, 'inspeccionRotulo']);
-
+    Route::post('/admin/Rotulos/guardar-inspeccion', [RotulosController::class, 'crear_inspeccion']);
    

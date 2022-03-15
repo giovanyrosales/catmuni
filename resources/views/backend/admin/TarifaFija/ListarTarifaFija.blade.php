@@ -436,7 +436,7 @@
           formData.append('impuesto_mensual', impuesto_mensual);
      
       axios.post('/admin/TarifaFija/NuevaT', formData,
-       {
+        {
             })
 
             .then((response) => {

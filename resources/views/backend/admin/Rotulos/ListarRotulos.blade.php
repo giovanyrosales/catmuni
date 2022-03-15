@@ -22,7 +22,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Lista De Rótulos Registrados</h1>
+            <h5>Lista De Rótulos Registrados</h1>
           </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -389,12 +389,26 @@
               </div>
 
               <div class="row">            
-                <div class="col-md-10">
-                  <div class="form-group"> 
-                  <label for="medidas" class="form-label">Medidas</label>
-                  <textarea class="form-control" id="medidas-editar" rows="3"></textarea>
+              <div class="col-md-5">
+                    <div class="form-group"> 
+                    <label for="medidas" class="form-label">Medidas:</label>
+                     <textarea class="form-control" id="medidas-editar" rows="2"></textarea>
+                    </div>
                   </div>
-                </div>            
+
+                  <div class="col-md-4">
+                    <div class="form-group"> 
+                    <label for="total_medidas" class="form-label">Total metros cuadrados:</label>
+                      <input type="number" name="total_medidas-editar" id="total_medidas-editar" class="form-control" required placeholder="Total metros cuadrados" >
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group"> 
+                    <label for="total_caras" class="form-label">Caras del rótulo:</label>
+                      <input type="text" name="total_caras-editar" id="total_caras-editar" class="form-control" required placeholder="">
+                    </div>
+                  </div>          
               </div>
                                                
               <div class="modal-footer justify-content-between">
@@ -579,6 +593,8 @@
             $('#select-actividad_economica-editar').val(response.data.rotulos.actividad_economica);
             $('#direccion-editar').val(response.data.rotulos.direccion);
             $('#medidas-editar').val(response.data.rotulos.medidas);
+            $('#total_medidas-editar').val(response.data.rotulos.total_medidas);
+            $('#total_caras-editar').val(response.data.rotulos.total_caras);
             $('#select-permiso_instalacion-editar').val(response.data.rotulos.permiso_instalacion);
           
                    
@@ -617,6 +633,8 @@
         var num_tarjeta = document.getElementById('num_tarjeta-editar').value;
         var permiso_instalacion = document.getElementById('select-permiso_instalacion-editar').value;
         var medidas = document.getElementById('medidas-editar').value;
+        var total_medidas = document.getElementById('total_medidas-editar').value;
+        var total_caras = document.getElementById('total_caras-editar').value;
        
 
         openLoading();
@@ -630,6 +648,8 @@
             formData.append('num_tarjeta', num_tarjeta);
             formData.append('permiso_instalacion',permiso_instalacion);
             formData.append('medidas', medidas);
+            formData.append('total_medidas', total_medidas);
+            formData.append('total_caras', total_caras);
             
             
             axios.post('/admin/Rotulos/Editar', formData, {

@@ -44,10 +44,10 @@
       <div class="container-fluid">
         <!-- SELECT2 EXAMPLE -->
 
-        <form class="form-horizontal" id="formulario-GenerarRecalificacion">
+        <form class="form-horizontal" id="formulario-GenerarInspeccion">
         @csrf
 
-        <div class="card card-info">
+        <div class="card card-success">
           <div class="card-header">
           <h5 class="modal-title">Realizar inspección a rótulo <span class="badge badge-warning">&nbsp; {{$rotulo->nom_rotulo}}&nbsp;</span>&nbsp;</h5>
 
@@ -79,7 +79,8 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-3">
                 <div class="form-group">  
-                    <input type="date"  value=" " name="fecha_inspeccion"  id="fecha_inspeccion" class="form-control" required >
+                    <input type="date" value=" " name="fecha_inspeccion"  id="fecha_inspeccion" class="form-control" required >
+                    <input type="hidden" name="estado_inspeccion" id="estado_inspeccion" class="form-control" value="realizado">
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -93,12 +94,12 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-3">
                 <div class="form-group">  
-                    <input type="time"  value=" " name="hora_inspeccion"  id="hora_inspeccion" class="form-control" required >
+                    <input type="time" onchange="cambioSelect()" value=" " name="hora_inspeccion"  id="hora_inspeccion" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
                <!-- /.form-group -->
-
+           
             <!-- /.form-group -->
             <div class="col-md-3">
                 <div class="form-group">
@@ -109,12 +110,11 @@
             <div class="col-md-3">
                 <div class="form-group">  
                    <input type="text"  value="{{$rotulo->nom_rotulo}}" name="nom_rotulo" disabled id="nom_rotulo" class="form-control" required >
-                   <input type="hidden"  value="{{ $rotulo->id }}" name="nom_rotulo" disabled id="nom_rotulo" class="form-control" required >
                 </div>
             </div>
             <!-- Finaliza Nombre del Rótulo-->
             <!-- /.form-group -->
-
+   
              <!-- /.form-group -->
             <div class="col-md-3">
                 <div class="form-group">
@@ -133,21 +133,6 @@
             <!-- /.form-group -->
             <div class="col-md-3">
                 <div class="form-group">
-                    <label>DIRECCIÓN:</label>
-                </div>
-            </div><!-- /.col-md-6 -->
-               <!-- Inicia Dirección -->
-            <div class="col-md-3">
-                <div class="form-group">  
-                   <input type="text"  value="{{$rotulo->direccion}}" name="direccion" disabled id="direccion" class="form-control" required >
-                </div>
-            </div>
-            <!-- Finaliza Dirección-->
-            <!-- /.form-group -->
-
-            <!-- /.form-group -->
-            <div class="col-md-3">
-                <div class="form-group">
                     <label>FECHA DE APERTURA:</label>
                 </div>
             </div><!-- /.col-md-6 -->
@@ -161,37 +146,55 @@
             <!-- /.form-group -->
 
             <!-- /.form-group -->
-            <div class="col-md-3">
+          
+            <div class="col-md-3" >
                 <div class="form-group">
-                    <label>REPRESENTANTE LEGAL:</label>
+                    <label id="labelcontri">REPRESENTANTE LEGAL:</label>
                 </div>
             </div><!-- /.col-md-6 -->
                <!-- Inicia Representante Legal -->
             <div class="col-md-3">
-                <div class="form-group">  
-                   <input type="text"  value="{{$rotulo->contribuyente}}&nbsp;{{$rotulo->apellido}}" name="contribuyente" disabled id="contribuyente" class="form-control" required >
+                <div class="form-group" id="representante">  
+                   <input type="text"  value="{{$contri}}" name="contribuyente" disabled id="contribuyente" class="form-control" required >
                 </div>
             </div>
             <!-- Finaliza Representante Legal-->
             <!-- /.form-group -->
-
-             <!-- /.form-group -->
-             <div class="col-md-3">
-                <div class="form-group">
+          
+           
+              <div class="col-md-3">
+                <div class="form-group"  >
                     <label>EMPRESA:</label>
                 </div>
             </div><!-- /.col-md-6 -->
                <!-- Inicia Empresa -->
             <div class="col-md-3">
                 <div class="form-group">  
-                   <input type="text"  value="{{$rotulo->empresas}}" name="empresa" disabled id="empresa" class="form-control" required >
+                   <input type="text"  value="{{$emp}}" name="empresa" disabled id="empresa" class="form-control" required >
                 </div>
             </div>
             <!-- Finaliza Empresa-->
             <!-- /.form-group -->
-            </div>
+
+   
+            <!-- /.form-group -->
+             <div class="col-md-3">
+                <div class="form-group">
+                    <label>DIRECCIÓN:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Dirección -->
+            <div class="col-md-3">
+                <div class="form-group">  
+                <textarea class="form-control" disabled id="direccion" rows="3">{{$rotulo->direccion}}</textarea>
                 </div>
             </div>
+            <!-- Finaliza Dirección-->
+            <!-- /.form-group -->
+            
+                </div>
+            </div>
+        </div>
 
         <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
         <div class="card-header text-info"><label>II. DATOS GENERALES</label></div>
@@ -223,7 +226,7 @@
                <!-- Inicia Empresa -->
             <div class="col-md-6">
                 <div class="form-group">  
-                   <input type="text"  value="{{$rotulo->empresas}}" disabled name="empresa" id="empresa" class="form-control" required >
+                   <input type="text"  value="{{$emp}} - &nbsp;{{$contri}}" disabled name="empresa" id="empresa" class="form-control" required >
                 </div>
             </div>       
             <!-- Finaliza Empresa-->
@@ -238,7 +241,35 @@
                <!-- Inicia Empresa -->
             <div class="col-md-6">
                 <div class="form-group">  
-                <input type="text" style="WIDTH: 485px; HEIGHT: 70px; text-align:right" value="{{$rotulo->medidas}}" disabled name="medidas" id="medidas" class="form-control" required >
+                <textarea class="form-control" disabled  id="medidas" rows="2">{{$rotulo->medidas}}</textarea>
+                </div>
+            </div>       
+            <!-- Finaliza Empresa-->
+            <!-- /.form-group -->
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p>con un total de metros cuadrados de:</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Empresa -->
+            <div class="col-md-6">
+                <div class="form-group">  
+                <input type="text"  value="{{$rotulo->total_medidas}} m²" disabled name="total_medidas" id="total_medidas" class="form-control" required >
+                </div>
+            </div>       
+            <!-- Finaliza Empresa-->
+            <!-- /.form-group -->
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p>y caras:</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Empresa -->
+            <div class="col-md-6">
+                <div class="form-group">  
+                <input type="text"  value="{{$rotulo->total_caras}}" disabled name="total_caras" id="total_caras" class="form-control" required >
                 </div>
             </div>       
             <!-- Finaliza Empresa-->
@@ -247,7 +278,7 @@
             <!-- /.form-group -->
             <div class="col-md-12">
                 <div class="form-group">
-                    <p>por lo que se procede a realizar la inscripcióny se anexa copia de Documentación Personal del Representante Legal</p>
+                    <p>por lo que se procede a realizar la inscripción y se anexa copia de Documentación Personal del Representante Legal</p>
                 </div>
             </div><!-- /.col-md-6 -->
 
@@ -275,19 +306,80 @@
                <!-- Inicia Empresa -->
             <div class="col-md-6">
                 <div class="form-group">  
-                   <input type="file"  value="" name="empresa" id="empresa" class="form-control" required >
+                   <input type="file" id="imagen" class="form-control" accept="image/jpeg, image/jpg, image/png " >
                 </div>
             </div>       
             <!-- Finaliza Empresa-->
             <!-- /.form-group -->
+            </div>
+         </div>
+        </div>
+        </div>
+
+            <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
+            <div class="card-header text-info"><label>III. INSPECCIÓN REALIZADA POR</label></div>
+            <div class="card-body"><!-- Card-body -->
+            <div class="row"><!-- /.ROW1 -->
+         
+            <!-- Finaliza Inspección-->
+            <div class="row">
+            <div class="col-md-7">
+                <div class="form-group">
+                    <label>Nombre:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Dirección -->
+            <div class="col-md-11">
+                <div class="form-group">  
+                    <input type="text"  value="" name="nom_inspeccion" id="nom_inspeccion" class="form-control" required >
+                </div>
+            </div>
+            <!-- Finaliza Inspección-->    
+            </div>
+        <div class="row">
+              <!-- Finaliza Inspección-->
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label>Cargo:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Dirección -->
+            <div class="col-md-10">
+                <div class="form-group">  
+                    <input type="text"  value="" name="cargo_inspeccion" id="cargo_inspeccion" class="form-control" required >
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+              <!-- Finaliza Inspección-->
+              <div class="col-md-8">
+                <div class="form-group">
+                    <label>Firma:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Dirección -->
+            <div class="col-md-12">
+                <div class="form-group">  
+                    <input type="text"  value="" name="" id="" class="form-control" required >
+                </div>
+            </div>
+        </div>
           
-        
+          </div>
             </div>
           </div>
         </div>
+
+          <div class="card-footer">
+                  <button type="button" class="btn btn-success float-right" onclick="guardarInspeccion()">Guardar Inspección</button>
+                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
+          </div>
+
+        </div>
        </div>
       </div>
-        </div>
+    </div>
 
 @extends('backend.menus.footerjs')
 
@@ -309,9 +401,86 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            document.getElementById("divcontenedor").style.display = "block";
+     
+          document.getElementById("divcontenedor").style.display = "block";
+           
+         
         });
 
+     
+      
+    </script>
+
+    <script>
+
+        function guardarInspeccion()
+        {
+            var id = {{$id}};
+            var fecha_inspeccion = document.getElementById('fecha_inspeccion').value;
+            var hora_inspeccion = document.getElementById('hora_inspeccion').value;
+            var coordenadas = document.getElementById('coordenadas').value;
+            var imagen = document.getElementById('imagen');
+            var estado_inspeccion = document.getElementById('estado_inspeccion').value;
+            var nom_inspeccion = document.getElementById('nom_inspeccion').value;
+            var cargo_inspeccion = document.getElementById('cargo_inspeccion').value;
+
+            if(imagen.files && imagen.files[0]){ // si trae doc
+                if (!imagen.files[0].type.match('image/jpeg|image/jpeg|image/png')){
+                    toastr.error('formato de imagen permitido: .png .jpg .jpeg');
+                    return;
+                }
+            }
+
+            var contribuyente = document.getElementById('contribuyente').value;
+            if ($contribuyente === '')
+            {
+                $('#representante').hide();
+                $('#labelcontri').hide();
+                
+            }
+
+            openLoading();
+            var formData = new FormData();
+                formData.append('id_rotulos', id);
+                formData.append('fecha_inspeccion', fecha_inspeccion);
+                formData.append('hora_inspeccion', hora_inspeccion);
+                formData.append('coordenadas', coordenadas);
+                formData.append('imagen', imagen.files[0]);
+                formData.append('estado_inspeccion', estado_inspeccion);
+                formData.append('nom_inspeccion', nom_inspeccion);
+                formData.append('cargo_inspeccion', cargo_inspeccion);
+
+            axios.post('/admin/Rotulos/guardar-inspeccion', formData,
+        {
+            })
+
+            .then((response) => {
+              console.log(response)
+              closeLoading();
+          if (response.data.success === 1)
+          {
+            Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: '¡Inspección de Rótulo registrada correctamente!',
+                  showConfirmButton: false,
+                  timer: 2000
+                     })
+            location.reload();
+          }
+          else
+          {
+          
+            toastr.error('¡Error al guardar!');
+          }
+             })
+
+            .catch((error) => {
+            toastr.error('Error al registrar');
+             closeLoading();
+          });
+
+        }
 
        
     </script>
