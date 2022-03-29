@@ -1534,7 +1534,4 @@ public function nuevaCalificacion(Request $request){
             return view('backend.admin.Empresas.Calificaciones.tabla.tabla_matriculas', compact('matriculas'));
     }
 
-
-
-    
 } //* Cierre final

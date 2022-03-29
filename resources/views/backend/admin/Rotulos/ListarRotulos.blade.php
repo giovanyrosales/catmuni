@@ -199,29 +199,7 @@
                            <!-- finaliza select Asignar Representante-->
                       </div>
                   </div>
-                  <div class="col-md-6">
-                      <div class="form-group">
-                      <label>Asignar representante legal:</label>
-                              <!-- Select live search -->
-                              <div class="input-group mb-14">
-                                <select 
-                                required
-                                disabled
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"
-                                id="select-contribuyente-ver" 
-                                title="-- Seleccione un registro --"
-                                
-                                >
-                                  @foreach($contribuyentes as $contribuyente)
-                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                           <!-- finaliza select Asignar Representante-->
-                      </div>
+                
                   </div>
                </div>
 
@@ -273,50 +251,41 @@
                     <form id="formulario-EditarRotulos">
                       <div class="card-body">
                       <div class="card card-green">
-                  <div class="card-header">
-                      <h3 class="card-title">Editar información de rótulos</h3>
+                   
+          <div class="card-header">
+            <h3 class="card-title">Actualizar Rótulos</h3>
 
-                  <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-                  </div>
-                  </div>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+            </div>
+          </div>
 
-                <!--inicia los campos del formulario ver-->
-                 <!-- /.card-header -->
-                 <div class="card-body">
-                  <div class="row">
-                        <div class="col-md-3">
-                        <div class="form-group"> 
-                        <label>Número de tarjeta:</label>
-                        <input type="number" name="num_tarjeta" id="num_tarjeta-editar" class="form-control" required placeholder="Número de tarjeta">
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                      </div>
-                        </div>
-                <!-- /.form-group -->
-                <div class="col-md-9">
+          <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
+        <div class="card-header text-info"><label>I. DATOS DEL RÓTULO</label></div>
+        <div class="card-body"><!-- Card-body -->
+          <!-- /.card-header -->
+            
+            <div class="row">
+              <!-- /.form-group -->
+                   <!-- /.form-group -->
+                   <div class="col-md-8">
                       <div class="form-group">
-                        <label>Nombre:</label>
+                        <label>NOMBRE DEL RÓTULO:</label>
                         <input type="text" name="nom_rotulo" id="nom_rotulo-editar" class="form-control"  required placeholder="Nombre" >
+                        <input type="hidden" name="id" id="id-editar" class="form-control" >
                      </div>
                     </div>
-                </div>
+           <!-- /.form-group -->
+           
 
-                <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Fecha de apertura:</label>
-                        <input type="text" name="fecha_apertura" id="fecha_apertura-editar" class="form-control" required placeholder="Fecha de apertura" >
-                     </div>
-                    </div>
-               
-                    <div class="col-md-4">
+           <div class="col-md-4">
                      <div class="form-group">
-                          <label>Actividad Económica:</label>
+                          <label>ACTIVIDAD ECONÓMICA:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-10">
                                 <select 
-                                required
+                                required                               
                                 class="form-control" 
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -330,41 +299,19 @@
                            <!-- finaliza asignar actividad economica-->
                         </div>
                           </div>
-
-                <div class="col-md-4">
-                   <div class="form-group">
-                      <label>Permiso de instalación:</label>
-                        <!-- Select estado - live search -->
-                        <div class="input-group mb-10">
-                            <select 
-                            required
-                            class="form-control" 
-                            data-style="btn-success"
-                            data-show-subtext="true" 
-                            data-live-search="true" 
-                            id="select-permiso_instalacion-editar" 
-                            title="-- Selecione el tipo de instalación --"
-                            >
-                            <option value="Temporal">Temporal</option>
-                            <option value="Permanente">Permanente</option>
-                            </select> 
-                        </div>
-                           <!-- finaliza asignar actividad economica-->
-                        </div>
-               </div> 
-              </div>
-
-              <div class="row"> 
-                   <div class="col-md-6">
+               
+              <!-- /.row -->
+           
+                 <div class="col-md-8">
                       <div class="form-group">
-                      <label>Asignar empresa:</label>
+                      <label>ASIGNAR EMPRESA:</label>
                               <!-- Select live search -->
                               <div class="input-group mb-14">
                                 <select 
                                 class="form-control" 
                                 data-style="btn-success"
                                 data-show-subtext="true" 
-                                data-live-search="true"
+                                data-live-search="true" 
                                 id="select-empresa-editar" 
                                 title="-- Seleccione un registro --"
                                 
@@ -376,56 +323,194 @@
                                 </div>
                            <!-- finaliza select Asignar Representante-->
                       </div>
-                  </div> 
-              </div>
-
-              <div class="row">   
-                <div class="col-md-10">
-                    <div class="form-group">
-                      <label>Dirección:</label>
-                      <input type="text" name="direccion" id="direccion-editar" class="form-control" required placeholder="Fecha de apertura" >
-                    </div>
-                </div>
-              </div>
-
-              <div class="row">            
-              <div class="col-md-5">
-                    <div class="form-group"> 
-                    <label for="medidas" class="form-label">Medidas:</label>
-                     <textarea class="form-control" id="medidas-editar" rows="2"></textarea>
-                    </div>
                   </div>
+    
+                    
+                
+                   <div class="col-md-4">
+                     <div class="form-group">
+                     <label>PERMISO:</label>
+                            <div class="input-group mb-10">
+                                <select 
+                                required
+                                class="form-control" 
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select-permiso_instalacion-editar" 
+                                title="-- Selecione el tipo de instalación --"
+                                 >
+                                 <option value="Temporal">Temporal</option>
+                                 <option value="Permanente">Permanente</option>
+                                </select> 
+                           </div>
+                           <!-- finaliza asignar actividad economica-->
+                        </div>
+                      </div>
 
-                  <div class="col-md-4">
-                    <div class="form-group"> 
-                    <label for="total_medidas" class="form-label">Total metros cuadrados:</label>
-                      <input type="number" name="total_medidas-editar" id="total_medidas-editar" class="form-control" required placeholder="Total metros cuadrados" >
-                    </div>
-                  </div>
-
-                  <div class="col-md-3">
-                    <div class="form-group"> 
-                    <label for="total_caras" class="form-label">Caras del rótulo:</label>
-                      <input type="text" name="total_caras-editar" id="total_caras-editar" class="form-control" required placeholder="">
-                    </div>
-                  </div>          
-              </div>
-                                               
-              <div class="modal-footer justify-content-between">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                  <button type="button" class="btn btn-success  float-right" onclick="actualizarRotulo()">Actualizar</button>
-              </div>
-              <!--finaliza los campos del formulario-->
+                      
+                      <div class="col-md-8">
+                      <div class="form-group">
+                        <label>DIRECCIÓN DEL RÓTULO:</label>
+                        <input type="text" name="" id="direccion-editar" class="form-control"  required placeholder="Nombre" >
                      </div>
-                     </form>
                     </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Fecha de apertura:</label>
+                        <input type="date" name="" id="fecha_apertura-editar" class="form-control"  required placeholder="Fecha de apertura" >
                      </div>
-                  </div>
-                </div>
-              </div>
+                    </div>
+                <!-- Finaliza Nombre del Rótulo-->
+                <!-- /.form-group -->
+               
             </div>
-  <!--Finaliza Modal editar rótulos -->
-     
+            <!-- /.row -->
+            </div>
+         <!-- Fin /.col -->
+         </div>
+       
+                  
+
+        <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
+        <div class="card-header text-info"><label>II. DATOS GENERALES</label></div>
+        <div class="card-body"><!-- Card-body -->
+        <div class="row"><!-- /.ROW1 -->
+
+                  <!-- /.form-group -->
+             <div class="col-md-6">
+                <div class="form-group">
+                    <p>el rótulo posee las siguiente medidas:</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Empresa -->
+            <div class="col-md-6">
+                <div class="form-group">  
+                <textarea class="form-control" id="medidas-editar" rows="2"></textarea>
+                </div>
+            </div>       
+            <!-- Finaliza Empresa-->
+            <!-- /.form-group -->
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p>con un total de metros cuadrados de:</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Empresa -->
+            <div class="col-md-6">
+                <div class="form-group">  
+                <input type="text" name="" id="total_medidas-editar" class="form-control" required  > 
+                </div>
+            </div>       
+            <!-- Finaliza Empresa-->
+            <!-- /.form-group -->
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p>y caras:</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Empresa -->
+            <div class="col-md-6">
+                <div class="form-group">  
+                <input type="text"  name="" id="total_caras-editar" class="form-control" required >
+                </div>
+            </div>       
+            <!-- Finaliza Empresa-->
+            <!-- /.form-group -->
+
+            <!-- /.form-group -->
+            <div class="col-md-12">
+                <div class="form-group">
+                    <p>por lo que se procede a realizar la inscripción y se anexa copia de Documentación Personal del Representante Legal</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+
+            <!-- /.form-group -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p>Coordenadas Geodésicas:</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Empresa -->
+            <div class="col-md-6">
+                <div class="form-group">  
+                   <input type="text"  value="" name="" id="coordenadas-editar" class="form-control" required >
+                </div>
+            </div>       
+            <!-- Finaliza Empresa-->
+            <!-- /.form-group -->
+
+             <!-- /.form-group -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p>se anexa foto del rótulo</p>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Empresa -->
+            <div class="col-md-6">
+                <div class="form-group">  
+                   <input type="file" id="imagen-editar" class="form-control" accept="image/jpeg, image/jpg, image/png " >
+                </div>
+            </div>       
+            <!-- Finaliza Empresa-->
+            <!-- /.form-group -->
+            </div>
+         </div>
+        </div>
+      
+
+        <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
+            <div class="card-header text-info"><label>III. INSPECCIÓN REALIZADA POR UATM</label></div>
+            <div class="card-body"><!-- Card-body -->
+            <div class="row"><!-- /.ROW1 -->
+         
+            <!-- Finaliza Inspección-->
+           
+            <div class="col-md-7">
+                <div class="form-group">
+                    <label>Nombre:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Dirección -->
+            <div class="col-md-8">
+                <div class="form-group">  
+                    <input type="text"  value="" name="" id="nom_inspeccion-editar" class="form-control" required >
+                </div>
+            </div>
+            <!-- Finaliza Inspección-->    
+            </div>
+        <div class="row">
+              <!-- Finaliza Inspección-->
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label>Cargo:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Dirección -->
+            <div class="col-md-8">
+                <div class="form-group">  
+                    <input type="text"  value="" name="" id="cargo_inspeccion-editar" class="form-control" required >
+                </div>
+            </div>
+        </div>
+         </div>
+         
+         </div>
+         <div class="card-footer">
+                  <button type="button" class="btn btn-success float-right" onclick="actualizarRotulo()">Guardar</button>
+                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
+          </div>
+      <!-- /.card -->
+             </div>
+           </div>
+        </div>
+      </form>
+            </div>
+        </div>
+</div>                                                                                 
   <!-- Inicia Modal Borrar Rótulo-->
 
   <div class="modal fade" id="modalEliminarRotulos">
@@ -587,7 +672,7 @@
             $('#modalEditarRotulos').modal('show');
 
             $('#id-editar').val(response.data.rotulos.id);
-            $('#num_tarjeta-editar').val(response.data.rotulos.num_tarjeta);
+           
             $('#nom_rotulo-editar').val(response.data.rotulos.nom_rotulo);
             $('#fecha_apertura-editar').val(response.data.rotulos.fecha_apertura);
             $('#select-actividad_economica-editar').val(response.data.rotulos.actividad_economica);
@@ -595,7 +680,11 @@
             $('#medidas-editar').val(response.data.rotulos.medidas);
             $('#total_medidas-editar').val(response.data.rotulos.total_medidas);
             $('#total_caras-editar').val(response.data.rotulos.total_caras);
+            $('#coordenadas-editar').val(response.data.rotulos.coordenadas);
             $('#select-permiso_instalacion-editar').val(response.data.rotulos.permiso_instalacion);
+            $('#nom_inspeccion-editar').val(response.data.rotulos.nom_inspeccion);
+            $('#cargo_inspeccion-editar').val(response.data.rotulos.cargo_inspeccion);
+          
           
                    
            
@@ -630,11 +719,22 @@
         var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
         var direccion = document.getElementById('direccion-editar').value;
         var fecha_apertura = document.getElementById('fecha_apertura-editar').value;
-        var num_tarjeta = document.getElementById('num_tarjeta-editar').value;
         var permiso_instalacion = document.getElementById('select-permiso_instalacion-editar').value;
         var medidas = document.getElementById('medidas-editar').value;
         var total_medidas = document.getElementById('total_medidas-editar').value;
         var total_caras = document.getElementById('total_caras-editar').value;
+        var coordenadas = document.getElementById('coordenadas-editar').value;
+        var nom_inspeccion = document.getElementById('nom_inspeccion-editar').value;
+        var imagen = document.getElementById('imagen-editar');
+        var cargo_inspeccion = document.getElementById('cargo_inspeccion-editar').value;
+
+        if(imagen.files && imagen.files[0]){ // si trae doc
+                if (!imagen.files[0].type.match('image/jpeg|image/jpeg|image/png')){
+                    toastr.error('formato de documento permitido: .png .jpg .jpeg');
+                    return;
+                }
+            }
+
        
 
         openLoading();
@@ -644,12 +744,15 @@
             formData.append('nom_rotulo', nom_rotulo);
             formData.append('actividad_economica',actividad_economica);
             formData.append('direccion',direccion);
-            formData.append('fecha_apertura',fecha_apertura);
-            formData.append('num_tarjeta', num_tarjeta);
+            formData.append('fecha_apertura',fecha_apertura);      
             formData.append('permiso_instalacion',permiso_instalacion);
             formData.append('medidas', medidas);
             formData.append('total_medidas', total_medidas);
             formData.append('total_caras', total_caras);
+            formData.append('coordenadas', coordenadas);
+            formData.append('nom_inspeccion', nom_inspeccion);
+            formData.append('imagen', imagen.files[0]);
+            formData.append('cargo_inspeccion', cargo_inspeccion);
             
             
             axios.post('/admin/Rotulos/Editar', formData, {

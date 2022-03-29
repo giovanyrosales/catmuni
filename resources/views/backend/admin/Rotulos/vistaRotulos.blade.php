@@ -31,9 +31,6 @@
 </style>
 
 
-
-
-
 <div id="divcontenedor" style="display: none">  
     <section class="content-header">
       <div class="container-fluid">
@@ -58,55 +55,12 @@
           </div>
       <!--body-->
         </div>
-   
-      <div class="row">
-        <div class="col-md-4 col-sm-8">
-              @if($detectorNull== '0')
-             
-                        <a href="#" onclick="CrearInspeccion({{$lista->id}} )" >
-                            <div class="widget stats-widget">
-                              <div class="widget-body clearfix bg-info">
-                                  <div class="pull-left">
-                                      <h3 class="widget-title text-white">Realizar Inspección</h3>
-                                  </div>
-                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
-                              </div>
-                          </div><!-- .widget -->
-                        </a>
-        
-              @else 
-                      @if($inspecciones->estado_inspeccion == '')
-                        <a href="#" onclick="CrearInspeccion({{$lista->id}} )" >
-                            <div class="widget stats-widget">
-                              <div class="widget-body clearfix bg-info">
-                                  <div class="pull-left">
-                                      <h3 class="widget-title text-white">Realizar Inspección</h3>
-                                  </div>
-                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
-                              </div>
-                          </div><!-- .widget -->
-                          </a>
-                      @elseif($inspecciones->estado_inspeccion == 'realizado')
-                      <a href="#" onclick="InspeccionRealizada()">
-                                <div class="widget stats-widget">
-                                    <div class="widget-body clearfix bg-info">
-                                        <div class="pull-left">
-                                            <h3 class="widget-title text-white">Inspección realizada <span class="badge badge-pill badge-dark"> {{$inspecciones->fecha_inspeccion}}</span></h3>
-                                        </div>
-                                        <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
-                                    </div>
-                                </div><!-- .widget -->
-                                </a>
-                      @endif
- 
-              @endif
-       
-        </div>
-    
+  
+        <div class="row">
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="informacionCierre({{$lista->id}})" >
+        <a href="#" onclick="CrearCalificacion({{$lista->id}})" >
             <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-dark">
+                <div class="widget-body clearfix bg-info">
                     <div class="pull-left">
                         <h3 class="widget-title text-white">Calificación</h3>
                     </div>
@@ -157,59 +111,68 @@
                       <tr>
                         <th>Nombre</th>
                         <td >{{$lista->nom_rotulo}}</td>
-                        
                       </tr>
+
                       <tr>
                         <th>Actividad económica</th>
                         <td>{{$lista->actividad_economica}}</td>
                       </tr>
+
                       <tr>
-                        <th>Dirección</th>
-                        <td> {{$lista->direccion}} </span></td>
+                        <th>Empresa</th>
+                        <td>{{$lista->empresas}}</td>
                       </tr>
+                      
                       <xtr>
                         <th>Fecha apertura</th>
                         <td>{{$lista->fecha_apertura}} </td>
                       </tr>
-                      <tr>
-                        <th>Número de tarjeta</th>
-                        <td>{{$lista->num_tarjeta}}</td>
-                      </tr>
-                      
+
                       <tr>
                         <th>Permiso Instalación</th>
                         <td>{{$lista->permiso_instalacion}}</span></td>
                       </tr>
 
                       <tr>
-                        <th>Estado</th>
-                        <td>{{$lista->estado}}</span></td>
+                        <th>Dirección del rótulo</th>
+                        <td>{{$lista->direccion}}</span></td>
                       </tr>
 
                       <tr>
-                        <th>Medidas</th>
+                        <th>Estado</th>
                         <td>{{$lista->medidas}}</span></td>
                       </tr>
 
                       <tr>
                         <th>Total Medidas</th>
-                        <td>{{$lista->total_medidas}}</span></td>
+                        <td>{{$lista->total_medidas}}m²</span></td>
                       </tr>
 
                       <tr>
-                        <th>Total Caras</th>
+                        <th>Caras del rótulo</th>
                         <td>{{$lista->total_caras}}</span></td>
                       </tr>
 
                       <tr>
-                        <th>Propietario</th>
-                        <td>{{$contri}}</span></td>
+                        <th>Coordenadas</th>
+                        <td>{{$lista->coordenadas}}</span></td>
                       </tr>
+
                       <tr>
-                        <th>Empresa</th>
-                        <td>{{$emp}}</td>
+                        <th>Inspección realizada por</th>
+                        <td>{{$lista->nom_inspeccion}}</span></td>
                       </tr>
-                      
+
+                      <tr>
+                        <th>Cargo</th>
+                        <td>{{$lista->cargo_inspeccion}}</span></td>
+                      </tr>
+
+                      <tr>
+                        <th>Imagen</th>
+                        <td><img src="{{ asset('archivos/' .$lista->imagen) }}"/></span></td>
+                      </tr>
+
                     </tbody>
                   </form>
                   </table>
@@ -426,6 +389,11 @@
       openLoading();
       window.location.href="{{ url('/admin/Rotulos/inspeccion') }}/"+id;
     }
+    function CrearCalificacion(id)
+    {
+      openLoading();
+      window.location.href="{{ url('/admin/Rotulos/calificacion') }}/"+id;
+    }
         
     function informacionCierre(id)
     {
@@ -578,7 +546,5 @@
       return;
     }
 
-    
-    
     </script>
 @stop

@@ -18,7 +18,7 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
-use App\Http\Controllers\Backend\Rotulos\InspeccionRotulosController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -188,4 +188,7 @@ use App\Http\Controllers\Backend\Rotulos\InspeccionRotulosController;
 
     Route::get('/admin/Rotulos/inspeccion/{rotulo}', [RotulosController::class, 'inspeccionRotulo']);
     Route::post('/admin/Rotulos/guardar-inspeccion', [RotulosController::class, 'crear_inspeccion']);
-   
+    Route::get('/admin/Rotulos/calificacion/{rotulo}', [RotulosController::class, 'calificacionRotulo']);
+    Route::get('/admin/rotulos/calificaciones/tablarotulo/{rotulo}', [RotulosController::class,'tablaCalificacionR']);
+
+    
