@@ -17,11 +17,13 @@
 
 
 @stop
+
 <script>
     function f1()
         {
            document.getElementById('select_interes').disabled=true;
            $('#periodo').hide();
+           
         }
 
 window.onload = f1;
@@ -48,7 +50,7 @@ formData.append('ultimo_cobro', ultimo_cobro);
 formData.append('tasa_interes', tasa_interes);
 formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
- axios.post('/admin/empresas/calculo_cobros', formData, {
+ axios.post('/admin/empresas/calculo_cobros_empresa', formData, {
         })
         .then((response) => {
                 console.log(response);
@@ -126,7 +128,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
         <form class="form-horizontal" id="formulario-Cobros">
         @csrf
 
-        <div class="card card-green">
+        <div class="card card">
           <div class="card-header">
           <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
 
@@ -140,15 +142,32 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
           <div class="card-body">
             
 <!-------------------------CONEDIDO (CAMPOS) ----------------------------------------------->
-
-        <div class="row"><!-- /.ROWPADRE -->
-
-        <!-- Campos del formulario de cobros -->
-         <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
-         <div class="card card">
-         <div class="card-header text-success"><b>DATOS GENERALES</b>.</div>
-          <div class="card-body"><!-- Card-body -->
-            <div class="row"><!-- /.ROW1 -->
+      <!-- Nav.Items--> 
+    <!--  <h5><i class="fas fa-cash-register"></i> &nbsp;Tipo de cobro: </h5>--> 
+ 
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">       
+        <li class="nav-item">
+          <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-coins"></i> &nbsp;Impuestos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><i class="fas fa-hand-holding-usd"></i>&nbsp;Tasas Municipales</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false"><i class="fas fa-file-invoice-dollar"></i>&nbsp;Matrículas</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+      <hr>
+      <!-- /.Nav.Items-->  
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+         
+          <div class="row" id="cobros"><!-- /.ROWPADRE -->
+          <!-- Campos del formulario de cobros -->
+          <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
+          <div class="card card">
+          <div class="card-header text-success"><b>DATOS GENERALES</b>.</div>
+            <div class="card-body"><!-- Card-body -->
+             <div class="row"><!-- /.ROW1 -->
             
                <!-- /.form-group -->
                 <div class="col-md-6">
@@ -209,10 +228,29 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
                 <div class="input-group mb-3">  
-                        <input type="text"  value="{{ $empresa->nombre_giro }}" name="giro_comercial" disabled id="giroc_comercial" class="form-control" required >
+
+                          <!-- Select estado - live search -->
+                      <!--   
+                          <select 
+                                class="form-control"
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"   
+                                id="select_giro" 
+                                title="-- Seleccione un interés  --"
+                                 >
+                                  @foreach($giroscomerciales as $dato)
+                                  <option value=""> {{ $dato->nombre_giro  }}</option>
+                                  @endforeach 
+                                </select> 
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
+                                  </div>-->
+                           <!-- finaliza select estado-->
+                        <input type="text" disabled value="{{ $empresa->nombre_giro }}" name="giro_comercial"  id="giroc_comercial" class="form-control" required >
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
-                            </div>
+                            </div> 
                       </div>
                 </div>
               <!-- finaliza select Giro Comercial-->
@@ -376,12 +414,6 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                           </tr>
 
                           <tr>
-                            <td></td>
-                            <td></td>
-                            <td>-   </td>
-                          </tr>
-
-                          <tr>
                             <th scope="row">TOTAL</th>
                             <td><label>$<label name="FondoF_imp" id="FondoF_imp"> </label></label></td>
                             <td><label name="totalPago_imp" id="totalPago_imp"></label><label</td>
@@ -405,6 +437,24 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
           <!-- /.row -->
           </div>
         </div><!-- /.ROWPADRE -->
+          </div> <!-- pills-Home-->
+          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">...</div>
+          <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+          @if($MatriculasNull== '1')
+                                <section class="content-header" id="aviso">
+                                    <div class="container-fluid">
+                                        <div>
+                                            <br>
+                                            <div class="callout callout-info">
+                                                <h5><i class="fas fa-info"></i> Nota:</h5>
+                                                <h5> No hay ninguna matrícula registrada para <span class="badge badge-warning">{{$empresa->nombre}}</span></h5> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                        @endif
+          </div><!-- pills-MatriculasLicencias-->
+        </div>
        </div>
 
         <!-- /.card-footer -->

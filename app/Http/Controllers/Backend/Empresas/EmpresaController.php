@@ -19,6 +19,7 @@ use App\Models\MatriculasDetalle;
 use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
 use App\Models\MultasDetalle;
+use App\Models\MatriculasDetalleEspecifico;
 
 use DateInterval;
 use DatePeriod;
@@ -199,7 +200,7 @@ public function calificacion($id)
 
         $monto = number_format((float)$monto, 2, '.', ',');
         $montoMatriculaValor='$'. $monto;
-    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('id','empresa','giroscomerciales', 'monto', 'contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','detectorNull','matriculas','montoMatriculaValor'));
+    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('id','empresa','giroscomerciales', 'monto', 'contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','detectorNull','matriculas','montoMatriculaValor','matriculasRegistradas'));
     
 }
 
@@ -303,6 +304,9 @@ public function show($id)
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
+    $matriculasEspecificas=MatriculasDetalle::select('id')
+    ->where('id_empresa', "=", $id) 
+    ->get();
 
     //** Para determinar la cantidad de multas por empresa */
     $multas=MultasDetalle::select('monto_multa')
@@ -384,7 +388,7 @@ public function show($id)
 }
 
 // ---------COBROS ------------------------------------------>
-public function calculo_cobros(Request $request)
+public function calculo_cobros_empresa(Request $request)
 { 
 
     log::info($request->all());
@@ -698,11 +702,30 @@ public function calculo_cobros(Request $request)
 
 public function cobros($id)
 {
+    
+
     $contribuyentes = Contribuyentes::All();
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
     $tasasDeInteres = Interes::All();
+
+    $matriculasRegistradas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+    ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                    
+    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+            'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'matriculas.nombre as tipo_matricula')
+    ->where('id_empresa', "=", "$id")     
+    ->first($id);
+    
+    if ($matriculasRegistradas == null)
+         { 
+             $MatriculasNull=1;
+         }else 
+         {
+            $MatriculasNull=0;
+         }
 
     $calificaciones = calificacion::latest()
     ->join('empresa','calificacion.id_empresa','=','empresa.id')
@@ -742,7 +765,7 @@ public function cobros($id)
         {
             $detectorNull=0;
             $detectorCobro=0;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('detectorNull','detectorCobro'));
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('detectorNull','detectorCobro','matriculasRegistradas','MatriculasNull'));
         }
             
            
@@ -754,13 +777,13 @@ public function cobros($id)
         {
          $detectorNull=0;
          $detectorCobro=0;
-        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro','tasasDeInteres'));
+        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull'));
         }
         else
         {
             $detectorNull=1;
             $detectorCobro=1;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro','tasasDeInteres'));
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull'));
         }
     }
       
@@ -1519,6 +1542,7 @@ public function nuevaCalificacion(Request $request){
         }
 
 
+<<<<<<< HEAD
     public function tablaMatriculas($id){
 
                 
@@ -1534,4 +1558,7 @@ public function nuevaCalificacion(Request $request){
             return view('backend.admin.Empresas.Calificaciones.tabla.tabla_matriculas', compact('matriculas'));
     }
 
+=======
+    
+>>>>>>> ca6a337b9beb9dc3a66a00d28085c0991518a415
 } //* Cierre final

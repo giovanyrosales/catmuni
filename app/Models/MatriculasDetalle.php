@@ -15,6 +15,6 @@ class MatriculasDetalle extends Model
         'id_matriculas',
         'cantidad',
         'monto',
-
+        'pago_mensual'
       ];
 }

@@ -3,10 +3,11 @@
 
                             <thead>
                                 <tr>
-                                <th style="width: 25%;">Tipo de Matricula</th>
-                                <th style="width: 15%;">Cantidad</th>
-                                <th style="width: 15%;">Monto</th>
-                                <th style="width: 15%;">Opciones</th>
+                                <th style="width: 22%;">Tipo de Matricula</th>
+                                <th style="width: 10%;">Cantidad</th>
+                                <th style="width: 16%;">Total Matrículas</th>
+                                <th style="width: 14%;">Pago Mensual</th>
+                                <th style="width: 40%;">Opciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -15,11 +16,24 @@
                                     <td>{{$dato->tipo_matricula}}</td>
                                     <td>{{$dato->cantidad}}</td>
                                     <td>${{$dato->monto}}</td>
+                                    <td>${{$dato->pago_mensual}}</td>
                                     <td style="text-align: center;"> 
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="InformacionMatricula({{$dato->id }})">
+                                    @if($dato->estado_especificacion=='especificada')
+                                        <button type="button" class="btn btn-success btn-xs">
+                                        <i class="fas fa-check-circle"></i>&nbsp;Matrícula Específicada
+                                        </button>
+                                    @else
+                                        <button type="button" class="btn btn-dark btn-xs" onclick="EspecificarM({{$dato->id_matriculas_detalle}})">
+                                        <i class="fas fa-layer-group"></i>&nbsp; Específicar matrículas
+                                        </button>
+                                    @endif
+                                        <button type="button" class="btn btn-info btn-xs" onclick="VerMatricula_especifica({{$dato->id_matriculas_detalle}})">
+                                        <i class="fas fa-eye"></i>&nbsp; Ver
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="InformacionMatricula({{$dato->id_matriculas_detalle}})">
                                          <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
-                                        <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarMatricula({{$dato->id }})">
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarMatricula({{$dato->id_matriculas_detalle }})">
                                          <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
                                         </button>
                                     </td>

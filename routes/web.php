@@ -77,7 +77,7 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::get('/admin/empresas/cobros/{empresa}', [EmpresaController::class, 'cobros']);
     Route::post('/admin/empresas/calculo_calificacion', [EmpresaController::class, 'calculo_calificacion']);
     Route::post('/admin/empresas/calificacion/nueva', [EmpresaController::class,'nuevaCalificacion']);
-    Route::post('/admin/empresas/calculo_cobros', [EmpresaController::class, 'calculo_cobros']);
+    Route::post('/admin/empresas/calculo_cobros_empresa', [EmpresaController::class, 'calculo_cobros_empresa']);
     Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
     Route::get('/admin/empresas/calificaciones/tabla_matriculas/{empresa}', [EmpresaController::class,'tablaMatriculas']);
 
@@ -169,7 +169,12 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/matriculas_detalle/eliminar', [MatriculasDetalleController::class, 'eliminarM']);
     Route::post('/admin/matriculas_detalle/informacion', [MatriculasDetalleController::class, 'informacionMatricula']);
     Route::post('/admin/matriculas_detalle/editar', [MatriculasDetalleController::class, 'editarMatricula']);
-    
+    Route::post('/admin/matriculas_detalle/agregar', [MatriculasDetalleController::class,'agregar_matriculas']);
+
+    // ---MATRICULAS DETALLE ESPECIFICO
+    Route::post('/admin/matriculas_detalle_especifico/agregar', [MatriculasDetalleController::class,'agregar_matriculas_detalle_especifico']);
+    Route::post('/admin/matriculas_detalle/especificar', [MatriculasDetalleController::class, 'especificarMatriculas']);
+    Route::post('/admin/matriculas_detalle/ver_matriculas_especificas', [MatriculasDetalleController::class, 'VerMatriculaEsp']);
     
     // --- RÓTULOS
     Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');
