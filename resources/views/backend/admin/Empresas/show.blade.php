@@ -96,7 +96,7 @@
             <div class="small-box bg-danger">
               <div class="inner">
                 <h3> </h3>
-                <p>Multas: <span class="badge badge-pill badge-light">{{$Cantidad_multas}}</span></p>
+                <p>Multas por balance: <span class="badge badge-pill badge-light">{{$Cantidad_multas}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -116,7 +116,6 @@
   
         <div class="col-md-4 col-sm-8">
               @if($detectorNull== '0')
-             
                         <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
                             <div class="widget stats-widget">
                               <div class="widget-body clearfix bg-secondary">
@@ -127,8 +126,7 @@
                               </div>
                           </div><!-- .widget -->
                         </a>
-        
-              @else 
+                    @else 
                       @if($calificaciones->estado_calificacion == '')
                         <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
                             <div class="widget stats-widget">
@@ -141,46 +139,19 @@
                           </div><!-- .widget -->
                           </a>
                       @elseif($calificaciones->estado_calificacion == 'calificado')
-                      <a href="#" onclick="CalificacionCreada()" >
-                                <div class="widget stats-widget">
-                                    <div class="widget-body clearfix bg-dark">
-                                        <div class="pull-left">
-                                            <h3 class="widget-title text-white">Calificación creada <span class="badge badge-pill badge-info"> {{$calificaciones->fecha_calificacion}}</span></h3>
-                                        </div>
-                                        <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
-                                    </div>
-                                </div><!-- .widget -->
-                                </a>
+                      <a href="#" onclick="CrearRecalificacion({{$empresa->id}} )" >
+                      <div class="widget stats-widget">
+                          <div class="widget-body clearfix bg-info">
+                              <div class="pull-left">
+                                  <h3 class="widget-title text-white">Registrar Recalificación</h3>
+                              </div>
+                              <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
+                            
+                            </div>
+                      </div><!-- .widget -->
+                      </a>
                       @endif
- 
               @endif
-       
-        </div>
-        <div class="col-md-4 col-sm-8">
-        @if($detectorNull== '0')
-        <a href="#"  onclick="NoCalificar()" id="btnmodalCalificar">
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-info">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Recalificación</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
-                  </div>
-            </div><!-- .widget -->
-        </a>
-      @else
-      <a href="#" onclick="CrearRecalificacion({{$empresa->id}} )" >
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-info">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Recalificación</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
-                  
-                  </div>
-            </div><!-- .widget -->
-        </a>
-        @endif
         </div>
         <div class="col-md-4 col-sm-8">
         <a href="#" onclick="informacionTraspaso({{$empresa->id}})" >
@@ -192,10 +163,22 @@
                     <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
             </div><!-- .widget -->
-        </a>
-    </div>
-    <div class="col-md-4 col-sm-8">
-        <a href="{{url('client')}}">
+          </a>
+        </div>
+          <div class="col-md-4 col-sm-8">
+          <a href="#" onclick="matriculas()" >
+                  <div class="widget stats-widget">
+                      <div class="widget-body clearfix bg-warning">
+                          <div class="pull-left">
+                              <h3 class="widget-title text-black">Matrículas</h3>
+                          </div>
+                          <span class="pull-right big-icon watermark"><i class="fas fa-list-alt"></i>&nbsp; <i class="fas fa-file-signature"></i></span>
+                      </div>
+                  </div><!-- .widget -->
+              </a>
+          </div>
+        <div class="col-md-4 col-sm-8">
+          <a href="{{url('client')}}">
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
                     <div class="pull-left">
@@ -245,18 +228,7 @@
         </a>
     @endif
         </div>
-    <div class="col-md-4 col-sm-8">
-    <a href="#" onclick="matriculas()" >
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-warning">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-black">Matrículas</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"> <i class="fas fa-file-signature"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
-    </div>
+    
    
     </div><!-- .ROW -->
     <hr>
@@ -410,21 +382,24 @@
                    </div>
                   </div><!--Termino ROW -->
 
-
+    
           <!-- Termina sección cargar datos contribuyente -->
           </div>
          </div>
         </form>
         </div>
 	    </div>
+      <!-- Card-Footer -->
+      <div class="card-footer">
+            <button type="button" onclick="ListarEmpresas()" class="btn btn-default"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
+      </div>
+      <!-- /.Card-Footer -->
   </div>
 </section>
 <!-- /.section -->
 <!-- seccion frame -->
 <!-- Cuadro para datos del contribuyente termina aquí ------------------------------------------>
-<div class="card-footer">
-            <button type="button" onclick="ListarEmpresas()" class="btn btn-default"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
-          </div>
+
             </div>
           </div>
         </div>
@@ -788,12 +763,10 @@
           </div> <!-- /.Card-body -->
 
         <!-- Finaliza campos del formulario Recalificacion -->
-
-
          <!-- /.card-body -->
-         <div class="card-footer">
-         <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="far fa-money-bill-alt"></i>&nbsp;Registrar Cobro&nbsp;</button>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <div class="card-footer">
+            <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="far fa-money-bill-alt"></i>&nbsp;Registrar Cobro&nbsp;</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
           </div>
          <!-- /.card-footer -->
          </div>
