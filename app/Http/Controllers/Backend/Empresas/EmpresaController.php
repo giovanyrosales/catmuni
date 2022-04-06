@@ -13,6 +13,8 @@ use App\Models\ActividadEconomica;
 use App\Models\ActividadEspecifica;
 use App\Models\Cobros;
 use App\Models\calificacion;
+use App\Models\CalificacionMatriculas;
+use App\Models\CobrosMatriculas;
 use App\Models\Interes;
 use App\Models\LicenciaMatricula;
 use App\Models\MatriculasDetalle;
@@ -163,7 +165,7 @@ public function calificacion($id)
     ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
     ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
                     
-    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
             'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
             'matriculas.nombre as tipo_matricula')
     ->where('id_empresa', "=", "$id")     
@@ -180,7 +182,7 @@ public function calificacion($id)
          $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
          ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
                          
-         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
                  'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
                  'matriculas.nombre as tipo_matricula')
          ->where('id_empresa', "=", "$id")     
@@ -253,7 +255,7 @@ public function Recalificacion($id)
     ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
     ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
                     
-    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
             'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
             'matriculas.nombre as tipo_matricula')
     ->where('id_empresa', "=", "$id")     
@@ -270,7 +272,7 @@ public function Recalificacion($id)
          $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
          ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
                          
-         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
                  'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
                  'matriculas.nombre as tipo_matricula')
          ->where('id_empresa', "=", "$id")     
@@ -539,7 +541,7 @@ public function calculo_cobros_empresa(Request $request)
 
             }   //** Termina el foreach */
 
-            //** -------Inicia - Cáculo para multas por pago extemporaneo--------- */
+            //** -------Inicia - Cálculo para multas por pago extemporaneo--------- */
             /* -------------------------------------------------------------------
                "Se determina una multa por día en mora, despues de haberse vencido 
                la fecha de pago y una vez haya transcurrido 60 días despues del 
@@ -572,10 +574,10 @@ public function calculo_cobros_empresa(Request $request)
                         Log::info($Fecha60Sumada);
                         Log::info($f3);
                         if($f3>$Fecha60Sumada){
-                        $CantidaDiasMesMulta=ceil($Fecha60Sumada->floatdiffInDays($f3));
+                        $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));//**le tenia floatdiffInDays y funcinona bien  */
                         }else
                         {
-                            $CantidaDiasMesMulta=ceil($Fecha60Sumada->floatdiffInDays($f3));
+                            $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));
                             $CantidaDiasMesMulta=-$CantidaDiasMesMulta;
                             
                         }
@@ -708,20 +710,22 @@ public function cobros($id)
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
-    $tasasDeInteres = Interes::All();
-
+    $tasasDeInteres = Interes::select('monto_interes')
+    ->orderby('id','desc')
+    ->get();
+    
     $matriculasRegistradas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
     ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
                     
     ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
             'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-            'matriculas.nombre as tipo_matricula')
+            'matriculas.nombre as tipo_matricula','matriculas.slug')
     ->where('id_empresa', "=", "$id")     
-    ->first($id);
+    ->get($id);
     
     if ($matriculasRegistradas == null)
          { 
-             $MatriculasNull=1;
+            $MatriculasNull=1;
          }else 
          {
             $MatriculasNull=0;
@@ -740,6 +744,7 @@ public function cobros($id)
     $ultimo_cobro = Cobros::latest()
     ->where('id_empresa', "=", "$id")
     ->first();
+
 
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -777,13 +782,13 @@ public function cobros($id)
         {
          $detectorNull=0;
          $detectorCobro=0;
-        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull'));
+        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull'));
         }
         else
         {
             $detectorNull=1;
             $detectorCobro=1;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull'));
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull'));
         }
     }
       
@@ -1378,6 +1383,19 @@ public function nuevaCalificacion(Request $request){
 
     $id_multas=1;
     $id_estado_multa=2;
+
+    $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                         
+         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
+                 'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                 'matriculas.nombre as tipo_matricula')
+         ->where('id_empresa', $request->id_empresa)     
+         ->get();
+        
+       $NohayRegistro=0;
+
+        Log::info($matriculas);
     
     $regla = array(
 
@@ -1399,7 +1417,25 @@ public function nuevaCalificacion(Request $request){
                 'success'=> 0,
             ];
         }
-                    
+        
+        //** Guardar calificaciones de matriculas detalle */
+        if($matriculas!=null){
+
+            foreach($matriculas as $dato) {
+                    $rDetalle = new CalificacionMatriculas();
+                    $rDetalle->id_matriculas_detalle = $dato->id;
+                    $rDetalle->nombre_matricula = $dato->tipo_matricula;
+                    $rDetalle->cantidad = $dato->cantidad;
+                    $rDetalle->monto_matricula = $dato->monto;
+                    $rDetalle->pago_mensual = $dato->pago_mensual;
+                    $rDetalle->año_calificacion = $request->año_calificacion;
+                    $rDetalle->estado_calificacion = $request->estado_calificacion;
+                    $rDetalle->save();
+                
+         }
+        }
+        //** /. Guardar calificaciones de matriculas detalle */  
+
                 $dato = new calificacion();
                 $dato->id_empresa = $request->id_empresa;
                 $dato->fecha_calificacion = $request->fecha_calificacion;

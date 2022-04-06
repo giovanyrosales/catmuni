@@ -415,9 +415,10 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
                                   <thead>
                                       <tr>
-                                      <th style="width: 50%;">Tipo de Matricula</th>
-                                      <th style="width: 25%;">Cantidad</th>
-                                      <th style="width: 25%;">Monto</th>
+                                      <th style="width: 35%;">Tipo de Matricula</th>
+                                      <th style="width: 20%;">Cantidad</th>
+                                      <th style="width: 25%;">Total Matrículas</th>
+                                      <th style="width: 35%;">Pago Mensual</th>
                                   </tr>
                                   </thead>
                                   <tbody>
@@ -426,6 +427,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                           <td>{{$dato->tipo_matricula}}</td>
                                           <td>{{$dato->cantidad}}</td>
                                           <td value="{{$dato->monto}}">${{$dato->monto}}</td>
+                                          <td value="{{$dato->pago_mensual}}">${{$dato->pago_mensual}}</td>
                                       </tr>
                                       @endforeach
                                   </tbody>
@@ -709,21 +711,23 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                <div class="col-md-12">
                   <div class="form-group">
       
-                  <table border="1" width:760px;>
+                  <table border="1" width:1080px;>
                           <tr>
                             <th scope="col">MARTRICULAS</th>
-                            <th scope="col">CANTIDAD</th>
+                            <th scope="col">CANT.</th>
                             <th scope="col">MONTO</th>
-                            <th scope="col">LICENCIA</th>
-                            <th scope="col">MATRICULA</th>
-                            <th scope="col">PAGO POR MAT. O PER.</th>
+                            <th scope="col">P. MENSUAL</th>
+                            <th scope="col">T. LICENCIAS</th>
+                            <th scope="col">T. MATRICULAS</th>
+                            <th scope="col">T. MAT. O PER.</th>
                           </tr>
 
                           <tr>
                           @if($detectorNull==1)
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td><h6 name="licencia_imp" id="licencia_imp"> </h6> <input type="hidden" class="form-control" required disabled  id="monto_pagar_licenciaValor_imp" > </td>
                             <td><h6 name="monto_pagar_matricula_imp" id="monto_pagar_matricula_imp"> </h6><input type="hidden" class="form-control" required disabled id="monto_pagar_matriculaValor_imp"></td>
                             <td><h6 name="pagolicenciaMatricula_imp" id="pagolicenciaMatricula_imp"> </h6></td>
@@ -733,6 +737,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                             <td>{{$dato->tipo_matricula}}</td>
                             <td align="center" >{{$dato->cantidad}}</td>
                             <td><h6>${{$dato->monto}}</h6></td>
+                            <td><h6>${{$dato->pago_mensual}}</h6></td>
                             <td><h6 name="licencia_imp" id="licencia_imp"> </h6> <input type="hidden" class="form-control" required disabled  id="monto_pagar_licenciaValor_imp" > </td>
                             <td><h6 name="monto_pagar_matricula_imp" id="monto_pagar_matricula_imp"> </h6><input type="hidden" class="form-control" required disabled id="monto_pagar_matriculaValor_imp"></td>
                             <td><h6 name="pagolicenciaMatricula_imp" id="pagolicenciaMatricula_imp"> </h6></td>
@@ -740,7 +745,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           @endforeach
                           @endif
                           <tr>               
-                            <td rowspan="6" colspan="4">&nbsp; </td>
+                            <td rowspan="6" colspan="5">&nbsp; </td>
                           </tr>
 
                           <tr>

@@ -170,6 +170,11 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/matriculas_detalle/informacion', [MatriculasDetalleController::class, 'informacionMatricula']);
     Route::post('/admin/matriculas_detalle/editar', [MatriculasDetalleController::class, 'editarMatricula']);
     Route::post('/admin/matriculas_detalle/agregar', [MatriculasDetalleController::class,'agregar_matriculas']);
+    Route::post('/admin/empresas/info_cobro_matriculas', [MatriculasDetalleController::class, 'info_cobroMatriculas']);
+    Route::post('/admin/empresas/calculo_cobros_mesas', [MatriculasDetalleController::class, 'calculo_cobroMesas']);
+    Route::post('/admin/empresas/calculo_cobros_maquinas', [MatriculasDetalleController::class, 'calculo_cobroMaquinas']);
+    Route::post('/admin/empresas/calculo_cobros_sinfonolas', [MatriculasDetalleController::class, 'calculo_cobroSinfonolas']);
+    Route::post('/admin/empresas/calculo_cobros_aparatos', [MatriculasDetalleController::class, 'calculo_cobroAparatos']);
 
     // ---MATRICULAS DETALLE ESPECIFICO
     Route::post('/admin/matriculas_detalle_especifico/agregar', [MatriculasDetalleController::class,'agregar_matriculas_detalle_especifico']);
