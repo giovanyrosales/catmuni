@@ -8,6 +8,7 @@ use App\Models\Contribuyentes;
 use App\Models\InspeccionRotulos;
 use App\Models\Rotulos;
 use App\Models\Empresas;
+use App\Models\TarifaRotulo;
 use App\Models\Usuario;
 use CreateCalificacionTable;
 use Illuminate\Http\Request;
@@ -164,7 +165,7 @@ class RotulosController extends Controller
     //Ver informacón del rótulo
     public function informacionRotulo(Request $request)
       {
-        
+       
         $regla = array(
             'id' => 'required',
         
@@ -181,16 +182,19 @@ class RotulosController extends Controller
                 
                 return['success' => 1,
        
-                'rotulos' => $lista,
-             
+                'rotulos' => $lista,             
                 'id_empre' => $lista->id_empresa,
-                'empresas' => $empresas
+                'empresas' => $empresas,
                  ];
            }
             else
             {
                 return ['success' => 2];
+                
             }
+
+           
+        
     }
     //Termina funcion para ver informacion del rótulo
 
@@ -453,6 +457,8 @@ class RotulosController extends Controller
         $empresa = Empresas::ALL();
         $rotulo = Rotulos::ALL();
        
+        $contribuyente = Contribuyentes::orderBy('id', 'ASC')->get();
+
         $rotulo = Rotulos::where ('id', $id)->first();
 
         $contri = ' ';
@@ -462,28 +468,22 @@ class RotulosController extends Controller
       
         if ($contribuyente = Contribuyentes::where('id', $rotulo->id_contribuyente)->first())
         {
-            $contri  = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+            
         }
 
         if ($empresa = Empresas::where('id', $rotulo->id_empresa)->first())
         {
             $emp = $empresa->nombre;
             $emp1 = $empresa->direccion;
-            $emp2 = $empresa->contribuyente;
-        }
-     
+            $emp2  = $empresa->contribuyente;
+            
         
-        return view('backend.admin.Rotulos.CalificacionRotulo', compact('id','rotulo','contri','emp','emp1','emp2','contribuyente', 'empresa'));
-    }
-
-    //Función para mostrar los rótulos que pertenecen a una sola empresa
-    public function tablaCalificacionR($id)
-    {
+        }
         $empresa = Rotulos::where('id', $id)->first();
-      
-
-        $calificacion=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
      
+        $calificacion=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
+                                
+//Consulta para mostrar los rótulos que pertenecen a una sola empresa
                       
         ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
         'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
@@ -494,28 +494,166 @@ class RotulosController extends Controller
         ->where('id_empresa', $empresa->id_empresa)
         ->get();
 
-        $cantidad = 0;
-
+        $tRotulo = TarifaRotulo::orderBy('id', 'ASC')->get();          
+    
+        $total1 = 0;
+        $totalanual = 0;
+        $totalA = 0;
+        $total = 0;
+        $monto_tarifa = 0;
+        $total_medidas = 0;
+        $fondoF = 0.05;
+        $total_impuesto = 0;
+       
+//Calculo de la calificación de rótulos
     foreach ($calificacion as $dato)
     {
-        $nombreRotulo = $dato->nom_rotulo;
+        $tarifa_mensual = 0;
+        
+        foreach($tRotulo as $tarifa)
+        {
+           if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
+           {
+                $tarifa_mensual = $tarifa->monto_tarifa; 
+                    
+                    if($dato->total_caras >1)
+                    {
+                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                    }
+                 
+            break;         
 
-            $cantidad = $cantidad + 1;
+           }  
+          
+           else if($dato->total_medidas > 8)
+            {
+                $tarifa_mensual = $dato->total_medidas;
 
+                    if($dato->total_caras >1)
+                    {
+                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                    }
+            break;
+          
+            }
+
+        }
+
+        $total = $total + $tarifa_mensual;
+        $total1 = round($total + ($tarifa_mensual * $fondoF),2);
+        $dato->monto = $tarifa_mensual;       
+        $totalanual = $total *12;
+        $totalA = $totalanual +($totalanual * $fondoF);
+
+
+        $dato = new CalificacionRotulo();
+        
+    }
+  
+
+     
+        return view('backend.admin.Rotulos.CalificacionRotulo', compact('id','rotulo','tarifa','totalA','totalanual','total','total1','contri','emp','emp1','emp2','contribuyente', 'empresa','calificacion'));
     }
 
+//Función para tabla de calificacion de rótulos
 
+    public function tablaCalificacionR($id)
+    {
+        $empresa = Rotulos::where('id', $id)->first();
+     
+        $calificacion=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
+                                
+//Consulta para mostrar los rótulos que pertenecen a una sola empresa
+                      
+        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
+        'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
+        'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
+        'rotulos.coordenadas','rotulos.imagen',
+        'empresa.nombre as empresas')
+        
+        ->where('id_empresa', $empresa->id_empresa)
+        ->get();
+
+ //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
+
+    $tRotulo = TarifaRotulo::orderBy('id', 'ASC')->get();          
       
-            return view('backend.admin.Rotulos.tabla.tablarotulo', compact('calificacion','cantidad'));
+        $monto_tarifa = 0;
+        $total_medidas = 0;
+        $fondoF = 0.05;
+        $total = 0;
+        $total_impuesto = 0;
+       
+//Calculo de la calificación de rótulos
+    foreach ($calificacion as $dato)
+    {
+        $tarifa_mensual = 0;
+        
+        foreach($tRotulo as $tarifa)
+        {
+           if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
+           {
+                $tarifa_mensual = $tarifa->monto_tarifa; 
+               
+                    if($dato->total_caras >1)
+                    {
+                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                    }
+               break;
+
+              
+           }  
+          
+           else if($dato->total_medidas > 8)
+           {
+                $tarifa_mensual = $dato->total_medidas;
+                    if($dato->total_caras >1)
+                    {
+                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                    }
+               break;
+           }
+          
+        }
+
+        $dato->monto = $tarifa_mensual;
+        $dato->total_impuesto	 = round($tarifa_mensual + ($tarifa_mensual * $fondoF),2);
+        
+    }
+  
+        return view('backend.admin.Rotulos.tabla.tablarotulo', compact('calificacion','total_impuesto','tarifa_mensual','dato'));
          
     }
-    //Termina función para mostrar los rótulos que pertenecen a una sola empresa
+    //Termica calculo de la calificación de rótulos
+   
 
 
-    public function calcularTarifaR ($id)
+    public function guardarCalificacion(Request $request)
     {
+             log::info($request->all());
+            $regla = array(
 
+            'fecha_calificacion' => 'required',
+           
+        );
+    
+        $validar = Validator::make($request->all(), $regla);
+    
+        if ($validar->fails())
+            {
+                return 
+                [
+                    'success'=> 0,
+                ];
+            }
+        
+           
+           
+                 
+           
     }
+
+   
 }
 
 

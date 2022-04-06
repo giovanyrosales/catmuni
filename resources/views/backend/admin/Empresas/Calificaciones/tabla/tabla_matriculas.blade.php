@@ -15,7 +15,7 @@
                                     <td>{{$dato->cantidad}}</td>
                                     <td>${{$dato->monto}}</td>
                                 </tr>
-                                @endforeach
+                            @endforeach
                             </tbody>
                             </table>
 

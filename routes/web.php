@@ -195,5 +195,6 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/Rotulos/guardar-inspeccion', [RotulosController::class, 'crear_inspeccion']);
     Route::get('/admin/Rotulos/calificacion/{rotulo}', [RotulosController::class, 'calificacionRotulo']);
     Route::get('/admin/rotulos/calificaciones/tablarotulo/{rotulo}', [RotulosController::class,'tablaCalificacionR']);
+    Route::post('/admin/rotulos/calificacion/nuevaC' , [RotulosController::class, 'guardarCalificacion']);
 
     

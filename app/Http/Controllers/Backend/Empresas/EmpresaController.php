@@ -1542,7 +1542,6 @@ public function nuevaCalificacion(Request $request){
         }
 
 
-<<<<<<< HEAD
     public function tablaMatriculas($id){
 
                 
@@ -1558,7 +1557,4 @@ public function nuevaCalificacion(Request $request){
             return view('backend.admin.Empresas.Calificaciones.tabla.tabla_matriculas', compact('matriculas'));
     }
 
-=======
-    
->>>>>>> ca6a337b9beb9dc3a66a00d28085c0991518a415
 } //* Cierre final

@@ -510,9 +510,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
              </div><!-- ROW FILA1 -->
 
-             <div class="row"><!-- /.ROW FILA2 -->
-
-  
+             <div class="row"><!-- /.ROW FILA2 -->  
               <!-- /.form-group -->
               <div class="col-md-3">
                   <div class="form-group">
@@ -1017,9 +1015,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
     <script src="sweetalert2.min.js"></script>
 
 
-  
-
-    
     
     <script type="text/javascript">
         $(document).ready(function(){

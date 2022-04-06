@@ -7,37 +7,30 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>    
+                                    <th style="width: 15%;">Nombre</th>
                                     <th style="width: 18%;">Dirección</th>
                                     <th style="width: 13%;">Medidas m²</th>
                                     <th style="width: 13%;">Caras</th>
-                                    <th style="width: 15%;">Tarifa Mensual</th>
-                                    <th style="width: 15%;">cantidad</th>
-
-                                    <th style="width: 20%;">Opciones</th>
-                                 
-                            </tr>
+                                    <th style="width: 15%;">Tarifa</th>
+                                    <th style="width: 15%;">Impuesto total</th>
+                                    
+                                </tr>
                             </thead>
                             <tbody>
 
                             @foreach($calificacion as $rotulo)
                                 <tr>
-                               
+                                    <td>{{$rotulo->nom_rotulo}}</td>
                                     <td>{{$rotulo->direccion}}</td>
                                     <td>
                                     <input  id="total_medidas" class='form-control' disabled min='1' style='max-width: 250px' type="text" value="{{$rotulo->total_medidas}} "/></td>
                                     <td>
                                     <input  id="total_caras" class='form-control' disabled  min='1' style='max-width: 250px' type='text' value='{{$rotulo->total_caras}}'/></td>
-                                    <td>
-                                    <input  id="monto_tarifa" class='form-control' min='1' style='max-width: 250px' type='text' value=''/>
+                                    <td>                                        
+                                    <input  id="monto_tarifa" class='form-control' min='1' style='max-width: 250px' type='text' value='${{$rotulo->monto}}'/>
                                     </td>
-                                   <td> 
-                                    <input  id="cantidad" class='form-control' min='1' style='max-width: 250px' type='text' value='{{$cantidad}}'/>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <button type="button" class="btn btn-dark btn-xs" onclick="calcular()" data-toggle="modal" >
-                                        <i class="fa-solid fa-calculator" title="Ver Registro"></i>&nbsp; Calcular 
-                                        </button>     
-                                       
+                                    <td>                                        
+                                    <input  id="impuesto_total" class='form-control' min='1' style='max-width: 250px' type='text' value='${{$rotulo->total_impuesto}}'/>
                                     </td>
                                 </tr>
 
@@ -52,7 +45,6 @@
         </div>
     </div>
 </section>
-
 
 <script>
     $(function () {
@@ -96,37 +88,4 @@
 
 
 </script>
-
-<script>
-
-        
-function calcular()
-        {
-            var total_medidas = document.getElementById('total_medidas').value;
-           
-            var total_caras = document.getElementById('total_caras').value;
-
-            var monto_tarifa = 0;
-            var fondoF = 0.05;
-        
-         
-            if (total_medidas <= 4)
-            {
-                monto_tarifa = 2.50+(2.50 * fondoF);
-                if(total_caras>1){
-                   monto_tarifa=monto_tarifa*2 
-                }
-             
-            }
-        
-         
-            document.getElementById('monto_tarifa').value = monto_tarifa; 
-
-            
-         
-          
-        }
-
-    </script>
-
 

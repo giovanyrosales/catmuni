@@ -10,19 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class CalificacionRotulo extends Model
+class TarifaRotulo extends Model
 {
 
-    protected $table = 'calificacion_rotulo';
+    protected $table = 'tarifa_rotulo';
     public $timestamps = false;
     protected $fillable = [
-          'id',
-          'fecha_calificacion',
-          'monto_tarifa',
-          'id_inspeccion_rotulos',
-          'id_rotulos',
-          'id_tarifa_rotulo'
+        'id',
+        'limite_inferior',
+        'limite_superior',
+        'monto_tarifa',
+
       ];
-
-
 }
+ 

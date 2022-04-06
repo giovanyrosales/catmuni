@@ -308,6 +308,7 @@
                               <!-- Select live search -->
                               <div class="input-group mb-14">
                                 <select 
+                                required
                                 class="form-control" 
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -352,7 +353,7 @@
                       <div class="col-md-8">
                       <div class="form-group">
                         <label>DIRECCIÓN DEL RÓTULO:</label>
-                        <input type="text" name="" id="direccion-editar" class="form-control"  required placeholder="Nombre" >
+                        <input type="text" name="" id="direccion-editar" class="form-control"  required placeholder="Dirección del rótulo" >
                      </div>
                     </div>
 
@@ -681,7 +682,7 @@
             $('#total_medidas-editar').val(response.data.rotulos.total_medidas);
             $('#total_caras-editar').val(response.data.rotulos.total_caras);
             $('#coordenadas-editar').val(response.data.rotulos.coordenadas);
-            $('#select-permiso_instalacion-editar').val(response.data.rotulos.permiso_instalacion);
+            $('#select-permiso_instalacion-editar').val(response.data.rotulos.permiso_instalacion);       
             $('#nom_inspeccion-editar').val(response.data.rotulos.nom_inspeccion);
             $('#cargo_inspeccion-editar').val(response.data.rotulos.cargo_inspeccion);
           
@@ -691,12 +692,14 @@
             document.getElementById("select-empresa-editar").selectedIndex;
 
                 $.each(response.data.empresa, function( key, val ){
-                if(response.data.id_empre == val.id){
-                $('#select-empresa-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
-                }else{
-                $('#select-empresa-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
-                  }
-                });
+                            if(response.data.id_empre == val.id){
+                                $('#select-empresa-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
+                            }else{
+                                $('#select-empresa-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
+                            }
+                        }); 
+
+              
                      
                   }else{
                     toastr.error('No se encuentra la información solicitada');
@@ -716,7 +719,7 @@
         var id = document.getElementById('id-editar').value;
         var empresa = document.getElementById('select-empresa-editar').value;
         var nom_rotulo = document.getElementById('nom_rotulo-editar').value;
-        var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
+        var actividad_economica = document.getElementById('select-actividad_economica-editar').value;        
         var direccion = document.getElementById('direccion-editar').value;
         var fecha_apertura = document.getElementById('fecha_apertura-editar').value;
         var permiso_instalacion = document.getElementById('select-permiso_instalacion-editar').value;
