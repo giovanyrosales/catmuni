@@ -835,9 +835,11 @@ foreach ($calificacion as $dato)
         $f_inicio=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(2)->day(1);
         $UltimoDiaMes=$f_inicio->subDays(1);
         //Log::info( $UltimoDiaMes);
-        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-        Log::info($FechaDeInicioMoratorio);
+        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
+
         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+        Log::info('Inicio moratorio inicia aqui');
+        Log::info($FechaDeInicioMoratorio);
         $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
         //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
 
@@ -981,7 +983,7 @@ foreach ($calificacion as $dato)
                    $divisiondefila=".....................";
 
 
-                    $TarifaAñoMulta=Carbon::parse($MesDeMulta)->format('Y');
+    
                         $Date1=Carbon::parse($MesDeMulta)->day(1);
                         $Date2=Carbon::parse($MesDeMulta)->endOfMonth();
                         
