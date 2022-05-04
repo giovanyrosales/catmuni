@@ -825,11 +825,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   <div  class="input-group mb-3">
                           <!-- Select estado - live search -->                        
                                 <select 
-<<<<<<< HEAD
-                                required                                
-=======
                                 required
->>>>>>> d0b02af52d389e8de377cdb14d7e7b4224927c7a
                                 class="form-control"
                                 data-style="btn-success"
                                 data-show-subtext="true" 
