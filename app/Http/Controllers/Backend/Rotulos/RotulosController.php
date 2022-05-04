@@ -989,7 +989,7 @@ foreach ($calificacion as $dato)
                         $MesDeMultaDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
                         
             
-                    $Fecha60Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(60); 
+                    $Fecha60Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(30); 
                     Log::info($Fecha60Sumada);
                     Log::info($f3);
                     if($f3>$Fecha60Sumada){
@@ -1082,7 +1082,7 @@ foreach ($calificacion as $dato)
     
                 
                 $fondoFPValor=round($impuestoTotal*0.05,2);
-             $totalPagoValor= round($fondoFPValor+$impuestoTotal+$InteresTotal,2);
+                $totalPagoValor= round($fondoFPValor+$impuestoTotal+$InteresTotal,2);
 
                 //Le agregamos su signo de dollar para la vista al usuario
                 $fondoFP= "$". $fondoFPValor;     
@@ -1103,8 +1103,7 @@ foreach ($calificacion as $dato)
                         'tarifa'=>$tarifa,
                         'fondoFP'=>$fondoFP,
                         'totalPago'=>$totalPago,
-                        'DiasinteresMoratorio'=>$DiasinteresMoratorio,
-                
+                        'DiasinteresMoratorio'=>$DiasinteresMoratorio,                
                         'interes'=>$Tasainteres,
                         'InicioPeriodo'=>$InicioPeriodo,
                         'PagoUltimoDiaMes'=>$PagoUltimoDiaMes,
