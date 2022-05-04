@@ -19,9 +19,9 @@ class CalificacionRotulo extends Model
           'id',
           'fecha_calificacion',
           'monto_tarifa',
-          'id_inspeccion_rotulos',
+          'total_impuesto',       
           'id_rotulos',
-          'id_tarifa_rotulo'
+     
       ];
 
 

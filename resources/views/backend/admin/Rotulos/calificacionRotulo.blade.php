@@ -237,7 +237,9 @@
                <div class="col-md-6">
                   <div class="form-group">
                         <input type="text"  value="{{$rotulo->nom_rotulo}}" name="nombre" disabled id="nom_rotulo" class="form-control" required >
-                        <input type="hidden"  value="{{$rotulo->id}}" name="id_rotulo" disabled id="id_rotulo" class="form-control" required >
+                        <input type="hidden" value="{{$rotulo->id}}" name="id_rotulos" disabled id="id_rotulos" class="form-control" required >
+                        <input type="hidden" value="{{$empresa->id_empresa}}"  disabled id="id_empresa" class="form-control" required >
+                     
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -287,8 +289,8 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                  <input type="text" disabled name="fechacalificar" id="fechacalificar" class="form-control" >
-                        <input type="hidden" name="estado_calificacion" id="estado_calificacion" class="form-control" value="calificado">
+                  <input type="date" disabled name="fechacalificar" id="fechacalificar" class="form-control" >
+                        <input type="hidden"  id="estado_calificacion" class="form-control" value="calificado">
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -325,7 +327,7 @@
                           <td align="center">2022</td>
                        
                         </tr>
-                      @endforeach
+                        @endforeach 
                
                         <tr>
                           <td>ACTIVIDAD ECONOMICA / TARIFA </td>
@@ -340,24 +342,26 @@
                           <td align="center">{{$rotulo->actividad_economica}}</td>
                           <td></td>
                           <td> </td>                         
-                          <td align="center" >${{$total}}</td>                         
-                          <td align="center">${{$totalanual}}</td>
+                          <td align="center" >${{$total}}<label id= "tarifa_mensual"></label> <input type="hidden" id="tarifa_mensual"></td>                         
+                          <td align="center">${{$total1}}</td>
                         </tr>
-                  
+                      
                           
                         <tr>
                           <td rowspan="2"></td>
                           <td colspan="2">Fondo Fiestas Patronales 5%</td>
-                          <td align="center">${{$total1}} </td>
-                          <td align="center">${{$totalA}}<label name="tarifa_mensual" id= "tarifa_mensual"></label> <input type="hidden" name="tarifa_mensual" id="tarifa_mensual"></td>
+                          <td align="center">${{$rotulo->total_impuesto}} </td>
+                          <td align="center">${{$totalA}}</td>
                         </tr>
 
                         <tr>
                           <td colspan="2">TOTAL IMPUESTO</td>
-                          <td align="center" ><strong>${{$total1}} </strong><label name="total_tarifa" id= "total_tarifa"></label> <input type="hidden" name="total_tarifa" id="total_tarifa"></td>
+                          <td align="center" ><strong>${{$rotulo->total_impuesto}} </strong><label id= "total_impuesto"></label> <input type="hidden"  id="total_impuesto"></td>
                           <td align="center"><strong>${{$totalA}}</strong></td>
                         </tr>
+                        
                       </table>
+                      
                       </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
               </div> <!-- /.card-header text-success -->
@@ -441,24 +445,27 @@
 
     function nuevaCalificacion()
   {
-    var id={{$id}};     
+   
+
+      var id = {{$id}};     
+      var id_empresa = document.getElementById('id_empresa').value;     
       var estado_calificacion = document.getElementById('estado_calificacion').value;
       var fechacalificar = document.getElementById('fechacalificar').value;
-      var monto_tarifa = document.getElementById('monto_tarifa').value;
-      var impuesto_total = document.getElementById('impuesto_total').value;
 
+    
       openLoading();
-  var formData = new FormData();
-  formData.append('id_rotulo', id);
-  formData.append('estado_calificacion', estado_calificacion);
-  formData.append('fechacalificar', fechacalificar);
-  formData.append('monto_tarifa', monto_tarifa);
-  formData.append('impuesto_total', impuesto_total);
-
+      var formData = new FormData();
+          formData.append('id_rotulos', id);
+          formData.append('id_empresa', id_empresa);
+          formData.append('estado_calificacion', estado_calificacion);
+          formData.append('fechacalificar', fechacalificar);
+         
+       
 
   axios.post('/admin/rotulos/calificacion/nuevaC', formData, {
   })
       .then((response) => {
+        console.log(response)
           closeLoading();
           if(response.data.success === 0){
               toastr.error(response.data.message);

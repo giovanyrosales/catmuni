@@ -27,10 +27,10 @@
                                     <td>
                                     <input  id="total_caras" class='form-control' disabled  min='1' style='max-width: 250px' type='text' value='{{$rotulo->total_caras}}'/></td>
                                     <td>                                        
-                                    <input  id="monto_tarifa" class='form-control' min='1' style='max-width: 250px' type='text' value='${{$rotulo->monto}}'/>
+                                    <input  id="tarifa_mensual" class='form-control' min='1' style='max-width: 250px' type='text' value='${{$rotulo->monto}}'/>
                                     </td>
                                     <td>                                        
-                                    <input  id="impuesto_total" class='form-control' min='1' style='max-width: 250px' type='text' value='${{$rotulo->total_impuesto}}'/>
+                                    <input  id="total_impuesto" class='form-control' min='1' style='max-width: 250px' type='text' value='${{$rotulo->total_impuesto}}'/>
                                     </td>
                                 </tr>
 

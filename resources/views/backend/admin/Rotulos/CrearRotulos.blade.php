@@ -142,11 +142,11 @@
                               <!-- Select live search -->
                               <div class="input-group mb-14">
                                 <select 
-                                class="selectpicker show-tick" 
+                                class="selectpicker" 
                                 data-show-subtext="true" 
                                 data-live-search="true" 
                                 id="select-empresa" 
-                                title="-- Seleccione un registro --"
+                                title="-- Seleccione una empresa --"
                                 
                                 >
                                   @foreach($empresas as $empresa)

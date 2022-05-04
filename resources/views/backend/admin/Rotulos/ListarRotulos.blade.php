@@ -308,14 +308,13 @@
                               <!-- Select live search -->
                               <div class="input-group mb-14">
                                 <select 
-                                required
+                                required 
                                 class="form-control" 
                                 data-style="btn-success"
                                 data-show-subtext="true" 
-                                data-live-search="true" 
+                                data-live-search="true"  
                                 id="select-empresa-editar" 
-                                title="-- Seleccione un registro --"
-                                
+                             
                                 >
                                   @foreach($empresas as $empresa)
                                   <option value="{{ $empresa->id }}"> {{ $empresa->nombre }}</option>
@@ -565,6 +564,10 @@
  
     <script src="sweetalert2.all.min.js"></script>
     <script src="sweetalert2.min.js"></script>
+
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     
 <script type="text/javascript">
         $(document).ready(function(){
@@ -672,8 +675,7 @@
             if(response.data.success === 1){
             $('#modalEditarRotulos').modal('show');
 
-            $('#id-editar').val(response.data.rotulos.id);
-           
+            $('#id-editar').val(response.data.rotulos.id);           
             $('#nom_rotulo-editar').val(response.data.rotulos.nom_rotulo);
             $('#fecha_apertura-editar').val(response.data.rotulos.fecha_apertura);
             $('#select-actividad_economica-editar').val(response.data.rotulos.actividad_economica);
@@ -687,20 +689,16 @@
             $('#cargo_inspeccion-editar').val(response.data.rotulos.cargo_inspeccion);
           
           
-                   
-           
-            document.getElementById("select-empresa-editar").selectedIndex;
+                  document.getElementById("select-empresa-editar").options.length = 0;
 
-                $.each(response.data.empresa, function( key, val ){
+                  $.each(response.data.empresa, function( key, val ){
                             if(response.data.id_empre == val.id){
                                 $('#select-empresa-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
                             }else{
                                 $('#select-empresa-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
                             }
-                        }); 
+                        });
 
-              
-                     
                   }else{
                     toastr.error('No se encuentra la información solicitada');
                   }

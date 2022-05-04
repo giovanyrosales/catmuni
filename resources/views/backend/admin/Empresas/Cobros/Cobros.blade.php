@@ -575,8 +575,7 @@ formData.append('ultimo_cobroAparatos', ultimo_cobroAparatos);
                           <!-- Select estado - live search -->
                          
                                 <select 
-                                required
-                                
+                                required                                
                                 class="form-control"
                                 data-style="btn-success"
                                 data-show-subtext="true" 

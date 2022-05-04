@@ -58,6 +58,23 @@
   
         <div class="row">
     <div class="col-md-4 col-sm-8">
+
+    @if($detectorNull== '0')             
+             <a href="#" onclick="CrearCalificacion({{$lista->id}} )" >
+                 <div class="widget stats-widget">
+                   <div class="widget-body clearfix bg-info">
+                       <div class="pull-left">
+                           <h3 class="widget-title text-white">Realizar calificación</h3>
+                       </div>
+                       <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                   </div>
+               </div><!-- .widget -->
+             </a>
+
+   @else 
+
+           @if($calificacion->estado_calificacion == '')
+
         <a href="#" onclick="CrearCalificacion({{$lista->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-info">
@@ -68,6 +85,21 @@
                 </div>
             </div><!-- .widget -->
         </a>
+
+        @elseif($calificacion->estado_calificacion == 'calificado')
+                      <a href="#" onclick="">
+                                <div class="widget stats-widget">
+                                    <div class="widget-body clearfix bg-info">
+                                        <div class="pull-left">
+                                            <h3 class="widget-title text-white">Calificación realizada &nbsp;{{$calificacion->fecha_calificacion}} </span></h3>
+                                        </div>
+                                        <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
+                                    </div>
+                                </div><!-- .widget -->
+                                </a>
+                      @endif
+ 
+              @endif
     </div>
    
     <div class="col-md-4 col-sm-8">
@@ -82,6 +114,20 @@
             </div><!-- .widget -->
         </a>
     </div>
+
+    <div class="col-md-4 col-sm-8">
+        <a href="#" onclick="CobrosR({{$lista->id}})" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-green">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Cobros</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>                   
+                </div>
+            </div><!-- .widget -->
+        </a>
+    </div>
+
 </div>
 </div>
 </div> 
@@ -544,6 +590,13 @@
     {
       toast.success('La inspeccion ya fue realizada');
       return;
+    }
+
+    function CobrosR(id)
+    {
+      openLoading();
+
+      window.location.href="{{ url('/admin/rotulos/cobros') }}/"+id;
     }
 
     </script>
