@@ -392,25 +392,31 @@ public function show($id)
 
 // ---------COBROS ------------------------------------------>
 public function calculo_cobros_empresa(Request $request)
-{ 
+{   log::info($request->all());
+    
+    $MesNumero=Carbon::createFromDate($request->ultimo_cobro)->format('d');
+    log::info($MesNumero);
 
-    log::info($request->all());
-    $DetectorEnero=Carbon::parse($request->ultimo_cobro)->format('M');
-    $AñoVariable=Carbon::parse($request->ultimo_cobro)->format('Y');
+    if($MesNumero<='15')
+    {
+        $f1=Carbon::parse($request->ultimo_cobro)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
+        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+        log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+         log::info('fin de mes ');
+         }
+
+    log::info('Ultimo pago: '.$f1);
+
     $id=$request->id;
     $Message=0;
-    if($DetectorEnero=='Jan')
-    {
-        $f1=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        $Message="Se ha sumado 1 dia";
 
-    }else{
-            $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-            $Message="No se ha sumado dias";
-         }
     
     $f2=Carbon::parse($request->fechaPagara);
     $f3=Carbon::parse($request->fecha_interesMoratorio);
@@ -421,7 +427,7 @@ public function calculo_cobros_empresa(Request $request)
     $dayInicio='01';
     $monthFinal='12';
     $dayFinal='31';
-    $AñoInicio=$f1->format('Y');
+    $AñoInicio=Carbon::parse($request->ultimo_cobro)->format('Y');
     $AñoFinal=$f2->format('Y');
     $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
     $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
