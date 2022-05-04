@@ -143,18 +143,40 @@ class MatriculasDetalleController extends Controller
         ->where('m.id_matriculas_detalle', $request->id)     
         ->first();
 
-        if($listado==""){
-            $tasa = MatriculasDetalle::find($request->id);
-            $tasa->delete();
+        $Detectar_calificacion_martricula=CalificacionMatriculas::where('id_matriculas_detalle', $request->id)
+        ->get();
+        
+        if($listado=="")
+        {
+                if($Detectar_calificacion_martricula=!null){
 
-            return [
-                'success' => 1,
-               ];
-        }else{
-                return [
-                    'success' => 2,
-                ];
-             }
+                    $delete = CalificacionMatriculas::where('id_matriculas_detalle', $request->id);
+                    $delete->delete();
+
+                    $tasa = MatriculasDetalle::find($request->id);
+                    $tasa->delete();
+
+                    return 
+                        [
+                            'success' => 1,
+                        ];
+                }else{
+                        $tasa = MatriculasDetalle::find($request->id);
+                        $tasa->delete();
+            
+                        return 
+                            [
+                                'success' => 1,
+                            ];
+                    }
+        }
+         else
+             {//if pricipal
+                    return 
+                    [
+                        'success' => 2,
+                    ];
+              }
     }
     public function informacionMatricula(Request $request)
     {
@@ -448,37 +470,26 @@ public function VerMatriculaEsp(Request $request)
 public function info_cobroMatriculas(Request $request){
     log::info($request->all());
     //Inicia Información mátriculas mesas
-        $id=$request->id_matriculadetalleMesas;
-        $ultimo_cobroMesas = CobrosMatriculas::latest()->where('id_matriculas_detalle', $id)->first();
-            if($ultimo_cobroMesas==null)
-                {
-                    $ultimo_cobroMesas='2021-08-31';
-                }
-    //Información mátriculas mesas
-    //Inicia Información mátriculas máquinas eletrónicas
-        $id=$request->id_matriculadetalleMaquinas;
-        $ultimo_cobroMaquinas = CobrosMatriculas::latest()->where('id_matriculas_detalle', $id)->first();
-            if($ultimo_cobroMaquinas==null)
-                {
-                    $ultimo_cobroMaquinas='2019-12-31';
-                }
-    //Información máquinas eletrónicas
-    //Inicia Información mátriculas máquinas eletrónicas
-        $id=$request->id_matriculadetalleSinfonolas;
-        $ultimo_cobroSinfonolas = CobrosMatriculas::latest()->where('id_matriculas_detalle', $id)->first();
-            if($ultimo_cobroSinfonolas==null)
-                {
-                    $ultimo_cobroSinfonolas='2021-11-30';
-                }
-    //Información máquinas eletrónicas
-    //Inicia Información mátriculas máquinas eletrónicas
-        $id=$request->id_matriculadetalleaparatos;
-        $ultimo_cobroAparatos = CobrosMatriculas::latest()->where('id_matriculas_detalle', $id)->first();
-            if($ultimo_cobroAparatos==null)
-                {
-                    $ultimo_cobroAparatos='2021-12-31';
-                }
-    //Información máquinas eletrónicas
+        $id_matriculadetalleMesas=$request->id_matriculadetalleMesas;
+        $ultimo_cobroMesas = CobrosMatriculas::latest()
+        ->where('id_matriculas_detalle', $id_matriculadetalleMesas)->first();
+
+    //Información mátricula máquinas eletrónicas
+        $id_matriculadetalleMaquinas=$request->id_matriculadetalleMaquinas;
+        $ultimo_cobroMaquinas = CobrosMatriculas::latest()
+        ->where('id_matriculas_detalle',$id_matriculadetalleMaquinas)->first();
+
+    //Información mátricula Sinfonolas
+        $id_matriculadetalleSinfonolas=$request->id_matriculadetalleSinfonolas;
+        $ultimo_cobroSinfonolas = CobrosMatriculas::latest()
+        ->where('id_matriculas_detalle', $id_matriculadetalleSinfonolas)->first();
+
+    //Información mátricula Aparatos
+        $id_matriculadetalleaparatos=$request->id_matriculadetalleAparatos;
+        $ultimo_cobroAparatos =  CobrosMatriculas::latest()
+        ->where('id_matriculas_detalle', $id_matriculadetalleaparatos)->first();
+
+
 
     return [
             'success' => 1,
@@ -496,7 +507,7 @@ public function calculo_cobroMesas(Request $request){
     $DetectorEnero=Carbon::parse($request->ultimo_cobroMesas)->format('M');
     $AñoVariable=Carbon::parse($request->ultimo_cobroMesas)->format('Y');
     $id_empresa=$request->id;
-    $fechaPagara=$request->fechaPagaraMesas;
+    $fechaPagaraMesas=$request->fechaPagaraMesas;
     $id_matriculadetalleMesas=$request->id_matriculadetalleMesas;
     $tasa_interes=$request->tasa_interesMesas;
     $fecha_interesMoratorio=$request->fecha_interesMoratorioMesas;
@@ -552,7 +563,7 @@ public function calculo_cobroMesas(Request $request){
         
      ->join('matriculas_detalle','calificacion_matriculas.id_matriculas_detalle','=','matriculas_detalle.id')
      
-     ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion',
+     ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion','calificacion_matriculas.id_estado_matricula',
      'matriculas_detalle.id as id_matriculadetalle','matriculas_detalle.id_empresa',)
  
      ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleMesas)
@@ -748,64 +759,148 @@ public function calculo_cobroMesas(Request $request){
                  }
 
              //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
-             $Pmatriculas=CalificacionMatriculas::select('estado_matricula','monto_matricula','año_calificacion')
-             ->where('id_matriculas_detalle',$id_matriculadetalleMesas)
-             ->get();
 
-                $añoActual=carbon::now()->format('Y');
-                $fecha_limite=Carbon::createFromDate($añoActual,03, 31);
-                $fechahoy=carbon::now();
+             $añoActual=carbon::now()->format('Y');
+             $fecha_limiteMesas=Carbon::createFromDate($añoActual,03, 31);
+             $fechahoy=carbon::now();
 
-                 $Cantidad_matriculas=0;
-                 $monto_pago_matricula=0;
-                 $multa=0;
+                /** Calculando las licencias*/
+                $Cantidad_matriculas=0;
+                $monto_pago_matricula=0;
+                $multa=0;
+                $fila='------------------';
+                $fila2='_______________________';
 
-                 foreach($Pmatriculas as $dato){
-                  
+                //** Inicia Foreach para calcular matriculas y sus multas */
+                foreach ($periodo as $dt) {
 
-                   if($dato->estado_matricula=='impago' and $dato->año_calificacion<$añoActual)
-                   {
-                            $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
-                            $Cantidad_matriculas=$Cantidad_matriculas+1;
-                            $multa= $multa+$dato->monto_matricula;
+                 $AñoCancelar=$dt->format('Y');
+                
+                 $año_calificacion=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMesas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('año_calificacion')
+                 ->first();
 
-                   }else if($dato->estado_matricula=='impago' and $dato->año_calificacion==$añoActual)
-                   {
-                       if($fechahoy>$fecha_limite)
-                       {
-                        $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
-                        $Cantidad_matriculas=$Cantidad_matriculas+1;
-                        $multa= $multa+$dato->monto_matricula;
+                 $id_estado_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMesas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('id_estado_matricula')
+                 ->first();
 
-                       }else 
-                            {
-                                $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
-                                $Cantidad_matriculas=$Cantidad_matriculas+1;
-                                $multa=$multa;
-                            }
-
-                   }                                     
-             } 
-             //** Fin- Determinar si el permiso de una matricula ya fue pagada y Determinar multa  matricula */ 
-
+                 $monto_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMesas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('monto_matricula')
+                 ->first();
                  
+                 log::info($año_calificacion);
+                 log::info($id_estado_matricula);
+                 log::info($monto_matricula);
+                 log::info($fila);
+
+                if($id_estado_matricula=='2' and $año_calificacion<$añoActual)
+                {
+                         $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                         $Cantidad_matriculas=$Cantidad_matriculas+1;
+                         $multa= $multa+$monto_matricula;
+                         Log::info($monto_pago_matricula);
+                         Log::info($Cantidad_matriculas);
+                         Log::info($multa);
+                         Log::info('IF1- Con Multa');
+                         log::info($fila2);
+                }else if($id_estado_matricula=='2' and $año_calificacion===$añoActual)
+                {
+                    if($fechahoy>$fecha_limiteMesas)
+                    {
+
+                     $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                     $Cantidad_matriculas=$Cantidad_matriculas+1;
+                     $multa= $multa+$monto_matricula;
+                     Log::info($monto_pago_matricula);
+                     Log::info($Cantidad_matriculas);
+                     Log::info($multa);
+                     Log::info('IF2- Con Multa');
+                     log::info($fila2);
+
+                    }else 
+                         {
+                             $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                             $Cantidad_matriculas=$Cantidad_matriculas+1;
+                             $multa=$multa;
+                             Log::info($monto_pago_matricula);
+                             Log::info($Cantidad_matriculas);
+                             Log::info($multa);
+                             Log::info('IF3 - Sin Multa');
+                             log::info($fila2);
+                         } 
+                 }
+             } //** Finaliza foreach para calcular multa matricula y calculo de las matriculas */                                   
+          
 
 
              Log::info($monto_pago_matricula);
              Log::info($Cantidad_matriculas);
+         
+            
+            if($request->estado=='On')
+            {
+                $impuestos_mora=0;
+                $impuesto_año_actual=0;
+                $totalMultaPagoExtemporaneo=0;
+                $InteresTotal=0;
+                $impuestoTotal=0;
+                $Cantidad_MesesTotal=0;
+            } 
 
             $fondoFPValor=round(($impuestoTotal*0.05)+($monto_pago_matricula*0.05),2);
             $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$impuestoTotal+$totalMultaPagoExtemporaneo+$InteresTotal+$multa,2);
-
             //Le agregamos su signo de dollar para la vista al usuario
+
             $fondoFP= "$". $fondoFPValor;     
-            $totalPagoMesasDollar="$".$totalPagoValor;
             $impuestos_mora_Dollar="$".$impuestos_mora;
             $impuesto_año_actual_Dollar="$".$impuesto_año_actual;
             $multaPagoExtemporaneoDollar="$".$totalMultaPagoExtemporaneo;
             $InteresTotalDollar="$".$InteresTotal;
             $multaMatriculaDollar="$".$multa;
             $monto_pago_PmatriculaDollar="$".$monto_pago_matricula;
+            $totalPagoMesasDollar="$".$totalPagoValor;
+
+            //** Guardar cobro*/
+            if ($request->cobrar=='1')
+            {   
+                if($multa>0)
+                {
+                    foreach ($periodo as $dt) {
+                        $AñoCancelar =$dt->format('Y');
+                    CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleMesas)
+                    ->where('id_estado_matricula','2')
+                    ->where('año_calificacion',$AñoCancelar)
+                    ->update([
+                                'id_estado_matricula' =>"1",              
+                            ]);
+                        }
+                }
+
+            $cobro = new CobrosMatriculas();
+            $cobro->id_matriculas_detalle = $request->id_matriculadetalleMesas;
+            $cobro->id_usuario = '1';
+            $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
+            $cobro->monto_multa_matricula = $multa;
+            $cobro->fondo_fiestasP = $fondoFPValor;
+            $cobro->impuesto_mora =$impuestos_mora;
+            $cobro->impuesto =$impuesto_año_actual;
+            $cobro->intereses_moratorios =$InteresTotal;
+            $cobro->monto_multaPE =$totalMultaPagoExtemporaneo;
+            $cobro->pago_total = $totalPagoValor;
+            $cobro->fecha_cobro =  $fechahoy;
+            $cobro->periodo_cobro_inicio = $InicioPeriodo;
+            $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+            $cobro->tipo_cobro ='matricula';
+            $cobro->save();
+        
+            return ['success' => 2];
+            
+
+        }else{
+
             return [
                 'success' => 1,
                 'impuestoTotalMesas'=>$impuestoTotal,
@@ -826,20 +921,22 @@ public function calculo_cobroMesas(Request $request){
                 'totalPagoMesas'=>$totalPagoMesasDollar,
           
                ];
-        } //** Termina if validador de la fecha de ultimo pago no puede ser mayor que la de pagara */
-        else
-            {
-                return ['success' => 0];
-            }
+            } //** Termina if validador de la fecha de ultimo pago no puede ser mayor que la de pagara */
         
+        } else //** if principal */
+               {
+                   return ['success' => 0];
+               }
 }//** ------------------ Termina cálculo para cobrar la matrícula de MESAS DE BILLAR ---------------------------- */
+
+
 public function calculo_cobroMaquinas(Request $request){
     log::info($request->all());
 
     $DetectorEnero=Carbon::parse($request->ultimo_cobroMaquinas)->format('M');
     $AñoVariable=Carbon::parse($request->ultimo_cobroMaquinas)->format('Y');
     $id_empresa=$request->id;
-    $fechaPagara=$request->fechaPagaraMaquinas;
+    $fechaPagaraMaquinas=$request->fechaPagaraMaquinas;
     $id_matriculadetalleMaquinas=$request->id_matriculadetalleMaquinas;
     $tasa_interes=$request->tasa_interesMaquinas;
     $fecha_interesMoratorio=$request->fecha_interesMoratorioMaquinas;
@@ -895,7 +992,7 @@ public function calculo_cobroMaquinas(Request $request){
         
      ->join('matriculas_detalle','calificacion_matriculas.id_matriculas_detalle','=','matriculas_detalle.id')
      
-     ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion',
+     ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion','calificacion_matriculas.id_estado_matricula',
      'matriculas_detalle.id as id_matriculadetalle','matriculas_detalle.id_empresa',)
  
      ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleMaquinas)
@@ -1055,50 +1152,94 @@ public function calculo_cobroMaquinas(Request $request){
 
 
              //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
-             $Pmatriculas=CalificacionMatriculas::select('estado_matricula','monto_matricula','año_calificacion')
-             ->where('id_matriculas_detalle',$id_matriculadetalleMaquinas)
-             ->get();
+             
+             $añoActual=carbon::now()->format('Y');
+             $fecha_limiteMaquinas=Carbon::createFromDate($añoActual,03, 31);
+             $fechahoy=carbon::now();
 
-                $añoActual=carbon::now()->format('Y');
-                $fecha_limite=Carbon::createFromDate($añoActual,03, 31);
-                $fechahoy=carbon::now();
+                /** Calculando las licencias*/
+                $Cantidad_matriculas=0;
+                $monto_pago_matricula=0;
+                $multa=0;
+                $fila='------------------';
+                $fila2='_______________________';
 
-                 $Cantidad_matriculas=0;
-                 $monto_pago_matricula=0;
-                 $multa=0;
+                //** Inicia Foreach para calcular matriculas y sus multas */
+                foreach ($periodo as $dt) {
 
-                 foreach($Pmatriculas as $dato){
-                  
+                 $AñoCancelar=$dt->format('Y');
+                
+                 $año_calificacion=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMaquinas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('año_calificacion')
+                 ->first();
 
-                   if($dato->estado_matricula=='impago' and $dato->año_calificacion<$añoActual)
-                   {
-                            $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
-                            $Cantidad_matriculas=$Cantidad_matriculas+1;
-                            $multa= $multa+$dato->monto_matricula;
+                 $id_estado_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMaquinas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('id_estado_matricula')
+                 ->first();
 
-                   }else if($dato->estado_matricula=='impago' and $dato->año_calificacion==$añoActual)
-                   {
-                       if($fechahoy>$fecha_limite)
-                       {
-                        $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
-                        $Cantidad_matriculas=$Cantidad_matriculas+1;
-                        $multa= $multa+$dato->monto_matricula;
+                 $monto_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMaquinas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('monto_matricula')
+                 ->first();
+                 
+                 log::info($año_calificacion);
+                 log::info($id_estado_matricula);
+                 log::info($monto_matricula);
+                 log::info($fila);
 
-                       }else 
-                            {
-                                $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
-                                $Cantidad_matriculas=$Cantidad_matriculas+1;
-                                $multa=$multa;
-                            }
+                if($id_estado_matricula=='2' and $año_calificacion<$añoActual)
+                {
+                         $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                         $Cantidad_matriculas=$Cantidad_matriculas+1;
+                         $multa= $multa+$monto_matricula;
+                         Log::info($monto_pago_matricula);
+                         Log::info($Cantidad_matriculas);
+                         Log::info($multa);
+                         Log::info('IF1- Con Multa');
+                         log::info($fila2);
+                }else if($id_estado_matricula=='2' and $año_calificacion===$añoActual)
+                {
+                    if($fechahoy>$fecha_limiteMaquinas)
+                    {
 
-                   }                                     
-             } 
-             //** Fin- Determinar si el permiso de una matricula ya fue pagada y Determinar multa  matricula */ 
+                     $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                     $Cantidad_matriculas=$Cantidad_matriculas+1;
+                     $multa= $multa+$monto_matricula;
+                     Log::info($monto_pago_matricula);
+                     Log::info($Cantidad_matriculas);
+                     Log::info($multa);
+                     Log::info('IF2- Con Multa');
+                     log::info($fila2);
 
-
+                    }else 
+                         {
+                             $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                             $Cantidad_matriculas=$Cantidad_matriculas+1;
+                             $multa=$multa;
+                             Log::info($monto_pago_matricula);
+                             Log::info($Cantidad_matriculas);
+                             Log::info($multa);
+                             Log::info('IF3 - Sin Multa');
+                             log::info($fila2);
+                         } 
+                 }
+             } //** Finaliza foreach para calcular multa matricula y calculo de las matriculas */                                   
+ 
              Log::info($monto_pago_matricula);
              Log::info($Cantidad_matriculas);
              Log::info($multa);
+
+             if($request->estado=='On')
+             {
+                 $impuestos_mora=0;
+                 $impuesto_año_actual=0;
+                 $InteresTotal=0;
+                 $impuestoTotal=0;
+                 $Cantidad_MesesTotal=0;
+             } 
+
             $fondoFPValor=round(($impuestoTotal*0.05)+($monto_pago_matricula*0.05),2);
             $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$impuestoTotal+$InteresTotal+$multa,2);
 
@@ -1110,28 +1251,69 @@ public function calculo_cobroMaquinas(Request $request){
             $InteresTotalDollar="$".$InteresTotal;
             $monto_pago_PmatriculaDollar="$".$monto_pago_matricula;
             $multaDolarMaquinas="$".$multa;
-            return [
-                'success' => 1,
-                'impuestoTotalMaquinas'=>$impuestoTotal,
-                'impuestos_mora_DollarMaquinas'=>$impuestos_mora_Dollar,
-                'impuesto_año_actual_DollarMaquinas'=>$impuesto_año_actual_Dollar,
-                'Cantidad_MesesTotalMaquinas'=>$Cantidad_MesesTotal,          
-                'tarifaMaquinas'=>$tarifa,
-                'fondoFPMaquinas'=>$fondoFP,
-                'DiasinteresMoratorioMaquinas'=>$DiasinteresMoratorio,
-                'InicioPeriodoMaquinas'=>$InicioPeriodo,
-                'PagoUltimoDiaMesMaquinas'=>$PagoUltimoDiaMes,
-                'FechaDeInicioMoratorioMaquinas'=> $FechaDeInicioMoratorio,
-                'InteresTotalDollar'=>$InteresTotalDollar,
-                'monto_pago_PmatriculaDollarMaquinas'=>$monto_pago_PmatriculaDollar,
-                'multaDolarMaquinas'=>$multaDolarMaquinas,
-                'totalPagoMaquinas'=>$totalPagoMatriculasDollar,
-               ];
-        } //** Termina if validador de la fecha de ultimo pago no puede ser mayor que la de pagara */
-        else
-            {
-                return ['success' => 0];
+
+
+            //** Guardar cobro*/
+            if ($request->cobrar=='1')
+            {   
+                if($multa>0)
+                {
+                    foreach ($periodo as $dt) {
+                    $AñoCancelar =$dt->format('Y');
+                    CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleMaquinas)
+                     ->where('id_estado_matricula','2')
+                     ->where('año_calificacion',$AñoCancelar)
+                        ->update([
+                                'id_estado_matricula' =>"1",              
+                            ]);
+
+                    }
+
             }
+            $cobro = new CobrosMatriculas();
+            $cobro->id_matriculas_detalle = $request->id_matriculadetalleMaquinas;
+            $cobro->id_usuario = '1';
+            $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
+            $cobro->monto_multa_matricula = $multa;
+            $cobro->fondo_fiestasP = $fondoFPValor;
+            $cobro->impuesto_mora =$impuestos_mora;
+            $cobro->impuesto =$impuesto_año_actual;
+            $cobro->intereses_moratorios =$InteresTotal;
+            $cobro->pago_total = $totalPagoValor;
+            $cobro->fecha_cobro =  $fechahoy;
+            $cobro->periodo_cobro_inicio = $InicioPeriodo;
+            $cobro->periodo_cobro_fin =$fechaPagaraMaquinas;
+            $cobro->tipo_cobro ='matricula';
+            $cobro->save();
+        
+            return ['success' => 2];
+            
+
+            }else{
+
+                    return [
+                        'success' => 1,
+                        'impuestoTotalMaquinas'=>$impuestoTotal,
+                        'impuestos_mora_DollarMaquinas'=>$impuestos_mora_Dollar,
+                        'impuesto_año_actual_DollarMaquinas'=>$impuesto_año_actual_Dollar,
+                        'Cantidad_MesesTotalMaquinas'=>$Cantidad_MesesTotal,          
+                        'tarifaMaquinas'=>$tarifa,
+                        'fondoFPMaquinas'=>$fondoFP,
+                        'DiasinteresMoratorioMaquinas'=>$DiasinteresMoratorio,
+                        'InicioPeriodoMaquinas'=>$InicioPeriodo,
+                        'PagoUltimoDiaMesMaquinas'=>$PagoUltimoDiaMes,
+                        'FechaDeInicioMoratorioMaquinas'=> $FechaDeInicioMoratorio,
+                        'InteresTotalDollar'=>$InteresTotalDollar,
+                        'monto_pago_PmatriculaDollarMaquinas'=>$monto_pago_PmatriculaDollar,
+                        'multaDolarMaquinas'=>$multaDolarMaquinas,
+                        'totalPagoMaquinas'=>$totalPagoMatriculasDollar,
+                    ];
+                } //** Termina if validador de la fecha de ultimo pago no puede ser mayor que la de pagara */
+            } 
+            else
+                {
+                    return ['success' => 0];
+                }
 
 }//** ------------------ Cálculo para cobrar la matrícula de MAQUINAS ELÉCTRONICAS ------------------------------- */
 
@@ -1143,7 +1325,7 @@ public function calculo_cobroSinfonolas(Request $request){
     $DetectorEnero=Carbon::parse($request->ultimo_cobroSinfonolas)->format('M');
     $AñoVariable=Carbon::parse($request->ultimo_cobroSinfonolas)->format('Y');
     $id_empresa=$request->id;
-    $fechaPagara=$request->fechaPagaraSinfonolas;
+    $fechaPagaraSinfonolas=$request->fechaPagaraSinfonolas;
     $id_matriculadetalleSinfonolas=$request->id_matriculadetalleSinfonolas;
     $tasa_interes=$request->tasa_interesSinfonolas;
     $fecha_interesMoratorio=$request->fecha_interesMoratorioSinfonolas;
@@ -1199,7 +1381,7 @@ public function calculo_cobroSinfonolas(Request $request){
         
      ->join('matriculas_detalle','calificacion_matriculas.id_matriculas_detalle','=','matriculas_detalle.id')
      
-     ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion',
+     ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion','calificacion_matriculas.id_estado_matricula',
      'matriculas_detalle.id as id_matriculadetalle','matriculas_detalle.id_empresa',)
  
      ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleSinfonolas)
@@ -1302,7 +1484,7 @@ public function calculo_cobroSinfonolas(Request $request){
                $intervalo2 = DateInterval::createFromDateString('1 Month');
                $periodo2 = new DatePeriod ($MesDeMulta, $intervalo2, $fechaFinMeses);
                     
-               //** Inicia Foreach para cálculo por meses */
+               //** Inicia Foreach para cálculo de multas por por pago extemporaneos e interese moratorios */
                     foreach ($periodo2 as $dt) 
                     {
                        $contador=$contador+1;
@@ -1395,51 +1577,95 @@ public function calculo_cobroSinfonolas(Request $request){
                  }
 
              //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
-             $Pmatriculas=CalificacionMatriculas::select('estado_matricula','monto_matricula','año_calificacion')
-             ->where('id_matriculas_detalle',$id_matriculadetalleSinfonolas)
-             ->get();
 
                 $añoActual=carbon::now()->format('Y');
-                $fecha_limite=Carbon::createFromDate($añoActual,03, 31);
+                $fecha_limiteSinfonolas=Carbon::createFromDate($añoActual,03, 31);
                 $fechahoy=carbon::now();
 
-                 $Cantidad_matriculas=0;
-                 $monto_pago_matricula=0;
-                 $multa=0;
+                   /** Calculando las licencias*/
+                   $Cantidad_matriculas=0;
+                   $monto_pago_matricula=0;
+                   $multa=0;
+                   $fila='------------------';
+                   $fila2='_______________________';
 
-                 foreach($Pmatriculas as $dato){
-                  
+                   //** Inicia Foreach para calcular matriculas y sus multas */
+                   foreach ($periodo as $dt) {
 
-                   if($dato->estado_matricula=='impago' and $dato->año_calificacion<$añoActual)
+                    $AñoCancelar=$dt->format('Y');
+                   
+                    $año_calificacion=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                    ->where('año_calificacion',$AñoCancelar)
+                    ->pluck('año_calificacion')
+                    ->first();
+
+                    $id_estado_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                    ->where('año_calificacion',$AñoCancelar)
+                    ->pluck('id_estado_matricula')
+                    ->first();
+
+                    $monto_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                    ->where('año_calificacion',$AñoCancelar)
+                    ->pluck('monto_matricula')
+                    ->first();
+                    
+                    log::info($año_calificacion);
+                    log::info($id_estado_matricula);
+                    log::info($monto_matricula);
+                    log::info($fila);
+
+                   if($id_estado_matricula=='2' and $año_calificacion<$añoActual)
                    {
-                            $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
+                            $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
                             $Cantidad_matriculas=$Cantidad_matriculas+1;
-                            $multa= $multa+$dato->monto_matricula;
-
-                   }else if($dato->estado_matricula=='impago' and $dato->año_calificacion==$añoActual)
+                            $multa= $multa+$monto_matricula;
+                            Log::info($monto_pago_matricula);
+                            Log::info($Cantidad_matriculas);
+                            Log::info($multa);
+                            Log::info('IF1- Con Multa');
+                            log::info($fila2);
+                   }else if($id_estado_matricula=='2' and $año_calificacion===$añoActual)
                    {
-                       if($fechahoy>$fecha_limite)
+                       if($fechahoy>$fecha_limiteSinfonolas)
                        {
-                        $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
+
+                        $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
                         $Cantidad_matriculas=$Cantidad_matriculas+1;
-                        $multa= $multa+$dato->monto_matricula;
+                        $multa= $multa+$monto_matricula;
+                        Log::info($monto_pago_matricula);
+                        Log::info($Cantidad_matriculas);
+                        Log::info($multa);
+                        Log::info('IF2- Con Multa');
+                        log::info($fila2);
 
                        }else 
                             {
-                                $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
+                                $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
                                 $Cantidad_matriculas=$Cantidad_matriculas+1;
                                 $multa=$multa;
-                            }
-
-                   }                                     
-             } 
-             //** Fin- Determinar si el permiso de una matricula ya fue pagada y Determinar multa  matricula */ 
-
-                 
+                                Log::info($monto_pago_matricula);
+                                Log::info($Cantidad_matriculas);
+                                Log::info($multa);
+                                Log::info('IF3 - Sin Multa');
+                                log::info($fila2);
+                            } 
+                    }
+                } //** Finaliza foreach para calcular multa matricula y calculo de las matriculas */                                   
+             
 
 
              Log::info($monto_pago_matricula);
              Log::info($Cantidad_matriculas);
+
+             if($request->estado=='On')
+             {
+                 $impuestos_mora=0;
+                 $impuesto_año_actual=0;
+                 $totalMultaPagoExtemporaneo=0;
+                 $InteresTotal=0;
+                 $impuestoTotal=0;
+                 $Cantidad_MesesTotal=0;
+             } 
 
             $fondoFPValor=round(($impuestoTotal*0.05)+($monto_pago_matricula*0.05),2);
             $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$impuestoTotal+$totalMultaPagoExtemporaneo+$InteresTotal+$multa,2);
@@ -1453,6 +1679,45 @@ public function calculo_cobroSinfonolas(Request $request){
             $InteresTotalDollar="$".$InteresTotal;
             $multaMatriculaDollar="$".$multa;
             $monto_pago_PmatriculaDollar="$".$monto_pago_matricula;
+
+            //** Guardar cobro*/
+            if ($request->cobrar=='1')
+            {   
+                if($multa>0)
+                {
+                    foreach ($periodo as $dt) {
+                        $AñoCancelar =$dt->format('Y');
+                    CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleSinfonolas)
+                    ->where('id_estado_matricula','2')
+                    ->where('año_calificacion',$AñoCancelar)
+                    ->update([
+                                'id_estado_matricula' =>"1",              
+                            ]);
+                        }
+                }
+
+            $cobro = new CobrosMatriculas();
+            $cobro->id_matriculas_detalle = $request->id_matriculadetalleSinfonolas;
+            $cobro->id_usuario = '1';
+            $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
+            $cobro->monto_multa_matricula = $multa;
+            $cobro->fondo_fiestasP = $fondoFPValor;
+            $cobro->impuesto_mora =$impuestos_mora;
+            $cobro->impuesto =$impuesto_año_actual;
+            $cobro->intereses_moratorios =$InteresTotal;
+            $cobro->monto_multaPE =$totalMultaPagoExtemporaneo;
+            $cobro->pago_total = $totalPagoValor;
+            $cobro->fecha_cobro =  $fechahoy;
+            $cobro->periodo_cobro_inicio = $InicioPeriodo;
+            $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+            $cobro->tipo_cobro ='matricula';
+            $cobro->save();
+        
+            return ['success' => 2];
+            
+
+        }else{
+                
             return [
                 'success' => 1,
                 'impuestoTotalSinfonolas'=>$impuestoTotal,
@@ -1473,8 +1738,9 @@ public function calculo_cobroSinfonolas(Request $request){
                 'totalPagoSinfonolas'=>$totalPagoSinfonolasDollar,
           
                ];
+            
         } //** Termina if validador de la fecha de ultimo pago no puede ser mayor que la de pagara */
-        else
+     } else
             {
                 return ['success' => 0];
             }
@@ -1488,12 +1754,12 @@ public function calculo_cobroAparatos(Request $request){
     $DetectorEnero=Carbon::parse($request->ultimo_cobroAparatos)->format('M');
     $AñoVariable=Carbon::parse($request->ultimo_cobroAparatos)->format('Y');
     $id_empresa=$request->id;
-    $fechaPagara=$request->fechaPagaraAparatos;
+    $fechaPagaraAparatos=carbon::parse($request->fecha_pagaraAparatos)->format('Y-12-31');
     $id_matriculadetalleAparatos=$request->id_matriculadetalleAparatos;
     $tasa_interes=$request->tasa_interesAparatos;
-    $fecha_interesMoratorio=$request->fecha_interesMoratorioAparatos;
 
-    if($DetectorEnero=='Jan')
+
+   if($DetectorEnero=='Jan') 
     {
         $f1=Carbon::createFromDate($AñoVariable,2,1);
         $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
@@ -1506,8 +1772,8 @@ public function calculo_cobroAparatos(Request $request){
             $Message="No se ha sumado dias";
          }
     
-    $f2=Carbon::parse($request->fechaPagaraAparatos);
-    $f3=Carbon::parse($request->fecha_interesMoratorioAparatos);
+    $f2=Carbon::parse($fechaPagaraAparatos);
+    $f3=carbon::now();
     $añoActual=Carbon::now()->format('Y');
    
     //** Inicia - Para determinar el intervalo de años a pagar */
@@ -1521,55 +1787,90 @@ public function calculo_cobroAparatos(Request $request){
     $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
     //** Finaliza - Para determinar el intervalo de años a pagar */
 
- 
-    //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-    $DTF=Carbon::parse($request->fechaPagaraAparatos)->addMonthsNoOverflow(1)->day(1);
-    $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-    //Log::info($PagoUltimoDiaMes);
-    //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
-    if($f1->lt($PagoUltimoDiaMes))
+
+    if($f1->lt($fechaPagaraAparatos))
     {
 
-             //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
-             $Pmatriculas=CalificacionMatriculas::select('estado_matricula','monto_matricula','año_calificacion')
-             ->where('id_matriculas_detalle',$id_matriculadetalleAparatos)
-             ->get();
-
+    //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
+    $Pmatriculas=CalificacionMatriculas::select('id_estado_matricula','monto_matricula','año_calificacion')
+    ->where('id_matriculas_detalle',$id_matriculadetalleAparatos)
+    ->get();
                 $añoActual=carbon::now()->format('Y');
+                //$añoVariable=carbon::parse($Pmatriculas->año_calificacion);
                 $fecha_limite=Carbon::createFromDate($añoActual,03, 31);
                 $fechahoy=carbon::now();
+                //$fechahoy='2022-02-17';
 
                  $Cantidad_matriculas=0;
                  $monto_pago_matricula=0;
                  $multa=0;
 
-                 foreach($Pmatriculas as $dato){
-                  
+                 $intervalo = DateInterval::createFromDateString('1 Year');
+                 $periodo = new DatePeriod ($FechaInicio, $intervalo, $FechaFinal);
+      
+                 $fila='------------------';
+                 $fila2='_______________________';
+                 foreach ($periodo as $dt) {
+                    $AñoPago =$dt->format('Y');
+                    $año_calificacion=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleAparatos)
+                    ->where('año_calificacion',$AñoPago)
+                    ->pluck('año_calificacion')
+                    ->first();
 
-                   if($dato->estado_matricula=='impago' and $dato->año_calificacion<$añoActual)
+                    $id_estado_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleAparatos)
+                    ->where('año_calificacion',$AñoPago)
+                    ->pluck('id_estado_matricula')
+                    ->first();
+
+                    $monto_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleAparatos)
+                    ->where('año_calificacion',$AñoPago)
+                    ->pluck('monto_matricula')
+                    ->first();
+                    
+                    log::info($año_calificacion);
+                    log::info($id_estado_matricula);
+                    log::info($monto_matricula);
+                    log::info($fila);
+
+                   if($id_estado_matricula=='2' and $año_calificacion<$añoActual)
                    {
-                            $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
+                            $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
                             $Cantidad_matriculas=$Cantidad_matriculas+1;
-                            $multa= $multa+$dato->monto_matricula;
-
-                   }else if($dato->estado_matricula=='impago' and $dato->año_calificacion==$añoActual)
+                            $multa= $multa+$monto_matricula;
+                            Log::info($monto_pago_matricula);
+                            Log::info($Cantidad_matriculas);
+                            Log::info($multa);
+                            Log::info('IF1- Con Multa');
+                            log::info($fila2);
+                   }else if($id_estado_matricula=='2' and $año_calificacion===$añoActual)
                    {
                        if($fechahoy>$fecha_limite)
                        {
-                        $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
+
+                        $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
                         $Cantidad_matriculas=$Cantidad_matriculas+1;
-                        $multa= $multa+$dato->monto_matricula;
+                        $multa= $multa+$monto_matricula;
+                        Log::info($monto_pago_matricula);
+                        Log::info($Cantidad_matriculas);
+                        Log::info($multa);
+                        Log::info('IF2- Con Multa');
+                        log::info($fila2);
 
                        }else 
                             {
-                                $monto_pago_matricula= $monto_pago_matricula+$dato->monto_matricula;
+                                $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
                                 $Cantidad_matriculas=$Cantidad_matriculas+1;
                                 $multa=$multa;
+                                Log::info($monto_pago_matricula);
+                                Log::info($Cantidad_matriculas);
+                                Log::info($multa);
+                                Log::info('IF3 - Sin Multa');
+                                log::info($fila2);
                             }
 
                    }                                     
-             } 
+            }//** Finaliza foreach -periodo- */
              //** Fin- Determinar si el permiso de una matricula ya fue pagada y Determinar multa  matricula */ 
 
                  
@@ -1578,7 +1879,7 @@ public function calculo_cobroAparatos(Request $request){
              Log::info($monto_pago_matricula);
              Log::info($Cantidad_matriculas);
 
-            $fondoFPValor=round(($monto_pago_matricula*0.05)+($monto_pago_matricula*0.05),2);
+            $fondoFPValor=round(($monto_pago_matricula*0.05),2);
             $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$multa,2);
 
             //Le agregamos su signo de dollar para la vista al usuario
@@ -1586,17 +1887,54 @@ public function calculo_cobroAparatos(Request $request){
             $totalPagoAparatosDollar="$".$totalPagoValor;
             $multaMatriculaDollar="$".$multa;
             $monto_pago_PmatriculaDollar="$".$monto_pago_matricula;
+
+            //** Guardar cobro*/
+            if ($request->cobrar=='1')
+            {   
+                if($monto_pago_matricula>0)
+                {
+                    foreach ($periodo as $dt) {
+                        $AñoCancelar =$dt->format('Y');
+                    CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleAparatos)
+                    ->where('id_estado_matricula','2')
+                    ->where('año_calificacion',$AñoCancelar)
+                    ->update([
+                                'id_estado_matricula' =>"1",              
+                            ]);
+                        }
+            }
+
+            $cobro = new CobrosMatriculas();
+            $cobro->id_matriculas_detalle = $request->id_matriculadetalleAparatos;
+            $cobro->id_usuario = '1';
+            $cobro->cantidad_meses_cobro = '12';
+            $cobro->monto_multa_matricula = $multa;
+            $cobro->fondo_fiestasP = $fondoFPValor;
+            $cobro->pago_total = $totalPagoValor;
+            $cobro->fecha_cobro =  $fechahoy;
+            $cobro->periodo_cobro_inicio = $InicioPeriodo;
+            $cobro->periodo_cobro_fin =$fechaPagaraAparatos;
+            $cobro->tipo_cobro ='matricula';
+            $cobro->save();
+        
+            return ['success' => 2];
+            
+
+        }else{
+
             return [
                 'success' => 1,
        
                 'fondoFPAparatos'=>$fondoFP,
                 'InicioPeriodoAparatos'=>$InicioPeriodo,
-                'PagoUltimoDiaMesAparatos'=>$PagoUltimoDiaMes,
+                'PagoUltimoDiaMesAparatos'=>$fechaPagaraAparatos,
                 'monto_pago_PmatriculaDollarAparatos'=>$monto_pago_PmatriculaDollar,
                 'multa_por_matricula'=>$multaMatriculaDollar,
                 'totalPagoAparatos'=>$totalPagoAparatosDollar,
           
                ];
+            }
+
         } //** Termina if validador de la fecha de ultimo pago no puede ser mayor que la de pagara */
         else
             {

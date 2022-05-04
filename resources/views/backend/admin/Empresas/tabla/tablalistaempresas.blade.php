@@ -26,8 +26,6 @@
                                     <td align="center"> <span class="badge bg-success">Activo</span></td>
                                     @elseif($dato->estado == 'Cerrado')
                                     <td align="center"> <span class="badge bg-danger">Cerrado</span></td>
-                                    @else
-                                    <td align="center"> <span class="badge bg-Warning">En Mora</span></td>
                                     @endif
                                     <td>{{$dato->direccion}}</td>
                                     <td>{{$dato->telefono}}</td>

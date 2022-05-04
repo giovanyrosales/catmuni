@@ -12,9 +12,10 @@ class CalificacionMatriculas extends Model
     protected $fillable = [
           'id',
           'id_matriculas_detalle',
+          'id_estado_matricula',
           'nombre_matricula',
           'cantidad',
-          'monto_matriculas',
+          'monto_matricula',
           'pago_mensual',
           'año_calificacion',
           'estado_calificacion',

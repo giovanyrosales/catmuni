@@ -78,6 +78,7 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/empresas/calculo_calificacion', [EmpresaController::class, 'calculo_calificacion']);
     Route::post('/admin/empresas/calificacion/nueva', [EmpresaController::class,'nuevaCalificacion']);
     Route::post('/admin/empresas/calculo_cobros_empresa', [EmpresaController::class, 'calculo_cobros_empresa']);
+    Route::post('/admin/empresas/calculo_cobros_licencia_licor', [EmpresaController::class, 'calculo_cobroLicor']);
     Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
     Route::get('/admin/empresas/calificaciones/tabla_matriculas/{empresa}', [EmpresaController::class,'tablaMatriculas']);
 
@@ -175,6 +176,7 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/empresas/calculo_cobros_maquinas', [MatriculasDetalleController::class, 'calculo_cobroMaquinas']);
     Route::post('/admin/empresas/calculo_cobros_sinfonolas', [MatriculasDetalleController::class, 'calculo_cobroSinfonolas']);
     Route::post('/admin/empresas/calculo_cobros_aparatos', [MatriculasDetalleController::class, 'calculo_cobroAparatos']);
+   
 
     // ---MATRICULAS DETALLE ESPECIFICO
     Route::post('/admin/matriculas_detalle_especifico/agregar', [MatriculasDetalleController::class,'agregar_matriculas_detalle_especifico']);
