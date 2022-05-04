@@ -991,14 +991,14 @@ foreach ($calificacion as $dato)
                         $MesDeMultaDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
                         
             
-                    $Fecha60Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(30); 
-                    Log::info($Fecha60Sumada);
+                    $Fecha30Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(30); 
+                    Log::info($Fecha30Sumada);
                     Log::info($f3);
-                    if($f3>$Fecha60Sumada){
-                    $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));//**le tenia floatdiffInDays y funcinona bien  */
+                    if($f3>$Fecha30Sumada){
+                    $CantidaDiasMesMulta=ceil($Fecha30Sumada->diffInDays($f3));//**le tenia floatdiffInDays y funcinona bien  */
                     }else
                     {
-                        $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));
+                        $CantidaDiasMesMulta=ceil($Fecha30Sumada->diffInDays($f3));
                         $CantidaDiasMesMulta=-$CantidaDiasMesMulta;
                         
                     }

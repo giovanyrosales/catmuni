@@ -380,6 +380,10 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                     </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
               </div><!-- ROW FILA3 -->        
+              <button type="button" class="btn btn-primary btn-lg btn-block" onclick="verificar();">
+                       <i class="fas fa-edit"></i>
+                       &nbsp;Registrar Cobro &nbsp;
+                      </button>
 
             </div><!-- /.Panel Tarifas -->
  
