@@ -860,20 +860,6 @@ foreach ($calificacion as $dato)
         ->where('id_rotulos', "=", "$id")
         ->first();
 
-
-        $calificacion=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
-                                
-        //Consulta para mostrar los rótulos que pertenecen a una sola empresa
-                              
-                ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
-                'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
-                'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
-                'rotulos.coordenadas','rotulos.imagen',
-                'empresa.nombre as empresas')
-                
-                ->where('id_empresa', $id_empresa)
-                ->get();
-        
          //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
      
           
@@ -962,19 +948,15 @@ foreach ($calificacion as $dato)
 
                 }   //** Termina el foreach */
 
-                //** -------Inicia - Cálculo para multas por pago extemporaneo--------- */
-                /* -------------------------------------------------------------------
-                "Se determina una multa por día en mora, despues de haberse vencido 
-                la fecha de pago y una vez haya transcurrido 60 días despues del 
-                vencimiento de la fecha limite de pago".
-                ------------------------------------------------------------------*/
+                //** -------Inicia - Cálculo para intereses--------- */
+
                 $TasaInteresDiaria=($Tasainteres/365);
                 $InteresTotal=0;
-                $MesDeMulta=Carbon::parse($FechaDeInicioMoratorio)->subDays(60);
+                $MesDeInteres=Carbon::parse($FechaDeInicioMoratorio)->subDays(30);
                 $contador=0;
                 $fechaFinMeses=$f2->addMonthsNoOverflow(1);
                 $intervalo2 = DateInterval::createFromDateString('1 Month');
-                $periodo2 = new DatePeriod ($MesDeMulta, $intervalo2, $fechaFinMeses);
+                $periodo2 = new DatePeriod ($MesDeInteres, $intervalo2, $fechaFinMeses);
                         
                 //** Inicia Foreach para cálculo por meses */
                 foreach ($periodo2 as $dt) 
@@ -982,58 +964,40 @@ foreach ($calificacion as $dato)
                    $contador=$contador+1;
                    $divisiondefila=".....................";
 
-
-    
-                        $Date1=Carbon::parse($MesDeMulta)->day(1);
-                        $Date2=Carbon::parse($MesDeMulta)->endOfMonth();
+                        $Date1=Carbon::parse($MesDeInteres)->day(1);
+                        $Date2=Carbon::parse($MesDeInteres)->endOfMonth();
                         
-                        $MesDeMultaDiainicial=Carbon::parse($Date1)->format('Y-m-d'); 
-                        $MesDeMultaDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
+                        $MesDeInteresDiainicial=Carbon::parse($Date1)->format('Y-m-d'); 
+                        $MesDeInteresDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
                         
             
-                    $Fecha30Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(30); 
+                    $Fecha30Sumada=Carbon::parse($MesDeInteresDiaFinal)->addDays(30); 
                     Log::info($Fecha30Sumada);
                     Log::info($f3);
                     if($f3>$Fecha30Sumada){
-                    $CantidaDiasMesMulta=ceil($Fecha30Sumada->diffInDays($f3));//**le tenia floatdiffInDays y funcinona bien  */
+                    $CantidaDiasMesInteres=ceil($Fecha30Sumada->diffInDays($f3));//**le tenia floatdiffInDays y funcinona bien  */
                     }else
                     {
-                        $CantidaDiasMesMulta=ceil($Fecha30Sumada->diffInDays($f3));
-                        $CantidaDiasMesMulta=-$CantidaDiasMesMulta;
+                        $CantidaDiasMesInteres=ceil($Fecha30Sumada->diffInDays($f3));
+                        $CantidaDiasMesInteres=-$CantidaDiasMesInteres;
                         
                     }
-                    Log::info($CantidaDiasMesMulta);
-                    
-                   $tarifa=CalificacionRotulo::where('año_calificacion',$AñoPago)
-                   ->where('id_empresa','=',$id_empresa) 
-                      ->pluck('tarifa_mensual') 
-                          ->first();
+                    Log::info($CantidaDiasMesInteres);
+
                 
-                $MesDeMulta->addMonthsNoOverflow(1)->format('Y-M');
+                $MesDeInteres->addMonthsNoOverflow(1)->format('Y-M');
 
 
-               //** INICIO- Determinar multa por pago extemporaneo. */
-               if($CantidaDiasMesMulta>0){                                                   
-                    if($CantidaDiasMesMulta<=90)
-                    {  
-                                $multaPagoExtemporaneo=round(($tarifa_total*0.05),2);
-                                $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;
-                                $stop="Avanza:Multa";
-
-                    }elseif($CantidaDiasMesMulta>=90)
-                            {
-                                $multaPagoExtemporaneo=round(($tarifa_total*0.10),2);
-                                $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;  
-                                $stop="Avanza:Multa";
-                            }
+               //** INICIO- Determinar Interes. */
+               if($CantidaDiasMesInteres>0){                                                   
+                 
+                    $stop="Avanza:interes";    
 
                     //** INICIO-  Cálculando el interes. */
-                    $Interes=round((($TasaInteresDiaria*$CantidaDiasMesMulta)/100*$tarifa_total),2);
+                    $Interes=round((($TasaInteresDiaria*$CantidaDiasMesInteres)/100*$tarifa_total),2);
                     $InteresTotal=$InteresTotal+$Interes;
                     //** FIN-  Cálculando el interes. */
 
-
-                    
                 }
                 else
                     { 
@@ -1041,47 +1005,24 @@ foreach ($calificacion as $dato)
                         $InteresTotal=$InteresTotal;
                         $multaPagoExtemporaneo=$multaPagoExtemporaneo;
                         $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo;
-                        $stop="Alto:No multa";
+                        $stop="Alto: Sin interes";
                     }
                //** FIN-  Determinar multa por pago extemporaneo. */
 
                
                
                     Log::info($contador);
-                    Log::info('Mes multa '.$MesDeMulta);
+                    Log::info('Mes multa '.$MesDeInteres);
                     Log::info($stop);
-                    Log::info($MesDeMultaDiainicial);                   
-                    Log::info($MesDeMultaDiaFinal);                 
+                    Log::info($MesDeInteresDiainicial);                   
+                    Log::info($MesDeInteresDiaFinal);                 
                     Log::info($multaPagoExtemporaneo);
                     Log::info($totalMultaPagoExtemporaneo);
                     Log::info($Interes);
                     Log::info($InteresTotal);
                     Log::info($divisiondefila);
                 }                 
-                 //** Para determinar la cantidad de multas por balance por empresa */
-                 /*  
-                 $multas=MultasDetalle::select('monto_multa')
-                 ->where('id_empresa',$id)
-                 ->where('id_estado_multa','2')
-                     ->get();
- 
-                     $Cantidad_multas=0;
-                     $monto_pago_multa=0;
- 
-                     foreach($multas as $dato){
-                         $multa=$dato->monto_multa;
- 
-                             if ($multa>0)
-                             {
-                                 $monto_pago_multa= $monto_pago_multa+$multa;
-                                 $Cantidad_multas=$Cantidad_multas+1;
-                             }
-                             
-                 }   
-                 /*
-                 //** Fin- Determinar la cantidad de multas por empresa */ 
-           
-    
+                
                 
                 $fondoFPValor=round($impuestoTotal*0.05,2);
                 $totalPagoValor= round($fondoFPValor+$impuestoTotal+$InteresTotal,2);
@@ -1091,7 +1032,7 @@ foreach ($calificacion as $dato)
                 $totalPago="$".$totalPagoValor;
                 $impuestos_mora_Dollar="$".$impuestos_mora;
                 $impuesto_año_actual_Dollar="$".$impuesto_año_actual;
-             //  $monto_pago_multaDollar="$".$monto_pago_multa;
+      
            
                 $InteresTotalDollar="$".$InteresTotal;
             
@@ -1100,8 +1041,7 @@ foreach ($calificacion as $dato)
                         'impuestoTotal'=>$impuestoTotal,
                         'impuestos_mora_Dollar'=>$impuestos_mora_Dollar,
                         'impuesto_año_actual_Dollar'=>$impuesto_año_actual_Dollar,
-                        'Cantidad_MesesTotal'=>$Cantidad_MesesTotal,
-                     //   'nombre_rotulo'=>$nombre_rotulo,              
+                        'Cantidad_MesesTotal'=>$Cantidad_MesesTotal,           
                         'tarifa'=>$tarifa,
                         'fondoFP'=>$fondoFP,
                         'totalPago'=>$totalPago,
