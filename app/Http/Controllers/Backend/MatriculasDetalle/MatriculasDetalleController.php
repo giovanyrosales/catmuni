@@ -504,27 +504,30 @@ public function info_cobroMatriculas(Request $request){
 public function calculo_cobroMesas(Request $request){
     log::info($request->all());
 
-    $DetectorEnero=Carbon::parse($request->ultimo_cobroMesas)->format('M');
-    $AñoVariable=Carbon::parse($request->ultimo_cobroMesas)->format('Y');
+
     $id_empresa=$request->id;
-    $fechaPagaraMesas=$request->fechaPagaraMesas;
     $id_matriculadetalleMesas=$request->id_matriculadetalleMesas;
     $tasa_interes=$request->tasa_interesMesas;
-    $fecha_interesMoratorio=$request->fecha_interesMoratorioMesas;
-    $Message=0;
+    
+ 
+    $MesNumero=Carbon::createFromDate($request->ultimo_cobroMesas)->format('d');
+    //log::info($MesNumero);
 
-    if($DetectorEnero=='Jan')
+    if($MesNumero<='15')
     {
-        $f1=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
+        $f1=Carbon::parse($request->ultimo_cobroMesas)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
         $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        $Message="Se ha sumado 1 dia";
-
-    }else{
-            $f1=Carbon::parse($request->ultimo_cobroMesas)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($request->ultimo_cobroMesas)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-            $Message="No se ha sumado dias";
+        //log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($request->ultimo_cobroMesas)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($request->ultimo_cobroMesas)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+        // log::info('fin de mes ');
          }
+
     
     $f2=Carbon::parse($request->fechaPagaraMesas);
     $f3=Carbon::parse($request->fecha_interesMoratorioMesas);
@@ -542,21 +545,21 @@ public function calculo_cobroMesas(Request $request){
     //** Finaliza - Para determinar el intervalo de años a pagar */
 
  
-    //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-    $DTF=Carbon::parse($request->fechaPagaraMesas)->addMonthsNoOverflow(1)->day(1);
-    $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-    //Log::info($PagoUltimoDiaMes);
+    ///** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
+    $PagoUltimoDiaMes=Carbon::parse($request->fechaPagaraMesas)->endOfMonth()->format('Y-m-d');
     //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+    Log::info('Pago ultimo dia del mes---->' .$PagoUltimoDiaMes);
 
-     //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-     $f_inicio=Carbon::parse($request->ultimo_cobroMesas)->addMonthsNoOverflow(2)->day(1);
-     $UltimoDiaMes=$f_inicio->subDays(1);
-     //Log::info($UltimoDiaMes);
-     $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-     
-     $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
-     $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
-     //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+    //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+    $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+    Log::info('ultimo dia del mes---->' .$UltimoDiaMes);
+    $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+    Log::info($FechaDeInicioMoratorio);
+    
+    $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+    $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+    //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+    
      Log::info($DiasinteresMoratorio);
    
      $calificacionesMesas = CalificacionMatriculas::latest()
@@ -933,8 +936,6 @@ public function calculo_cobroMesas(Request $request){
 public function calculo_cobroMaquinas(Request $request){
     log::info($request->all());
 
-    $DetectorEnero=Carbon::parse($request->ultimo_cobroMaquinas)->format('M');
-    $AñoVariable=Carbon::parse($request->ultimo_cobroMaquinas)->format('Y');
     $id_empresa=$request->id;
     $fechaPagaraMaquinas=$request->fechaPagaraMaquinas;
     $id_matriculadetalleMaquinas=$request->id_matriculadetalleMaquinas;
@@ -942,18 +943,24 @@ public function calculo_cobroMaquinas(Request $request){
     $fecha_interesMoratorio=$request->fecha_interesMoratorioMaquinas;
     $Message=0;
 
-    if($DetectorEnero=='Jan')
-    {
-        $f1=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        $Message="Se ha sumado 1 dia";
+    $MesNumero=Carbon::createFromDate($request->ultimo_cobroMaquinas)->format('d');
+    //log::info($MesNumero);
 
-    }else{
-            $f1=Carbon::parse($request->ultimo_cobroMaquinas)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($request->ultimo_cobroMaquinas)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-            $Message="No se ha sumado dias";
+    if($MesNumero<='15')
+    {
+        $f1=Carbon::parse($request->ultimo_cobroMaquinas)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
+        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+        //log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($request->ultimo_cobroMaquinas)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($request->ultimo_cobroMaquinas)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+        // log::info('fin de mes ');
          }
+
     
     $f2=Carbon::parse($request->fechaPagaraMaquinas);
     $f3=Carbon::parse($request->fecha_interesMoratorioMaquinas);
@@ -972,20 +979,19 @@ public function calculo_cobroMaquinas(Request $request){
 
  
     //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-    $DTF=Carbon::parse($request->fechaPagaraMaquinas)->addMonthsNoOverflow(1)->day(1);
-    $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-    //Log::info($PagoUltimoDiaMes);
+    $PagoUltimoDiaMes=Carbon::parse($request->fechaPagaraMaquinas)->endOfMonth()->format('Y-m-d');
     //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+    Log::info('Pago ultimo dia del mes---->' .$PagoUltimoDiaMes);
 
-     //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-     $f_inicio=Carbon::parse($request->ultimo_cobroMaquinas)->addMonthsNoOverflow(2)->day(1);
-     $UltimoDiaMes=$f_inicio->subDays(1);
-     //Log::info($UltimoDiaMes);
-     $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
-     
-     $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
-     $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
-     //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+    //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+    $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+    Log::info('ultimo dia del mes---->' .$UltimoDiaMes);
+    $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
+    Log::info($FechaDeInicioMoratorio);
+    
+    $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+    $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+    //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
      Log::info($DiasinteresMoratorio);
    
      $calificacionesMaquinas = CalificacionMatriculas::latest()
@@ -1322,8 +1328,7 @@ public function calculo_cobroMaquinas(Request $request){
 public function calculo_cobroSinfonolas(Request $request){
     log::info($request->all());
 
-    $DetectorEnero=Carbon::parse($request->ultimo_cobroSinfonolas)->format('M');
-    $AñoVariable=Carbon::parse($request->ultimo_cobroSinfonolas)->format('Y');
+    $MesNumero=Carbon::createFromDate($request->ultimo_cobroSinfonolas)->format('d');
     $id_empresa=$request->id;
     $fechaPagaraSinfonolas=$request->fechaPagaraSinfonolas;
     $id_matriculadetalleSinfonolas=$request->id_matriculadetalleSinfonolas;
@@ -1331,21 +1336,22 @@ public function calculo_cobroSinfonolas(Request $request){
     $fecha_interesMoratorio=$request->fecha_interesMoratorioSinfonolas;
     $Message=0;
 
-    if($DetectorEnero=='Jan')
+    if($MesNumero<='15')
     {
-        $f1=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
+        $f1=Carbon::parse($request->ultimo_cobroSinfonolas)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
         $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        $Message="Se ha sumado 1 dia";
-
-    }else{
-            $f1=Carbon::parse($request->ultimo_cobroSinfonolas)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($request->ultimo_cobroSinfonolas)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-            $Message="No se ha sumado dias";
+        log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($request->ultimo_cobroSinfonolas)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($request->ultimo_cobroSinfonolas)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+        log::info('fin de mes ');
          }
-    
     $f2=Carbon::parse($request->fechaPagaraSinfonolas);
-    $f3=Carbon::parse($request->fecha_interesMoratorioSinfonolas);
+    $f3=Carbon::parse($fecha_interesMoratorio);
     $añoActual=Carbon::now()->format('Y');
    
     //** Inicia - Para determinar el intervalo de años a pagar */
@@ -1361,17 +1367,14 @@ public function calculo_cobroSinfonolas(Request $request){
 
  
     //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-    $DTF=Carbon::parse($request->fechaPagaraSinfonolas)->addMonthsNoOverflow(1)->day(1);
-    $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-    //Log::info($PagoUltimoDiaMes);
+    $PagoUltimoDiaMes=Carbon::parse($fechaPagaraSinfonolas)->endOfMonth()->format('Y-m-d');
     //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
      //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-     $f_inicio=Carbon::parse($request->ultimo_cobroSinfonolas)->addMonthsNoOverflow(2)->day(1);
-     $UltimoDiaMes=$f_inicio->subDays(1);
-     //Log::info($UltimoDiaMes);
+     $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
      $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-     
+
+     Log::info($FechaDeInicioMoratorio);
      $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
      $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
      //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
@@ -1751,26 +1754,30 @@ public function calculo_cobroSinfonolas(Request $request){
 public function calculo_cobroAparatos(Request $request){
     log::info($request->all());
 
-    $DetectorEnero=Carbon::parse($request->ultimo_cobroAparatos)->format('M');
-    $AñoVariable=Carbon::parse($request->ultimo_cobroAparatos)->format('Y');
+
     $id_empresa=$request->id;
     $fechaPagaraAparatos=carbon::parse($request->fecha_pagaraAparatos)->format('Y-12-31');
     $id_matriculadetalleAparatos=$request->id_matriculadetalleAparatos;
     $tasa_interes=$request->tasa_interesAparatos;
 
+    $MesNumero=Carbon::createFromDate($request->ultimo_cobroAparatos)->format('d');
+    //log::info($MesNumero);
 
-   if($DetectorEnero=='Jan') 
+    if($MesNumero<='15')
     {
-        $f1=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
+        $f1=Carbon::parse($request->ultimo_cobroAparatos)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
         $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        $Message="Se ha sumado 1 dia";
-
-    }else{
-            $f1=Carbon::parse($request->ultimo_cobroAparatos)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($request->ultimo_cobroAparatos)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-            $Message="No se ha sumado dias";
+        //log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($request->ultimo_cobroultimo_cobroAparatos)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($request->ultimo_cobroAparatos)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+        // log::info('fin de mes ');
          }
+
     
     $f2=Carbon::parse($fechaPagaraAparatos);
     $f3=carbon::now();
@@ -1792,12 +1799,8 @@ public function calculo_cobroAparatos(Request $request){
     if($f1->lt($fechaPagaraAparatos))
     {
 
-    //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
-    $Pmatriculas=CalificacionMatriculas::select('id_estado_matricula','monto_matricula','año_calificacion')
-    ->where('id_matriculas_detalle',$id_matriculadetalleAparatos)
-    ->get();
                 $añoActual=carbon::now()->format('Y');
-                //$añoVariable=carbon::parse($Pmatriculas->año_calificacion);
+         
                 $fecha_limite=Carbon::createFromDate($añoActual,03, 31);
                 $fechahoy=carbon::now();
                 //$fechahoy='2022-02-17';

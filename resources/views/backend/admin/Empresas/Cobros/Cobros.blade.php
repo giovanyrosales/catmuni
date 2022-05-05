@@ -558,7 +558,7 @@ formData.append('fecha_interesMoratorioSinfonolas', fecha_interesMoratorioSinfon
                 console.log(response);
                   closeLoading();
                   if(response.data.success ===0){
-                    toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
+                    toastr.error('La fecha selecionada no puede ser menor o igual a la del ultimo pago');
                     document.getElementById('fechaInicioPagoSinfonolas_imp').innerHTML=''; 
                     document.getElementById('hastaSinfonolas').innerHTML= '';
                     document.getElementById('cant_mesesSinfonolas').value=''; 

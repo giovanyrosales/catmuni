@@ -436,16 +436,13 @@ public function calculo_cobros_empresa(Request $request)
 
  
     //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-    $DTF=Carbon::parse($request->fechaPagara)->addMonthsNoOverflow(1)->day(1);
-    $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-    Log::info($PagoUltimoDiaMes);
+    $PagoUltimoDiaMes=Carbon::parse($request->fechaPagara)->endOfMonth()->format('Y-m-d');
     //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
      //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-     $f_inicio=Carbon::parse($f1)->addMonthsNoOverflow(2)->day(1);
-     $UltimoDiaMes=$f_inicio->subDays(1);
-     Log::info( $UltimoDiaMes);
+     $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
      $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+
      Log::info($FechaDeInicioMoratorio);
      $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
      $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
@@ -751,23 +748,26 @@ public function calculo_cobros_empresa(Request $request)
 public function calculo_cobroLicor(Request $request)
 { 
     log::info($request->all());
-    $DetectorEnero=Carbon::parse($request->ultimo_cobro)->format('M');
-    $AñoVariable=Carbon::parse($request->ultimo_cobro)->format('Y');
-    $id=$request->id;
-    $Message=0;
-    if($DetectorEnero=='Jan')
-    {
-        $f1=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
-        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        $Message="Se ha sumado 1 dia";
+    $MesNumero=Carbon::createFromDate($request->ultimo_cobro)->format('d');
+    //log::info($MesNumero);
 
-    }else{
-            $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-            $Message="No se ha sumado dias";
+    if($MesNumero<='15')
+    {
+        $f1=Carbon::parse($request->ultimo_cobro)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
+        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+        //log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+        // log::info('fin de mes ');
          }
-    
+
+    $id=$request->id;
+   
     $f2=Carbon::parse($request->fechaPagara);
     $f3=Carbon::parse($request->fecha_interesMoratorio);
     $añoActual=Carbon::now()->format('Y');
@@ -785,27 +785,23 @@ public function calculo_cobroLicor(Request $request)
     $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
     //** Finaliza - Para determinar el intervalo de años a pagar */
 
- 
+  
+  
     //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-    $DTF=Carbon::parse($request->fechaPagara)->addMonthsNoOverflow(1)->day(1);
-    $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-    //Log::info($PagoUltimoDiaMes);
+    $PagoUltimoDiaMes=Carbon::parse($request->fechaPagara)->endOfMonth()->format('Y-m-d');
     //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+    Log::info('Pago ultimo dia del mes---->' .$PagoUltimoDiaMes);
 
-     //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-     $f_inicio=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(2)->day(1);
-     $UltimoDiaMes=$f_inicio->subDays(1);
-     //Log::info( $UltimoDiaMes);
-     $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-     Log::info($FechaDeInicioMoratorio);
-     $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
-     $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
-     //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+    //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+    $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+    Log::info('ultimo dia del mes---->' .$UltimoDiaMes);
+    $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+    Log::info($FechaDeInicioMoratorio);
     
-     //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
-     $Plicencias=calificacion::select('id_estado_licencia_licor','licencia','año_calificacion')
-     ->where('id_empresa',$id)
-     ->get();
+    $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+    $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+    //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+    
 
     //** Inicia - Para obtener la tasa de interes más reciente */
     $Tasainteres=Interes::latest()
@@ -1003,8 +999,6 @@ public function calculo_cobroLicor(Request $request)
                  {
                      $totalMultaPagoExtemporaneo=2.86;
                  }
-
-                //$FechaLimitePasado=Carbon::parse($request->ultimo_cobro)->addYears(1)->month(1)->day(15);
                 
                  /** Calculando las licencias*/
                  $Cantidad_licencias=0;
