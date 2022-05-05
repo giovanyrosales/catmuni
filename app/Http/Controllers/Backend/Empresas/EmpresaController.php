@@ -395,7 +395,7 @@ public function calculo_cobros_empresa(Request $request)
 {   log::info($request->all());
     
     $MesNumero=Carbon::createFromDate($request->ultimo_cobro)->format('d');
-    log::info($MesNumero);
+    //log::info($MesNumero);
 
     if($MesNumero<='15')
     {
@@ -403,16 +403,16 @@ public function calculo_cobros_empresa(Request $request)
         $f1=Carbon::parse($f1);
         $InicioPeriodo=Carbon::createFromDate($f1);
         $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        log::info('inicio de mes');
+        //log::info('inicio de mes');
     }
     else
         {
          $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
          $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-         log::info('fin de mes ');
+        // log::info('fin de mes ');
          }
 
-    log::info('Ultimo pago: '.$f1);
+    //log::info('Ultimo pago: '.$f1);
 
     $id=$request->id;
     $Message=0;
@@ -427,7 +427,8 @@ public function calculo_cobros_empresa(Request $request)
     $dayInicio='01';
     $monthFinal='12';
     $dayFinal='31';
-    $AñoInicio=Carbon::parse($request->ultimo_cobro)->format('Y');
+    $AñoInicio=Carbon::parse($f1)->format('Y');
+    
     $AñoFinal=$f2->format('Y');
     $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
     $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
@@ -437,13 +438,13 @@ public function calculo_cobros_empresa(Request $request)
     //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
     $DTF=Carbon::parse($request->fechaPagara)->addMonthsNoOverflow(1)->day(1);
     $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-    //Log::info($PagoUltimoDiaMes);
+    Log::info($PagoUltimoDiaMes);
     //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
      //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-     $f_inicio=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(2)->day(1);
+     $f_inicio=Carbon::parse($f1)->addMonthsNoOverflow(2)->day(1);
      $UltimoDiaMes=$f_inicio->subDays(1);
-     //Log::info( $UltimoDiaMes);
+     Log::info( $UltimoDiaMes);
      $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
      Log::info($FechaDeInicioMoratorio);
      $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
