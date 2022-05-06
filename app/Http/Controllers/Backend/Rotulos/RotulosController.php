@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Rotulos;
 
 use App\Http\Controllers\Controller;
 use App\Models\CalificacionRotulo;
+use App\Models\CobrosRotulo;
 use App\Models\Contribuyentes;
 use App\Models\InspeccionRotulos;
 use App\Models\Rotulos;
@@ -770,6 +771,10 @@ foreach ($calificacion as $dato)
   
         ->find($id);
 
+        $ultimo_cobro = CobrosRotulo::latest()
+        ->where('id_rotulos', "=", "$id")
+        ->first();
+
 
         $calificacion = CalificacionRotulo::latest()
         ->join('rotulos', 'calificacion_rotulo.id_rotulos', '=', 'rotulos.id')
@@ -781,8 +786,34 @@ foreach ($calificacion as $dato)
         'rotulos.coordenadas','rotulos.imagen')
         ->first();
         
+        if ($calificacion == null)
+        { 
+            $detectorNull=0;
+            if ($ultimo_cobro == null)
+            {
+                $detectorNull=0;
+                $detectorCobro=0;
+                return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('detectorNull','detectorCobro'));
+            }
+        }
+        else
+        {  
+            $detectorNull=1;
+            if ($ultimo_cobro == null)
+            {
+             $detectorNull=0;
+             $detectorCobro=0;
+            return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('rotulo','empresa','date','ultimo_cobro','calificacion','detectorNull','detectorCobro','tasasDeInteres',));
+            }
+            else
+            {
+                $detectorNull=1;
+                $detectorCobro=1;
+                return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('rotulo','empresa','date','ultimo_cobro','calificacion','detectorNull','date','detectorCobro','tasasDeInteres'));
+            }
+        }
     
-        return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('rotulo','calificacion','empresa','tasasDeInteres','date'));
+       // return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('rotulo','calificacion','empresa','tasasDeInteres','date'));
     }
 
     public function calcularCobros(Request $request)
@@ -790,6 +821,8 @@ foreach ($calificacion as $dato)
   
         $id_empresa = $request->id_empresa;
         $id=$request->id;
+        $id_rotulo = $request->id_rotulos;
+    
             
         log::info($request->all());
         $DetectorEnero=Carbon::parse($request->ultimo_cobro)->format('M');
@@ -1031,10 +1064,33 @@ foreach ($calificacion as $dato)
                 $fondoFP= "$". $fondoFPValor;     
                 $totalPago="$".$totalPagoValor;
                 $impuestos_mora_Dollar="$".$impuestos_mora;
-                $impuesto_año_actual_Dollar="$".$impuesto_año_actual;
-      
-           
+                $impuesto_año_actual_Dollar="$".$impuesto_año_actual; 
                 $InteresTotalDollar="$".$InteresTotal;
+               
+
+                if ($request->cobrar=='1')
+                {  
+
+                $cobro = new CobrosRotulo();
+                $cobro->id_empresa = $request->id_empresa;
+                $cobro->id_rotulos = $request->id_rotulos;
+                $cobro->id_usuario = '1';
+                $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
+                $cobro->impuesto_mora = $impuestos_mora;
+                $cobro->impuesto = $impuesto_año_actual;
+                $cobro->intereses_moratorios = $InteresTotal;
+                $cobro->fondo_fiestasP = $fondoFPValor;
+                $cobro->pago_total = $totalPagoValor;
+                $cobro->fecha_cobro = $request->fecha_interesMoratorio;
+                $cobro->periodo_cobro_inicio = $InicioPeriodo;
+                $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+
+                $cobro->save();
+        
+                return ['success' => 2];
+                
+
+                }else{
             
                 return ['success' => 1,
                         'InteresTotalDollar'=>$InteresTotalDollar,
@@ -1052,6 +1108,7 @@ foreach ($calificacion as $dato)
                         'FechaDeInicioMoratorio'=> $FechaDeInicioMoratorio,
              
                         ];
+                    }
             }else
             {
                 return ['success' => 0];
