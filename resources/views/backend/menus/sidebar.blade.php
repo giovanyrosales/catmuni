@@ -126,7 +126,7 @@
                  <!-- Grupo Rótulos -->
                          <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                <i class="fas fa-people-arrows"></i>
+                                <i class="fas fa-sign"></i>
                                 <p>Rótulos <i class="right fas fa-angle-left"></i></p>
                                 
                                 </a>
@@ -140,8 +140,31 @@
 
                             <li class="nav-item">
                                 <a href="{{ route('admin.listarRotulos.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-id-badge nav-icon"></i>
+                                <i class="fas fa-list-ol nav-icon"></i>
                                 <p>Listar Rótulos</p>
+                                </a>
+                            </li>
+                        </ul>
+                <!-- Finaliza Grupo Rótulos -->
+                <!-- Grupo Buses -->
+                                <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                <i class="fas fa-bus"></i>
+                                <p>Buses <i class="right fas fa-angle-left"></i></p>
+                                
+                                </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.crear.rotulos.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Agregar Buses</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.listarRotulos.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-list-ul nav-icon"></i>
+                                <p>Listar Buses</p>
                                 </a>
                             </li>
                         </ul>
