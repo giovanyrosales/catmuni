@@ -222,7 +222,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" onchange="calculo({{$rotulo->id}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
+                        <input  type="date" onchange ="calculo({{$rotulo->id}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -317,10 +317,7 @@
                <div class="col-md-6">
                   <div class="form-group">
                         <br>
-                        <button type="button" class="btn btn-primary btn-lg btn-block" >
-                       <i class="fas fa-edit"></i>
-                       &nbsp;Generar Cobro &nbsp;
-                      </button>
+                       
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
