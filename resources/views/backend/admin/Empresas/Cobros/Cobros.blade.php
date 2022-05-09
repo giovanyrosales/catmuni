@@ -58,6 +58,7 @@
            $('#periodoMaquinas').hide();
            $('#periodoSinfonolas').hide();
            $('#periodoAparatos').hide();
+           $('#estado_de_cuentaIMP').hide();
            
         }
         function recuperariD($id)//*** Para recuperar los ID de las matriculas detalle */
@@ -199,6 +200,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                   } 
                   if(response.data.success === 1){
                     $('#periodo').show();
+                    $('#estado_de_cuentaIMP').show();
                     document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
                     document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
                     document.getElementById('impuestos_mora_imp').innerHTML=response.data.impuestos_mora_Dollar;
@@ -879,7 +881,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   <div class="col-md-6">
                   <div class="form-group">
                         <br>
-
+                        
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
@@ -901,7 +903,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> </div>
+         <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
+            <button type="button" class="btn btn-outline-success btn-sm float-right" 
+            onclick="reporteprueba()" id="estado_de_cuentaIMP">
+              <i class="fas fa-print"></i> Estado cuenta
+            </button> 
+          </div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -913,7 +920,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                           Periodo del: 
                              <label class="badge badge-info" id="fechaInicioPago_imp"></label>
                           &nbsp; al &nbsp;<label class="badge badge-success" id="hasta"></label>
+                          
                         </h6>
+                        
                   </div>
                   <hr>
               <!-- /.form-group -->
@@ -2271,6 +2280,11 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 function VerEmpresa(id){
 
 window.location.href="{{ url('/admin/empresas/show') }}/"+id;
+
+}
+function reporteprueba(){
+
+  window.open("{{ URL::to('/admin/estado_cuenta/pdf') }}");
 
 }
 

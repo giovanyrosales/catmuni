@@ -17,10 +17,11 @@ use function PHPUnit\Framework\isEmpty;
 use PDF;
 
 
-class ReportesController extends Controller 
+class reportesController extends Controller 
 {
-    public function pdfreport ()
+    public function estado_cuenta() 
     {
-
+    	return 'hola';
+        return view('backend.admin.Empresas.EstadoCuenta.Estado_cuenta');
     }
 }
