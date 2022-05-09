@@ -155,7 +155,7 @@
                                 </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('admin.crear.rotulos.index') }}" target="frameprincipal" class="nav-link">
+                                <a href="{{ route('admin.crear.buses.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-plus-circle nav-icon"></i>
                                 <p>Agregar Buses</p>
                                 </a>

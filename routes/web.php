@@ -18,6 +18,7 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
+use App\Http\Controllers\Backend\Buses\BusesController;
 
 
 /*
@@ -184,20 +185,17 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::post('/admin/matriculas_detalle/ver_matriculas_especificas', [MatriculasDetalleController::class, 'VerMatriculaEsp']);
     
     // --- RÓTULOS
-    Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');
-   // Route::get('/admin/rotulos/Crear', [RotulosController::class,'Prueba'])->name('admin.crear.rotulos.nuevo');
+    Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');   
     Route::post('/admin/Rotulos/CrearRotulos', [RotulosController::class,'nuevoRotulo']);
     Route::get('/admin/Rotulos/tabla', [RotulosController::class,'tablaRotulos']);
     Route::get('/admin/Rotulos/Listar', [RotulosController::class,'listarRotulos'])->name('admin.listarRotulos.index');
     Route::post('/admin/Rotulos/Ver', [RotulosController::class, 'informacionRotulo']); 
     Route::post('/admin/Rotulos/Editar', [RotulosController::class, 'editarRotulos']);
     Route::post('/admin/Rotulos/Borrar', [RotulosController::class, 'eliminarRotulo']);
-
     Route::get('/admin/Rotulos/vista/{rotulo}', [RotulosController::class, 'showRotulos']);
     Route::post('/admin/Rotulos/vista/cierre', [RotulosController::class, 'nuevoEstadoR']);
     Route::post('/admin/Rotulos/vista/inf-cierre', [RotulosController::class, 'infoCierre']);
     Route::post('/admin/Rotulos/vista/traspaso', [RotulosController::class, 'traspasoR']);
-
     Route::get('/admin/Rotulos/inspeccion/{rotulo}', [RotulosController::class, 'inspeccionRotulo']);
     Route::post('/admin/Rotulos/guardar-inspeccion', [RotulosController::class, 'crear_inspeccion']);
     Route::get('/admin/Rotulos/calificacion/{rotulo}', [RotulosController::class, 'calificacionRotulo']);
@@ -206,4 +204,5 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::get('/admin/rotulos/cobros/{rotulo}', [RotulosController::class, 'cobros']);
     Route::post('/admin/rotulos/calcular-Cobros', [RotulosController::class, 'calcularCobros']);
 
-    
+    // --- BUSES
+    Route::get('/admin/nuevo/buses/Crear', [BusesController::class,'index'])->name('admin.crear.buses.index'); 
