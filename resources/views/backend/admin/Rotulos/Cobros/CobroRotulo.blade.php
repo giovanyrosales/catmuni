@@ -29,61 +29,82 @@
 </script>
 
 <script>
-  function calculo(id)
+  function calculo(id, valor)
 {
     /*Declaramos variables */
     var id_empresa = (document.getElementById('id_empresa').value);
+    var id_rotulos = (document.getElementById('id_rotulos').value);
     var fechaPagara=(document.getElementById('fecha_hasta_donde_pagara').value);
     var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
     var tasa_interes=(document.getElementById('select_interes').value);
     var fecha_interesMoratorio=(document.getElementById('fecha_interes_moratorio').value);
 
+    openLoading();
 
-var formData = new FormData();
+      //Validaciones
+      if (fechaPagara=='' && valor=='0')
+    {
+      modalMensaje('Aviso', 'No se ha definido la fecha hasta donde pagará.');
+      return;
+    }
 
-formData.append('id', id);
-formData.append('id_empresa', id_empresa);
-formData.append('fechaPagara', fechaPagara);
-formData.append('ultimo_cobro', ultimo_cobro);
-formData.append('tasa_interes', tasa_interes);
-formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
+    if (totalPago_imp=='' && valor=='1')
+    {
+      modalMensaje('Aviso', 'No hay ningún cobro generado.');
+      return;
+    }
 
- axios.post('/admin/rotulos/calcular-Cobros', formData, {
-        })
-        .then((response) => {
-                console.log(response);
-                  closeLoading();
-                  if(response.data.success !=1){
-                    toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
-                    document.getElementById('hasta').innerHTML= '';
-                    document.getElementById('cant_meses').value='';
-                    document.getElementById('fondoFP_imp').innerHTML='$-';
-                    document.getElementById('totalPago_imp').innerHTML='$-';
-                  
-                    document.getElementById('impuestos_mora_imp').innerHTML='$-';
-                    document.getElementById('impuesto_año_actual_imp').innerHTML='$-';
-                    document.getElementById('fechaInicioPago_imp').innerHTML='';                   
-                    document.getElementById('InteresTotal_imp').innerHTML='$-';
-                  } 
-                  if(response.data.success === 1){
-                    $('#periodo').show();
-                    document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
-                    document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
-                    document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
-                    document.getElementById('totalPago_imp').innerHTML=response.data.totalPago;
-                    
-                
-                    document.getElementById('impuestos_mora_imp').innerHTML=response.data.impuestos_mora_Dollar;
-                    document.getElementById('impuesto_año_actual_imp').innerHTML=response.data.impuesto_año_actual_Dollar;
-                    document.getElementById('fechaInicioPago_imp').innerHTML=response.data.InicioPeriodo;                    
-                    document.getElementById('InteresTotal_imp').innerHTML=response.data.InteresTotalDollar;
-                    
-                  }  
-              })
-              .catch((error) => {
-                  toastr.error('Error');
-                  closeLoading();
-              }); 
+    var formData = new FormData();
+
+    formData.append('id', id);
+    formData.append('id_empresa', id_empresa);
+    formData.append('id_rotulos', id_rotulos);
+    formData.append('cobrar', valor);
+    formData.append('fechaPagara', fechaPagara);
+    formData.append('ultimo_cobro', ultimo_cobro);
+    formData.append('tasa_interes', tasa_interes);
+    formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
+
+    axios.post('/admin/rotulos/calcular-Cobros', formData, {
+            })
+            .then((response) => {
+                    console.log(response);
+                        closeLoading();
+                        if(response.data.success === 0){
+                          toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
+                          document.getElementById('hasta').innerHTML= '';
+                          document.getElementById('cant_meses').value='';
+                          document.getElementById('fondoFP_imp').innerHTML='$-';
+                          document.getElementById('totalPago_imp').innerHTML='$-';                  
+                          document.getElementById('impuestos_mora_imp').innerHTML='$-';
+                          document.getElementById('impuesto_año_actual_imp').innerHTML='$-';
+                          document.getElementById('fechaInicioPago_imp').innerHTML='';                   
+                          document.getElementById('InteresTotal_imp').innerHTML='$-';
+                        } 
+                        if(response.data.success === 1){
+                          $('#periodo').show();
+                          document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
+                          document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
+                          document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
+                          document.getElementById('totalPago_imp').innerHTML=response.data.totalPago;
+                          
+                      
+                          document.getElementById('impuestos_mora_imp').innerHTML=response.data.impuestos_mora_Dollar;
+                          document.getElementById('impuesto_año_actual_imp').innerHTML=response.data.impuesto_año_actual_Dollar;
+                          document.getElementById('fechaInicioPago_imp').innerHTML=response.data.InicioPeriodo;                    
+                          document.getElementById('InteresTotal_imp').innerHTML=response.data.InteresTotalDollar;
+                          
+                        }  
+
+                      if(response.data.success===2)
+                          {
+                              cobro_registrado();
+                          }
+                  })
+                  .catch((error) => {
+                      toastr.error('Error');
+                      closeLoading();
+                  }); 
 
 
 }
@@ -178,15 +199,19 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
-                  <div class="input-group mb-3">
-                
-                                <input  type="text" value="2021-04-30" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+               <div class="input-group mb-3">
+                    @if($detectorCobro=='0')
+                                <input  type="text" value="{{ $calificacion->fecha_calificacion }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                                  </div>                   
-                             
+                                  </div>
+                                @else
+                                <input  type="text" value="{{ $ultimo_cobro->periodo_cobro_fin }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                  </div>
+                    @endif
                   </div>
-
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
                <!-- /.form-group -->
@@ -197,7 +222,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date"  onchange="calculo({{$rotulo->id}});" class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
+                        <input  type="date" onchange ="calculo({{$rotulo->id}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -286,14 +311,17 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                               <div class="col-md-6">
                   <div class="form-group">
                         <br>
+                      
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
                         <br>
+                       
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
+            
               
               
             </div> <!-- /.ROW1 -->
@@ -422,6 +450,47 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
         });
+
+        function verificar(){
+            Swal.fire({
+                title: '¿Desea guardar el Cobro?',
+                text: "",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Guardar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                calculo({{$rotulo->id}},1);
+                }
+            });
+        }
+
+        function cobro_registrado(){
+                      Swal.fire({
+                      title: 'Cobro registrado correctamente',
+                      //text: "Puede modificarla en la opción [Editar]",
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#28a745',
+                      closeOnClickOutside: false,
+                      allowOutsideClick: false,
+                      confirmButtonText: 'Aceptar'
+                      }).then((result) => {
+                        if (result.isConfirmed) 
+                                    {
+                                     recargar({{$rotulo->id}});
+                                    }
+                                });
+                            }
+
+
+  function recargar(id){
+       openLoading();
+       window.location.href="{{ url('/admin/Rotulos/vista') }}/"+id;
+    }
 
         </script>
 
