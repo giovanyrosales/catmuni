@@ -18,7 +18,8 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
-
+use App\Http\Controllers\PdfController;
+use App\Http\Controllers\Backend\Reportes\reportesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -206,4 +207,5 @@ use App\Http\Controllers\Backend\Rotulos\RotulosController;
     Route::get('/admin/rotulos/cobros/{rotulo}', [RotulosController::class, 'cobros']);
     Route::post('/admin/rotulos/calcular-Cobros', [RotulosController::class, 'calcularCobros']);
 
-    
+    //Reportes
+    Route::get('/admin/estado_cuenta/pdf', [reportesController::class, 'estado_cuenta']);
