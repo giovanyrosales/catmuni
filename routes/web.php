@@ -18,8 +18,12 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
+<<<<<<< HEAD
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 
+=======
+use App\Http\Controllers\Backend\Buses\BusesController;
+>>>>>>> db4de5ad9c082ac56acc38efa82778835c01bf9c
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
 
@@ -206,6 +210,7 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::get('/admin/rotulos/cobros/{rotulo}', [RotulosController::class, 'cobros']);
     Route::post('/admin/rotulos/calcular-Cobros', [RotulosController::class, 'calcularCobros']);
 
+<<<<<<< HEAD
 
     //BUSES
     Route::get('/admin/nuevo/buses/Crear', [BusesDetalleController::class,'index'])->name('admin.crear.buses.index');   
@@ -215,3 +220,10 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
 
     //Reportes
     Route::get('/admin/estado_cuenta/pdf', [reportesController::class, 'estado_cuenta']);
+=======
+    // --- BUSES
+    Route::get('/admin/nuevo/buses/Crear', [BusesController::class,'index'])->name('admin.crear.buses.index'); 
+    
+    //Reportes
+    Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'estado_cuenta']);
+>>>>>>> db4de5ad9c082ac56acc38efa82778835c01bf9c

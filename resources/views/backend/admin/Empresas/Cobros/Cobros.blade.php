@@ -50,7 +50,6 @@
 
     function f1()
         {
-           document.getElementById('select_interes').disabled=true;
            document.getElementById('select_interesMesas').disabled=true;
            $('#periodo').hide();
            $('#periodoLicor').hide();
@@ -739,13 +738,15 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
       <hr>
 <!------------------------------------------------------- Nav.Items ( Impuestos Empresa )------------------------------------------------------------------------------------------------------>  
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-         
+        
           <div class="row" id="cobros_empresa"><!-- /.ROWPADRE -->
           <!-- Campos del formulario de cobros -->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-success"><b>DATOS GENERALES</b>.</div>
             <div class="card-body"><!-- Card-body -->
+            <form action="/admin/estado_cuenta/pdf" method="POST" id="formularioCalculo">
+           @csrf
              <div class="row"><!-- /.ROW1 -->
             
                <!-- /.form-group -->
@@ -835,7 +836,6 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                                 id="select_interes" 
                                 title="-- Seleccione un interés  --"
                                  >
-                                 <option value="Ninguno">Ninguno</option>
                                   @foreach($tasasDeInteres as $dato)
                                   <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
                                   @endforeach 
@@ -903,11 +903,13 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
+       
          <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
-            <button type="button" class="btn btn-outline-success btn-sm float-right" 
-            onclick="reporteprueba()" id="estado_de_cuentaIMP">
+            <button- type="submit" class="btn btn-outline-success btn-sm float-right" 
+            onclick="reporteprueba({{$empresa->id}});" id="estado_de_cuentaIMP" >
               <i class="fas fa-print"></i> Estado cuenta
             </button> 
+             
           </div>
             <div class="card-body">
 
@@ -986,6 +988,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             <td><label name="totalPago_imp" id="totalPago_imp"></label><label</td>
                           </tr>
                         </table>
+</form>
                       <hr>
                       <button type="button" class="btn btn-primary btn-lg btn-block" onclick="verificar();">
                        <i class="fas fa-edit"></i>
@@ -2282,9 +2285,14 @@ function VerEmpresa(id){
 window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 
 }
-function reporteprueba(){
+function reporteprueba(id){
+    
+    var f1=(document.getElementById('ultimo_cobro').value);
+    var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
+    var ti=(document.getElementById('select_interes').value);
+    var f3=(document.getElementById('fecha_interes_moratorio').value);
 
-  window.open("{{ URL::to('/admin/estado_cuenta/pdf') }}");
+  window.open("{{ URL::to('/admin/estado_cuenta/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
 
 }
 
