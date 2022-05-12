@@ -36,8 +36,27 @@ class BusesDetalleController extends Controller
     {
         $empresas = Empresas::ALL();
 
+        $busesRegistrados=BusesDetalle
+        ::join('empresa','buses_detalle.id_empresa','=','empresa.id')
+                               
+        ->select('buses_detalle.id', 'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.tarifa',
+                'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante',
+                'empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
+        
+        ->get();
+
+        
+        if ($busesRegistrados == null)
+             { 
+                 $detectorBus=1;
+             }else 
+             {
+                $detectorBus=0;
+             }
+            
+             
       
-        return view('backend.admin.Buses.CrearBuses', compact('empresas'));
+        return view('backend.admin.Buses.CrearBuses', compact('empresas','detectorBus'));
     }
 
     public function tablaBuses(BusesDetalle $buses){

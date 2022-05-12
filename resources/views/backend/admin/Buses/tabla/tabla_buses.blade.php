@@ -3,8 +3,8 @@
 
 <thead>
     <tr>
-    <th style="width: 22%;">Empresa</th>
-    <th style="width: 10%;">Cantidad de buses</th>
+    <th style="width: 20%;">Empresa</th>
+    <th style="width: 20%;">Cantidad de buses</th>
     <th style="width: 16%;">Total Tarifa</th>
     <th style="width: 14%;">Pago Mensual</th>
     <th style="width: 40%;">Opciones</th>
@@ -20,11 +20,11 @@
         <td style="text-align: center;"> 
      
             <button type="button" class="btn btn-success btn-xs">
-            <i class="fas fa-check-circle"></i>&nbsp;Matrícula Específicada
+            <i class="fas fa-check-circle"></i>&nbsp;Bus Especificado
             </button>
      
             <button type="button" class="btn btn-dark btn-xs" onclick="">
-            <i class="fas fa-layer-group"></i>&nbsp; Específicar matrículas
+            <i class="fas fa-layer-group"></i>&nbsp; Especificar Buses
             </button>
    
             <button type="button" class="btn btn-info btn-xs" onclick="">

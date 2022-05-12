@@ -129,13 +129,13 @@ function f4(){
                        <div class="m-0 row justify-content-center" id="DivMatriculas">
                             <div class="card">
                                     <div class="card-header text-success">
-                                        <h5> Buses registrados para <span class="badge badge-secondary"></span></h5> 
+                                        <h5> Buses registrados  <span class="badge badge-secondary"></span></h5> 
                                     </div>
                                     <div class="col-auto  p-5 text-center" id="tablaDatatable"></div>
                             </div>
                         </div>
 
-                                            
+                        @if($detectorBus == '1')                
                                     <script>
                                     window.onload = f1;
                                     </script>
@@ -154,7 +154,7 @@ function f4(){
                                         </div>
                                     </div>
                                 </section>
-                             
+                                @endif   
                        
                        <!-- /.Inclución de tabla -->
                   
