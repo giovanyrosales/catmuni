@@ -162,7 +162,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('admin.listarRotulos.index') }}" target="frameprincipal" class="nav-link">
+                                <a href="{{ route('admin.listar.buses') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-list-ul nav-icon"></i>
                                 <p>Listar Buses</p>
                                 </a>

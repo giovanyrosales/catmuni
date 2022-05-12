@@ -83,24 +83,24 @@ function f4(){
                            <tr>
                             <th style="width: 25%; text-align: center">Empresa</th>
                             <th style="width: 25%; text-align: center">Cantidad de buses</th>   
-                            <th style="width: 25%; text-align: center">Total Matrículas</th>               
+                            <th style="width: 25%; text-align: center">Total Tarifa</th>               
                             <th style="width: 14%; text-align: center">Pago Mensual</th>
                             <th style="width: 15%; text-align: center">Opciones</th>
                            </tr>
                         </thead>
                         <tbody>
                             <td>
-                            <select class='form-control seleccion' onchange='multiplicar(this)' style='max-width: 300px' id='select_empresa'  >
+                            <select class='form-control seleccion'  style='max-width: 300px' id='select_empresa'  >
                                 <option value='0'> --  Seleccione la empresa  -- </option>
                                 @foreach($empresas as $data)
-                                <option value="{{ $data->id }}" data-matricula='{{ 0.05 }}' data-pagoM='{{17.14}}'> {{ $data->nombre }}</option>
+                                <option value="{{ $data->id }}" data-pagoM='{{17.14}}'> {{ $data->nombre }}</option>                                
                                 @endforeach>
                    
                             </select>
                             </td>
 
                         <td>
-                        <input  id='cantidad' onchange='multiplicar(this)' class='form-control' min='1' style='max-width: 250px' type='number' value=''/>
+                        <input  id='cantidad' onchange='multiplicar(this)' class='form-control' min='1' style='max-width: 250px' type='number' value=''/>                        
                         </td>
 
                         <td>
@@ -129,12 +129,13 @@ function f4(){
                        <div class="m-0 row justify-content-center" id="DivMatriculas">
                             <div class="card">
                                     <div class="card-header text-success">
-                                        <h5> Matrículas registradas para <span class="badge badge-secondary"></span></h5> 
+                                        <h5> Buses registrados para <span class="badge badge-secondary"></span></h5> 
                                     </div>
                                     <div class="col-auto  p-5 text-center" id="tablaDatatable"></div>
                             </div>
                         </div>
-                        
+
+                                            
                                     <script>
                                     window.onload = f1;
                                     </script>
@@ -153,13 +154,10 @@ function f4(){
                                         </div>
                                     </div>
                                 </section>
-                      
+                             
                        
                        <!-- /.Inclución de tabla -->
                   
-                            <div class="card-footer">
-                                <button type="button" class="btn btn-default" onclick="VerEmpresa()"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
-                            </div>
                          </div>
                         </div>
                       </div>
@@ -186,28 +184,31 @@ function f4(){
 
     <script type="text/javascript">
         $(document).ready(function(){
-     
-            var ruta = "{{ url('/admin/matriculas_detalle/tabla') }}/";
+           
+            var ruta = "{{ url('/admin/buses/tabla') }}/";
             $('#tablaDatatable').load(ruta);
             document.getElementById("divcontenedor").style.display = "block";
         });
     </script>
 
     <script>
+        
         //* Inicia función multiplicar
-        function multiplicar(){
-
+        function multiplicar()
+        {
+                var fondoF = 0.05;
+                var monto_matricula=0;
+                var pago_mensual=0;
+                       
                 var sel = document.getElementById("select_empresa");  
-                var selected = sel.options[sel.selectedIndex];
-                var monto_matricula=selected.getAttribute('data-matricula');
-                var tarifa=selected.getAttribute('data-pagoM');
-                console.log(pago_mensual,monto_matricula);
+                var selected = sel.options[sel.selectedIndex];         
+                var tarifa=selected.getAttribute('data-pagoM');              
                 var cantidad = document.getElementById("cantidad").value; 
 
-                //Operación
-                var fondoF = 0.05;
-                var Total_pago_mensual= '$'+ tarifa*cantidad;
-                var monto_total= '$'+ monto_matricula*Total_pago_mensual;
+                //Operación                               
+                var Total_pago_mensual= '$'+ tarifa*cantidad;           
+                var monto_total = '$'+ Math.ceil(tarifa*fondoF + (tarifa*cantidad));
+           
 
                 //Imprimiendo resultado
                 document.getElementById('monto_matricula').value=monto_total; 
@@ -215,6 +216,141 @@ function f4(){
 
 
         } //* Termina función multiplicar
+
+        function agregarBus(id)
+        {
+            
+            var empresa = document.getElementById("select_empresa").value; 
+            var cantidad = document.getElementById("cantidad").value;
+            var monto_pagar = document.getElementById("monto_matricula").value;
+            var tarifa = document.getElementById("pago_mensual").value;
+            
+
+                if(empresa==0)
+                {
+                    modalMensaje('Aviso', 'Debe selecionar una empresa');
+                    return;
+                }
+                                    
+                if(cantidad=="")
+                {
+                    modalMensaje('Aviso', 'Debe ingresar una cantidad');
+                    return;
+                }
+                if(cantidad==0)
+                {
+                    modalMensaje('Aviso', 'Debe ingresar una cantidad mayor a 0');
+                    return;
+                }
+
+            openLoading();
+            var formData = new FormData();    
+         
+            formData.append('empresa', empresa);
+            formData.append('cantidad', cantidad);
+            formData.append('monto_pagar', monto_pagar);
+            formData.append('tarifa', tarifa);
+
+
+                    axios.post('/admin/buses/agregar', formData, {
+                    })
+                        .then((response) => {
+                            console.log(response)
+                            closeLoading();
+                            if(response.data.success === 0){
+                                toastr.error(response.data.message);
+                            }
+                            else if(response.data.success === 1){
+                                agregado();
+                                resetbtn();
+                                }
+                             
+                        })
+                        .catch((error) => {
+                            fallo('Error!', 'Error al agregar el bus');
+                        
+                        });              
+
+        }
+
+        function recargar()
+        {   
+                  
+            var ruta = "{{ url('/admin/buses/tabla') }}/";
+                $('#tablaDatatable').load(ruta);
+        }
+
+  
+    </script>
+
+    <script>
+
+    function resetbtn()
+    {
+        document.getElementById('monto_matricula').value=""; 
+        document.getElementById('cantidad').value=""; 
+        document.getElementById('pago_mensual').value=""; 
+        document.getElementById('select_empresa').value=0; 
+    } 
+    
+    function agregado()
+    {
+            Swal.fire({
+                title: 'Bus Agregado',
+                text: "Puede modificarla en la opción [Editar]",
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                closeOnClickOutside: false,
+                allowOutsideClick: false,
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                   
+                        recargar();
+                        f3();
+                       
+                }
+            });
+    }
+
+    function fallo(titulo, mensaje)
+    {
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                location.reload;
+                }
+            });
+            
+            
+    }
+
+    function verificar()
+    {
+            Swal.fire({
+                title: '¿Guardar Buses?',
+                text: "",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Guardar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    agregarBus();
+                }
+            });
+    }
+
+
 
     </script>
 
