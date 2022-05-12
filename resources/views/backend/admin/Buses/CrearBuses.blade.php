@@ -129,7 +129,7 @@ function f4(){
                        <div class="m-0 row justify-content-center" id="DivMatriculas">
                             <div class="card">
                                     <div class="card-header text-success">
-                                        <h5> Buses registrados  <span class="badge badge-secondary"></span></h5> 
+                                        <h5> Buses registrados recientemente: <span class="badge badge-secondary"></span></h5> 
                                     </div>
                                     <div class="col-auto  p-5 text-center" id="tablaDatatable"></div>
                             </div>
