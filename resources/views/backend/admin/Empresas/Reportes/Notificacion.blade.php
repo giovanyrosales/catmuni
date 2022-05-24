@@ -25,8 +25,14 @@
            
         }
         header h3{
-            margin: 10px 0;
-            color: #A9A8A7;
+            margin: 5px 0;
+            color: #1E1E1E;
+        }
+        header p{
+            margin-left: 15px;
+            display: block;
+            margin: 2px 0 0 0;
+            font: size 5px;
         }
         footer {
             position: fixed;
@@ -67,11 +73,7 @@
             font-size: 20px;
 
         }
-        .content p{
-            margin-left: 15px;
-            display: block;
-            margin: 2px 0 0 0;
-        }
+
         .content hr{
              
              border: none;
@@ -119,6 +121,12 @@
             margin-left: 17px;
             text-align: justify;
         }
+        .texto{
+            margin-left: 15px;
+            display: block;
+            margin: 2px 0 0 0;
+            font-size: small;
+        }
 
 
 
@@ -130,8 +138,9 @@
         <div class="content">
             <img src="{{ asset('images/logoIMP.png') }}" style="float: left" alt="" height="78px" width="78px">
             <img src="{{ asset('images/EscudoSV.png') }}" style="float: right" alt="" height="78px" width="78px">
-            <h3>ALCALDIA MUNICIPAL DE METAPAN</h3>
-            <h3>Santa Ana, El Salvador, C.A.</h3>
+            <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+            UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+            DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
             <img src="{{ asset('images/linea3.png') }}"   alt="" height="30px" width="720px">
         </div>
         
@@ -148,46 +157,38 @@
                 </p>
             </td>
             <td>
-                <img src="{{ asset('images/linea3.png') }}" alt="" height="28px" width="700px">
-                <p class="page" >
-                Avenida Benjamín Estrada Valiente y Calle Poniente, Barrio San Pedro, Metapán.<br>
-                Tel.:2402-7615 - 2402-7601 - Fax: 2402-7616 <br>
-               <strong>www.alcaldiademetapan.org</strong>
-                </p>
-                
+ 
             </td>
         </tr>
     </table>
 </footer>
 
 <div id="content">
-<h4 align="center"><u>ESTADO DE CUENTA</u></h4>
 <table border="0" align="center" style="width: 600px;">
         <tr>
-            <td></td>
-            <td align="right">
+            <td colspan="2" align="center"><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+            <td align="right" colspan="2">
                 <strong>Metapán, {{$FechaDelDia}}</strong>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <p>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
+            <p style="font-size:11">Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
                 Dirección:&nbsp;{{$empresa->direccionCont}}<br>
                 Cuenta Corriente N°:&nbsp;{{$empresa->num_tarjeta}}<br>
                 Empresa o Negocio:&nbsp;{{$empresa->nombre}}</p>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p>Estimado(a) señor (a):</p>
-                <p style="text-indent:20">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+
+                Estimado(a) señor (a):
+                <p style="text-indent:20; font-size:11">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                     motivo de la presente es para manifestarle que su estado de cuenta en esta
                     Municipalidad es el siguiente:</p>
-            <p><strong>Impuestos Municipales</strong></p>
+            <p>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>{{$FechaDelDia}}</u></strong><br>
+            </p>
             </td>
-        <tr>
-            <td colspan="2"><hr></td>
-        </tr>
         <tr>
             <th scope="col">Periodo: &nbsp;&nbsp;desde&nbsp; {{$InicioPeriodo}}&nbsp;</th>
             <th scope="col">&nbsp;&nbsp;hasta&nbsp; {{$PagoUltimoDiaMes}}&nbsp;</th>    
@@ -217,7 +218,7 @@
             <td align="center">{{$fondoFPValor}}</td>
         </tr>
         <tr>
-            <th scope="row">Total de Impuestos Adeudados</th>
+            <th scope="row">Total Adeudado</th>
             <th align="center">{{$totalPagoValor}}</th>
         </tr>
         <tr>
@@ -226,15 +227,19 @@
         </tr>
         <tr>
             <td colspan="2">
-            Validez: <strong><u>{{$FechaDelDia}}</u></strong>
-                <p  style="text-indent:20">Agradeciendo su comprension y atención a este estado de cuenta me suscribo de
-                                            usted, muy cordialmente</p>
+                <p style="color: black; font-family: Arial; font-size: 10; text-align: justify; text-indent:20">
+                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                <br><br>
+                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                </p>
             </td>
         </tr>
         <tr align="center">
             <td colspan="2">
-                <p>Lic. Rosa Lisseth Aldana <br>
-                Unidad de Administración Tributaria Municipal</p>
+            <img src="{{ asset('images/imgf1.png') }}" style="float: left" alt="" height="206px" width="600px">
             </td>
         </tr>
     </table>

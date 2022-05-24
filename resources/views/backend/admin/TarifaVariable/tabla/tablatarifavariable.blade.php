@@ -19,11 +19,11 @@
                             <tbody>
                             @foreach($lista as $dato)
                                 <tr>
-                                    <td>{{$dato->limite_inferior}} </td>
-                                    <td>{{$dato->limite_superior}} </td>
-                                    <td>{{$dato->fijo}} </td>
-                                    <td>{{$dato->excedente}} </td>
-                                    <td>{{$dato->millar}} </td>
+                                    <td>¢{{$dato->limite_inferior}} </td>
+                                    <td>¢{{$dato->limite_superior}} </td>
+                                    <td>¢{{$dato->fijo}} </td>
+                                    <td>¢{{$dato->excedente}} </td>
+                                    <td>¢{{$dato->millar}} </td>
                                     <td>{{$dato->actividad_economica}}</td>
                                   
                                     

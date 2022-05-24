@@ -123,8 +123,8 @@ formData.append('id_matriculadetalleAparatos', id_matriculadetalleAparatos);
                         document.getElementById('ultimo_cobroSinfonolas').value=response.data.ultimo_cobroSinfonolas.periodo_cobro_fin;
                         document.getElementById('ultimo_cobroSinfonolas').disabled=true;
                     }else{
-                          document.getElementById('ultimo_cobroAparatos').value='';
-                          document.getElementById('ultimo_cobroAparatos').disabled=false;
+                          document.getElementById('ultimo_cobroSinfonolas').value='';
+                          document.getElementById('ultimo_cobroSinfonolas').disabled=false;
                          }
 
                     if(response.data.ultimo_cobroAparatos==null)
@@ -155,6 +155,7 @@ function calculo(id, valor)
     var tasa_interes=(document.getElementById('select_interes').value);
     var fecha_interesMoratorio=(document.getElementById('fecha_interes_moratorio').value);
     var totalPago_imp=(document.getElementById('totalPago_imp').innerHTML);
+    var tarifaMes=(document.getElementById('tarifaMes').value);
     openLoading();
 
     //Validaciones
@@ -169,11 +170,17 @@ function calculo(id, valor)
       modalMensaje('Aviso', 'No hay ningún cobro generado.');
       return;
     }
+    if (tarifaMes=='' && valor=='0')
+    {
+      modalMensaje('Aviso', 'No se ha definido la tarifa que pagará.');
+      return;
+    }
 
 var formData = new FormData();
 
 formData.append('id', id);
 formData.append('cobrar', valor);
+formData.append('tarifaMes', tarifaMes);
 formData.append('fechaPagara', fechaPagara);
 formData.append('ultimo_cobro', ultimo_cobro);
 formData.append('tasa_interes', tasa_interes);
@@ -230,8 +237,7 @@ function calculo_licencia_licor(id, valor)
     /*Declaramos variables */
     var fechaPagaraLicor=(document.getElementById('fecha_hasta_donde_pagaraLicor').value);
     var ultimo_cobroLicor=(document.getElementById('ultimo_cobroLicor').value);
-    var tasa_interesLicor=(document.getElementById('select_interesLicor').value);
-    var fecha_interesMoratorioLicor=(document.getElementById('fecha_interes_moratorioLicor').value);
+
     openLoading();
 
     //* Validaciones **//
@@ -258,8 +264,7 @@ formData.append('id', id);
 formData.append('cobrar', valor);
 formData.append('fechaPagara', fechaPagaraLicor);
 formData.append('ultimo_cobro', ultimo_cobroLicor);
-formData.append('tasa_interes', tasa_interesLicor);
-formData.append('fecha_interesMoratorio', fecha_interesMoratorioLicor);
+
 
 
  axios.post('/admin/empresas/calculo_cobros_licencia_licor', formData, {
@@ -270,27 +275,15 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorioLicor);
                   if(response.data.success ===0){
                     toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
                     document.getElementById('hastaLicor').innerHTML= '';
-                    document.getElementById('cant_mesesLicor').value='';
-                    document.getElementById('impuestos_moraLicor_imp').innerHTML='';
-                    document.getElementById('impuesto_año_actualLicor_imp').innerHTML='';
-                    document.getElementById('InteresTotalLicor_imp').innerHTML='';
-                    document.getElementById('multaPagoExtemporaneoLicor_imp').innerHTML='';
                     document.getElementById('LicenciaLicor_imp').innerHTML='';
-                    document.getElementById('fondoFPLicor_imp').innerHTML='';
                     document.getElementById('MultaLicor_imp').innerHTML='';
                     document.getElementById('totalPagoLicor_imp').innerHTML='';
                     document.getElementById('fechaInicioPagoLicor_imp').innerHTML='';
                   } 
                   if(response.data.success === 1){
                     $('#periodoLicor').show();
-                    document.getElementById('hastaLicor').innerHTML=response.data.PagoUltimoDiaMesLicor;
-                    document.getElementById('cant_mesesLicor').value=response.data.Cantidad_MesesTotalLicor;
-                    document.getElementById('impuestos_moraLicor_imp').innerHTML=response.data.impuestos_mora_DollarLicor;
-                    document.getElementById('impuesto_año_actualLicor_imp').innerHTML=response.data.impuesto_año_actual_DollarLicor;
-                    document.getElementById('InteresTotalLicor_imp').innerHTML=response.data.InteresTotalDollarLicor;
-                    document.getElementById('multaPagoExtemporaneoLicor_imp').innerHTML=response.data.multaPagoExtemporaneoDollarLicor;
+                    document.getElementById('hastaLicor').innerHTML=response.data.PagoUltimoDiaMesLicor;          
                     document.getElementById('LicenciaLicor_imp').innerHTML=response.data.monto_pago_licencia;
-                    document.getElementById('fondoFPLicor_imp').innerHTML=response.data.fondoFPLicor;
                     document.getElementById('MultaLicor_imp').innerHTML=response.data.monto_pago_multaDollar;
                     document.getElementById('totalPagoLicor_imp').innerHTML=response.data.totalPagoLicor;
                     document.getElementById('fechaInicioPagoLicor_imp').innerHTML=response.data.InicioPeriodoLicor;
@@ -774,7 +767,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <div class="col-md-5">
                   <div class="input-group mb-3">
                     @if($detectorCobro=='0')
-                                <input  type="text" value="{{ $calificaciones->inicio_operaciones }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+                                <input  type="text" value="{{ $empresa->inicio_operaciones }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                                   </div>
@@ -846,7 +839,24 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                            <!-- finaliza select estado-->
                       </div>
                </div><!-- /.col-md-6 -->
-            <!-- /.form-group -->
+               @if($CE==1)
+                <!-- /.form-group -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                        <label>TARIFA DEL MES:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-5">
+                  <div class="input-group mb-3">
+                        <input type="number"  id="tarifaMes" class="form-control" placeholder="$0.00">
+                          <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
+                          </div>
+                    </div>
+               </div><!-- /.col-md-6 -->
+               @else
+               <input type="hidden"  id="tarifaMes" class="form-control" value="hidden">
+                @endif
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -1089,65 +1099,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             </div> 
                       </div>
                 </div>
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>TASA DE INTERÉS:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-                <!-- /.form-group -->
-                <div class="col-md-5">
-                  <div  class="input-group mb-3">
-                          <!-- Select estado - live search -->
-                         
-                                <select 
-                                required
-                                class="form-control"
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select_interesLicor" 
-                                title="-- Seleccione un interés  --"
-                                 >
-                                  
-                                  @foreach($tasasDeInteres as $dato)
-                                  <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
-                                  @endforeach 
-                                </select> 
-                                  <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fas fa-percent"></i></span>
-                                  </div>
-                           <!-- finaliza select estado-->
-                      </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>FECHA DEL INTERÉS MORATORIO:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-5">
-                  <div class="input-group mb-3">
-                        <input type="text" value="{{ $date}}"  id="fecha_interes_moratorioLicor" class="form-control" disabled >
-                          <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
-                          </div>
-                    </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>CANTIDAD DE MESES A PAGAR:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="input-group mb-3">
-                        <input type="text" disabled   id="cant_mesesLicor" class="form-control" >
-                          <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-calculator"></i></span>
-                           </div>
-                      </div>
-               </div><!-- /.col-md-6 -->
+               
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -1199,39 +1151,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                           </tr>
 
                           <tr>
-                            <td class="table-light">IMPUESTO MORA</td>
-                            <td class="table-light">{{$empresa->mora}}</td>
-                            <td class="table-light"><p id="impuestos_moraLicor_imp"></td>
-                          </tr>
-
-                          <tr>
-                            <td>IMPUESTOS</td>
-                            <td>{{$empresa->codigo_atc_economica}}</td>
-                            <td><h6 id="impuesto_año_actualLicor_imp"></h6></td>
-                          </tr>
-
-                          <tr>
-                            <td>INTERESES MORATORIOS</td>
-                            <td>15302</td>
-                            <td><h6 id="InteresTotalLicor_imp"></td>
-                          </tr>
-
-                          <tr>
-                            <td>MULTAS P. EXTEMPORANEOS</td>
-                            <td>15313</td>
-                            <td><h6 id="multaPagoExtemporaneoLicor_imp"></h6></td>
-                          </tr>
-
-                          <tr>
                             <td>LICENCIAS</td>
                             <td>12207</td>
                             <td><h6 id="LicenciaLicor_imp"></td>
-                          </tr>
-
-                          <tr>
-                            <td>FONDO F. PATRONALES 5%</td>
-                            <td>12114</td>
-                            <td><h6 id="fondoFPLicor_imp"></h6></td>
                           </tr>
 
                           <tr>
@@ -2291,8 +2213,9 @@ function reporteprueba(id){
     var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
     var ti=(document.getElementById('select_interes').value);
     var f3=(document.getElementById('fecha_interes_moratorio').value);
+    var tf=(document.getElementById('tarifaMes').value);
 
-  window.open("{{ URL::to('/admin/estado_cuenta/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
+  window.open("{{ URL::to('/admin/estado_cuenta/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + tf + "/" + id );
 
 }
 

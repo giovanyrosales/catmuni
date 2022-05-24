@@ -14,20 +14,37 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
   
-    <link rel="stylesheet" href="sweetalert2.min.css">
+
 
 
 @stop
 <!-- Función para calcular la calificación --------------------------------------------------------->
 <script type="text/javascript">
+      function deseleccionarCheck()
+      {
+          //** Quitamos la selección del check caso especial */
+          document.getElementById('gridCheck').checked=false;
+          document.getElementById('tarifaAplicada').value='';
+      }
 
+    function desbloqTarifa()
+      {
+          if(document.getElementById('gridCheck').checked)
+            {
+            document.getElementById('tarifaAplicada').disabled=false;
+            document.getElementById('tarifaAplicada').value='';
+
+            }else{
+                  document.getElementById('tarifaAplicada').disabled=true; 
+                 }  
+      }
 
     function f1(){
                 $('#monto_tarifa').hide();
                 $('#selectTarifa').hide();
                 $('#tarifaAplicada').hide();
                 $('#tarifa').hide();
-                
+                $('#checkCasoEspecial').hide();
 
                 //**** Para llenar el select de año de calificación *****//
                 var n = (new Date()).getFullYear()
@@ -52,7 +69,10 @@ function resetea()
 }
 
 function calculo(id_act_economica)
-{
+{   //** Bloqueamos el input de la tarifa */
+    document.getElementById('tarifaAplicada').disabled=true;
+
+    var id_actividad_especifica={{$empresa->id_actividad_especifica}};
     /*Declaramos variables */
     var  licencia=(document.getElementById('selectLicencia').value);
     var  matricula=(document.getElementById('matriculaValorTotal').value);
@@ -63,13 +83,24 @@ function calculo(id_act_economica)
     var deducciones_imp=(document.getElementById('deducciones').value);
     var tipo_tarifa=(document.getElementById('tipo_tarifa').value);
     var ValortarifaAplicada=(document.getElementById('tarifaAplicadaValor').value);
-    var id_actividad_especifica={{$empresa->id_actividad_especifica}};
+    var tarifaAplicadaCasoEspecial=(document.getElementById('tarifaAplicada').value)
+    
     var estado_calificacion=(document.getElementById('estado_calificacion').value);
     var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
     var año_calificacion=(document.getElementById('año_calificacion').value);
 
+    if(document.getElementById('gridCheck').checked)
+          {
+            CasoEspecial=1;
+          }else
+              {
+                CasoEspecial=0;
+              }
+
 var formData = new FormData();
 
+formData.append('CasoEspecial', CasoEspecial);
+formData.append('tarifaAplicadaCasoEspecial', tarifaAplicadaCasoEspecial);
 formData.append('deducciones', deducciones);
 formData.append('activo_total', activo_total);
 formData.append('ValortarifaAplicada', ValortarifaAplicada);
@@ -152,10 +183,11 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                         document.getElementById('tarifaenColonesSigno_imp').innerHTML=response.data.tarifaenColonesSigno;                      
                         document.getElementById('tarifaAplicadaMensual_imp').innerHTML=response.data.tarifaFijaMensualDolarSigno;
                         document.getElementById('tarifaAplicada_imp').innerHTML=response.data.tarifaFijaMensualDolarSigno;
-                       
+                        document.getElementById('codigoTarifa_imp').innerHTML=response.data.codigo;
                         
                           $("#monto_tarifa").show();
                           $('#tarifaAplicada').show();
+                          $('#checkCasoEspecial').show();
                           $('#tarifa').show();
                           $("#Div_Fija").show();
                           $("#Div_Variable").hide();
@@ -180,7 +212,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                           document.getElementById('tarifaAplicadaMensualValor_imp').value=response.data.ImpuestoMensualVariableDolar;
 
                           $("#monto_tarifa").hide();
-                        
+                          $('#checkCasoEspecial').hide();
                           $('#tarifaAplicada').show();
                           $('#tarifa').show();
                           $("#Div_Variable").show();
@@ -299,7 +331,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                  <input type="text"  value="{{ $empresa->nom_actividad_especifica }}" disabled id="nom_actividad_especifica" class="form-control" required >                               
+                  <textarea  required class="form-control" disabled id="nom_actividad_especifica" rows="2">{{ $empresa->nom_actividad_especifica }}</textarea>                              
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -364,7 +396,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                                 <div class="input-group mb-9">
                                 <select 
                                 required 
-                                onchange="calculo({{$empresa->id_act_economica}});"
                                 class="selectpicker"
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -512,7 +543,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
              </div><!-- ROW FILA1 -->
 
-             <div class="row"><!-- /.ROW FILA2 -->  
+             <div class="row"><!-- /.ROW FILA4 -->  
               <!-- /.form-group -->
               <div class="col-md-3">
                   <div class="form-group">
@@ -527,7 +558,22 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                     </div>
                 </div>
               <!-- finaliza select ACTIVIDAD-->
+              
+        
+              <!-- /.form-group -->
+              <div class="col-md-3">
+                    <div class="form-group">
+                      <div class="form-check" id="checkCasoEspecial">
+                        <input class="form-check-input" type="checkbox" id="gridCheck" onchange="desbloqTarifa()">
+                        <label class="form-check-label" for="gridCheck">
+                          Caso especial
+                        </label>
+                      </div>
+                    </div>
+               </div><!-- /.col-md-6 -->
               </div><!-- ROW FIL4 -->   
+
+
    
               </div><!-- /.SUCCESS -->
             </div><!-- /.Panel Tarifas -->
@@ -560,12 +606,12 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
 <!--Inicia Modal Registrar Calificación--------------------------------------------------------------->
 
-<div class="modal fade" id="modalCalificacion">
+<div class="modal fade" id="modalCalificacion"  aria-hidden="true">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Registrar calificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" onclick="deseleccionarCheck()" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -783,8 +829,8 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
                       <tr>
                         <td align="center">{{$empresa->nombre}}</td>
-                        <td> 13623 </td>
-                        <td>1</td>
+                        <td> <h6 id="codigoTarifa_imp"></h6> </td>
+                        <td align="center">1</td>
                         <td> <h6 name="tarifaenColonesSigno_imp" id="tarifaenColonesSigno_imp"> </td>
                         <td><h6 name="tarifaAplicada_imp" id="tarifaAplicada_imp"> </h6></td>
                       </tr>
@@ -978,7 +1024,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
          </i>&nbsp; Impimir Calificación&nbsp;</button>
          <button type="button" class="btn btn-success float-right" onclick="nuevo()"><i class="fas fa-edit">
          </i> &nbsp;Registrar Calificación&nbsp;</button>
-         <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+         <br><br><button type="button" class="btn btn-default" onclick="deseleccionarCheck()" data-dismiss="modal">Cerrar</button>
           </div>
          <!-- /.card-footer -->
          </div>
@@ -1016,8 +1062,6 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
-    <script src="sweetalert2.all.min.js"></script>
-    <script src="sweetalert2.min.js"></script>
 
 
     
@@ -1049,27 +1093,32 @@ function GenerarCalificacion(){
             
             if(fecha_pres_balance === ''){
                     toastr.error('La fecha que presenta el balance es requerida.');
+                    deseleccionarCheck()
                     return;
                 }
 
             if(año_calificacion === ''){
                     toastr.error('El año a calificar es requerido.');
+                    deseleccionarCheck()
                     return;
                 }
 
 
             if(activo_total === ''){
                     toastr.error('El dato activo activo total es requerido.');
+                    deseleccionarCheck()
                     return;
                 }
               
               if(deducciones === ''){
                     toastr.error('El dato deducciones es requerido.');
+                    deseleccionarCheck()
                     return;
                 }
 
                 if(tarifaAplicada_imp === ''){
                     toastr.error('No ha asignado una tarifa fija.');
+                    deseleccionarCheck()
                     return;
                 }
 
@@ -1077,8 +1126,8 @@ function GenerarCalificacion(){
  
             document.getElementById('fechabalanceodjurada').value=fecha_pres_balance;
             document.getElementById('actividad_economica').innerHTML=rubro; 
-
-            $('#modalCalificacion').modal('show');
+            $('#modalCalificacion').modal({backdrop: 'static', keyboard: false})
+            //$('#modalCalificacion').modal('show');
         }
 
 function VerEmpresa(id){

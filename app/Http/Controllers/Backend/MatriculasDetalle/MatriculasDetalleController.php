@@ -471,23 +471,23 @@ public function info_cobroMatriculas(Request $request){
     log::info($request->all());
     //Inicia Información mátriculas mesas
         $id_matriculadetalleMesas=$request->id_matriculadetalleMesas;
-        $ultimo_cobroMesas = CobrosMatriculas::latest()
-        ->where('id_matriculas_detalle', $id_matriculadetalleMesas)->first();
+        $ultimo_cobroMesas = CobrosMatriculas::whereNotNull('periodo_cobro_fin')
+        ->where('id_matriculas_detalle', $id_matriculadetalleMesas)->latest()->first();
 
     //Información mátricula máquinas eletrónicas
         $id_matriculadetalleMaquinas=$request->id_matriculadetalleMaquinas;
-        $ultimo_cobroMaquinas = CobrosMatriculas::latest()
-        ->where('id_matriculas_detalle',$id_matriculadetalleMaquinas)->first();
+        $ultimo_cobroMaquinas = CobrosMatriculas::whereNotNull('periodo_cobro_fin')
+        ->where('id_matriculas_detalle',$id_matriculadetalleMaquinas)->latest()->first();
 
     //Información mátricula Sinfonolas
         $id_matriculadetalleSinfonolas=$request->id_matriculadetalleSinfonolas;
-        $ultimo_cobroSinfonolas = CobrosMatriculas::latest()
-        ->where('id_matriculas_detalle', $id_matriculadetalleSinfonolas)->first();
+        $ultimo_cobroSinfonolas = CobrosMatriculas::whereNotNull('periodo_cobro_fin')
+        ->where('id_matriculas_detalle', $id_matriculadetalleSinfonolas)->latest()->first();
 
     //Información mátricula Aparatos
         $id_matriculadetalleaparatos=$request->id_matriculadetalleAparatos;
-        $ultimo_cobroAparatos =  CobrosMatriculas::latest()
-        ->where('id_matriculas_detalle', $id_matriculadetalleaparatos)->first();
+        $ultimo_cobroAparatos =  CobrosMatriculas::whereNotNull('periodo_cobro_fin')
+        ->where('id_matriculas_detalle', $id_matriculadetalleaparatos)->latest()->first();
 
 
 
@@ -504,7 +504,7 @@ public function info_cobroMatriculas(Request $request){
 public function calculo_cobroMesas(Request $request){
     log::info($request->all());
 
-
+    $idusuario = Auth::id();
     $id_empresa=$request->id;
     $id_matriculadetalleMesas=$request->id_matriculadetalleMesas;
     $tasa_interes=$request->tasa_interesMesas;
@@ -869,22 +869,9 @@ public function calculo_cobroMesas(Request $request){
             //** Guardar cobro*/
             if ($request->cobrar=='1')
             {   
-                if($multa>0)
-                {
-                    foreach ($periodo as $dt) {
-                        $AñoCancelar =$dt->format('Y');
-                    CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleMesas)
-                    ->where('id_estado_matricula','2')
-                    ->where('año_calificacion',$AñoCancelar)
-                    ->update([
-                                'id_estado_matricula' =>"1",              
-                            ]);
-                        }
-                }
-
             $cobro = new CobrosMatriculas();
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleMesas;
-            $cobro->id_usuario = '1';
+            $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
             $cobro->monto_multa_matricula = $multa;
             $cobro->fondo_fiestasP = $fondoFPValor;
@@ -894,11 +881,32 @@ public function calculo_cobroMesas(Request $request){
             $cobro->monto_multaPE =$totalMultaPagoExtemporaneo;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro =  $fechahoy;
-            $cobro->periodo_cobro_inicio = $InicioPeriodo;
-            $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+            if($request->estado=='On')
+            {
+               $cobro->periodo_cobro_inicioMatricula = $InicioPeriodo;
+               $cobro->periodo_cobro_finMatricula =$PagoUltimoDiaMes;
+
+            }else{
+                   $cobro->periodo_cobro_inicio = $InicioPeriodo;
+                   $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+               
+                 }
             $cobro->tipo_cobro ='matricula';
             $cobro->save();
         
+            if($multa>0)
+            {
+                foreach ($periodo as $dt) {
+                    $AñoCancelar =$dt->format('Y');
+                CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleMesas)
+                ->where('id_estado_matricula','2')
+                ->where('año_calificacion',$AñoCancelar)
+                ->update([
+                            'id_estado_matricula' =>"1",              
+                        ]);
+                    }
+            }
+
             return ['success' => 2];
             
 
@@ -936,11 +944,11 @@ public function calculo_cobroMesas(Request $request){
 public function calculo_cobroMaquinas(Request $request){
     log::info($request->all());
 
+    $idusuario = Auth::id();
     $id_empresa=$request->id;
     $fechaPagaraMaquinas=$request->fechaPagaraMaquinas;
     $id_matriculadetalleMaquinas=$request->id_matriculadetalleMaquinas;
     $tasa_interes=$request->tasa_interesMaquinas;
-    $fecha_interesMoratorio=$request->fecha_interesMoratorioMaquinas;
     $Message=0;
 
     $MesNumero=Carbon::createFromDate($request->ultimo_cobroMaquinas)->format('d');
@@ -1262,23 +1270,10 @@ public function calculo_cobroMaquinas(Request $request){
             //** Guardar cobro*/
             if ($request->cobrar=='1')
             {   
-                if($multa>0)
-                {
-                    foreach ($periodo as $dt) {
-                    $AñoCancelar =$dt->format('Y');
-                    CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleMaquinas)
-                     ->where('id_estado_matricula','2')
-                     ->where('año_calificacion',$AñoCancelar)
-                        ->update([
-                                'id_estado_matricula' =>"1",              
-                            ]);
 
-                    }
-
-            }
             $cobro = new CobrosMatriculas();
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleMaquinas;
-            $cobro->id_usuario = '1';
+            $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
             $cobro->monto_multa_matricula = $multa;
             $cobro->fondo_fiestasP = $fondoFPValor;
@@ -1287,10 +1282,33 @@ public function calculo_cobroMaquinas(Request $request){
             $cobro->intereses_moratorios =$InteresTotal;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro =  $fechahoy;
-            $cobro->periodo_cobro_inicio = $InicioPeriodo;
-            $cobro->periodo_cobro_fin =$fechaPagaraMaquinas;
+            if($request->estado=='On')
+             {
+                $cobro->periodo_cobro_inicioMatricula = $InicioPeriodo;
+                $cobro->periodo_cobro_finMatricula =$PagoUltimoDiaMes;
+
+             }else{
+                    $cobro->periodo_cobro_inicio = $InicioPeriodo;
+                    $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+                
+                  }
             $cobro->tipo_cobro ='matricula';
             $cobro->save();
+
+            if($multa>0)
+            {
+                foreach ($periodo as $dt) {
+                $AñoCancelar =$dt->format('Y');
+                CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleMaquinas)
+                 ->where('id_estado_matricula','2')
+                 ->where('año_calificacion',$AñoCancelar)
+                    ->update([
+                            'id_estado_matricula' =>"1",              
+                        ]);
+
+                }
+
+            }
         
             return ['success' => 2];
             
@@ -1328,6 +1346,7 @@ public function calculo_cobroMaquinas(Request $request){
 public function calculo_cobroSinfonolas(Request $request){
     log::info($request->all());
 
+    $idusuario = Auth::id();
     $MesNumero=Carbon::createFromDate($request->ultimo_cobroSinfonolas)->format('d');
     $id_empresa=$request->id;
     $fechaPagaraSinfonolas=$request->fechaPagaraSinfonolas;
@@ -1686,22 +1705,9 @@ public function calculo_cobroSinfonolas(Request $request){
             //** Guardar cobro*/
             if ($request->cobrar=='1')
             {   
-                if($multa>0)
-                {
-                    foreach ($periodo as $dt) {
-                        $AñoCancelar =$dt->format('Y');
-                    CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleSinfonolas)
-                    ->where('id_estado_matricula','2')
-                    ->where('año_calificacion',$AñoCancelar)
-                    ->update([
-                                'id_estado_matricula' =>"1",              
-                            ]);
-                        }
-                }
-
             $cobro = new CobrosMatriculas();
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleSinfonolas;
-            $cobro->id_usuario = '1';
+            $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
             $cobro->monto_multa_matricula = $multa;
             $cobro->fondo_fiestasP = $fondoFPValor;
@@ -1711,11 +1717,32 @@ public function calculo_cobroSinfonolas(Request $request){
             $cobro->monto_multaPE =$totalMultaPagoExtemporaneo;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro =  $fechahoy;
-            $cobro->periodo_cobro_inicio = $InicioPeriodo;
-            $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+            if($request->estado=='On')
+            {
+               $cobro->periodo_cobro_inicioMatricula = $InicioPeriodo;
+               $cobro->periodo_cobro_finMatricula =$PagoUltimoDiaMes;
+
+            }else{
+                   $cobro->periodo_cobro_inicio = $InicioPeriodo;
+                   $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+               
+                 }
             $cobro->tipo_cobro ='matricula';
             $cobro->save();
-        
+
+            if($multa>0)
+            {
+                foreach ($periodo as $dt) {
+                    $AñoCancelar =$dt->format('Y');
+                CalificacionMatriculas::where('id_matriculas_detalle',$request->id_matriculadetalleSinfonolas)
+                ->where('id_estado_matricula','2')
+                ->where('año_calificacion',$AñoCancelar)
+                ->update([
+                            'id_estado_matricula' =>"1",              
+                        ]);
+                    }
+            }
+            
             return ['success' => 2];
             
 
@@ -1754,7 +1781,7 @@ public function calculo_cobroSinfonolas(Request $request){
 public function calculo_cobroAparatos(Request $request){
     log::info($request->all());
 
-
+    $idusuario = Auth::id();
     $id_empresa=$request->id;
     $fechaPagaraAparatos=carbon::parse($request->fecha_pagaraAparatos)->format('Y-12-31');
     $id_matriculadetalleAparatos=$request->id_matriculadetalleAparatos;
@@ -1909,7 +1936,7 @@ public function calculo_cobroAparatos(Request $request){
 
             $cobro = new CobrosMatriculas();
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleAparatos;
-            $cobro->id_usuario = '1';
+            $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro = '12';
             $cobro->monto_multa_matricula = $multa;
             $cobro->fondo_fiestasP = $fondoFPValor;

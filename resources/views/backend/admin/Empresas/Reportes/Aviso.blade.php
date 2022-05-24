@@ -26,7 +26,7 @@
         }
         header h3{
             margin: 10px 0;
-            color: #A9A8A7;
+            color: #1E1E1E;
         }
         footer {
             position: fixed;
@@ -63,10 +63,7 @@
             float: center;
         }
 
-        .content h3{
-            font-size: 20px;
-
-        }
+ 
         .content p{
             margin-left: 15px;
             display: block;
@@ -127,11 +124,11 @@
 <header style="margin-top: 25px">
     <div class="row">
 
-        <div class="content">
-            <img src="{{ asset('images/logoIMP.png') }}" style="float: left" alt="" height="78px" width="78px">
-            <img src="{{ asset('images/EscudoSV.png') }}" style="float: right" alt="" height="78px" width="78px">
+        <div class="content" style="float: left">
+            <img src="{{ asset('images/logo.png') }}" style="float: left" alt="" height="78px" width="78px">
             <h3>ALCALDIA MUNICIPAL DE METAPAN</h3>
             <h3>Santa Ana, El Salvador, C.A.</h3>
+            <h3>UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL, TEL 2402-7614</h3>
             <img src="{{ asset('images/linea3.png') }}"   alt="" height="30px" width="720px">
         </div>
         
@@ -161,80 +158,51 @@
 </footer>
 
 <div id="content">
-<h4 align="center"><u>ESTADO DE CUENTA</u></h4>
+<h4 align="center"><u>AVISO</u></h4>
 <table border="0" align="center" style="width: 600px;">
         <tr>
             <td></td>
             <td align="right">
+                <b>EXP.&nbsp;{{$empresa->num_tarjeta}}<br>
                 <strong>Metapán, {{$FechaDelDia}}</strong>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <p>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
-                Dirección:&nbsp;{{$empresa->direccionCont}}<br>
-                Cuenta Corriente N°:&nbsp;{{$empresa->num_tarjeta}}<br>
-                Empresa o Negocio:&nbsp;{{$empresa->nombre}}</p>
+                <p><b>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
+                Presente.</b></p>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <p>Estimado(a) señor (a):</p>
-                <p style="text-indent:20">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-                    motivo de la presente es para manifestarle que su estado de cuenta en esta
-                    Municipalidad es el siguiente:</p>
-            <p><strong>Impuestos Municipales</strong></p>
+                <p style="text-align: justify">Aprovecho la oportunidad para saludarle y a la vez informarle que la falta de pago de los tributos
+                municipales en el plazo o fecha límite correspondiente, coloca al sujeto pasivo en situación de mora, sin necesidad de requerimiento 
+                de parte de la administración tributaria municipal y sin tomar en consideración, las causas o motivos de esa falta de pago. Art. 45 
+                (Ley General Tributaria).</p>
+                <br>
+                Nombre del Negocio o Empresa en Mora:&nbsp; <strong>{{$empresa->nombre}}</strong><br>
+                Direccion: &nbsp;<strong>{{$empresa->direccion}}</strong></p>
             </td>
         <tr>
-            <td colspan="2"><hr></td>
-        </tr>
-        <tr>
-            <th scope="col">Periodo: &nbsp;&nbsp;desde&nbsp; {{$InicioPeriodo}}&nbsp;</th>
-            <th scope="col">&nbsp;&nbsp;hasta&nbsp; {{$PagoUltimoDiaMes}}&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align="right">IMPUESTOS</td>
-            <td align="center">{{$impuesto_año_actual}}</td>
-        </tr>
-        <tr>
-            <td align="right">IMPUESTO MORA</td>
-            <td align="center">{{$impuestos_mora}}</td>
-        </tr>
-        <tr>
-            <td align="right">INTERESES MORATORIOS</td>
-            <td align="center">{{$InteresTotal}}</td>
-        </tr>
-        <tr>
-            <td align="right">MULTAS POR BALANCE</td>
-            <td align="center">{{$monto_pago_multaBalance}}</td>
-        </tr>
-        <tr>
-            <td align="right">MULTAS P. EXTEMPORANEOS</td>
-            <td align="center">{{$totalMultaPagoExtemporaneo}}</td>
-        </tr>
-        <tr>
-            <td align="right">FONDO F. PATRONALES 5%</td>
-            <td align="center">{{$fondoFPValor}}</td>
-        </tr>
-        <tr>
-            <th scope="row">Total de Impuestos Adeudados</th>
-            <th align="center">{{$totalPagoValor}}</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
             <td colspan="2">
-            Validez: <strong><u>{{$FechaDelDia}}</u></strong>
-                <p  style="text-indent:20">Agradeciendo su comprension y atención a este estado de cuenta me suscribo de
-                                            usted, muy cordialmente</p>
+                <p style="text-align: justify">La mora del sujeto pasivo producirá, entre otros, los siguientes efectos: 1º Hace exigible la deuda
+                    tributaria, 2º Da lugar al devengo de intereses moratorios, 3º Da lugar a la aplicación de multas, por
+                    configurar dicha mora, una infracción tributaria. Los intereses moratorios se aplicarán desde el
+                    vencimiento de plazo en que debió pagarse el tributo hasta el día de la extinción total de la obligación
+                    tributaria. Art. 46 (Ley General Tributaria), Por tanto, es necesario que se acerque al Departamento
+                    de Catastro Tributario de esta Municipalidad a la mayor brevedad posible, para cancelar la deuda o
+                    solicitar de manera escrita un plan de pago.
+                </p>
+                    Agradecemos de antemano la atención prestada a esta nota, y esperamos la disposición necesaria
+                    para solventar su situación. 
+                    <br>
+                <p>Atentamente.</p>
             </td>
         </tr>
         <tr align="center">
             <td colspan="2">
-                <p>Lic. Rosa Lisseth Aldana <br>
-                Unidad de Administración Tributaria Municipal</p>
+                <p>Sr. José Roberto Solito<br>
+                Delegado de Cobro.</p>
             </td>
         </tr>
     </table>

@@ -16,7 +16,21 @@
  <!-- Para vista detallada fin -->
 
 @stop
+<script>
+function reporte_notificacion(id){
+    
+        var f1=(document.getElementById('f1').value);
 
+        var f2=(document.getElementById('fechahoy').value);
+
+        var ti={{$Tasainteres}};
+        var f3=(document.getElementById('fechahoy').value);
+        var tf='hidden';
+    
+      window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + tf + "/" + id );
+    
+    }
+</script>
 
 <style>
     table{
@@ -115,6 +129,18 @@
 
   
         <div class="col-md-4 col-sm-8">
+          @if($CE==1)
+                    <a href="#" >
+                            <div class="widget stats-widget">
+                              <div class="widget-body clearfix bg-light">
+                                  <div class="pull-left">
+                                      <h3 class="widget-title text-black">No requiere calificación</h3>
+                                  </div>
+                                  <span class="pull-right big-icon watermark"><i class="fas fa-shield-alt"></i>&nbsp;<i class="fas fa-lock"></i></span>
+                              </div>
+                          </div><!-- .widget -->
+                        </a>
+          @else              
               @if($detectorNull== '0')
                         <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
                             <div class="widget stats-widget">
@@ -152,6 +178,7 @@
                       </a>
                       @endif
               @endif
+          @endif      
         </div>
         <div class="col-md-4 col-sm-8">
         <a href="#" onclick="informacionTraspaso({{$empresa->id}})" >
@@ -178,7 +205,7 @@
               </a>
           </div>
         <div class="col-md-4 col-sm-8">
-          <a href="{{url('client')}}">
+          <a href="#" onclick="reporteAviso({{$empresa->id}})">
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
                     <div class="pull-left">
@@ -191,11 +218,13 @@
     </div>
 
     <div class="col-md-4 col-sm-8">
-        <a href="{{url('simulator')}}">
+        <a href="#" onclick="reporte_notificacion({{$empresa->id}})">
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-purple">
                     <div class="pull-left">
                         <h3 class="widget-title text-white">Generar notificación</h3>
+                        <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
+                        <input type="hidden" id="f1" value="{{$ultimoCobroEmpresa}}" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-envelope-open-text"></i></span>
                 </div>
@@ -204,32 +233,43 @@
 
     </div>
     <div class="col-md-4 col-sm-8">
-    @if($detectorNull== '0')
-    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
-    <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-success">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
+    @if($CE==1)
+      <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
+              <div class="widget stats-widget">
+                  <div class="widget-body clearfix bg-success">
+                      <div class="pull-left">
+                          <h3 class="widget-title text-white">Registrar Cobro</h3>
+                      </div>
+                      <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                  </div>
+              </div><!-- .widget -->
+          </a>
     @else
-        <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-success">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
-    @endif
-        </div>
-    
-   
+                  @if($detectorNull== '0')
+                  <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+                  <div class="widget stats-widget">
+                              <div class="widget-body clearfix bg-success">
+                                  <div class="pull-left">
+                                      <h3 class="widget-title text-white">Registrar Cobro</h3>
+                                  </div>
+                                  <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                              </div>
+                          </div><!-- .widget -->
+                      </a>
+                  @else
+                      <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
+                          <div class="widget stats-widget">
+                              <div class="widget-body clearfix bg-success">
+                                  <div class="pull-left">
+                                      <h3 class="widget-title text-white">Registrar Cobro</h3>
+                                  </div>
+                                  <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                              </div>
+                          </div><!-- .widget -->
+                      </a>
+                  @endif
+                      </div>
+      @endif
     </div><!-- .ROW -->
     <hr>
 
@@ -805,10 +845,11 @@
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
 
-    
 <script type="text/javascript">
 
 function guardarTraspaso(){
+
+  
       
       var id = {{ $id}};
       var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
@@ -1005,6 +1046,17 @@ function matriculas(){
   openLoading();
               window.location.href="{{ url('/admin/matriculas_detalle/index') }}/"+id;
         }
+
+
+function reporteAviso(id){
+    
+   
+
+  window.open("{{ URL::to('/admin/generar_aviso/pdf') }}/" + id );
+
+}
+
+
 
 </script>
 @stop
