@@ -130,7 +130,7 @@ function reporte_notificacion(id){
   
         <div class="col-md-4 col-sm-8">
           @if($CE==1)
-                    <a href="#" >
+                    <a href="#" onclick="NoCalificarCE()" >
                             <div class="widget stats-widget">
                               <div class="widget-body clearfix bg-light">
                                   <div class="pull-left">
@@ -216,22 +216,35 @@ function reporte_notificacion(id){
             </div><!-- .widget -->
         </a>
     </div>
-
+   
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="reporte_notificacion({{$empresa->id}})">
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-purple">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Generar notificación</h3>
-                        <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
+              @if($CE==0)
+                <a href="#" onclick="reporte_notificacion({{$empresa->id}})">
+                  <div class="widget stats-widget">
+                    <div class="widget-body clearfix bg-purple">
+                     <div class="pull-left">
+                     <h3 class="widget-title text-white">Generar notificación</h3>
+                     <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
                         <input type="hidden" id="f1" value="{{$ultimoCobroEmpresa}}" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-envelope-open-text"></i></span>
                 </div>
+              @else
+                <a href="#" onclick="NoNotificar()">              
+                 <div class="widget stats-widget">
+                  <div class="widget-body clearfix bg-light">
+                    <div class="pull-left">
+                    <h3 class="widget-title text-black">Generar notificación</h3>
+                        <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
+                        <input type="hidden" id="f1" value="{{$ultimoCobroEmpresa}}" class="form-control" >
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-lock"></i></span>
+                </div>
+                @endif
             </div><!-- .widget -->
-        </a>
-
+      </a>
     </div>
+           
     <div class="col-md-4 col-sm-8">
     @if($CE==1)
       <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
@@ -1030,11 +1043,19 @@ function NoCobrar(){
   toastr.warning('Debe registrar una calificación primero para poder generar un cobro.');
   return;
 }
+function NoCalificarCE(){
+  toastr.warning('Esta empresa no es calificable.');
+  return;
+}
+
 function NoCalificar(){
   toastr.warning('Debe registrar una calificación primero para poder generar una recalificación.');
   return;
 }
-
+function NoNotificar(){
+  toastr.warning('Esta empresa no es notificable.');
+  return;
+}
 function Cobros(id){
   openLoading();
 

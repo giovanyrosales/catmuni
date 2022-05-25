@@ -82,7 +82,7 @@
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar licencia o matricula</h4>
+         <h4 class="modal-title">Agregar licencia o matrícula</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -112,8 +112,8 @@
                                 id="select-tipo_permiso" 
                                 title="-- Selecione el tipo de permiso --"
                                  >
-                                 <option value="licencia">Licencia</option>
-                                 <option value="matricula">Matricula</option>
+                                 <option value="Licencia">Licencia</option>
+                                 <option value="Matrícula">Matrícula</option>
                                 </select> 
                            </div>
                            <!-- finaliza asignar actividad economica-->
@@ -126,11 +126,20 @@
                 </div>
                 </div>
                 <!-- /.form-group -->
+                <!-- /.form-group -->  
+                <div class="col-md-10">
+                <div class="form-group">
+                     <label>Tarifa:</label>
+                        <input type="number"  id="tarifa" class="form-control" required placeholder="Tarifa">
+                </div>
+                </div>
+
+                <!-- /.form-group -->
                 </div>               
                  </div>
                   <div class="card-footer">
                   <button type="button" class="btn btn-success float-right" onclick="nuevaLM()"> Guardar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fas fa-times-circle"></i>Cerrar</button>
                 </div>
                    </div>
              
@@ -157,10 +166,10 @@
                 </div>
                <div class="modal-body">
                     <form id="formulario-EditarLM"> 
-            <div class="row">
-              <div class="col-md-10">
-              <div class="form-group">
-                <label>Nombre:</label>
+              <div class="row">
+               <div class="col-md-10">
+                <div class="form-group">
+                  <label>Nombre:</label>
                         <input type="text" name="nombre" id="nombre-editar" class="form-control" required placeholder="Nombre licencia o matricula">
                         <input type="hidden" name="id" id="id-editar" class="form-control" >
                 </div>
@@ -180,35 +189,47 @@
                                 id="select-tipo_permiso-editar" 
                                  >
                                 
-                                 <option value="licencia">Licencia</option>
-                                 <option value="matricula">Matricula</option>
+                                 <option value="Licencia">Licencia</option>
+                                 <option value="Matrícula">Matrícula</option>
                                
                                 </select>  
                            </div>
                         </div>
+                  </div>
                 <!-- /.form-group -->  
-                     </div>
-                     <div class="col-md-10">
+                   
+                <div class="col-md-10">
                 <div class="form-group">
-                     <label>Monto:</label>
+                     <label>Monto Permiso:</label>
                         <input type="number" name="monto" id="monto-editar" class="form-control" required placeholder="Monto">
                 </div>
                 </div>
-              </div>
+            
+                <!-- /.form-group -->
+
+                <!-- /.form-group -->  
+                <div class="col-md-10">
+                <div class="form-group">
+                     <label>Tarifa:</label>
+                        <input type="number" name="tarifa" id="tarifa-editar" class="form-control" required placeholder="Tarifa">
+                </div>
+                </div>
+
                 <!-- /.form-group -->
                 
                 </div>    
                 <div class="card-footer">
                   <button type="button" class="btn btn-success float-right" onclick="actualizarLM()"> Actualizar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fas fa-times-circle"></i>Cerrar</button>
                 </div>           
-                   </div>
+                </div>
                  </div>
                    </div>
                     </div>
                   </div>
                 </div>
             </div>
+            
       <!-- /.card -->
           </form>
       <!-- /form -->
@@ -243,7 +264,7 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>Cerrar</button>
                     <button type="button" class="btn btn-danger" onclick="eliminarLM()">Borrar</button>
                 </div>
             </div>
@@ -301,6 +322,7 @@
         
         var nombre = document.getElementById('nombre').value;
         var monto = document.getElementById('monto').value;
+        var tarifa = document.getElementById('tarifa').value;
         var tipo_permiso = document.getElementById('select-tipo_permiso').value;
         
 
@@ -315,7 +337,11 @@
             toastr.error('El monto es requerido');
             return;
         }
-
+        if(tarifa === '')
+        {
+            toastr.error('La tarifa es requerida');
+            return;
+        }
         if(tipo_permiso === '')
         {
             toastr.error('El tipo de permiso es requerido');
@@ -326,6 +352,7 @@
       var formData = new FormData();
       formData.append('nombre', nombre);
       formData.append('monto', monto);
+      formData.append('tarifa', tarifa);
       formData.append('tipo_permiso', tipo_permiso);
 
       axios.post('/admin/LicenciaMatricula/Nuevas', formData,
@@ -376,8 +403,14 @@
                         $('#id-editar').val(response.data.licencia_matricula.id);
                         $('#nombre-editar').val(response.data.licencia_matricula.nombre);
                         $('#monto-editar').val(response.data.licencia_matricula.monto);
-                        $('#select-tipo_permiso-editar').val(response.data.licencia_matricula.tipo_permiso);
+                        $('#tarifa-editar').val(response.data.licencia_matricula.tarifa);
 
+
+                        if(response.data.licencia_matricula.tipo_permiso == "Licencia"){
+                          document.getElementById("select-tipo_permiso-editar").selectedIndex = 0;
+                        }else{
+                          document.getElementById("select-tipo_permiso-editar").selectedIndex = 1;
+                        }
 
                     }else{
                         toastr.error('La información solicitada no se encuentra');
@@ -396,6 +429,7 @@
             var id = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
             var monto = document.getElementById('monto-editar').value;
+            var tarifa = document.getElementById('tarifa-editar').value;
             var tipo_permiso = document.getElementById('select-tipo_permiso-editar').value;
            
             openLoading()
@@ -404,6 +438,7 @@
             formData.append('id', id);
             formData.append('nombre', nombre);  
             formData.append('monto', monto);
+            formData.append('tarifa', tarifa);
             formData.append('tipo_permiso', tipo_permiso);
 
             axios.post('/admin/LicenciaMatricula/editar', formData, {

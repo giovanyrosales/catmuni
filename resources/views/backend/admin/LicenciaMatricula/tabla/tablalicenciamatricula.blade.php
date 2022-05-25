@@ -10,7 +10,8 @@
                                 
                                 <th style="width: 15%;">Nombre</th>
                                 <th style="width: 15%;">Tipo permiso</th>
-                                <th style="width: 15%;">Monto</th>
+                                <th style="width: 15%;">Monto permiso</th>
+                                <th style="width: 15%;">Tarifa</th>
                                 <th style="width: 15%;">Acción</th>
                             </tr>
                             </thead>
@@ -20,6 +21,7 @@
                                     <td>{{$licencia->nombre}}
                                     <td>{{$licencia->tipo_permiso}} </td>
                                     <td>${{$licencia->monto}} </td>
+                                    <td>${{$licencia->tarifa}} </td>
                                                                      
                                     <td style="text-align: center;">
                                                                    
