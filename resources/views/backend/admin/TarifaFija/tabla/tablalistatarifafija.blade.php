@@ -22,9 +22,9 @@
                                     <td>{{$tarifa_fija->codigo}} </td>
                                     <td>{{$tarifa_fija->nombre_actividad}} </td>
                                     <td>{{$tarifa_fija->nombre_rubro}} </td>
-                                    <td>${{$tarifa_fija->limite_inferior}} </td>
-                                    <td>${{$tarifa_fija->limite_superior}} </td>
-                                    <td>${{$tarifa_fija->impuesto_mensual}} </td>
+                                    <td>¢{{$tarifa_fija->limite_inferior}} </td>
+                                    <td>¢{{$tarifa_fija->limite_superior}} </td>
+                                    <td>¢{{$tarifa_fija->impuesto_mensual}} </td>
                                   
                                     <td style="text-align: center;">
                                                                    

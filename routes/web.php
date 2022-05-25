@@ -220,6 +220,7 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::post('/admin/buses_detalle/eliminar', [BusesDetalleController::class, 'eliminarB']);
 
 
-
     //Reportes
-    Route::get('/admin/estado_cuenta/pdf', [reportesController::class, 'estado_cuenta']);
+    Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);
+    Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso']);
+    Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'notificacion']);

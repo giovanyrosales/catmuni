@@ -24,6 +24,8 @@ class CobrosMatriculas extends Model
         'fecha_cobro',
         'periodo_cobro_inicio',
         'periodo_cobro_fin',
+        'periodo_cobro_inicioMatricula',
+        'periodo_cobro_finMatricula',
         'tipo_cobro',
       ];
 }

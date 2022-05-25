@@ -160,7 +160,9 @@ public function calificacion($id)
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro','actividad_economica.id as id_act_economica',
     'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
-    ->find($id);
+    ->where('empresa.id',$id)
+    ->first();
+    log::info($empresa);
 
     $matriculasRegistradas=MatriculasDetalle
     ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
@@ -203,6 +205,7 @@ public function calificacion($id)
 
         $monto = number_format((float)$monto, 2, '.', ',');
         $montoMatriculaValor='$'. $monto;
+        
     return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('id','empresa','giroscomerciales', 'monto', 'contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','detectorNull','matriculas','montoMatriculaValor','matriculasRegistradas'));
     
 }
@@ -251,7 +254,7 @@ public function Recalificacion($id)
     'actividad_economica.rubro','actividad_economica.id as id_act_economica',
     'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);
-
+    
     $matriculasRegistradas=MatriculasDetalle
     ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
     ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
@@ -311,6 +314,12 @@ public function show($id)
     ->where('id_empresa', "=", $id) 
     ->get();
 
+    //** Inicia - Para obtener la tasa de interes más reciente */
+    $Tasainteres=Interes::latest()
+    ->pluck('monto_interes')
+        ->first();
+    //** Finaliza - Para obtener la tasa de interes más reciente */
+
     //** Para determinar la cantidad de multas por empresa */
     $multas=MultasDetalle::select('monto_multa')
        ->where('id_empresa',$id)
@@ -340,11 +349,9 @@ public function show($id)
     ->first();
 
 
-    $ultimo_cobro = Cobros::latest()
-    ->where('id_empresa', "=", "$id")
-    ->first();
     
-
+   
+    
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -360,16 +367,55 @@ public function show($id)
     'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);    
 
+    
+    $ultimo_cobro = Cobros::latest()
+    ->where('id_empresa',$id)
+    ->first();
+    if( $ultimo_cobro==null)
+    {
+        $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+    }else{
+            $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
+        }
+
+    //**¨Para detectar los cobros especiales */
+    if($empresa->id_actividad_especifica==118)
+    {
+        $CE=1;
+    } else if($empresa->id_actividad_especifica==120)
+            {
+                $CE=1; 
+            }else if($empresa->id_actividad_especifica==121)
+                    {
+                        $CE=1;
+                    }else if($empresa->id_actividad_especifica==122)
+                            {
+                                $CE=1;
+                            }else if($empresa->id_actividad_especifica==127)
+                                    {
+                                        $CE=1;
+                                    }else{
+                                         $CE=0;
+                                        }
+
+    //**¨Fin detectar los cobros especiales */
+
+    
+    $fechahoy=carbon::now()->format('Y-m-d');
+    log::info($fechahoy);
+
    if ($calificaciones == null)
     { 
         $detectorNull=0;
         if ($ultimo_cobro == null)
-        {
-            $detectorNull=0;
+        {  
             $detectorCobro=0;
-            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas'));
-        }
-            
+            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));     
+        }else{
+                $detectorCobro=1;
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));   
+             }
+        
            
     }
     else
@@ -379,11 +425,13 @@ public function show($id)
             if ($ultimo_cobro == null)
             {
                 $detectorCobro=0;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas'));
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));
             }else
             {
+              
                 $detectorCobro=1;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas'));
+               
+                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));
             }
                    
     }
@@ -394,6 +442,7 @@ public function show($id)
 public function calculo_cobros_empresa(Request $request)
 {   log::info($request->all());
     
+    $idusuario = Auth::id();
     $MesNumero=Carbon::createFromDate($request->ultimo_cobro)->format('d');
     //log::info($MesNumero);
 
@@ -450,9 +499,7 @@ public function calculo_cobros_empresa(Request $request)
 
    
     //** Inicia - Para obtener la tasa de interes más reciente */
-    $Tasainteres=Interes::latest()
-    ->pluck('monto_interes')
-        ->first();
+        $Tasainteres=$request->tasa_interes;
     //** Finaliza - Para obtener la tasa de interes más reciente */
 
         $calificaciones = calificacion::latest()
@@ -464,8 +511,23 @@ public function calculo_cobros_empresa(Request $request)
     
         ->where('id_empresa', "=", "$id")
         ->first();
-        $nombre_empresa=$calificaciones->nombre;
-
+       
+        
+        $empresa= Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+        ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+        
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+        'estado_empresa.estado',
+        'giro_comercial.nombre_giro',
+        'actividad_economica.rubro',
+        'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+        ->find($id); 
+        $nombre_empresa= $empresa->nombre;
         if($f1->lt($PagoUltimoDiaMes))
         {
 
@@ -486,11 +548,33 @@ public function calculo_cobros_empresa(Request $request)
                
                 $AñoSumado=Carbon::createFromDate($AñoPago, 12, 31);
 
-                $tarifa=calificacion::where('año_calificacion','=',$AñoPago)
-                 ->where('id_empresa','=',$id) 
-                    ->pluck('pago_mensual') 
-                        ->first();
-                
+                /**¨Para detectar los cobros especiales y darle su tarifa */
+                if($empresa->id_actividad_especifica==118)
+                {
+                    $tarifa=$request->tarifaMes;
+                } else if($empresa->id_actividad_especifica==120)
+                        {
+                            $tarifa=$request->tarifaMes;
+                        }else if($empresa->id_actividad_especifica==121)
+                                {
+                                    $tarifa=$request->tarifaMes;
+                                }else if($empresa->id_actividad_especifica==122)
+                                        {
+                                            $tarifa=1;
+                                        }else if($empresa->id_actividad_especifica==127)
+                                                {
+                                                    $tarifa=$request->tarifaMes;
+                                                }else{
+                                                    
+                                                    $tarifa=calificacion::where('año_calificacion','=',$AñoPago)
+                                                    ->where('id_empresa','=',$id) 
+                                                    ->pluck('pago_mensual') 
+                                                        ->first();
+               
+                                                    }
+
+                //**¨Fin detectar los cobros especiales */
+
          
                         if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
                             {
@@ -587,10 +671,33 @@ public function calculo_cobros_empresa(Request $request)
                         }
                         Log::info($CantidaDiasMesMulta);
                         
-                       $tarifa=calificacion::where('año_calificacion','=',$TarifaAñoMulta)
-                       ->where('id_empresa','=',$id) 
-                          ->pluck('pago_mensual') 
-                              ->first();
+
+             /**¨Para detectar los cobros especiales y darle su tarifa */
+                if($empresa->id_actividad_especifica==118)
+                {
+                    $tarifaMulta=$request->tarifaMes;
+                } else if($empresa->id_actividad_especifica==120)
+                        {
+                            $tarifaMulta=$request->tarifaMes;
+                        }else if($empresa->id_actividad_especifica==121)
+                                {
+                                    $tarifaMulta=$request->tarifaMes;
+                                }else if($empresa->id_actividad_especifica==122)
+                                        {
+                                            $tarifaMulta=$request->tarifaMes;
+                                        }else if($empresa->id_actividad_especifica==127)
+                                                {
+                                                    $tarifaMulta=$request->tarifaMes;
+                                                }else{
+                                                    
+                                                    $tarifaMulta=calificacion::where('año_calificacion','=',$TarifaAñoMulta)
+                                                    ->where('id_empresa','=',$id) 
+                                                       ->pluck('pago_mensual') 
+                                                           ->first();
+               
+                                                    }
+
+                //**¨Fin detectar los cobros especiales */
                     
                     $MesDeMulta->addMonthsNoOverflow(1)->format('Y-M');
   
@@ -599,19 +706,19 @@ public function calculo_cobros_empresa(Request $request)
                    if($CantidaDiasMesMulta>0){                                                   
                         if($CantidaDiasMesMulta<=90)
                         {  
-                                    $multaPagoExtemporaneo=round(($tarifa*0.05),2);
+                                    $multaPagoExtemporaneo=round(($tarifaMulta*0.05),2);
                                     $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;
                                     $stop="Avanza:Multa";
 
                         }elseif($CantidaDiasMesMulta>=90)
                                 {
-                                    $multaPagoExtemporaneo=round(($tarifa*0.10),2);
+                                    $multaPagoExtemporaneo=round(($tarifaMulta*0.10),2);
                                     $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;  
                                     $stop="Avanza:Multa";
                                 }
 
                         //** INICIO-  Cálculando el interes. */
-                        $Interes=round((($TasaInteresDiaria*$CantidaDiasMesMulta)/100*$tarifa),2);
+                        $Interes=round((($TasaInteresDiaria*$CantidaDiasMesMulta)/100*$tarifaMulta),2);
                         $InteresTotal=$InteresTotal+$Interes;
                         //** FIN-  Cálculando el interes. */
 
@@ -672,13 +779,13 @@ public function calculo_cobros_empresa(Request $request)
             $totalPagoValor= round($fondoFPValor+$monto_pago_multaBalance+$impuestoTotal+$totalMultaPagoExtemporaneo+$InteresTotal,2);
 
             //Le agregamos su signo de dollar para la vista al usuario
-            $fondoFP= "$". $fondoFPValor;     
-            $totalPago="$".$totalPagoValor;
-            $impuestos_mora_Dollar="$".$impuestos_mora;
-            $impuesto_año_actual_Dollar="$".$impuesto_año_actual;
-            $monto_pago_multaDollar="$".$monto_pago_multaBalance;
-            $multaPagoExtemporaneoDollar="$".$totalMultaPagoExtemporaneo;
-            $InteresTotalDollar="$".$InteresTotal;
+            $fondoFP="$".number_format($fondoFPValor, 2, '.', ',');   
+            $totalPago="$".number_format($totalPagoValor, 2, '.', ',');
+            $impuestos_mora_Dollar="$".number_format($impuestos_mora, 2, '.', ',');
+            $impuesto_año_actual_Dollar="$".number_format($impuesto_año_actual, 2, '.', ',');
+            $monto_pago_multaDollar="$".number_format($monto_pago_multaBalance, 2, '.', ',');
+            $multaPagoExtemporaneoDollar="$".number_format($totalMultaPagoExtemporaneo, 2, '.', ',');
+            $InteresTotalDollar="$".number_format($InteresTotal, 2, '.', ',');
            
         //** Guardar cobro*/
         if ($request->cobrar=='1')
@@ -697,7 +804,7 @@ public function calculo_cobros_empresa(Request $request)
             }
             $cobro = new cobros();
             $cobro->id_empresa = $request->id;
-            $cobro->id_usuario = '1';
+            $cobro->id_usuario =$idusuario;
             $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
             $cobro->impuesto_mora = $impuestos_mora;
             $cobro->impuesto = $impuesto_año_actual;
@@ -748,6 +855,7 @@ public function calculo_cobros_empresa(Request $request)
 public function calculo_cobroLicor(Request $request)
 { 
     log::info($request->all());
+    $idusuario = Auth::id();
     $MesNumero=Carbon::createFromDate($request->ultimo_cobro)->format('d');
     //log::info($MesNumero);
 
@@ -756,22 +864,21 @@ public function calculo_cobroLicor(Request $request)
         $f1=Carbon::parse($request->ultimo_cobro)->format('Y-m-01');
         $f1=Carbon::parse($f1);
         $InicioPeriodo=Carbon::createFromDate($f1);
-        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+        $InicioPeriodo= $InicioPeriodo->format('Y-01-01');
         //log::info('inicio de mes');
     }
     else
         {
          $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
-         $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+         $InicioPeriodo=Carbon::parse($f1)->format('Y-01-01');
         // log::info('fin de mes ');
          }
 
     $id=$request->id;
    
     $f2=Carbon::parse($request->fechaPagara);
-    $f3=Carbon::parse($request->fecha_interesMoratorio);
+    $FechaPagara=Carbon::parse($request->fechaPagara)->format('Y-12-31');
     $añoActual=Carbon::now()->format('Y');
-    $fecha_limite=Carbon::createFromDate($añoActual,01, 15);
     $fechahoy=carbon::now();
    
     //** Inicia - Para determinar el intervalo de años a pagar */
@@ -792,214 +899,35 @@ public function calculo_cobroLicor(Request $request)
     //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
     Log::info('Pago ultimo dia del mes---->' .$PagoUltimoDiaMes);
 
-    //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+
     $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
     Log::info('ultimo dia del mes---->' .$UltimoDiaMes);
-    $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-    Log::info($FechaDeInicioMoratorio);
-    
-    $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
-    $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
-    //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
-    
 
-    //** Inicia - Para obtener la tasa de interes más reciente */
-    $Tasainteres=Interes::latest()
-    ->pluck('monto_interes')
-        ->first();
-    //** Finaliza - Para obtener la tasa de interes más reciente */
-
-        $calificaciones = calificacion::latest()
         
-        ->join('empresa','calificacion.id_empresa','=','empresa.id')
+        $empresa= Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+        ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
         
-        ->select('calificacion.id','calificacion.multa_balance','calificacion.fecha_calificacion','calificacion.tipo_tarifa','calificacion.tarifa','calificacion.estado_calificacion','calificacion.id_estado_licencia_licor',
-        'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono')
-    
-        ->where('id_empresa', "=", "$id")
-        ->first();
-        $nombre_empresa=$calificaciones->nombre;
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+        'estado_empresa.estado',
+        'giro_comercial.nombre_giro',
+        'actividad_economica.rubro',
+        'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+        ->find($id); 
+        $nombre_empresa= $empresa->nombre;
 
         if($f1->lt($PagoUltimoDiaMes))
         {
 
             $intervalo = DateInterval::createFromDateString('1 Year');
             $periodo = new DatePeriod ($FechaInicio, $intervalo, $FechaFinal);
-
-            $Cantidad_MesesTotal=0;
-            $impuestoTotal=0;
-            $impuestos_mora=0;
-            $impuesto_año_actual=0;
-            $multaPagoExtemporaneo=0;
-         
-            $totalMultaPagoExtemporaneo=0;
             $multa=0;
             $multaTotalLicor=0;
-            //** Inicia Foreach para cálculo de impuesto por años */
-            foreach ($periodo as $dt) {
-
-                $AñoPago =$dt->format('Y');
-               
-                $AñoSumado=Carbon::createFromDate($AñoPago, 12, 31);
-
-                $tarifa=calificacion::where('año_calificacion','=',$AñoPago)
-                 ->where('id_empresa','=',$id) 
-                    ->pluck('tarifa_licencia') 
-                        ->first();
-
-                        if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
-                            {
-                                $CantidadMeses=ceil(($f1->floatDiffInRealMonths($PagoUltimoDiaMes)));
-                                                               
-                            }
-                            else
-                            {
-                                
-                                $CantidadMeses=ceil(($f1->floatDiffInRealMonths($AñoSumado)));  
-                                $f1=$f1->addYears(1)->month(1)->day(1);
-                                
-                            }
-
-                //*** calculando solo el impuesto */
-       
-                $impuestosValor=(round($tarifa*$CantidadMeses,2));
-                $impuestoTotal=$impuestoTotal+$impuestosValor;
-                $Cantidad_MesesTotal=$Cantidad_MesesTotal+$CantidadMeses;
-
-                if($AñoPago==$AñoFinal and $AñoPago<$añoActual)
-                {
-                        $impuestos_mora=$impuestos_mora+$impuestosValor;
-                        $impuesto_año_actual=$impuesto_año_actual;
-                }
-                else if( $AñoPago==$AñoFinal and $AñoPago==$añoActual)
-                {
-                        $impuestos_mora=$impuestos_mora;
-                        $impuesto_año_actual=$impuesto_año_actual+$impuestosValor;
-                }else{
-                        $impuestos_mora=$impuestos_mora+$impuestosValor;
-                        $impuesto_año_actual=$impuesto_año_actual;
-                }
-
-                $linea="_____________________<<::>>";
-                $divisiondefila=".....................";
-   
-                Log::info($multa);
-
-                Log::info($AñoPago);
-                Log::info($CantidadMeses);
-                Log::info($tarifa);
-                Log::info($impuestosValor);
-                Log::info($impuestos_mora);
-                Log::info($impuesto_año_actual);
-                
-                Log::info($AñoSumado);
-                
-                Log::info($f2);
-                Log::info($divisiondefila);
-                
-                Log::info($linea);
-
-            }   //** Termina el foreach */
            
-            //** -------Inicia - Cálculo para multas por pago extemporaneo--------- */
-            /* -------------------------------------------------------------------
-               "Se determina una multa por día en mora, despues de haberse vencido 
-               la fecha de pago y una vez haya transcurrido 60 días despues del 
-               vencimiento de la fecha limite de pago".
-               ------------------------------------------------------------------*/
-               $TasaInteresDiaria=($Tasainteres/365);
-               $InteresTotal=0;
-               $MesDeMulta=Carbon::parse($FechaDeInicioMoratorio)->subDays(60);
-               $contador=0;
-               $fechaFinMeses=$f2->addMonthsNoOverflow(1);
-               $intervalo2 = DateInterval::createFromDateString('1 Month');
-               $periodo2 = new DatePeriod ($MesDeMulta, $intervalo2, $fechaFinMeses);
-                    
-               //** Inicia Foreach para cálculo por meses */
-                    foreach ($periodo2 as $dt) 
-                    {
-                       $contador=$contador+1;
-                       $divisiondefila=".....................";
-                        $TarifaAñoMulta=Carbon::parse($MesDeMulta)->format('Y');
-                            $Date1=Carbon::parse($MesDeMulta)->day(1);
-                            $Date2=Carbon::parse($MesDeMulta)->endOfMonth();
-                            
-                            $MesDeMultaDiainicial=Carbon::parse($Date1)->format('Y-m-d'); 
-                            $MesDeMultaDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
-                            
-                
-                        $Fecha60Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(60); 
-                        Log::info($Fecha60Sumada);
-                        Log::info($f3);
-                        if($f3>$Fecha60Sumada){
-                        $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));//**le tenia floatdiffInDays y funcinona bien  */
-                        }else
-                        {
-                            $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));
-                            $CantidaDiasMesMulta=-$CantidaDiasMesMulta;
-                            
-                        }
-                        Log::info($CantidaDiasMesMulta);
-                        
-                       $tarifa=calificacion::where('año_calificacion','=',$TarifaAñoMulta)
-                       ->where('id_empresa','=',$id) 
-                          ->pluck('tarifa_licencia') 
-                              ->first();
-                    
-                    $MesDeMulta->addMonthsNoOverflow(1)->format('Y-M');
-  
-
-                   //** INICIO- Determinar multa por pago extemporaneo. */
-                   if($CantidaDiasMesMulta>0){                                                   
-                        if($CantidaDiasMesMulta<=90)
-                        {  
-                                    $multaPagoExtemporaneo=round(($tarifa*0.05),2);
-                                    $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;
-                                    $stop="Avanza:Multa";
-
-                        }elseif($CantidaDiasMesMulta>=90)
-                                {
-                                    $multaPagoExtemporaneo=round(($tarifa*0.10),2);
-                                    $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;  
-                                    $stop="Avanza:Multa";
-                                }
-
-                        //** INICIO-  Cálculando el interes. */
-                        $Interes=round((($TasaInteresDiaria*$CantidaDiasMesMulta)/100*$tarifa),2);
-                        $InteresTotal=$InteresTotal+$Interes;
-                        //** FIN-  Cálculando el interes. */
-
-
-                        
-                    }
-                    else
-                        { 
-                            $Interes=0;
-                            $InteresTotal=$InteresTotal;
-                            $multaPagoExtemporaneo=$multaPagoExtemporaneo;
-                            $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo;
-                            $stop="Alto:No multa";
-                        }
-                   //** FIN-  Determinar multa por pago extemporaneo. */
-
-                   
-                   Log::info($contador);
-                   Log::info($stop);
-                   Log::info($MesDeMultaDiainicial);                   
-                   Log::info($MesDeMultaDiaFinal); 
-                   Log::info($MesDeMulta);
-                       Log::info($multaPagoExtemporaneo);
-                       Log::info($totalMultaPagoExtemporaneo);
-                       Log::info($Interes);
-                       Log::info($InteresTotal);
-                       Log::info($divisiondefila);
-                    }//FIN - Foreach para meses multa
-                
-                 if($totalMultaPagoExtemporaneo>0 and $totalMultaPagoExtemporaneo<2.86)
-                 {
-                     $totalMultaPagoExtemporaneo=2.86;
-                 }
-                
                  /** Calculando las licencias*/
                  $Cantidad_licencias=0;
                  $monto_pago_licencia=0;
@@ -1089,10 +1017,8 @@ public function calculo_cobroLicor(Request $request)
 
              //** Fin- Determinar si el permiso de una licencia ya fue pagada*/ 
 
-            
-
-            $fondoFPValor=round($impuestoTotal*0.05,2);
-            $totalPagoValor= round($fondoFPValor+$multaTotalLicor+$impuestoTotal+$totalMultaPagoExtemporaneo+$InteresTotal,2);
+     
+            $totalPagoValor= round($multaTotalLicor+$monto_pago_licencia,2);
             
             //Dando formato a las cantidades finales
             $multa=number_format($multa, 2, '.', ',');
@@ -1102,14 +1028,12 @@ public function calculo_cobroLicor(Request $request)
             $totalPagoValor=number_format($totalPagoValor, 2, '.', ',');
             
             //Le agregamos su signo de dollar para la vista al usuario
-            $fondoFP= "$". $fondoFPValor;     
+  
             $totalPago="$".$totalPagoValor;
-            $impuestos_mora_Dollar="$".$impuestos_mora;
-            $impuesto_año_actual_Dollar="$".$impuesto_año_actual;
             $monto_pago_licenciaDollar="$".$monto_pago_licencia;
             $monto_pago_multaDollar="$".$multaTotalLicor;
-            $multaPagoExtemporaneoDollar="$".$totalMultaPagoExtemporaneo;
-            $InteresTotalDollar="$".$InteresTotal;
+
+
 
         //** Guardar cobro*/
         if ($request->cobrar=='1')
@@ -1132,18 +1056,12 @@ public function calculo_cobroLicor(Request $request)
             
             $cobro = new CobrosLicenciaLicor();
             $cobro->id_empresa = $request->id;
-            $cobro->id_usuario = '1';
-            $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
-            $cobro->impuesto_mora = $impuestos_mora;
-            $cobro->impuesto = $impuesto_año_actual;
-            $cobro->intereses_moratorios = $InteresTotal;
+            $cobro->id_usuario = $idusuario;
             $cobro->monto_multa_licencia = $multaTotalLicorDecimal;
-            $cobro->monto_multaPE = $totalMultaPagoExtemporaneo;
-            $cobro->fondo_fiestasP = $fondoFPValor;
             $cobro->pago_total = $totalPagoValorDecimal;
-            $cobro->fecha_cobro = $request->fecha_interesMoratorio;
+            $cobro->fecha_cobro = $fechahoy;
             $cobro->periodo_cobro_inicio = $InicioPeriodo;
-            $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+            $cobro->periodo_cobro_fin =$FechaPagara;
             $cobro->tipo_cobro = 'licencia';
             $cobro->save();
         
@@ -1152,25 +1070,12 @@ public function calculo_cobroLicor(Request $request)
 
         }else{
                     return ['success' => 1,
-                            'InteresTotalDollarLicor'=>$InteresTotalDollar,
-                            'impuestoTotalLicor'=>$impuestoTotal,
-                            'impuestos_mora_DollarLicor'=>$impuestos_mora_Dollar,
-                            'impuesto_año_actual_DollarLicor'=>$impuesto_año_actual_Dollar,
-                            'Cantidad_MesesTotalLicor'=>$Cantidad_MesesTotal,
                             'nombre_empresaLicor'=>$nombre_empresa,              
-                            'tarifaLicor'=>$tarifa,
-                            'fondoFPLicor'=>$fondoFP,
                             'totalPagoLicor'=>$totalPago,
-                            'DiasinteresMoratorioLicor'=>$DiasinteresMoratorio,
-                            'monto_pago_licencia'=>$monto_pago_licencia,
-                            'interesLicor'=>$Tasainteres,
+                            'monto_pago_licencia'=>$monto_pago_licenciaDollar,
                             'monto_pago_multaDollar'=> $monto_pago_multaDollar,
                             'InicioPeriodoLicor'=>$InicioPeriodo,
-                            'PagoUltimoDiaMesLicor'=>$PagoUltimoDiaMes,
-                            'FechaDeInicioMoratorioLicor'=> $FechaDeInicioMoratorio,
-                            'multaPagoExtemporaneoDollarLicor'=> $multaPagoExtemporaneoDollar,
-                            'totalMultaPagoExtemporaneoLicor'=>$totalMultaPagoExtemporaneo,
-                        
+                            'PagoUltimoDiaMesLicor'=>$FechaPagara,
                             ];
                 }
         }else //** If principal */
@@ -1222,8 +1127,13 @@ public function cobros($id)
     ->where('id_empresa', "=", "$id")
     ->first();
 
-    $licencia=$calificaciones->licencia;
-    Log::info($licencia);
+    if($calificaciones==null){
+        $licencia=0;
+    }else{
+        $licencia=$calificaciones->licencia;
+        }
+
+
     $ultimo_cobro = Cobros::latest()
     ->where('id_empresa', "=", "$id")
     ->first();
@@ -1247,7 +1157,30 @@ public function cobros($id)
     'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
     'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
     ->find($id);   
-    
+  
+
+    //**¨Para detectar los cobros especiales */
+    if($empresa->id_actividad_especifica==118)
+    {
+        $CE=1;
+    } else if($empresa->id_actividad_especifica==120)
+            {
+                $CE=1; 
+            }else if($empresa->id_actividad_especifica==121)
+                    {
+                        $CE=1;
+                    }else if($empresa->id_actividad_especifica==122)
+                            {
+                                $CE=1;
+                            }else if($empresa->id_actividad_especifica==127)
+                                    {
+                                        $CE=1;
+                                    }else{
+                                         $CE=0;
+                                        }
+
+    //**¨Fin detectar los cobros especiales */
+
     $date=Carbon::now()->toDateString();
 
     if ($calificaciones == null)
@@ -1255,10 +1188,12 @@ public function cobros($id)
         $detectorNull=0;
         if ($ultimo_cobro == null)
         {
-            $detectorNull=0;
             $detectorCobro=0;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('detectorNull','detectorCobro','matriculasRegistradas','MatriculasNull','ultimo_cobro_licor'));
-        }
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull','licencia','ultimo_cobro_licor','CE'));
+        }else{
+                $detectorCobro=1;
+                return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull','licencia','ultimo_cobro_licor','CE'));
+             }
             
            
     }
@@ -1269,13 +1204,13 @@ public function cobros($id)
         {
          $detectorNull=0;
          $detectorCobro=0;
-        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull','licencia','ultimo_cobro_licor'));
+        return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull','licencia','ultimo_cobro_licor','CE'));
         }
         else
         {
             $detectorNull=1;
             $detectorCobro=1;
-            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull','licencia','ultimo_cobro_licor'));
+            return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull','licencia','ultimo_cobro_licor','CE'));
         }
     }
       
@@ -1752,18 +1687,29 @@ public function calculo_calificacion(Request $request)
                 })
                 ->first();
 
-
+        log::info($ConsultaTarifasFijas);
 
 
          //***Sacando datos de la consulta........................................]
-         $impuesto_mensualFijo=  $ConsultaTarifasFijas->impuesto_mensual;
+         if($request->CasoEspecial=='1'){
+            $impuesto_mensualFijo=ceil($request->tarifaAplicadaCasoEspecial*8.75);
+         }
+         else{ 
+                $impuesto_mensualFijo=  $ConsultaTarifasFijas->impuesto_mensual;
+                }
          $limite_superior=  $ConsultaTarifasFijas->limite_superior;
          $id_actividad_economica=  $ConsultaTarifasFijas->id_actividad_economica;
          $codigo=  $ConsultaTarifasFijas->codigo;
          //***Termina sacando datos de la consulta................................]
          
          //***Convirtiendo a dolar................................................]
-            $tarifaFijaDolar=$impuesto_mensualFijo/8.75;
+         if($request->CasoEspecial=='1'){
+            $tarifaFijaDolar=$request->tarifaAplicadaCasoEspecial;
+         }
+         else{  
+              $tarifaFijaDolar=$impuesto_mensualFijo/8.75;
+             }
+        log::info($impuesto_mensualFijo);
 
          //***Calculando impuesto total dolares...................................]
             $FondoF= $tarifaFijaDolar*0.05;
