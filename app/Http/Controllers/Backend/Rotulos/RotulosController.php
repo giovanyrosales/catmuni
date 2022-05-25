@@ -253,6 +253,7 @@ class RotulosController extends Controller
 
                      if($estado)
                         {
+
                         Rotulos::where('id', $request->id)->update([
                             
                             'id_empresa' => $request->empresa,
@@ -269,11 +270,22 @@ class RotulosController extends Controller
                             'cargo_inspeccion' => $request->cargo_inspeccion,
                             'imagen' => $nomImagen,
                     
+                           
                         ]);
+                    
+
                             if(Storage::disk('archivos')->exists($imagenOld)){
                                 Storage::disk('archivos')->delete($imagenOld);
                             }
-                        }DB::commit();
+
+                           //**Al actualizar datos del rótulo se debera calificar para una nueva tarifa */
+                                CalificacionRotulo::where('id_empresa', $request->empresa)     
+                                ->delete();
+                           //**Termina borrar calificación del rótulo */
+
+                        }
+                       
+                        DB::commit();
                             return ['success' => 1];
         }else{
             Rotulos::where('id', $request->id)->update([
@@ -292,9 +304,18 @@ class RotulosController extends Controller
                 'cargo_inspeccion' => $request->cargo_inspeccion,
                
             ]);
+
+            //**Al actualizar datos del rótulo se debera calificar para una nueva tarifa */
+            CalificacionRotulo::where('id_empresa', $request->empresa)     
+            ->delete();
+            //**Termina borrar calificación del rótulo */
+
             DB::commit();
             return ['success' => 1];
         }
+
+     
+
     }   else 
         {
         return ['success' => 2];
@@ -337,7 +358,8 @@ class RotulosController extends Controller
         ->find($id);
     
 
-        $calificacion = CalificacionRotulo::join('rotulos','calificacion_rotulo.id_rotulos','=','rotulos.id')
+        $calificacion = CalificacionRotulo::latest()
+            ->join('rotulos','calificacion_rotulo.id_rotulos','=','rotulos.id')
     
         ->select('calificacion_rotulo.id','calificacion_rotulo.tarifa_mensual','calificacion_rotulo.total_impuesto','calificacion_rotulo.fecha_calificacion','calificacion_rotulo.estado_calificacion',
         'rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura','rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
@@ -483,11 +505,15 @@ class RotulosController extends Controller
       
         if ($contribuyente = Contribuyentes::where('id', $rotulo->id_contribuyente)->first())
         {
+            $contri = $contribuyente->nombre;
             
         }
 
         if ($empresa = Empresas::where('id', $rotulo->id_empresa)->first())
         {
+           
+
+           
             $emp = $empresa->nombre;
             $emp1 = $empresa->direccion;
             $emp2  = $empresa->contribuyente;
@@ -1113,8 +1139,6 @@ foreach ($calificacion as $dato)
             {
                 return ['success' => 0];
             }
-
-
 
     }
    

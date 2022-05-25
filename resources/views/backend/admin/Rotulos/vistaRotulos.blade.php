@@ -87,7 +87,7 @@
         </a>
 
         @elseif($calificacion->estado_calificacion == 'calificado')
-                      <a href="#" onclick="">
+                      <a href="#" onclick="CrearCalificacion({{$lista->id}})">
                                 <div class="widget stats-widget">
                                     <div class="widget-body clearfix bg-info">
                                         <div class="pull-left">
@@ -115,7 +115,22 @@
         </a>
     </div>
 
+    @if($detectorNull== '0')
     <div class="col-md-4 col-sm-8">
+    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+    <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-green">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    </div>
+        @else
+
+        <div class="col-md-4 col-sm-8">
         <a href="#" onclick="CobrosR({{$lista->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-green">
@@ -126,6 +141,7 @@
                 </div>
             </div><!-- .widget -->
         </a>
+        @endif
     </div>
 
 </div>
@@ -597,6 +613,17 @@
       openLoading();
 
       window.location.href="{{ url('/admin/rotulos/cobros') }}/"+id;
+    }
+
+    function NoCobrar()
+    {
+    toastr.warning('Debe registrar una calificación primero para poder generar un cobro.');
+    return;
+    }
+
+    function VerCalificacion()
+    {
+      
     }
 
     </script>

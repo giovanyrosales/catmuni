@@ -210,7 +210,15 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     //BUSES
     Route::get('/admin/nuevo/buses/Crear', [BusesDetalleController::class,'index'])->name('admin.crear.buses.index');   
     Route::post('/admin/buses/agregar', [BusesDetalleController::class,'nuevoBus']);
-    Route::get('/admin/buses/tabla', [BusesDetalleController::class,'tablaBuses'])->name('admin.listar.buses');
+    Route::get('/admin/buses/tabla', [BusesDetalleController::class,'tablaBuses']);
+    Route::get('/admin/buses/Listar', [BusesDetalleController::class,'listarBuses'])->name('admin.listarBuses.index');
+    Route::post('/admin/buses_detalle/especifico', [BusesDetalleController::class, 'especificarBuses']);
+    Route::post('/admin/buses_detalle_especifico/agregar', [BusesDetalleController::class,'agregar_buses_detalle_especifico']);
+    Route::post('/admin/buses_detalle/informacion', [BusesDetalleController::class, 'informacionBus']);
+    Route::post('/admin/buses_detalle/editar', [BusesDetalleController::class, 'editarBus']);
+    Route::post('/admin/buses_detalle/ver_buses_especificos', [BusesDetalleController::class, 'VerBusEsp']);
+    Route::post('/admin/buses_detalle/eliminar', [BusesDetalleController::class, 'eliminarB']);
+
 
 
     //Reportes

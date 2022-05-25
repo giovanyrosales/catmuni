@@ -134,7 +134,7 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-4">
                 <div class="form-group">  
-                    <input type="text"  value="{{$contribuyente}} " disabled id="contribuyente" class="form-control" required >
+                    <input type="text"  value="{{$emp2}} " disabled id="contribuyente" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -395,7 +395,7 @@
   </div> <!-- /.modal-content -->
  </div> <!-- /.modal-body -->
 
- 
+
  @extends('backend.menus.footerjs')
  @section('archivos-js')
 

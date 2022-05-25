@@ -22,19 +22,19 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h5>Lista De Rótulos Registrados</h1>
+            <h5>Lista De Buses Registrados</h1>
           </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Listado de rótulos</li>
+                            <li class="breadcrumb-item active">Listado de buses</li>
                             </ol>
                         </div>
         </div>
         <br>
         <button type="button"onclick="location.href='{{ url('/admin/nuevo/rotulos/Crear') }}'" class="btn btn-success btn-sm" >
                 <i class="fas fa-pencil-alt"></i>
-                Nuevo rótulo
+                Nuevo Bus
             </button>
       </div>
     </section>
@@ -53,15 +53,11 @@
             </div>
           </div>
           <!-- /.card-header -->
-          <div class="card-body">
-            <div class="row">
-            <div class="col-md-6">
-            </div>
-            </div>
-            <!-- /.col -->
-            <div id="tablaDatatable"></div>
-            </div>
-            </div>
+          <!-- Inclución de tabla -->
+          <div class="m-0 row justify-content-center" id="DivMatriculas">
+                  <div class="col-auto  p-5 text-center" id="tablaDatatable"></div>
+                          
+              </div>
           <!-- /.row -->
           </div>
          <!-- /.card-body -->
@@ -77,7 +73,7 @@
     </section>
 </div>
 <!--Termina Contenido Frame Principal -->
-
+ 
 
 @extends('backend.menus.footerjs')
 @section('archivos-js')
@@ -99,6 +95,8 @@
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    
     
 <script type="text/javascript">
         $(document).ready(function(){
@@ -108,7 +106,25 @@
         });
 </script>
 
-<script>
+<script type="text/javascript">
+      
+        $(document).ready(function(){
+            document.getElementById("divcontenedor").style.display = "block";
+        });
 
 </script>
+
+<script type="text/javascript">
+
+    function recargar()
+    {
+        var ruta = "{{ url('/admin/buses/tabla') }}";
+            $('#tablaDatatable').load(ruta);
+    }
+
+ 
+
+
+</script>
+
 @stop

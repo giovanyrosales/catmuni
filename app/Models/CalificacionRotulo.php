@@ -14,7 +14,7 @@ class CalificacionRotulo extends Model
 {
 
     protected $table = 'calificacion_rotulo';
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
           'id',
           'fecha_calificacion',
