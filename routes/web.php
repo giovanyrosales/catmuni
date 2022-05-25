@@ -20,7 +20,6 @@ use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 
-
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
 
