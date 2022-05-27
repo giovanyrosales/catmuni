@@ -25,9 +25,9 @@ function reporte_notificacion(id){
 
         var ti={{$Tasainteres}};
         var f3=(document.getElementById('fechahoy').value);
-        var tf='hidden';
+
     
-      window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + tf + "/" + id );
+      window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
     
     }
 </script>
@@ -82,7 +82,7 @@ function reporte_notificacion(id){
             <div class="small-box bg-info">
               <div class="inner">
                 <h3> </h3>
-                <p> Avisos: <span class="badge badge-pill badge-light">0</span></p>
+                <p> Avisos: <span class="badge badge-pill badge-light">{{$alerta_aviso}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -96,7 +96,7 @@ function reporte_notificacion(id){
             <div class="small-box bg-warning">
               <div class="inner">
                 <h3> </h3>
-                <p>Notificaciones: <span class="badge badge-pill badge-light">0</span></p>
+                <p>Notificaciones: <span class="badge badge-pill badge-light">{{$alerta_notificacion}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -193,6 +193,7 @@ function reporte_notificacion(id){
           </a>
         </div>
           <div class="col-md-4 col-sm-8">
+          @if($CE==0)
           <a href="#" onclick="matriculas()" >
                   <div class="widget stats-widget">
                       <div class="widget-body clearfix bg-warning">
@@ -203,6 +204,18 @@ function reporte_notificacion(id){
                       </div>
                   </div><!-- .widget -->
               </a>
+            @else
+            <a href="#" onclick="NoMartriculas()" >
+                  <div class="widget stats-widget">
+                      <div class="widget-body clearfix bg-light">
+                          <div class="pull-left">
+                              <h3 class="widget-title text-black">Matrículas</h3>
+                          </div>
+                          <span class="pull-right big-icon watermark"><i class="fas fa-file-signature"></i>&nbsp;<i class="fas fa-lock"></i></span>
+                      </div>
+                  </div><!-- .widget -->
+              </a>
+              @endif
           </div>
         <div class="col-md-4 col-sm-8">
           <a href="#" onclick="reporteAviso({{$empresa->id}})">
@@ -1045,6 +1058,10 @@ function NoCobrar(){
 }
 function NoCalificarCE(){
   toastr.warning('Esta empresa no es calificable.');
+  return;
+}
+function NoMartriculas(){
+  toastr.warning('Las matrículas no están disponibles para esta empresa.');
   return;
 }
 

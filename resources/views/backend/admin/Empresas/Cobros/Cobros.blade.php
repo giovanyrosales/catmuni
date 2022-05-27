@@ -58,8 +58,12 @@
            $('#periodoSinfonolas').hide();
            $('#periodoAparatos').hide();
            $('#estado_de_cuentaIMP').hide();
-           
-        }
+           $('#estado_de_cuenta_licorIMP').hide();
+           $('#estado_de_cuenta_aparatosIMP').hide();
+           $('#estado_de_cuenta_sinfonolasIMP').hide();
+           $('#estado_de_cuenta_maquinasIMP').hide();
+           $('#estado_de_cuenta_mesasIMP').hide();
+          }
         function recuperariD($id)//*** Para recuperar los ID de las matriculas detalle */
         {
          var id=$id; 
@@ -206,7 +210,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                   } 
                   if(response.data.success === 1){
                     $('#periodo').show();
-                    $('#estado_de_cuentaIMP').show();
+                    $('#estado_de_cuentaIMP').show(); 
                     document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
                     document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
                     document.getElementById('impuestos_mora_imp').innerHTML=response.data.impuestos_mora_Dollar;
@@ -282,6 +286,7 @@ formData.append('ultimo_cobro', ultimo_cobroLicor);
                   } 
                   if(response.data.success === 1){
                     $('#periodoLicor').show();
+                    $('#estado_de_cuenta_licorIMP').show();
                     document.getElementById('hastaLicor').innerHTML=response.data.PagoUltimoDiaMesLicor;          
                     document.getElementById('LicenciaLicor_imp').innerHTML=response.data.monto_pago_licencia;
                     document.getElementById('MultaLicor_imp').innerHTML=response.data.monto_pago_multaDollar;
@@ -364,7 +369,7 @@ formData.append('estado', estado);
                     document.getElementById('multaPagoExtemporaneoMesas_imp').innerHTML='$-';                   
                     document.getElementById('MatriculaMesas_imp').innerHTML='$-';  
                     document.getElementById('fondoFPMesas_imp').innerHTML='$-';    
-                    document.getElementById('multa_MartriculaMesasImp').innerHTML='$-';            
+                    document.getElementById('multa_MartriculaMesas_Imp').innerHTML='$-';            
                     document.getElementById('totalPagoMesas_imp').innerHTML='$-';
 
                     
@@ -372,6 +377,7 @@ formData.append('estado', estado);
                   } 
                   if(response.data.success === 1){
                     $('#periodoMesas').show();
+                    $('#estado_de_cuenta_mesasIMP').show();
                     document.getElementById('fechaInicioPagoMesas_imp').innerHTML=response.data.InicioPeriodoMesas; 
                     document.getElementById('hastaMesas').innerHTML= response.data.PagoUltimoDiaMesMesas;
                     document.getElementById('cant_mesesMesas').value=response.data.Cantidad_MesesTotalMesas; 
@@ -472,6 +478,7 @@ formData.append('fecha_interesMoratorioMaquinas', fecha_interesMoratorioMaquinas
                   } 
                   if(response.data.success === 1){
                     $('#periodoMaquinas').show();
+                    $('#estado_de_cuenta_maquinasIMP').show();
                     document.getElementById('fechaInicioPagoMaquinas_imp').innerHTML=response.data.InicioPeriodoMaquinas; 
                     document.getElementById('hastaMaquinas').innerHTML= response.data.PagoUltimoDiaMesMaquinas;
                     document.getElementById('cant_mesesMaquinas').value=response.data.Cantidad_MesesTotalMaquinas; 
@@ -570,6 +577,7 @@ formData.append('fecha_interesMoratorioSinfonolas', fecha_interesMoratorioSinfon
                   } 
                   if(response.data.success === 1){
                     $('#periodoSinfonolas').show();
+                    $('#estado_de_cuenta_sinfonolasIMP').show();
                     document.getElementById('fechaInicioPagoSinfonolas_imp').innerHTML=response.data.InicioPeriodoSinfonolas; 
                     document.getElementById('hastaSinfonolas').innerHTML= response.data.PagoUltimoDiaMesSinfonolas;
                     document.getElementById('cant_mesesSinfonolas').value=response.data.Cantidad_MesesTotalSinfonolas; 
@@ -638,6 +646,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   } 
                   if(response.data.success === 1){
                     $('#periodoAparatos').show();
+                    $('#estado_de_cuenta_aparatosIMP').show();
                     document.getElementById('fechaInicioPagoAparatos_imp').innerHTML=response.data.InicioPeriodoAparatos; 
                     document.getElementById('hastaAparatos').innerHTML= response.data.PagoUltimoDiaMesAparatos;
                     document.getElementById('MatriculaAparatos_imp').innerHTML=response.data.monto_pago_PmatriculaDollarAparatos;  
@@ -915,8 +924,8 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
        
          <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
-            <button- type="submit" class="btn btn-outline-success btn-sm float-right" 
-            onclick="reporteprueba({{$empresa->id}});" id="estado_de_cuentaIMP" >
+            <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+            onclick="reporte_empresa({{$empresa->id}});" id="estado_de_cuentaIMP" >
               <i class="fas fa-print"></i> Estado cuenta
             </button> 
              
@@ -998,7 +1007,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             <td><label name="totalPago_imp" id="totalPago_imp"></label><label</td>
                           </tr>
                         </table>
-</form>
+                      </form>
                       <hr>
                       <button type="button" class="btn btn-primary btn-lg btn-block" onclick="verificar();">
                        <i class="fas fa-edit"></i>
@@ -1122,7 +1131,14 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
             </div> <!-- /.Panel datos generales de la empresa -->
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-secondary"> <label> IMPUESTOS APLICADOS.</label> </div>
+         <div class="card-header text-secondary"> <label> IMPUESTOS APLICADOS.</label> 
+         <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+            onclick="reporte_licencia_licor({{$empresa->id}});" id="estado_de_cuenta_licorIMP" >
+              <i class="fas fa-print"></i> Estado cuenta
+            </button> 
+        
+        </div>
+         
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -1351,7 +1367,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-primary"> <label> IMPUESTOS APLICADOS.</label> </div>
+         <div class="card-header text-primary"> <label> IMPUESTOS APLICADOS.</label>
+         <button type="submit" class="btn btn-outline-primary btn-sm float-right" 
+            onclick="reporte_mesas({{$empresa->id}});" id="estado_de_cuenta_mesasIMP" >
+              <i class="fas fa-print"></i> Estado cuenta
+            </button>
+        </div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -1616,7 +1637,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-warning"> <label> IMPUESTOS APLICADOS.</label> </div>
+         <div class="card-header text-warning"> <label> IMPUESTOS APLICADOS.</label>
+         <button type="submit" class="btn btn-outline-warning btn-sm float-right" 
+            onclick="reporte_maquinas({{$empresa->id}});" id="estado_de_cuenta_maquinasIMP" >
+            <i class="fas fa-print"></i> Estado cuenta
+         </button>
+        </div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -1627,8 +1653,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         <h6 id="periodoMaquinas">
                           Periodo del: 
                           <label class="badge badge-info" id="fechaInicioPagoMaquinas_imp"></label>
-                         &nbsp; al &nbsp;<label class="badge badge-warning" id="hastaMaquinas"></label>
+                         &nbsp; al &nbsp;<label class="badge badge-warning" id="hastaMaquinas"></label> 
                         </h6>
+
                   </div>
                   <hr>
               <!-- /.form-group -->
@@ -1822,7 +1849,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-info"> <label> IMPUESTOS APLICADOS.</label> </div>
+         <div class="card-header text-info"> <label> IMPUESTOS APLICADOS.</label> 
+            <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+              onclick="reporte_aparatos({{$empresa->id}});" id="estado_de_cuenta_aparatosIMP" >
+              <i class="fas fa-print"></i> Estado cuenta
+            </button>         
+        </div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -2063,7 +2095,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-danger"> <label> IMPUESTOS APLICADOS.</label> </div>
+         <div class="card-header text-danger"> <label> IMPUESTOS APLICADOS.</label> 
+         <button type="submit" class="btn btn-outline-danger btn-sm float-right" 
+            onclick="reporte_sinfonolas({{$empresa->id}});" id="estado_de_cuenta_sinfonolasIMP" >
+              <i class="fas fa-print"></i> Estado cuenta
+            </button> 
+        </div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -2207,7 +2244,7 @@ function VerEmpresa(id){
 window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 
 }
-function reporteprueba(id){
+function reporte_empresa(id){
     
     var f1=(document.getElementById('ultimo_cobro').value);
     var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
@@ -2218,7 +2255,57 @@ function reporteprueba(id){
   window.open("{{ URL::to('/admin/estado_cuenta/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + tf + "/" + id );
 
 }
+function reporte_licencia_licor(id){
 
+    var f1=(document.getElementById('ultimo_cobroLicor').value);
+    var f2=(document.getElementById('fecha_hasta_donde_pagaraLicor').value);
+
+  window.open("{{ URL::to('/admin/estado_cuenta_licor/pdf') }}/" + f1 + "/" + f2 + "/" + id );
+
+}
+
+function reporte_aparatos(id){
+  
+var f1=(document.getElementById('ultimo_cobroAparatos').value);
+var f2=(document.getElementById('fecha_hasta_donde_pagaraAparatos').value);
+var ap=(document.getElementById('id_matriculadetalleAparatos').value);
+
+window.open("{{ URL::to('/admin/estado_cuenta_aparatos/pdf') }}/" + f1 + "/" + f2 + "/" + ap + "/" + id );
+
+}
+
+function reporte_sinfonolas(id){
+  
+  var f1=(document.getElementById('ultimo_cobroSinfonolas').value);
+  var f2=(document.getElementById('fecha_hasta_donde_pagaraSinfonolas').value);
+  var is=(document.getElementById('id_matriculadetalleSinfonolas').value);
+  var ti=(document.getElementById('select_interesSinfonolas').value);
+
+  window.open("{{ URL::to('/admin/estado_cuenta_sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + is + "/" + ti + "/" + id );
+  
+  }
+
+  function reporte_maquinas(id){
+  
+  var f1=(document.getElementById('ultimo_cobroMaquinas').value);
+  var f2=(document.getElementById('fecha_hasta_donde_pagaraMaquinas').value);
+  var im=(document.getElementById('id_matriculadetalleMaquinas').value);
+  var ti=(document.getElementById('select_interesMaquinas').value);
+
+  window.open("{{ URL::to('/admin/estado_cuenta_maquinas/pdf') }}/" + f1 + "/" + f2 + "/" + im + "/" + ti + "/" + id );
+  
+  }
+
+  function reporte_mesas(id){
+  
+  var f1=(document.getElementById('ultimo_cobroMesas').value);
+  var f2=(document.getElementById('fecha_hasta_donde_pagaraMesas').value);
+  var ime=(document.getElementById('id_matriculadetalleMesas').value);
+  var ti=(document.getElementById('select_interesMesas').value);
+
+  window.open("{{ URL::to('/admin/estado_cuenta_mesas/pdf') }}/" + f1 + "/" + f2 + "/" + ime + "/" + ti + "/" + id );
+  
+  }
 function GenerarCobro()
         {
             $('#modalregistrarCobros').modal('show');
@@ -2358,7 +2445,7 @@ function modalMensaje(titulo, mensaje){
         }
 
                                 
-        function cobro_registrado(){
+function cobro_registrado(){
                       Swal.fire({
                       title: 'Cobro registrado correctamente',
                       //text: "Puede modificarla en la opción [Editar]",

@@ -11,6 +11,7 @@ use App\Models\EstadoEmpresas;
 use App\Models\GiroComercial;
 use App\Models\ActividadEconomica;
 use App\Models\ActividadEspecifica;
+use App\Models\alertas_detalle;
 use App\Models\Cobros;
 use App\Models\calificacion;
 use App\Models\CalificacionMatriculas;
@@ -348,9 +349,24 @@ public function show($id)
     ->where('id_empresa', "=", "$id")
     ->first();
 
+    $alerta_aviso=alertas_detalle::where('id_empresa',$id)
+    ->where('id_alerta','1')
+    ->pluck('cantidad')
+    ->first();
 
-    
-   
+    if($alerta_aviso==null){
+        $alerta_aviso=0;
+    }
+
+    $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+        ->where('id_alerta','2')
+        ->pluck('cantidad')
+        ->first();
+
+    if($alerta_notificacion==null){
+        $alerta_notificacion=0;
+    }
+   log::info($alerta_notificacion);
     
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -402,7 +418,7 @@ public function show($id)
 
     
     $fechahoy=carbon::now()->format('Y-m-d');
-    log::info($fechahoy);
+
 
    if ($calificaciones == null)
     { 
@@ -410,13 +426,44 @@ public function show($id)
         if ($ultimo_cobro == null)
         {  
             $detectorCobro=0;
-            return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));     
+            return view('backend.admin.Empresas.show', compact('empresa',
+                                                                'giroscomerciales',
+                                                                'contribuyentes',
+                                                                'estadoempresas',
+                                                                'actividadeseconomicas',
+                                                                'ultimo_cobro',
+                                                                'detectorNull',
+                                                                'detectorCobro',
+                                                                'id',
+                                                                'Cantidad_multas',
+                                                                'CE',
+                                                                'Tasainteres',
+                                                                'ultimoCobroEmpresa',
+                                                                'fechahoy',
+                                                                'alerta_aviso',
+                                                                'alerta_notificacion'
+                                                            ));  
+
         }else{
                 $detectorCobro=1;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));   
-             }
-        
-           
+                return view('backend.admin.Empresas.show', compact('empresa',
+                'giroscomerciales',
+                'contribuyentes',
+                'estadoempresas',
+                'actividadeseconomicas',
+                'ultimo_cobro',
+                'detectorNull',
+                'detectorCobro',
+                'id',
+                'Cantidad_multas',
+                'CE',
+                'Tasainteres',
+                'ultimoCobroEmpresa',
+                'fechahoy',
+                'alerta_aviso',
+                'alerta_notificacion'
+                ));   
+             }           
     }
     else
     {
@@ -425,14 +472,51 @@ public function show($id)
             if ($ultimo_cobro == null)
             {
                 $detectorCobro=0;
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));
+                return view('backend.admin.Empresas.show', compact('empresa',
+                                                                    'giroscomerciales',
+                                                                    'contribuyentes',
+                                                                    'estadoempresas',
+                                                                    'actividadeseconomicas',
+                                                                    'ultimo_cobro',
+                                                                    'calificaciones',
+                                                                    'ultimo_cobro',
+                                                                    'detectorNull',
+                                                                    'detectorCobro',
+                                                                    'id',
+                                                                    'Cantidad_multas',
+                                                                    'CE',
+                                                                    'Tasainteres',
+                                                                    'ultimoCobroEmpresa',
+                                                                    'fechahoy',
+                                                                    'alerta_aviso',
+                                                                    'alerta_notificacion'
+                                                                    
+                                                                ));
             }else
             {
               
                 $detectorCobro=1;
                
-                return view('backend.admin.Empresas.show', compact('empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones','ultimo_cobro','detectorNull','detectorCobro','id','Cantidad_multas','CE','Tasainteres','ultimoCobroEmpresa','fechahoy'));
-            }
+                return view('backend.admin.Empresas.show', compact('empresa',
+                                                                    'giroscomerciales',
+                                                                    'contribuyentes',
+                                                                    'estadoempresas',
+                                                                    'actividadeseconomicas',
+                                                                    'ultimo_cobro',
+                                                                    'calificaciones',
+                                                                    'ultimo_cobro',
+                                                                    'detectorNull',
+                                                                    'detectorCobro',
+                                                                    'id',
+                                                                    'Cantidad_multas',
+                                                                    'CE',
+                                                                    'Tasainteres',
+                                                                    'ultimoCobroEmpresa',
+                                                                    'fechahoy',
+                                                                    'alerta_aviso',
+                                                                    'alerta_notificacion'
+                                                                ));
+                                                                }
                    
     }
       
@@ -790,18 +874,7 @@ public function calculo_cobros_empresa(Request $request)
         //** Guardar cobro*/
         if ($request->cobrar=='1')
         {   
-            if($monto_pago_multaBalance>0)
-            {
-                foreach($multasBalance as $dato){
-                    MultasDetalle::where('id_empresa',$id)
-                    ->where('id_estado_multa','2')
-                    ->update([
-                                'id_estado_multa' =>"1",              
-                            ]);
-
-                }
-
-            }
+            
             $cobro = new cobros();
             $cobro->id_empresa = $request->id;
             $cobro->id_usuario =$idusuario;
@@ -818,7 +891,20 @@ public function calculo_cobros_empresa(Request $request)
             $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
             $cobro->tipo_cobro = 'impuesto';
             $cobro->save();
-        
+
+                    if($monto_pago_multaBalance>0)
+                    {
+                        foreach($multasBalance as $dato){
+                            MultasDetalle::where('id_empresa',$id)
+                            ->where('id_estado_multa','2')
+                            ->update([
+                                        'id_estado_multa' =>"1",              
+                                    ]);
+
+                        }
+
+                    }
+
             return ['success' => 2];
             
 
