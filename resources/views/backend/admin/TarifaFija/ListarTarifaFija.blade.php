@@ -80,24 +80,13 @@
  <!--Modal para agregar tarifa fija-->
  <div class="modal fade" id="modalAgregarTarifaFija">
         <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-         <div class="modal-header">
-         <h6 class="modal-title">Agregar tarifa fija</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+            <div class="modal-content">
+                 <div class="modal-header">
+                    <h6 class="modal-title">Agregar tarifa fija</h4>
+                  </div>
                <div class="modal-body">
-                    <form id="formulario-AgregarTarifaFija">
-                    <div class="card card-green">
-            <div class="card-header">
-            <h3 class="card-title">Agregar tarifa fija</h3>
+                  <form id="formulario-AgregarTarifaFija">
 
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-            </div>
-          </div>
                     </div>
                     <div class="card-body">
              <div class="card-body">
@@ -190,7 +179,7 @@
          </div>
         </div>
         </div>
-        </div>
+
      
       
 <!--Finaliza Modal para agregar tarifa fija-->

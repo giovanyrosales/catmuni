@@ -174,16 +174,14 @@
                 <p>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
                 Dirección:&nbsp;{{$empresa->direccionCont}}<br>
                 Cuenta Corriente N°:&nbsp;{{$empresa->num_tarjeta}}<br>
-                Empresa o Negocio:&nbsp;{{$empresa->nombre}}</p>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p>Estimado(a) señor (a):</p>
+                Empresa o Negocio:&nbsp;{{$empresa->nombre}}<br><br>
+
+                Estimado(a) señor (a):</p>
                 <p style="text-indent:20">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                     motivo de la presente es para manifestarle que su estado de cuenta en esta
-                    Municipalidad es el siguiente:</p>
-            <p><strong>Impuestos Municipales</strong></p>
+                    Municipalidad es el siguiente:<br>
+            <strong>Impuestos Municipales</strong></p>
+            <p style="font-size:10">*Intereses cálculados con base a tabla proporcionados por el banco nacional de reserva.</p>
             </td>
         <tr>
             <td colspan="2"><hr></td>
@@ -205,7 +203,7 @@
             <td align="center">{{$InteresTotal}}</td>
         </tr>
         <tr>
-            <td align="right">MULTAS POR BALANCE</td>
+            <td align="right">MULTAS POR BALANCE ({{$Cantidad_multas}})</td>
             <td align="center">{{$monto_pago_multaBalance}}</td>
         </tr>
         <tr>

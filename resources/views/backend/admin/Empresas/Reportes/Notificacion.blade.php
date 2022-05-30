@@ -136,8 +136,8 @@
     <div class="row">
 
         <div class="content">
-            <img src="{{ asset('images/logoIMP.png') }}" style="float: left" alt="" height="78px" width="78px">
-            <img src="{{ asset('images/EscudoSV.png') }}" style="float: right" alt="" height="78px" width="78px">
+            <img src="{{ asset('images/logo.png') }}" style="float: left" alt="" height="75px" width="75px">
+            <img src="{{ asset('images/EscudoSV.png') }}" style="float: right" alt="" height="75px" width="75px">
             <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
             UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
             DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
@@ -184,11 +184,15 @@
                 <p style="text-indent:20; font-size:11">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                     motivo de la presente es para manifestarle que su estado de cuenta en esta
                     Municipalidad es el siguiente:</p>
-            <p>
+            <p style="font-size:11">
                 <strong>Impuestos Municipales</strong><br>
                 Validez: <strong><u>{{$FechaDelDia}}</u></strong><br>
             </p>
             </td>
+        <tr>
+            <td><hr></td>
+            <td><hr></td>
+        </tr>
         <tr>
             <th scope="col">Periodo: &nbsp;&nbsp;desde&nbsp; {{$InicioPeriodo}}&nbsp;</th>
             <th scope="col">&nbsp;&nbsp;hasta&nbsp; {{$PagoUltimoDiaMes}}&nbsp;</th>    
@@ -206,7 +210,7 @@
             <td align="center">{{$InteresTotal}}</td>
         </tr>
         <tr>
-            <td align="right">MULTAS POR BALANCE</td>
+            <td align="right">MULTAS POR BALANCE ({{$Cantidad_multas}})</td>
             <td align="center">{{$monto_pago_multaBalance}}</td>
         </tr>
         <tr>

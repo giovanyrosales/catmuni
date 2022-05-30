@@ -9,9 +9,8 @@
                                 <tr>
                                 
                                 <th style="width: 10%;">Código</th>
-                                <th style="width: 10%;">Tipo multa</th>
-                                <th style="width: 20%;">Nombre</th>
-                                <th style="width: 15%;">Acción</th>
+                                <th style="width: 50%;">Tipo multa</th>
+                                <th style="width: 30%;">Acción</th>
                               
                             </tr>
                             </thead>
@@ -19,18 +18,16 @@
                             @foreach($multa as $multa)
                                 <tr>
                                     <td>{{$multa->codigo}}
-                                    <td>{{$multa->tipo_multa}} </td>
-                                    <td>{{$multa->nombre}} </td>
-                                                                     
+                                    <td>{{$multa->tipo_multa}} </td>                                                            
                                     <td style="text-align: center;">
                                                                    
-                                    <button type="button" class="btn btn-primary btn-xs" onclick="informacionMultas({{ $multa->id }})">
-                                    <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
-                                    </button>
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="informacionMultas({{ $multa->id }})">
+                                        <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
+                                        </button>
 
-                                    <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarMulta ({{ $multa->id }})">
-                                    <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
-                                    </button>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarMulta ({{ $multa->id }})">
+                                        <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach

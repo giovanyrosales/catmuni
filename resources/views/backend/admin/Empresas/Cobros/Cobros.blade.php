@@ -1132,7 +1132,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-secondary"> <label> IMPUESTOS APLICADOS.</label> 
-         <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+         <button type="submit" class="btn btn-outline-secondary btn-sm float-right" 
             onclick="reporte_licencia_licor({{$empresa->id}});" id="estado_de_cuenta_licorIMP" >
               <i class="fas fa-print"></i> Estado cuenta
             </button> 
@@ -1850,7 +1850,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-info"> <label> IMPUESTOS APLICADOS.</label> 
-            <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+            <button type="submit" class="btn btn-outline-info btn-sm float-right" 
               onclick="reporte_aparatos({{$empresa->id}});" id="estado_de_cuenta_aparatosIMP" >
               <i class="fas fa-print"></i> Estado cuenta
             </button>         

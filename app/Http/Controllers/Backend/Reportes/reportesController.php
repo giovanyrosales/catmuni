@@ -396,7 +396,8 @@ class reportesController extends Controller
     
     $view = View::make('backend.admin.Empresas.EstadoCuenta.Estado_cuenta', compact(['FechaDelDia',
     'empresa','impuestos_mora','fondoFPValor','totalPagoValor','impuesto_año_actual',
-    'monto_pago_multaBalance','InteresTotal','totalMultaPagoExtemporaneo','PagoUltimoDiaMes','InicioPeriodo'
+    'monto_pago_multaBalance','InteresTotal','totalMultaPagoExtemporaneo','PagoUltimoDiaMes',
+    'InicioPeriodo','Cantidad_multas',
     
     ]))->render();
     $pdf = App::make('dompdf.wrapper');
@@ -445,7 +446,7 @@ public function aviso($id)
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadHTML($view)->setPaper('carta', 'portrait');
     
-        if($alerta_aviso==null){
+        if($alerta_aviso===null){
 
             $cantidad_avisos=$cantidad+1;
 
@@ -454,7 +455,8 @@ public function aviso($id)
             $registro->id_alerta ='1';
             $registro->cantidad = $cantidad_avisos;
             $registro->save();
-        }else{
+        }else if($alerta_aviso==0){
+
             $cantidad=$alerta_aviso+1;
 
             alertas_detalle::where('id_empresa',$id)
@@ -463,6 +465,15 @@ public function aviso($id)
                         'cantidad' =>$cantidad,              
                     ]);
              }
+                else{
+                        $cantidad=$alerta_aviso+1;
+
+                        alertas_detalle::where('id_empresa',$id)
+                        ->where('id_alerta','1')
+                        ->update([
+                                    'cantidad' =>$cantidad,              
+                                ]);
+                    }
 
         return $pdf->stream();
         
@@ -784,7 +795,8 @@ public function aviso($id)
         
         $view = View::make('backend.admin.Empresas.Reportes.Notificacion', compact(['FechaDelDia',
         'empresa','impuestos_mora','fondoFPValor','totalPagoValor','impuesto_año_actual',
-        'monto_pago_multaBalance','InteresTotal','totalMultaPagoExtemporaneo','PagoUltimoDiaMes','InicioPeriodo'
+        'monto_pago_multaBalance','InteresTotal','totalMultaPagoExtemporaneo','PagoUltimoDiaMes',
+        'InicioPeriodo','Cantidad_multas',
         
         ]))->render();
         $pdf = App::make('dompdf.wrapper');
@@ -797,7 +809,7 @@ public function aviso($id)
         ->pluck('cantidad')
         ->first();
 
-        if($alerta_notificacion==null){
+        if($alerta_notificacion===null){
 
             $cantidad_notificaciones=$cantidad+1;
 
@@ -806,7 +818,9 @@ public function aviso($id)
             $registro->id_alerta ='2';
             $registro->cantidad = $cantidad_notificaciones;
             $registro->save();
-        }else{
+
+        }else if($alerta_notificacion==0)
+        {
             $cantidad=$alerta_notificacion+1;
 
             alertas_detalle::where('id_empresa',$id)
@@ -815,6 +829,14 @@ public function aviso($id)
                         'cantidad' =>$cantidad,              
                     ]);
              }
+             else
+                    { $cantidad=$alerta_notificacion+1;
+
+                        alertas_detalle::where('id_empresa',$id)
+                        ->where('id_alerta','2')
+                        ->update([
+                                    'cantidad' =>$cantidad,              
+                                ]);}
 
 
         return $pdf->stream();
