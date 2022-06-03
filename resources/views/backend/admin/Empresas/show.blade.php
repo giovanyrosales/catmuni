@@ -16,7 +16,23 @@
  <!-- Para vista detallada fin -->
 
 @stop
+
 <script>
+
+window.onload = f4;
+
+function f4(){
+  $('#imp_traspaso').hide();
+  }
+
+function f6(){
+  $('#imp_traspaso').show();
+  }
+
+function f5(){
+  location.reload();
+}
+
 function reporte_notificacion(id){
     
         var f1=(document.getElementById('f1').value);
@@ -52,7 +68,11 @@ function reporte_notificacion(id){
       <div class="container-fluid">
        <div class="row mb-2">
          <div class="col-sm-6">
-            <h4> </h4>
+      
+            <button type="button" onclick="cierreytraspaso({{$empresa->id}})" class="btn btn-success btn-sm" >
+                <i class="fas fa-pencil-alt"></i>
+                Cierres y traspasos
+            </button>
            </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
@@ -483,7 +503,7 @@ function reporte_notificacion(id){
           <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Cierre y traspaso de empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" onclick="f5()" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -544,8 +564,19 @@ function reporte_notificacion(id){
                             <!-- finaliza select estado-->  
                       </div><!-- /.col-md-3 -->
                     </div><!-- /.form-group -->
-                  <!-- /.form-group -->
-
+                    <!-- /.form-group -->
+                    <div class="col-md-6">
+                      <div class="form-group">
+                          <label>A PARTIR DEL DÍA:</label>                          
+                      </div>
+                      </div>
+              <!-- /.form-group --> 
+              <div class="col-md-6">
+                      <div class="form-group">
+                          <input type="date" id="Apartirdeldia" required class="form-control" >
+                      </div>
+                      </div>
+              <!-- /.form-group --> 
                 </div><!--  /.ROW2 -->
 
               <!-- /.form-group -->
@@ -553,21 +584,21 @@ function reporte_notificacion(id){
               <!-- /.form-group -->
               <div class="col-md-6">
                   <div class="form-group">
-                       
+                  
                     <!-- Botón Imprimir Traspaso-->
                     <br>
-                      <button type="button"  onclick="ImpimirTraspaso()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                      <button type="button"  onclick="ImprimirTraspaso({{$empresa->id}})" id="imp_traspaso" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
                         &nbsp; Imprimir resolución de traspaso&nbsp;</button>
                       </button>
                     <!-- /.Botón Imprimir Traspaso -->
-
+              
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
                       <!-- Botón Guardar Traspaso -->
                         <br>
-                        <button type="button"  onclick="guardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
+                        <button type="button"  onclick="guardarTraspaso(),f6()" class="btn btn-success btn-sm float-right" ><i class="fas fa-save"></i>
                         &nbsp; Guardar Traspaso &nbsp;</button>
                       <!-- /.Botón Guardar Traspaso -->
                   </div>
@@ -615,7 +646,20 @@ function reporte_notificacion(id){
                       </div><!-- /.col-md-3 -->
                     </div><!-- /.form-group -->
                   <!-- /.form-group -->
-
+                    <!-- /.form-group -->
+                    <div class="col-md-6">
+                      <div class="form-group">
+                          <label>A PARTIR DEL DÍA:</label>                          
+                      </div>
+                      </div>
+              <!-- /.form-group --> 
+              <div class="col-md-6">
+                      <div class="form-group">
+                          <input type="date" id="Cierre_Apartirdeldia" required class="form-control" >
+                      </div>
+                      </div>
+              <!-- /.form-group --> 
+       
                 </div><!--  /.ROW2 -->
 
               <!-- /.form-group -->
@@ -625,8 +669,8 @@ function reporte_notificacion(id){
                   <div class="form-group">
                        
                     <!-- Botón Imprimir Cierre -->
-                    <br>
-                      <button type="button"  onclick="ImpimirCierre()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                    
+                      <button type="button"  onclick="ImpimirCierre({{$empresa->id}})" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
                         &nbsp; Imprimir resolución de Cierre&nbsp;</button>
                       </button>
                     <!-- /.Botón Imprimir Cierre -->
@@ -636,8 +680,8 @@ function reporte_notificacion(id){
                <div class="col-md-6">
                   <div class="form-group">
                       <!-- Botón Guardar Traspaso -->
-                        <br>
-                        <button type="button"  onclick="guardarEstado()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
+                  
+                        <button type="button"  onclick="guardarEstado()" class="btn btn-success btn-sm float-right" ><i class="fas fa-save"></i>
                         &nbsp; Guardar Cierre &nbsp;</button>
                       <!-- /.Botón Guardar Traspaso -->
                   </div>
@@ -652,7 +696,7 @@ function reporte_notificacion(id){
   
          <!-- /.card-body -->
          <div class="card-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-default" onclick="f5()" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
           </div>
          <!-- /.card-footer -->
 
@@ -872,23 +916,42 @@ function reporte_notificacion(id){
 
 
 <script type="text/javascript">
+function cierreytraspaso(id){
+  openLoading();
+  window.location.href="{{ url('/admin/empresas/cierres_traspasos') }}/"+id;
+}
+function ImprimirTraspaso(id){
+ 
+  window.open("{{ URL::to('/admin/traspaso_empresas/pdf') }}/" + id );
+
+}
+function ImpimirCierre(id){
+ 
+ window.open("{{ URL::to('/admin/cierre_empresas/pdf/') }}/" + id );
+
+}
 
 function guardarTraspaso(){
 
-  
-      
-      var id = {{ $id}};
+      var id = {{$id}};
       var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
+      var Apartirdeldia = document.getElementById('Apartirdeldia').value;
+
+      if(Apartirdeldia===''){
+        modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
+        return;
+      }
 
       if(contribuyente === ''){
-            toastr.error('El dato contribuyente es requerido');
-            return;
+        modalMensaje('Aviso', 'El dato contribuyente es requerido');
+        return;
         }
 
         openLoading();
             var formData = new FormData();
             formData.append('id', id);
             formData.append('contribuyente', contribuyente);
+            formData.append('Apartirdeldia', Apartirdeldia);
 
             axios.post('/admin/empresas/show/traspaso', formData, {
             })
@@ -899,15 +962,17 @@ function guardarTraspaso(){
                    
                    {
                        toastr.success('¡Propietario actualizado!');
-                       $('#modalCierresTraspasos').modal('hide');
-                       location.reload();
+                 
                    }
-                   else 
-                   {
-                       toastMensaje('Error al actualizar');
-                       $('#modalCierresTraspasos').modal('hide');
-                              recargar();
-                   }
+                   else if(response.data.success === 3){
+ 
+                    modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
+                    return;
+                   }else
+                        {
+                            toastMensaje('Error al actualizar');
+
+                        }
              
             })
             .catch((error) => {
@@ -916,11 +981,12 @@ function guardarTraspaso(){
             });
     }
 
-    function guardarEstado()
+function guardarEstado()
     {
       //Llamar la variable id desde el controlador
       var id = {{ $id}};
       var estado_empresa = document.getElementById('select-estado_empresa').value;
+      var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
 
       if(estado_empresa === ''){
             toastr.error('El estado de la empresa es requerido');
@@ -931,6 +997,7 @@ function guardarTraspaso(){
             var formData = new FormData();
             formData.append('id', id);
             formData.append('estado_empresa', estado_empresa);
+            formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
 
             axios.post('/admin/empresas/show/cierre', formData, {
             })
@@ -991,7 +1058,7 @@ function modalRecalificacion(){
               console.log(response);
                     closeLoading();
                     if(response.data.success === 1){
-                        $('#modalCierresTraspasos').modal('show');
+                        $('#modalCierresTraspasos').modal({backdrop: 'static', keyboard: false})
 
                         document.getElementById("select-contribuyente-traspaso").options.length = 0;
                         document.getElementById("select-estado_empresa").options.length = 0;
@@ -1094,6 +1161,21 @@ function reporteAviso(id){
 
 }
 
+function modalMensaje(titulo, mensaje){
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            });
+            
+        }
 
 
 </script>

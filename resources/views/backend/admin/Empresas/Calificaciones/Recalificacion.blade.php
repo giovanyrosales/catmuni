@@ -241,7 +241,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                  
+                <h4><i class="far fa-plus-square"></i>&nbsp;Agregar Calificaciones</h4>
                     </div><!-- Col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">

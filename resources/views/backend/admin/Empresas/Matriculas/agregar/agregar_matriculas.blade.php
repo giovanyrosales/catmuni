@@ -40,11 +40,6 @@ function f4(){
 </style>
 <!-----------------------------------Inicia Contenido ------------------------------------------->
 
-
-
-
-
-
 <div class="content-wrapper" style="display: none" id="divcontenedor">
 
     <section class="content-header">

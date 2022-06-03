@@ -82,7 +82,10 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                  <div class="modal-header">
-                    <h6 class="modal-title">Agregar tarifa fija</h4>
+                 <h4 class="modal-title">Agregar tarifa fija</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
                <div class="modal-body">
                   <form id="formulario-AgregarTarifaFija">

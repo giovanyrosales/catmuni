@@ -15,6 +15,7 @@ use App\Models\alertas_detalle;
 use App\Models\Cobros;
 use App\Models\calificacion;
 use App\Models\CalificacionMatriculas;
+use App\Models\Cierres;
 use App\Models\CobrosLicenciaLicor;
 use App\Models\CobrosMatriculas;
 use App\Models\Interes;
@@ -24,7 +25,7 @@ use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
 use App\Models\MultasDetalle;
 use App\Models\MatriculasDetalleEspecifico;
-
+use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
 use Illuminate\Http\Request;
@@ -57,6 +58,35 @@ class EmpresaController extends Controller
         $actividadespecifica = ActividadEspecifica::ALL();
 
         return view('backend.admin.Empresas.Crear_Empresa', compact('contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas','ConsultaEmpresa','actividadespecifica'));
+    }
+
+    public function cierres_traspasos($id){
+        
+        $idusuario = Auth::id();
+        $infouser = Usuario::where('id', $idusuario)->first();
+        $estadoempresas = EstadoEmpresas::All();
+        $contribuyentes = Contribuyentes::All();
+        $giroscomerciales = GiroComercial::All();
+        $actividadeseconomicas = ActividadEconomica::All();
+        $ConsultaEmpresa = Empresas::All();
+        $actividadespecifica = ActividadEspecifica::ALL();
+        $empresa= Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+        ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+        
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+        'estado_empresa.estado',
+        'giro_comercial.nombre_giro',
+        'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+        'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+        ->where('empresa.id',$id)
+        ->first();
+
+        return view('backend.admin.Empresas.CierresTraspasos.Cierres_traspasos', compact('empresa','contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas','ConsultaEmpresa','actividadespecifica'));
     }
 
     public function listarEmpresas()
@@ -366,8 +396,18 @@ public function show($id)
     if($alerta_notificacion==null){
         $alerta_notificacion=0;
     }
-   log::info($alerta_notificacion);
-    
+   
+    $Consul_traspasos=Traspasos::latest()
+    ->where('id_empresa',$id)
+    ->first();
+
+    if($Consul_traspasos===null){
+        $Consul_traspasos=0;
+        }
+    else
+        {$Consul_traspasos=1;
+        }   
+   
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -387,6 +427,7 @@ public function show($id)
     $ultimo_cobro = Cobros::latest()
     ->where('id_empresa',$id)
     ->first();
+
     if( $ultimo_cobro==null)
     {
         $ultimoCobroEmpresa=$empresa->inicio_operaciones;
@@ -419,6 +460,13 @@ public function show($id)
     
     $fechahoy=carbon::now()->format('Y-m-d');
 
+    $ultimo_cobro = Traspasos::latest()
+        ->where('id_empresa', "=", "$id")
+        ->first();
+
+    $ultimo_cobro = Cierres::latest()
+        ->where('id_empresa', "=", "$id")
+        ->first();
 
    if ($calificaciones == null)
     { 
@@ -441,7 +489,9 @@ public function show($id)
                                                                 'ultimoCobroEmpresa',
                                                                 'fechahoy',
                                                                 'alerta_aviso',
-                                                                'alerta_notificacion'
+                                                                'alerta_notificacion',
+                                                                'Consul_traspasos'
+    
                                                             ));  
 
         }else{
@@ -461,7 +511,8 @@ public function show($id)
                 'ultimoCobroEmpresa',
                 'fechahoy',
                 'alerta_aviso',
-                'alerta_notificacion'
+                'alerta_notificacion',
+                'Consul_traspasos'
                 ));   
              }           
     }
@@ -489,7 +540,8 @@ public function show($id)
                                                                     'ultimoCobroEmpresa',
                                                                     'fechahoy',
                                                                     'alerta_aviso',
-                                                                    'alerta_notificacion'
+                                                                    'alerta_notificacion',
+                                                                    'Consul_traspasos'
                                                                     
                                                                 ));
             }else
@@ -514,7 +566,8 @@ public function show($id)
                                                                     'ultimoCobroEmpresa',
                                                                     'fechahoy',
                                                                     'alerta_aviso',
-                                                                    'alerta_notificacion'
+                                                                    'alerta_notificacion',
+                                                                    'Consul_traspasos'
                                                                 ));
                                                                 }
                    
@@ -2036,7 +2089,28 @@ public function nuevaCalificacion(Request $request){
 
         public function nuevoTraspaso(Request $request)
         {
-      
+            $id_empresa=$request->id;
+            $id_contribuyente=$request->contribuyente;
+            $empresa= Empresas
+            ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+            ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+            ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+            ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+            ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+        
+            ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'contribuyente.nombre as contribuyente','contribuyente.id as id_contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+            'estado_empresa.estado',
+            'giro_comercial.nombre_giro',
+            'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
+            'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+            ->find($id_empresa);   
+
+            $datos_contribuyente=Contribuyentes::select('nombre','apellido')
+            ->where('id',$id_contribuyente)
+            ->first();
+     
+
             $regla = array(  
                 'id' => 'required',
                 'contribuyente' => 'required',
@@ -2052,26 +2126,39 @@ public function nuevaCalificacion(Request $request){
             ];
             }
             if(Empresas::where('id', $request->id)->first()){
-
+                //** Guardar registro historio en tabla traspasos */
+            
+            if($id_contribuyente!=$empresa->id_contribuyente){
+                $traspaso = new Traspasos();
+                $traspaso->id_empresa = $id_empresa;
+                $traspaso->propietario_anterior = $empresa->contribuyente.' '.$empresa->apellido;
+                $traspaso->propietario_nuevo =  $datos_contribuyente->nombre.' '.$datos_contribuyente->apellido;
+                $traspaso->fecha_a_partir_de = $request->Apartirdeldia;
+                $traspaso->save();
+                //** FIN- Guardar registro historio en tabla traspasos */
                 Empresas::where('id', $request->id)->update([
          
                      'id_contribuyente' => $request->contribuyente,
+                    ]);
 
-                     
-        ]);
+                    return ['success' => 1];
 
-        return ['success' => 1];
-    }else{
-        return ['success' => 2];
-    }
+                 }else{ 
+                    return ['success' => 3];
+                      }
+
+                }else{
+                    return ['success' => 2];
+                }
         }
 
-        public function nuevoEstado(Request $request)
+public function nuevoEstado(Request $request)
         {
       
             $regla = array(  
                 'id' => 'required',
                 'estado_empresa' => 'required',
+                'cierre_apartirdeldia' => 'required',
             );
           
             $validar = Validator::make($request->all(), $regla,
@@ -2084,6 +2171,13 @@ public function nuevaCalificacion(Request $request){
             ];
             }
             if(Empresas::where('id', $request->id)->first()){
+
+                //** Guardar registro historio en tabla traspasos */
+                $cierre = new Cierres();
+                $cierre->id_empresa = $request->id;
+                $cierre->fecha_a_partir_de = $request->cierre_apartirdeldia;
+                $cierre->save();
+                //** FIN- Guardar registro historio en tabla traspasos */
 
                 Empresas::where('id', $request->id)->update([
          

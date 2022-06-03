@@ -171,8 +171,8 @@
                            <!-- finaliza asignar actividad economica-->
                         
                       </div>
-                   <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+                   <div>
+                    <button type="button" class="btn btn-default float-left" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
                     
                     </div>
               <!--finaliza los campos del formulario-->

@@ -220,7 +220,7 @@
                 </div>    
                 <div class="card-footer">
                   <button type="button" class="btn btn-success float-right" onclick="actualizarLM()"> Actualizar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fas fa-times-circle"></i>Cerrar</button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
                 </div>           
                 </div>
                  </div>

@@ -94,6 +94,7 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::post('/admin/empresas/show/cierre', [EmpresaController::class,'nuevoEstado']);
     Route::post('/admin/empresas/show/informacion', [EmpresaController::class,'infoTraspaso']);
 
+    Route::get('/admin/empresas/cierres_traspasos/{empresa}', [EmpresaController::class,'cierres_traspasos']);
 
     // --- CONTRIBUYENTES ---
     Route::get('/admin/nuevo/contribuyentes/Listar', [ContribuyentesController::class,'listarContribuyentes'])->name('admin.listarContribuyentes.index');
@@ -229,4 +230,5 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas']);
     Route::get('/admin/estado_cuenta_maquinas/pdf/{f1}/{f2}/{im}/{ti}/{id}', [reportesController::class, 'estado_cuenta_maquinas']);
     Route::get('/admin/estado_cuenta_mesas/pdf/{f1}/{f2}/{ime}/{ti}/{id}', [reportesController::class, 'estado_cuenta_mesas']);
-    
+    Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa']);
+    Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa']);

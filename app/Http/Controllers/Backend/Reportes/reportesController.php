@@ -40,7 +40,8 @@ use App\Models\MultasDetalle;
 use App\Models\MatriculasDetalleEspecifico;
 use App\Models\alertas;
 use App\Models\alertas_detalle;
-
+use App\Models\Cierres;
+use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
 use Illuminate\Support\MessageBag;
@@ -2348,6 +2349,135 @@ public function estado_cuenta_mesas($f1,$f2,$ime,$ti,$id){
 
             return $pdf->stream();
             }
+public function traspaso_empresa($id){
 
+            $datos_traspaso=Traspasos::select('propietario_nuevo','propietario_anterior','fecha_a_partir_de')
+            ->where('id_empresa',$id)
+            ->latest()->first();
+
+            $cant_resolucion=Traspasos::all()
+            ->count();
+
+            $empresa= Empresas
+            ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+            ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+            ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+            ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+            ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+            
+            ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+            'estado_empresa.estado',
+            'giro_comercial.nombre_giro',
+            'actividad_economica.rubro',
+            'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+            ->find($id);
+
+            /** Obtener la fecha y días en español y formato tradicional*/
+            $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+            $fechaF = Carbon::parse(Carbon::now());
+            $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+            $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+            
+            $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+            $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+            /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+            
+            /** Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
+            $fecha_ApartirDe= Carbon::parse($datos_traspaso->fecha_a_partir_de);
+            
+            $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+            $mes = $mesesEspañol[($fecha_ApartirDe->format('n')) - 1];
+            $FechaDelDiaApartirDe = $fecha_ApartirDe->format('d') . ' de ' . $mes . ' de ' . $fecha_ApartirDe->format('Y');
+            
+            $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+            $diaApartirDe = $dias[(date('N', strtotime($fecha_ApartirDe))) - 1];
+            /** FIN - Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
+
+            $view = View::make('backend.admin.Empresas.Reportes.Traspaso', compact([
+
+                        'FechaDelDia',
+                        'empresa',
+                        'dia',
+                        'datos_traspaso',
+                        'cant_resolucion',
+                        'FechaDelDiaApartirDe',
+                        'diaApartirDe'
+
+            ]))->render();
+
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->getDomPDF()->set_option("enable_php", true);
+            $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+
+            return $pdf->stream();
+
+}
+public function cierre_empresa($id){
+
+    $datos_cierres=Cierres::select('fecha_a_partir_de','created_at')
+    ->where('id_empresa',$id)
+    ->latest()->first();
+
+    $cant_resolucion=Cierres::all()
+    ->count();
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+    
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+    ->find($id);
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse(Carbon::now());
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+    
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+    
+    /** Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
+    $fecha_ApartirDe= Carbon::parse($datos_cierres->fecha_a_partir_de);
+    
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $mes = $mesesEspañol[($fecha_ApartirDe->format('n')) - 1];
+    $FechaDelDiaApartirDe = $fecha_ApartirDe->format('d') . ' de ' . $mes . ' de ' . $fecha_ApartirDe->format('Y');
+    
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $diaApartirDe = $dias[(date('N', strtotime($fecha_ApartirDe))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
+
+    $view = View::make('backend.admin.Empresas.Reportes.Cierres_empresas', compact([
+
+                'FechaDelDia',
+                'empresa',
+                'dia',
+                'datos_cierres',
+                'cant_resolucion',
+                'FechaDelDiaApartirDe',
+                'diaApartirDe'
+
+    ]))->render();
+
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->getDomPDF()->set_option("enable_php", true);
+    $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+
+    return $pdf->stream();
+
+}
 //** Fin de reportes controller */    
 }
