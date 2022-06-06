@@ -17,36 +17,6 @@
 
 @stop
 
-<script>
-
-window.onload = f4;
-
-function f4(){
-  $('#imp_traspaso').hide();
-  }
-
-function f6(){
-  $('#imp_traspaso').show();
-  }
-
-function f5(){
-  location.reload();
-}
-
-function reporte_notificacion(id){
-    
-        var f1=(document.getElementById('f1').value);
-
-        var f2=(document.getElementById('fechahoy').value);
-
-        var ti={{$Tasainteres}};
-        var f3=(document.getElementById('fechahoy').value);
-
-    
-      window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
-    
-    }
-</script>
 
 <style>
     table{
@@ -68,11 +38,7 @@ function reporte_notificacion(id){
       <div class="container-fluid">
        <div class="row mb-2">
          <div class="col-sm-6">
-      
-            <button type="button" onclick="cierreytraspaso({{$empresa->id}})" class="btn btn-success btn-sm" >
-                <i class="fas fa-pencil-alt"></i>
-                Cierres y traspasos
-            </button>
+
            </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
@@ -201,7 +167,7 @@ function reporte_notificacion(id){
           @endif      
         </div>
         <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="informacionTraspaso({{$empresa->id}})" >
+        <a href="#" onclick="cierreytraspaso({{$empresa->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -496,226 +462,6 @@ function reporte_notificacion(id){
 
 <!-- Termina vista detallada-->
 
-<!--Inicia Modal Cierres y Traspasos--------------------------------------------------------------->
-
-<div class="modal fade" id="modalCierresTraspasos">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Cierre y traspaso de empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" onclick="f5()" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="formulario-Traspaso">
-            @csrf
-              <div class="card-body">
-<!-- Inicia Formulario Cierres y Traspasos--> 
-<section class="content">
-      <div class="container-fluid">
-       
-      <!-- /.card-header -->
-         <div class="card card-green">
-            <div class="card-header">
-                <h3 class="card-title">FORMULARIO DE CIERRE Y TRASPASO.</h3>
-
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-                  </div>
-            </div>
-        <!-- /.card-header -->
-
-
-        <!-- Campos del formulario Cierres y Traspasos -->
-        <div class="card border-success mb-3"><!-- Panel TRASPASO DE EMPRESA -->
-           <div class="card-header text-success"><label>II. TRASPASO DE EMPRESA</label></div>
-              <div class="card-body">
-
-                <div class="row"><!-- /.ROW2 -->
-
-                  <!-- /.form-group -->
-                  <div class="col-md-6">
-                      <div class="form-group">
-                            <label>TRASPASO A NOMBRE DE:</label>
-                      </div>
-                    </div><!-- /.col-md-6 -->
-                    <!-- /.form-group -->
-
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <!-- Select estado - live search -->
-                              <div class="input-group mb-9">
-                                    <select 
-                                    required
-                                    class="form-control"
-                                    data-style="btn-success"
-                                    data-show-subtext="true" 
-                                    data-live-search="true"   
-                                    id="select-contribuyente-traspaso" 
-                                    title="-- Seleccione un registro --"
-                                    >
-                                    @foreach($contribuyentes as $contribuyente)
-                                    <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
-                                    @endforeach
-                                    </select>
-                              </div>
-                            <!-- finaliza select estado-->  
-                      </div><!-- /.col-md-3 -->
-                    </div><!-- /.form-group -->
-                    <!-- /.form-group -->
-                    <div class="col-md-6">
-                      <div class="form-group">
-                          <label>A PARTIR DEL DÍA:</label>                          
-                      </div>
-                      </div>
-              <!-- /.form-group --> 
-              <div class="col-md-6">
-                      <div class="form-group">
-                          <input type="date" id="Apartirdeldia" required class="form-control" >
-                      </div>
-                      </div>
-              <!-- /.form-group --> 
-                </div><!--  /.ROW2 -->
-
-              <!-- /.form-group -->
-              <div class="row"><!-- /.ROW3 -->
-              <!-- /.form-group -->
-              <div class="col-md-6">
-                  <div class="form-group">
-                  
-                    <!-- Botón Imprimir Traspaso-->
-                    <br>
-                      <button type="button"  onclick="ImprimirTraspaso({{$empresa->id}})" id="imp_traspaso" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
-                        &nbsp; Imprimir resolución de traspaso&nbsp;</button>
-                      </button>
-                    <!-- /.Botón Imprimir Traspaso -->
-              
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                      <!-- Botón Guardar Traspaso -->
-                        <br>
-                        <button type="button"  onclick="guardarTraspaso(),f6()" class="btn btn-success btn-sm float-right" ><i class="fas fa-save"></i>
-                        &nbsp; Guardar Traspaso &nbsp;</button>
-                      <!-- /.Botón Guardar Traspaso -->
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              </div><!-- /.ROW3 -->
-
-          </div><!--  /.card-header text-success -->
-        </div> <!-- /.Panel CIERRE DE EMPRESA --> 
-
-     
-         <div class="card border-success mb-3"><!-- Panel CIERRE DE EMPRESA -->
-           <div class="card-header text-success"><label>II. CIERRE DE EMPRESA</label></div>
-              <div class="card-body">
-
-                <div class="row"><!-- /.ROW2 -->
-
-                  <!-- /.form-group -->
-                  <div class="col-md-6">
-                      <div class="form-group">
-                            <label>ESTADO DE LA EMPRESA:</label>
-                      </div>
-                    </div><!-- /.col-md-6 -->
-                    <!-- /.form-group -->
-
-                      <div class="col-md-3">
-                          <div class="form-group">
-                            <!-- Select estado - live search -->
-                              <div class="input-group mb-9">
-                                    <select 
-                                    required
-                                    class="form-control"
-                                    data-style="btn-success"
-                                    data-show-subtext="true" 
-                                    data-live-search="true"   
-                                    id="select-estado_empresa" 
-                                    title="-- Seleccione el estado  --"
-                                    >
-                                      @foreach($estadoempresas as $estado)
-                                      <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
-                                      @endforeach 
-                                    </select>
-                              </div>
-                            <!-- finaliza select estado-->  
-                      </div><!-- /.col-md-3 -->
-                    </div><!-- /.form-group -->
-                  <!-- /.form-group -->
-                    <!-- /.form-group -->
-                    <div class="col-md-6">
-                      <div class="form-group">
-                          <label>A PARTIR DEL DÍA:</label>                          
-                      </div>
-                      </div>
-              <!-- /.form-group --> 
-              <div class="col-md-6">
-                      <div class="form-group">
-                          <input type="date" id="Cierre_Apartirdeldia" required class="form-control" >
-                      </div>
-                      </div>
-              <!-- /.form-group --> 
-       
-                </div><!--  /.ROW2 -->
-
-              <!-- /.form-group -->
-              <div class="row"><!-- /.ROW3 -->
-              <!-- /.form-group -->
-              <div class="col-md-6">
-                  <div class="form-group">
-                       
-                    <!-- Botón Imprimir Cierre -->
-                    
-                      <button type="button"  onclick="ImpimirCierre({{$empresa->id}})" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
-                        &nbsp; Imprimir resolución de Cierre&nbsp;</button>
-                      </button>
-                    <!-- /.Botón Imprimir Cierre -->
-
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                      <!-- Botón Guardar Traspaso -->
-                  
-                        <button type="button"  onclick="guardarEstado()" class="btn btn-success btn-sm float-right" ><i class="fas fa-save"></i>
-                        &nbsp; Guardar Cierre &nbsp;</button>
-                      <!-- /.Botón Guardar Traspaso -->
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              </div><!-- /.ROW3 -->
-
-          </div><!--  /.card-header text-success -->
-        </div> <!-- /.Panel CIERRE DE EMPRESA --> 
-
-  <!-- Finaliza campos del formulario Cierres y Traspasos -->
-  
-         <!-- /.card-body -->
-         <div class="card-footer">
-              <button type="button" class="btn btn-default" onclick="f5()" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
-          </div>
-         <!-- /.card-footer -->
-
-         </div><!-- Card-body -->
-        </div><!-- /.card Green-->
-      </div><!-- /.container-fluid -->
-    </section>
-
-       </form> <!-- /.formulario-Calificacion2 -->
-      </div> <!-- /.Card-body -->
-   </div> <!-- /.modal-dialog modal-xl -->
-  </div> <!-- /.modal-content -->
- </div> <!-- /.modal-body -->
- </div> <!-- /.modalCIerres y traspasos -->
-
-<!-- Finaliza Modal Cierres y Traspasos--------------------------------------------------------->
-
-
-
 
 <!--Inicia Modal Recalificacion--------------------------------------------------------------------->
 
@@ -917,113 +663,9 @@ function reporte_notificacion(id){
 
 <script type="text/javascript">
 function cierreytraspaso(id){
-  openLoading();
+ 
   window.location.href="{{ url('/admin/empresas/cierres_traspasos') }}/"+id;
 }
-function ImprimirTraspaso(id){
- 
-  window.open("{{ URL::to('/admin/traspaso_empresas/pdf') }}/" + id );
-
-}
-function ImpimirCierre(id){
- 
- window.open("{{ URL::to('/admin/cierre_empresas/pdf/') }}/" + id );
-
-}
-
-function guardarTraspaso(){
-
-      var id = {{$id}};
-      var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
-      var Apartirdeldia = document.getElementById('Apartirdeldia').value;
-
-      if(Apartirdeldia===''){
-        modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
-        return;
-      }
-
-      if(contribuyente === ''){
-        modalMensaje('Aviso', 'El dato contribuyente es requerido');
-        return;
-        }
-
-        openLoading();
-            var formData = new FormData();
-            formData.append('id', id);
-            formData.append('contribuyente', contribuyente);
-            formData.append('Apartirdeldia', Apartirdeldia);
-
-            axios.post('/admin/empresas/show/traspaso', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
-
-                if (response.data.success === 1) 
-                   
-                   {
-                       toastr.success('¡Propietario actualizado!');
-                 
-                   }
-                   else if(response.data.success === 3){
- 
-                    modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
-                    return;
-                   }else
-                        {
-                            toastMensaje('Error al actualizar');
-
-                        }
-             
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar empresa');
-                closeLoading();
-            });
-    }
-
-function guardarEstado()
-    {
-      //Llamar la variable id desde el controlador
-      var id = {{ $id}};
-      var estado_empresa = document.getElementById('select-estado_empresa').value;
-      var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
-
-      if(estado_empresa === ''){
-            toastr.error('El estado de la empresa es requerido');
-            return;
-        }
-
-        openLoading();
-            var formData = new FormData();
-            formData.append('id', id);
-            formData.append('estado_empresa', estado_empresa);
-            formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
-
-            axios.post('/admin/empresas/show/cierre', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
-
-                if (response.data.success === 1) 
-                   
-                   {
-                       toastr.success('¡Estado de la empresa actualizado!');
-                       $('#modalCierresTraspasos').modal('hide');
-                       location.reload();
-                   }
-                   else 
-                   {
-                       toastMensaje('Error al actualizar');
-                       $('#modalCierresTraspasos').modal('hide');
-                              recargar();
-                   }
-             
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar empresa');
-                closeLoading();
-            });
-    }
 
 function modalRecalificacion(){
             openLoading();
@@ -1046,52 +688,6 @@ function modalRecalificacion(){
     }
 
     
-
-    function informacionTraspaso(id){
-            openLoading();
-            document.getElementById("formulario-Traspaso").reset();
-
-            axios.post('/admin/empresas/show/informacion',{
-                'id': id
-            })
-            .then((response) => {
-              console.log(response);
-                    closeLoading();
-                    if(response.data.success === 1){
-                        $('#modalCierresTraspasos').modal({backdrop: 'static', keyboard: false})
-
-                        document.getElementById("select-contribuyente-traspaso").options.length = 0;
-                        document.getElementById("select-estado_empresa").options.length = 0;
-
-                        
-                        $.each(response.data.contribuyente, function( key, val ){
-                            if(response.data.idcont == val.id){
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }else{
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }
-                        });
-
-                        $.each(response.data.estado_empresa, function( key, val ){
-                            if(response.data.idesta == val.id){
-                                $('#select-estado_empresa').append('<option value="' +val.id +'" selected="selected">'+val.estado+'</option>');
-                            }else{
-                                $('#select-estado_empresa').append('<option value="' +val.id +'">'+val.estado+'</option>');
-                            }
-                        }); 
-
-                      }else{
-                        toastr.error('Información no encontrada');
-                    }
-
-                })
-                .catch((error) => {
-                    closeLoading();
-                    toastr.error('Información no encontrada');
-                });
-
-    }
-
 
 </script>
 <script>
@@ -1158,6 +754,21 @@ function reporteAviso(id){
    
 
   window.open("{{ URL::to('/admin/generar_aviso/pdf') }}/" + id );
+
+}
+
+
+function reporte_notificacion(id){
+    
+    var f1=(document.getElementById('f1').value);
+
+    var f2=(document.getElementById('fechahoy').value);
+
+    var ti={{$Tasainteres}};
+    var f3=(document.getElementById('fechahoy').value);
+
+
+  window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
 
 }
 

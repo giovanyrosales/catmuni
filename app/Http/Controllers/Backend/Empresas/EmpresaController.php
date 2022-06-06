@@ -70,6 +70,7 @@ class EmpresaController extends Controller
         $actividadeseconomicas = ActividadEconomica::All();
         $ConsultaEmpresa = Empresas::All();
         $actividadespecifica = ActividadEspecifica::ALL();
+
         $empresa= Empresas
         ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
         ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -86,7 +87,34 @@ class EmpresaController extends Controller
         ->where('empresa.id',$id)
         ->first();
 
-        return view('backend.admin.Empresas.CierresTraspasos.Cierres_traspasos', compact('empresa','contribuyentes','estadoempresas','giroscomerciales','actividadeseconomicas','ConsultaEmpresa','actividadespecifica'));
+        $Consul_traspasos=Traspasos::latest()
+        ->where('id_empresa',$id)
+        ->first();
+
+        $historico_traspasos=Traspasos::orderBy('id', 'desc')
+        ->where('id_empresa',$id)
+        ->get();
+
+    
+        if($Consul_traspasos===null){
+            $Consul_traspasos=0;
+            }
+        else
+            {$Consul_traspasos=1;
+            }  
+
+        return view('backend.admin.Empresas.CierresTraspasos.Cierres_traspasos',
+                compact(
+                        'empresa',
+                        'contribuyentes',
+                        'estadoempresas',
+                        'giroscomerciales',
+                        'actividadeseconomicas',
+                        'ConsultaEmpresa',
+                        'actividadespecifica',
+                        'Consul_traspasos',
+                        'historico_traspasos'
+                       ));
     }
 
     public function listarEmpresas()

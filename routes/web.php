@@ -232,3 +232,4 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::get('/admin/estado_cuenta_mesas/pdf/{f1}/{f2}/{ime}/{ti}/{id}', [reportesController::class, 'estado_cuenta_mesas']);
     Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa']);
     Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa']);
+    Route::get('/admin/traspaso_empresas_historico/pdf/{id}', [reportesController::class, 'traspaso_empresa_historico']);

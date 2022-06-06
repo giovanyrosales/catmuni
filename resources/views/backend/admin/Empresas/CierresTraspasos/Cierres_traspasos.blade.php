@@ -19,15 +19,52 @@ window.onload = f4;
 function f4(){
   $('#imp_traspaso').hide();
   $('#imp_cierre').hide();
+  $('#btn_ocultar_historial_traspasos').hide();
+  $('#Div_historico').hide();
   informacionTraspaso({{$empresa->id}});
+
+  var hayTraspaso={{$Consul_traspasos}};
+
+  if (hayTraspaso==1){
+         $('#historico_traspaso_emp').show();
+    }else{
+        $('#historico_traspaso_emp').hide();
+        }
+
   }
 
 function f6(){
   $('#imp_traspaso').show();
+  $('#historico_traspaso_emp').show();
+  }
+
+function f7(){
   $('#imp_cierre').show();
   }
 
+function verhistorialTraspasos(){
+  $('#Div_historico').show();
+  $('#btn_ocultar_historial_traspasos').show();
+  $('#btn_ver_historial_traspasos').hide();
+}
+function OcultarhistorialTraspasos(){
+  $('#Div_historico').hide();
+  $('#btn_ocultar_historial_traspasos').hide();
+  $('#btn_ver_historial_traspasos').show();
+}
 </script>
+<style>
+    table{
+        /*Ajustar tablas*/
+        table-layout:fixed;
+    }
+    .avatar {
+        vertical-align: middle;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+</style>
 <!-----------------------------------Inicia Contenido ------------------------------------------->
 
 <div class="content-wrapper" style="display: none" id="divcontenedor">
@@ -142,13 +179,70 @@ function f6(){
                                 <div class="form-group">
                                     <!-- Botón Guardar Traspaso -->
                                         <br>
-                                        <button type="button"  onclick="guardarTraspaso({{$empresa->id}})" class="btn btn-success btn-sm float-right" ><i class="fas fa-save"></i>
+                                        <button type="button"  onclick="guardarTraspaso({{$empresa->id}})" 
+                                        class="btn btn-warning btn-sm float-right" ><i class="fas fa-save"></i>
                                         &nbsp; Guardar Traspaso &nbsp;</button>
                                     <!-- /.Botón Guardar Traspaso -->
                                 </div>
                                 </div><!-- /.col-md-6 -->
                                 <!-- /.form-group -->
-                                </div><!-- /.ROW3 -->
+                                </div><!-- /.ROW4 -->
+                                <hr>
+                                <div class="row" id="historico_traspaso_emp"><!-- /.ROW4 -->
+                               
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <h5>HISTÓRICO</h5>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!-- Botón ver historial de traspasos -->
+                                            <button type="button" id="btn_ver_historial_traspasos"   onclick="verhistorialTraspasos()" 
+                                            class="btn btn-dark btn-sm float-right" >
+                                            <i class="fas fa-history"></i>
+                                            &nbsp; Ver historial de traspasos &nbsp;</button>
+                                        <!-- /.Botón ver historial de traspasos -->
+                                        <!-- Botón ver historial de traspasos -->
+                                            <button type="button" id="btn_ocultar_historial_traspasos"  onclick="OcultarhistorialTraspasos()" 
+                                            class="btn btn-secondary btn-sm float-right" >
+                                            <i class="fas fa-eye-slash"></i>
+                                            &nbsp; Ocultar historial de traspasos &nbsp;</button>
+                                        <!-- /.Botón ver historial de traspasos -->
+                                    </div>
+                                    </div><!-- /.col-md-6 -->
+                                    <div class="col-md-12">
+                                    <div class="form-group" id="Div_historico">
+                                    <table id="tab_traspasos_empresas" class="table table-bordered table-hover">
+                                        <thead>             
+                                        <tr>
+                                            <th style="width: 20%;">Anterior</th>   
+                                            <th style="width: 20%;">Nuevo</th>   
+                                            <th style="width: 20%;">Fecha</th>                          
+                                            <th style="width: 30%;">Resoluciones</th>                           
+                                        </tr>
+                                        </thead>
+                                        <tbody>     
+                                        @foreach($historico_traspasos as $dato)
+                                        <tr>
+                                        <td>{{ $dato-> propietario_anterior }}</td>
+                                        <td>{{ $dato-> propietario_nuevo }}</td>
+                                        <td>{{ $dato-> fecha_a_partir_de }}</td> 
+                                        <td>
+                                        <center>
+                                        <a class="btn btn-warning btn-xs" onclick="resolucion_traspaso_historico({{$dato->id}})" target="frameprincipal">
+                                        <i class="fas fa-print"></i>&nbsp; Generar</a>
+                                        </center>                                                                                                   
+                                        </td>                    
+                                        </tr>
+                                        @endforeach  
+                                        </tbody>            
+                                    </table>  
+                                    </div>
+                                  </div>
+                        
+                                </div><!-- /.ROW4 -->
+
                             </div> 
                         </div>
                         </div>
@@ -223,7 +317,7 @@ function f6(){
                                 
                             <!-- Botón Imprimir Cierre -->
                                  <br>
-                                <button type="button"  onclick="ImpimirCierre({{$empresa->id}})" id="imp_cierre"  class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                                <button type="button"  onclick="ImprimirCierre({{$empresa->id}})" id="imp_cierre"  class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
                                 &nbsp; Imprimir resolución de Cierre&nbsp;</button>
                                 </button>
                             <!-- /.Botón Imprimir Cierre -->
@@ -234,7 +328,7 @@ function f6(){
                             <div class="form-group">
                                 <!-- Botón Guardar Traspaso -->
                                 <br>
-                                <button type="button"  onclick="guardarEstado()" class="btn btn-success btn-sm float-right" ><i class="fas fa-save"></i>
+                                <button type="button"  onclick="guardarEstado()" class="btn btn-danger btn-sm float-right" ><i class="fas fa-save"></i>
                                 &nbsp; Guardar Cierre &nbsp;</button>
                                 <!-- /.Botón Guardar Traspaso -->
                             </div>
@@ -281,6 +375,9 @@ function f6(){
             document.getElementById("divcontenedor").style.display = "block";
         });
 
+        function resolucion_traspaso_historico(id){
+            window.open("{{ URL::to('/admin/traspaso_empresas_historico/pdf')}}/"+ id)
+        }
         function ImprimirTraspaso(id)
         {
                 window.open("{{ URL::to('/admin/traspaso_empresas/pdf') }}/" + id );
@@ -365,7 +462,7 @@ function f6(){
         }
 
         function informacionTraspaso(id){
-          
+            openLoading();
             axios.post('/admin/empresas/show/informacion',{
                 'id': id
             })
@@ -406,6 +503,96 @@ function f6(){
                 });
 
     }
-    </script>
 
+    function guardarEstado()
+    {
+      //Llamar la variable id desde el controlador
+      var id = {{$empresa->id}};
+      var estado_empresa = document.getElementById('select-estado_empresa').value;
+      var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
+
+      if(estado_empresa === ''){
+            modalMensaje('Aviso', 'El estado de la empresa es requerido.');
+            return;
+        }
+        if(cierre_apartirdeldia === ''){
+            modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
+            return;
+        }
+
+        openLoading();
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('estado_empresa', estado_empresa);
+            formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
+
+            axios.post('/admin/empresas/show/cierre', formData, {
+            })
+            .then((response) => {          
+                closeLoading();
+
+                if (response.data.success === 1) 
+                   
+                   {
+                       toastr.success('¡Estado de la empresa actualizado!');
+                       f7();
+                   }
+                   else 
+                   {
+                       toastMensaje('Error al actualizar');
+                      
+                   }
+             
+            })
+            .catch((error) => {
+                toastr.error('Error al actualizar empresa');
+                closeLoading();
+            });
+    }
+
+
+</script>
+
+
+<script>
+//Script para Organizar la tabla de datos // prueba
+$(document).ready(function() {
+$("#tab_traspasos_empresas").DataTable({
+"paging": true,
+"lengthChange": true,
+"searching": true,
+"ordering": false,
+"info": true,
+"autoWidth": true,
+
+"language": {
+
+"sProcessing": "Procesando...",
+"sLengthMenu": "Mostrar _MENU_ registros",
+"sZeroRecords": "No se encontraron resultados",
+"sEmptyTable": "Ningún dato disponible en esta tabla",
+"sInfo": "Registros del _START_ al _END_ de un total de _TOTAL_",
+"sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+"sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+"sInfoPostFix": "",
+"sSearch": "Buscar:",
+"sUrl": "",
+"sInfoThousands": ",",
+"sLoadingRecords": "Cargando...",
+"oPaginate": {
+"sFirst": "Primero",
+"sLast": "Último",
+"sNext": "Siguiente",
+"sPrevious": "Anterior"
+},
+"oAria": {
+"sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+"sSortDescending": ": Activar para ordenar la columna de manera descendente"
+}
+},
+"responsive": true, "lengthChange": false, "autoWidth": true,
+});
+});
+
+</script>   
 @endsection
