@@ -27,10 +27,7 @@ class ContribuyentesController extends Controller
     {
          $contribuyentes = Contribuyentes::All();
         $infContribuyente = Contribuyentes::where('id', $contribuyentes)->first();
-    //     ->join('empresa','empresa.id_empresa','=','contribuyentes.id_empresa')
-    //     ->select('contribuyente.nombre','empresa.nombre')
-    //     ->get();
-    //     dd($contribuyentes);
+        $contribuyenteinf = Contribuyentes::where('id', $contribuyentes)->first();
 
         return view('backend.admin.Contribuyentes.ListarContribuyentes', compact('contribuyentes'));
     }

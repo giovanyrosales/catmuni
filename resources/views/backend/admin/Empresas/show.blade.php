@@ -52,7 +52,7 @@
       <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h5 class="card-category-">Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; </h5>
+            <h5 class="card-category-"><i class="fas fa-sitemap"></i> &nbsp;Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; </h5>
           </div>
       <!--body-->
       <div class="card-body">
@@ -371,7 +371,7 @@
           <!-- Termina sección cargar datos empresa -->
         
           <div class="card-footer">
-            <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="ListarEmpresas()"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
+            <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="reporteEmpresaDatos({{$empresa->id}})"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
           </div>
         </div>
       </form>
@@ -429,9 +429,6 @@
                     <div class="card-description">
                      <span class="badge badge-pill badge-dark">Dirección: </span> <br>  {{$empresa->direccionCont}}
                     </div>
-                    <div class="card-footer">
-                     <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="ListarEmpresas()"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
-                   </div>
                   </div><!--Termino ROW -->
 
     
@@ -461,187 +458,6 @@
 </div>
 
 <!-- Termina vista detallada-->
-
-
-<!--Inicia Modal Recalificacion--------------------------------------------------------------------->
-
-<div class="modal fade" id="modalRecalificacion">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="formulario-Recalificacion">
-              <div class="card-body">
-
-  <!-- Inicia Formulario Recalificación--> 
-   <section class="content">
-      <div class="container-fluid">
-        <!-- SELECT2 EXAMPLE -->
-
-        <form class="form-horizontal" id="formulario-Recalificacion">
-        @csrf
-
-          <div class="card card-green">
-            <div class="card-header">
-            <h3 class="card-title">Datos generales.</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-            </div>
-          </div>
-          <!-- /.card-header -->
-          <!-- Campos del formulario de recalificación -->
-          <div class="card-body"><!-- Card-body -->
-            <div class="row"><!-- /.ROW1 -->
-            
-             <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Número de tarjeta:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha de último pago:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                  @if($detectorCobro=='0')
-                        <input  type="text" disabled  name="ultimo_cobro" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control text-success" >
-                  @else
-                              <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled  name="ultimo_cobro" class="form-control text-success" required >
-                              <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  @endif
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha hasta donde pagará:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input  type="date" name="nombre" id="nombre-editar" class="form-control" required >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Giro Comercial:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- Inicia Select Giro Comercial -->
-               <div class="col-md-6">
-                      <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                disabled
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial-editar" 
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
-                  </div>
-              <!-- finaliza select Giro Comercial-->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Tasa de interes:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="text" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha del interes moratorio:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input type="date" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Cantidad de meses a pagar:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number" value="cant_meses" name="cant_meses" id="cant_meses" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-              
-            </div> <!-- /.ROW1 -->
-          <!-- /.col1 -->
-          </div> <!-- /.Card-body -->
-
-        <!-- Finaliza campos del formulario Recalificacion -->
-         <!-- /.card-body -->
-          <div class="card-footer">
-            <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="far fa-money-bill-alt"></i>&nbsp;Registrar Cobro&nbsp;</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-          </div>
-         <!-- /.card-footer -->
-         </div>
-        </div>
-      <!-- /.card -->
-      </form>
-      <!-- /form -->
-      </div>
-    <!-- /.container-fluid -->
-    </section>
-
-     </form> <!-- /.formulario-Recalificacion -->
-    </div> <!-- /.Card-body -->
-   </div> <!-- /.modalRecalificacion -->
-  </div> <!-- /.modal-dialog modal-xl -->
- </div> <!-- /.modal-content -->
-</div> <!-- /.modal-body -->
-
-<!-- Finaliza Modal Recalificacion------------------------------------------------------------------>
 
 
 
@@ -750,13 +566,10 @@ function matriculas(){
 
 
 function reporteAviso(id){
-    
-   
-
+  location.reload();
   window.open("{{ URL::to('/admin/generar_aviso/pdf') }}/" + id );
-
+ 
 }
-
 
 function reporte_notificacion(id){
     
@@ -772,6 +585,12 @@ function reporte_notificacion(id){
 
 }
 
+function reporteEmpresaDatos(id){
+
+  window.open("{{ URL::to('/admin/generar_reporte/datos_empresa/pdf') }}/"+ id );
+
+
+}
 function modalMensaje(titulo, mensaje){
             Swal.fire({
                 title: titulo,

@@ -3,8 +3,7 @@
 @section('content-admin-css')
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
-  
+    <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" /> 
 @stop
 <style>
     table{
@@ -19,7 +18,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Lista De Contribuyentes Registrados.</h1>
+            <h1> </h1>
           </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -41,7 +40,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Contribuyentes</h3>
+            <h3 class="card-title"> <i class="fas fa-th-list"></i> &nbsp;Lista de contribuyentes</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -83,7 +82,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Actualizar Contribuyente</h4>
+                    <h4 class="modal-title"><i class="far fa-edit"></i>&nbsp;Actualizar Contribuyente</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -93,7 +92,7 @@
                         <div class="card-body">
                         <div class="card card-green">
                         <div class="card-header">
-                        <h3 class="card-title">Datos del Contribuyente</h3>
+                        <h3 class="card-title"><i class="fas fa-server"></i> &nbsp;Datos del Contribuyente</h3>
 
                         <div class="card-tools">
                           <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -187,22 +186,13 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Datos del contribuyente</h4>
+                    <h4 class="modal-title"><i class="fas fa-server"></i> &nbsp;Datos del contribuyente</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                <div class="modal-body">
-                    <form id="formulario-ver">
-                        <div class="card-body card-green">
-                        <div class="card-header">
-                        <h3 class="card-title">Datos del Contribuyente</h3>
-
-                        <div class="card-tools">
-                          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-                        </div>
-                      </div>            
+                    <form id="formulario-ver">         
                 <!--inicia los campos del formulario ver-->
                  <!-- /.card-header -->
                  <div class="card-body">
@@ -262,8 +252,6 @@
                   <div class="form-group">
                           <label>Fax:</label>
                           <input type="number" name="fax" id="fax-ver" disabled required class="form-control" >
-                     </div>
-                   </div>
                   </div>
                 </div>
              </div>
@@ -272,9 +260,8 @@
                      </div>
                      </form>
                     </div>
-                    <div class="modal-footer justify-content-center">
-                         <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
-                    
+                    <div class="modal-footer ">
+                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     </div>
                    </div>
                   </div>
@@ -291,7 +278,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Eliminar Contribuyente</h4>
+                    <h4 class="modal-title"><i class="far fa-trash-alt"></i>&nbsp;Eliminar Contribuyente</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

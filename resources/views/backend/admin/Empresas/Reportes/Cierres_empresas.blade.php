@@ -202,11 +202,16 @@
             
         </tr>                               
         <tr>
-            <td colspan="2" align="left">
+            <td colspan="2">
                 <hr>
-                <p style="text-align: justify; text-transform: uppercase;">LA UATM CONSTATÓ QUE LA EMPRESA QUE REALIZA LA ACTIVIDAD DE {{$empresa->rubro}}, CERRÓ OPERACIONES
-                EN EL MUNICIPIO DE METAPÁN EL DÍA: {{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</p>
-                <p style="font-size:10">
+                <p style="text-align: justify; font-size:8; text-transform: uppercase;">LA UATM CONSTATÓ 
+                QUE LA EMPRESA QUE REALIZA LA ACTIVIDAD DE {{$empresa->rubro}}, 
+                CERRÓ OPERACIONES EN EL MUNICIPIO DE METAPÁN EL DÍA: {{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</p>
+                <br><br>
+            </td>
+        </tr>
+            <td colspan="2">
+                <p style="font-size:9">
                     LICDA. ROSA LISSETH ALDANA MERLOS<br>
                     JEFE DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL
                     

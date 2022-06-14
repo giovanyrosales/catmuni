@@ -167,10 +167,9 @@
 <div id="content">
 <table border="0" align="center" style="width: 600px;">
         <tr>
-            <td  align="left"><strong><u>TRASPASO</u></strong></td>
-        
+            <td align="left"><strong><u>REAPERTURA</u></strong></td>
             <td align="right">
-                RESOLUCIÓN N°:&nbsp;<strong>{{$cant_resolucion}}</strong><br><br>
+                RESOLUCIÓN N°:&nbsp;<strong>{{$cant_resolucion}}</strong>
             </td>
         </tr>
         <tr>
@@ -182,7 +181,7 @@
             <td>{{$empresa->num_tarjeta}}</td>
         </tr>
         <tr>
-            <td> <b>TRASPÁSESE:</b></td>
+            <td> <b>REAPERTURESE:</b></td>
             <td>{{$empresa->nombre}}</td>
         </tr>
         <tr>
@@ -191,7 +190,7 @@
         </tr>
         <tr>
             <td>PROPIEDAD DE:</td>
-            <td>{{$datos_traspaso->propietario_anterior}}</td>
+            <td>{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}</td>
         </tr>
         <tr>
             <td>GIRO ECONÓMICO:</td>
@@ -200,18 +199,19 @@
         <tr>
             <td>A PARTIR DEL DIA:</td>
             <td>{{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</td>
-        </tr>           
+            
+        </tr>                               
         <tr>
-            <td>A NOMBRE DE:</td>
-            <td>{{$datos_traspaso->propietario_nuevo}}</td>
-        </tr>                      
-        <tr>
-            <td colspan="2" align="left">
+            <td colspan="2">
+                <hr>
+                <p style="text-align: justify; font-size:8; text-transform: uppercase;">LA UATM CONSTATÓ
+                 QUE LA EMPRESA QUE REALIZA LA ACTIVIDAD DE {{$empresa->rubro}},
+                  REAPERTURÓ OPERACIONES EN EL MUNICIPIO DE METAPÁN EL DÍA: {{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</p>
+                <br><br>
+            </td>
+        </tr>
+            <td colspan="2">
                 <p style="font-size:9">
-                    <br>
-                    <br>
-                    <br>
-                    <br>
                     LICDA. ROSA LISSETH ALDANA MERLOS<br>
                     JEFE DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL
                     

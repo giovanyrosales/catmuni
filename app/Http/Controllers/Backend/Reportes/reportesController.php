@@ -40,7 +40,7 @@ use App\Models\MultasDetalle;
 use App\Models\MatriculasDetalleEspecifico;
 use App\Models\alertas;
 use App\Models\alertas_detalle;
-use App\Models\Cierres;
+use App\Models\CierresReaperturas;
 use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
@@ -2416,11 +2416,11 @@ public function traspaso_empresa($id){
 }
 public function cierre_empresa($id){
 
-    $datos_cierres=Cierres::select('fecha_a_partir_de','created_at')
+    $datos_cierres=CierresReaperturas::select('fecha_a_partir_de','tipo_operacion','created_at')
     ->where('id_empresa',$id)
     ->latest()->first();
 
-    $cant_resolucion=Cierres::all()
+    $cant_resolucion=CierresReaperturas::all()
     ->count();
 
     $empresa= Empresas
@@ -2460,17 +2460,33 @@ public function cierre_empresa($id){
     $diaApartirDe = $dias[(date('N', strtotime($fecha_ApartirDe))) - 1];
     /** FIN - Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
 
-    $view = View::make('backend.admin.Empresas.Reportes.Cierres_empresas', compact([
+    //** Detectar tipo de operación [Cierre][Reapertura] */
+    if($datos_cierres->tipo_operacion==='Cierre'){
+            $view = View::make('backend.admin.Empresas.Reportes.Cierres_empresas', compact([
 
-                'FechaDelDia',
-                'empresa',
-                'dia',
-                'datos_cierres',
-                'cant_resolucion',
-                'FechaDelDiaApartirDe',
-                'diaApartirDe'
+                    'FechaDelDia',
+                    'empresa',
+                    'dia',
+                    'datos_cierres',
+                    'cant_resolucion',
+                    'FechaDelDiaApartirDe',
+                    'diaApartirDe'
 
-    ]))->render();
+            ]))->render();
+    }else{
+            $view = View::make('backend.admin.Empresas.Reportes.Reaperturas_empresas', compact([
+
+                    'FechaDelDia',
+                    'empresa',
+                    'dia',
+                    'datos_cierres',
+                    'cant_resolucion',
+                    'FechaDelDiaApartirDe',
+                    'diaApartirDe'
+
+            ]))->render();
+
+         }//** Fin de detectar tipo de operación */
 
     $pdf = App::make('dompdf.wrapper');
     $pdf->getDomPDF()->set_option("enable_php", true);
@@ -2546,5 +2562,226 @@ public function traspaso_empresa_historico($id){
     return $pdf->stream();
 
 }
+
+public function cierre_empresa_historico($id){
+
+    $datos_cierres=CierresReaperturas::select('fecha_a_partir_de','tipo_operacion','created_at','id_empresa')
+    ->where('id',$id)
+    ->latest()->first();
+
+    $id_empresa= $datos_cierres->id_empresa;
+   
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+    
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+    ->find($id_empresa);
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse(Carbon::now());
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+    
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+    
+    /** Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
+    $fecha_ApartirDe= Carbon::parse($datos_cierres->fecha_a_partir_de);
+    
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $mes = $mesesEspañol[($fecha_ApartirDe->format('n')) - 1];
+    $FechaDelDiaApartirDe = $fecha_ApartirDe->format('d') . ' de ' . $mes . ' de ' . $fecha_ApartirDe->format('Y');
+    
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $diaApartirDe = $dias[(date('N', strtotime($fecha_ApartirDe))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
+
+    //** Detectar tipo de operación [Cierre][Reapertura] */
+    if($datos_cierres->tipo_operacion==='Cierre'){
+
+        $cant_resolucion=CierresReaperturas::where('tipo_operacion','Cierre')
+        ->count();
+
+        $view = View::make('backend.admin.Empresas.Reportes.Cierres_empresas', compact([
+
+                'FechaDelDia',
+                'empresa',
+                'dia',
+                'datos_cierres',
+                'cant_resolucion',
+                'FechaDelDiaApartirDe',
+                'diaApartirDe'
+
+        ]))->render();
+    }else{
+
+        $cant_resolucion=CierresReaperturas::where('tipo_operacion','Reapertura')
+        ->count();
+
+        $view = View::make('backend.admin.Empresas.Reportes.Reaperturas_empresas', compact([
+
+                'FechaDelDia',
+                'empresa',
+                'dia',
+                'datos_cierres',
+                'cant_resolucion',
+                'FechaDelDiaApartirDe',
+                'diaApartirDe'
+
+        ]))->render();
+
+    }//** Fin de detectar tipo de operación */
+
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->getDomPDF()->set_option("enable_php", true);
+    $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+
+    return $pdf->stream();
+
+}
+
+
+public function reporte_calificacion($id){
+
+    $matriculasRegistradas=MatriculasDetalle
+    ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+    ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                    
+    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
+            'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'matriculas.nombre as tipo_matricula')
+    ->where('id_empresa', "=", "$id")     
+    ->first($id);
+
+    if ($matriculasRegistradas == null)
+            { 
+                $detectorNull=1;
+            }else 
+            {
+                $detectorNull=0;
+            }
+    
+            $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+            ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                            
+            ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
+                    'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                    'matriculas.nombre as tipo_matricula')
+            ->where('id_empresa', "=", "$id")     
+            ->get();
+           
+            $monto = 0;
+            if($matriculas==null){
+               $monto = 0;
+   
+           }
+           else
+           {
+               foreach($matriculas as $dato){
+                                             $monto = $monto + $dato->monto;
+                                            } 
+           }
+   
+           $monto = number_format((float)$monto, 2, '.', ',');
+           $montoMatriculaValor='$'. $monto;
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+    ->find($id);
+
+    $ultimaCalificacion=calificacion::latest()
+    ->where('id_empresa',$id)
+    ->first();
+    //log::info($ultimaCalificacion);
+
+    $FechaDelDia = Carbon::now()->format('Y-m-d');
+
+    $view = View::make('backend.admin.Empresas.Reportes.Calificaciones', 
+            compact([
+
+                    'FechaDelDia',
+                    'empresa',
+                    'matriculasRegistradas',
+                    'detectorNull',
+                    'matriculas',
+                    'monto',
+                    'ultimaCalificacion',
+
+
+                    ]))->render();
+
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->getDomPDF()->set_option("enable_php", true);
+    $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+
+    return $pdf->stream();
+
+}
+
+public function reporte_datos_empresa($id){
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+    ->find($id);
+
+    $ultimaCalificacion=calificacion::latest()
+    ->where('id_empresa',$id)
+    ->first();
+
+    $FechaDelDia = Carbon::now()->format('Y-m-d');
+
+    $view = View::make('backend.admin.Empresas.Reportes.Datos_empresas', 
+            compact([
+
+                    'FechaDelDia',
+                    'empresa',
+                    'ultimaCalificacion',
+
+                    ]))->render();
+
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->getDomPDF()->set_option("enable_php", true);
+    $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+
+    return $pdf->stream();
+
+
+
+}
+
 //** Fin de reportes controller */    
 }

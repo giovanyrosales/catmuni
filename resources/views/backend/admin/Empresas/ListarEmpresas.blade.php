@@ -23,7 +23,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Lista de empresas registradas.</h1>
+            <h1></h1>
           </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -46,7 +46,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Empresas</h3>
+            <h3 class="card-title"><i class="fas fa-th-list"></i> &nbsp;Lista de empresas registradas.</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -85,7 +85,7 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Editar datos de la empresa</h4>
+            <h4 class="modal-title"><i class="far fa-edit"></i> &nbsp;Editar datos de la empresa</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>

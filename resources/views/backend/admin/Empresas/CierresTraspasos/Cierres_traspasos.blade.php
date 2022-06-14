@@ -20,15 +20,25 @@ function f4(){
   $('#imp_traspaso').hide();
   $('#imp_cierre').hide();
   $('#btn_ocultar_historial_traspasos').hide();
+  $('#btn_ocultar_historial_cierres').hide();
   $('#Div_historico').hide();
+  $('#Div_historico_cierres').hide();
   informacionTraspaso({{$empresa->id}});
 
   var hayTraspaso={{$Consul_traspasos}};
 
   if (hayTraspaso==1){
-         $('#historico_traspaso_emp').show();
+         $('#historico_traspaso_emp').show(); 
     }else{
         $('#historico_traspaso_emp').hide();
+        }
+
+    var hayCierre={{$Consul_cierres}};
+
+    if (hayCierre==1){
+       $('#historico_cierres_emp').show();
+    }else{
+        $('#historico_cierres_emp').hide();
         }
 
   }
@@ -40,9 +50,11 @@ function f6(){
 
 function f7(){
   $('#imp_cierre').show();
+  $('#historico_cierres_emp').show();
   }
 
 function verhistorialTraspasos(){
+  recargarTraspasos();
   $('#Div_historico').show();
   $('#btn_ocultar_historial_traspasos').show();
   $('#btn_ver_historial_traspasos').hide();
@@ -51,6 +63,18 @@ function OcultarhistorialTraspasos(){
   $('#Div_historico').hide();
   $('#btn_ocultar_historial_traspasos').hide();
   $('#btn_ver_historial_traspasos').show();
+}
+
+function verhistorialCierres(){
+  recargarCierres()
+  $('#Div_historico_cierres').show();
+  $('#btn_ocultar_historial_cierres').show();
+  $('#btn_ver_historial_cierres').hide();
+}
+function OcultarhistorialCierres(){
+  $('#Div_historico_cierres').hide();
+  $('#btn_ocultar_historial_cierres').hide();
+  $('#btn_ver_historial_cierres').show();
 }
 </script>
 <style>
@@ -188,7 +212,7 @@ function OcultarhistorialTraspasos(){
                                 <!-- /.form-group -->
                                 </div><!-- /.ROW4 -->
                                 <hr>
-                                <div class="row" id="historico_traspaso_emp"><!-- /.ROW4 -->
+                                <div class="row" id="historico_traspaso_emp"><!-- /.ROW5 -->
                                
                                     <div class="col-md-6">
                                     <div class="form-group">
@@ -213,35 +237,11 @@ function OcultarhistorialTraspasos(){
                                     </div><!-- /.col-md-6 -->
                                     <div class="col-md-12">
                                     <div class="form-group" id="Div_historico">
-                                    <table id="tab_traspasos_empresas" class="table table-bordered table-hover">
-                                        <thead>             
-                                        <tr>
-                                            <th style="width: 20%;">Anterior</th>   
-                                            <th style="width: 20%;">Nuevo</th>   
-                                            <th style="width: 20%;">Fecha</th>                          
-                                            <th style="width: 30%;">Resoluciones</th>                           
-                                        </tr>
-                                        </thead>
-                                        <tbody>     
-                                        @foreach($historico_traspasos as $dato)
-                                        <tr>
-                                        <td>{{ $dato-> propietario_anterior }}</td>
-                                        <td>{{ $dato-> propietario_nuevo }}</td>
-                                        <td>{{ $dato-> fecha_a_partir_de }}</td> 
-                                        <td>
-                                        <center>
-                                        <a class="btn btn-warning btn-xs" onclick="resolucion_traspaso_historico({{$dato->id}})" target="frameprincipal">
-                                        <i class="fas fa-print"></i>&nbsp; Generar</a>
-                                        </center>                                                                                                   
-                                        </td>                    
-                                        </tr>
-                                        @endforeach  
-                                        </tbody>            
-                                    </table>  
+                                        <div class="col-auto  p-12 text-center" id="tabla_traspasos"></div>
                                     </div>
                                   </div>
                         
-                                </div><!-- /.ROW4 -->
+                                </div><!-- /.ROW5 -->
 
                             </div> 
                         </div>
@@ -252,7 +252,7 @@ function OcultarhistorialTraspasos(){
                         <div class="container-fluid">
                             <div class="card card-danger">
                             <div class="card-header">
-                                <h3 class="card-title">II. CIERRE DE EMPRESA</h3>
+                                <h3 class="card-title">II. CIERRE Y REAPERTURA DE EMPRESA</h3>
                                 <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                 <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
@@ -335,8 +335,38 @@ function OcultarhistorialTraspasos(){
                             </div><!-- /.col-md-6 -->
                             <!-- /.form-group -->
                             </div><!-- /.ROW3 -->
+                            <hr>
+                            <div class="row" id="historico_cierres_emp"><!-- /.ROW4 -->
+                               
+                               <div class="col-md-6">
+                               <div class="form-group">
+                                   <h5>HISTÓRICO</h5>
+                               </div>
+                               </div>
+                               <div class="col-md-6">
+                               <div class="form-group">
+                                   <!-- Botón ver historial de cierres y reaperturas -->
+                                       <button type="button" id="btn_ver_historial_cierres"   onclick="verhistorialCierres()" 
+                                       class="btn btn-dark btn-sm float-right" >
+                                       <i class="fas fa-history"></i>
+                                       &nbsp; Ver historial &nbsp;</button>
+                                   <!-- /.Botón ver historial de cierres y reaperturas -->
+                                   <!-- Botón ver historial de cierres y reaperturas -->
+                                       <button type="button" id="btn_ocultar_historial_cierres"  onclick="OcultarhistorialCierres()" 
+                                       class="btn btn-secondary btn-sm float-right" >
+                                       <i class="fas fa-eye-slash"></i>
+                                       &nbsp; Ocultar historial &nbsp;</button>
+                                   <!-- /.Botón ver historial de cierres y reaperturas -->
+                               </div>
+                               </div><!-- /.col-md-6 -->
+                               <div class="col-md-12">
+                               <div class="form-group" id="Div_historico_cierres">
+                                    <div class="col-auto  p-12 text-center" id="tabla_cierres"></div>
+                               </div>
+                             </div>
+                   
+                           </div><!-- /.ROW4 -->
 
-                                      
                           </div>
                         </div>
                        </div>
@@ -371,13 +401,27 @@ function OcultarhistorialTraspasos(){
 
     <script type="text/javascript">
 
-    $(document).ready(function(){            
+        $(document).ready(function(){   
+            var id = {{$empresa->id}};
+
+            //**Para tabla cierres */
+            var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
+            $('#tabla_cierres').load(ruta);
+
+            //**Para tabla Traspasos */
+            var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
+            $('#tabla_traspasos').load(ruta);
+
             document.getElementById("divcontenedor").style.display = "block";
         });
 
         function resolucion_traspaso_historico(id){
             window.open("{{ URL::to('/admin/traspaso_empresas_historico/pdf')}}/"+ id)
         }
+        function resolucion_cierre_historico(id){
+            window.open("{{ URL::to('/admin/cierres_empresas_historico/pdf')}}/"+ id)
+        }
+        
         function ImprimirTraspaso(id)
         {
                 window.open("{{ URL::to('/admin/traspaso_empresas/pdf') }}/" + id );
@@ -442,6 +486,8 @@ function OcultarhistorialTraspasos(){
                     {
                         toastr.success('¡Propietario actualizado!');
                         f6();
+                        recargarTraspasos();
+                        document.getElementById('Apartirdeldia').value='';
                 
                     }
                     else if(response.data.success === 3){
@@ -536,12 +582,19 @@ function OcultarhistorialTraspasos(){
                    {
                        toastr.success('¡Estado de la empresa actualizado!');
                        f7();
+                       recargarCierres();
+                       document.getElementById('Cierre_Apartirdeldia').value='';
                    }
-                   else 
-                   {
-                       toastMensaje('Error al actualizar');
-                      
-                   }
+                   else if(response.data.success === 3){
+
+                    modalMensaje('Aviso', 'No ha cambiado el estado de la empresa, debe seleccionar otro.');
+                    return;
+                    }
+                      else 
+                            {
+                                toastMensaje('Error al actualizar');
+                                
+                            }
              
             })
             .catch((error) => {
@@ -550,49 +603,22 @@ function OcultarhistorialTraspasos(){
             });
     }
 
+    function recargarCierres()
+    {
+        var id={{$empresa->id}};
+        var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
+            $('#tabla_cierres').load(ruta);
+    }
+
+    function recargarTraspasos()
+    {
+        var id={{$empresa->id}};
+        var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
+            $('#tabla_traspasos').load(ruta);
+    }
 
 </script>
 
 
-<script>
-//Script para Organizar la tabla de datos // prueba
-$(document).ready(function() {
-$("#tab_traspasos_empresas").DataTable({
-"paging": true,
-"lengthChange": true,
-"searching": true,
-"ordering": false,
-"info": true,
-"autoWidth": true,
-
-"language": {
-
-"sProcessing": "Procesando...",
-"sLengthMenu": "Mostrar _MENU_ registros",
-"sZeroRecords": "No se encontraron resultados",
-"sEmptyTable": "Ningún dato disponible en esta tabla",
-"sInfo": "Registros del _START_ al _END_ de un total de _TOTAL_",
-"sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-"sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-"sInfoPostFix": "",
-"sSearch": "Buscar:",
-"sUrl": "",
-"sInfoThousands": ",",
-"sLoadingRecords": "Cargando...",
-"oPaginate": {
-"sFirst": "Primero",
-"sLast": "Último",
-"sNext": "Siguiente",
-"sPrevious": "Anterior"
-},
-"oAria": {
-"sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-"sSortDescending": ": Activar para ordenar la columna de manera descendente"
-}
-},
-"responsive": true, "lengthChange": false, "autoWidth": true,
-});
-});
-
-</script>   
+  
 @endsection

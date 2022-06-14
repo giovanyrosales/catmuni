@@ -15,7 +15,7 @@ use App\Models\alertas_detalle;
 use App\Models\Cobros;
 use App\Models\calificacion;
 use App\Models\CalificacionMatriculas;
-use App\Models\Cierres;
+use App\Models\CierresReaperturas;
 use App\Models\CobrosLicenciaLicor;
 use App\Models\CobrosMatriculas;
 use App\Models\Interes;
@@ -91,17 +91,24 @@ class EmpresaController extends Controller
         ->where('id_empresa',$id)
         ->first();
 
-        $historico_traspasos=Traspasos::orderBy('id', 'desc')
+        $Consul_cierres=CierresReaperturas::latest()
         ->where('id_empresa',$id)
-        ->get();
+        ->first();
 
-    
         if($Consul_traspasos===null){
             $Consul_traspasos=0;
             }
         else
             {$Consul_traspasos=1;
             }  
+        
+        if($Consul_cierres===null){
+                $Consul_cierres=0;
+                }
+        else
+                {
+                    $Consul_cierres=1;
+                }
 
         return view('backend.admin.Empresas.CierresTraspasos.Cierres_traspasos',
                 compact(
@@ -113,8 +120,27 @@ class EmpresaController extends Controller
                         'ConsultaEmpresa',
                         'actividadespecifica',
                         'Consul_traspasos',
-                        'historico_traspasos'
+                        'Consul_cierres',
+                        
                        ));
+    }
+
+    public function tablaCierres($id){
+
+        $historico_cierres=CierresReaperturas::orderBy('id', 'desc')
+        ->where('id_empresa',$id)
+        ->get();
+
+           
+        return view('backend.admin.Empresas.CierresTraspasos.tablas.tabla_cierres', compact('historico_cierres'));
+    }
+    public function tablaTraspasos($id){
+
+        $historico_traspasos=Traspasos::orderBy('id', 'desc')
+        ->where('id_empresa',$id)
+        ->get();
+           
+        return view('backend.admin.Empresas.CierresTraspasos.tablas.tabla_traspasos', compact('historico_traspasos'));
     }
 
     public function listarEmpresas()
@@ -492,7 +518,7 @@ public function show($id)
         ->where('id_empresa', "=", "$id")
         ->first();
 
-    $ultimo_cobro = Cierres::latest()
+    $ultimo_cobro = CierresReaperturas::latest()
         ->where('id_empresa', "=", "$id")
         ->first();
 
@@ -1255,7 +1281,7 @@ public function calculo_cobroLicor(Request $request)
 // ---------COBROS ------------------------------------------>
 
 
-
+//** Vista Cobros */
 public function cobros($id)
 {
     
@@ -1808,12 +1834,13 @@ public function calculo_calificacion(Request $request)
                         'licenciaSigno'=>$licenciaSigno,
                         'licencia'=> $licencia,
                         'matricula'=>$matricula,
-
+                        'fondoFLM'=>$fondoFLM,
                         'fondoFLMSigno'=>$fondoFLMSigno,
                         'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,
+                        'licenciaMatricula'=>$licenciaMatricula,
                         'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor,
                         'activo_imponibleColones'=>$activo_imponibleColones,
-
+                        'activo_imponible'=>$activo_imponible,
                         'categoria'=>$categoria,
                         'limite_inferior'=>$limite_inferior,
                         'fijo'=>$fijo,
@@ -1951,6 +1978,7 @@ public function calculo_calificacion(Request $request)
                     'codigo'=>$codigo,
                     'limite_superior'=>$limite_superior,
                     'id_actividad_economica'=>$id_actividad_economica,
+                    'impuesto_mensualFijo'=>$impuesto_mensualFijo,
                     'tarifaFijaDolar'=>$tarifaFijaDolar,
                     'tarifaFijaMensualDolarSigno'=>$tarifaFijaMensualDolarSigno,
                     'Total_ImpuestoFijoDolarValor'=> $Total_ImpuestoFijoDolarValor,
@@ -1963,9 +1991,12 @@ public function calculo_calificacion(Request $request)
                     'licencia'=> $licencia,
                     'matricula'=>$matricula,
                     'fondoFLMSigno'=>$fondoFLMSigno,
+                    'fondoFLM'=>$fondoFLM,
                     'licenciaMatriculaSigno'=>$licenciaMatriculaSigno,
+                    'licenciaMatricula'=>$licenciaMatricula,
                     'PagoAnualLicenciasValor'=>$PagoAnualLicenciasValor,
                     'activo_imponibleColones'=>$activo_imponibleColones,
+                    'activo_imponible'=>$activo_imponible,
     
                   ];   
         
@@ -1980,6 +2011,30 @@ public function calculo_calificacion(Request $request)
 
 //Registrar Calificación y recalificación
 public function nuevaCalificacion(Request $request){
+  log::info($request->all());
+
+  $pago_anual=round($request->pago_anualvariable,2);
+  $fondo_mensualvariable=round($request->fondo_mensualvariable,2);
+  $fondo_anual=round($request->fondo_anualvariable,2);
+  $total_impuesto_anual=round($request->total_impuesto_anualvariable,2);
+  $tarifa_colones=round($request->tarifa_colonesFijo,2);
+  $total_mat_permisos=round($request->total_mat_permisos,2);
+  $activoTotal=round($request->activo_total,2);
+  $deducciones=round($request->deducciones,2);
+  $activoImponible=round($request->activo_imponible,2);
+  $fondofp_licenciaPermisos=round($request->fondofp_licencia_permisos,2);
+
+  log::info($pago_anual);
+  log::info($fondo_mensualvariable);
+  log::info($fondo_anual);
+  log::info($total_impuesto_anual);
+  log::info($total_mat_permisos);
+  log::info($activoTotal);
+  log::info($deducciones);
+  log::info($activoImponible);
+  log::info($fondofp_licenciaPermisos);
+  log::info($tarifa_colones);
+
 
     $id_multas=1;
     $id_estado_multa=2;
@@ -2017,24 +2072,7 @@ public function nuevaCalificacion(Request $request){
                 'success'=> 0,
             ];
         }
-        
-        //** Guardar calificaciones de matriculas detalle */
-        if($matriculas!=null){
 
-            foreach($matriculas as $dato) {
-                    $rDetalle = new CalificacionMatriculas();
-                    $rDetalle->id_matriculas_detalle = $dato->id;
-                    $rDetalle->id_estado_matricula='2';
-                    $rDetalle->nombre_matricula = $dato->tipo_matricula;
-                    $rDetalle->cantidad = $dato->cantidad;
-                    $rDetalle->monto_matricula = $dato->monto;
-                    $rDetalle->pago_mensual = $dato->pago_mensual;
-                    $rDetalle->año_calificacion = $request->año_calificacion;
-                    $rDetalle->estado_calificacion = $request->estado_calificacion;
-                    $rDetalle->save();
-                
-         }
-        }
         //** /. Guardar calificaciones de matriculas detalle */  
 
                 $dato = new calificacion();
@@ -2042,16 +2080,45 @@ public function nuevaCalificacion(Request $request){
                 $dato->id_estado_licencia_licor ='2';
                 $dato->fecha_calificacion = $request->fecha_calificacion;
                 $dato->tipo_tarifa = $request->tipo_tarifa;
-                $dato->tarifa = $request->tarifa;
                 $dato->estado_calificacion = $request->estado_calificacion;
+            // $dato->tarifa_licencia =0;
                 $dato->licencia = $request->licencia;
                 $dato->matricula = $request->matricula;
-                $dato->año_calificacion = $request->año_calificacion;
-                $dato->pago_mensual = $request->pago_mensual;
-                $dato->total_impuesto = $request->total_impuesto;
+                $dato->total_mat_permisos = $total_mat_permisos;
+                $dato->fondofp_licencia_permisos = $fondofp_licenciaPermisos;
                 $dato->pago_anual_permisos = $request->pago_anual_permisos;
+                $dato->activo_total = $activoTotal;
+                $dato->deducciones = $deducciones;
+                $dato->activo_imponible = $activoImponible;
+                $dato->año_calificacion = $request->año_calificacion;
+                $dato->tarifa = $request->tarifa;
+                $dato->tarifa_colones = $tarifa_colones;
+                $dato->pago_mensual = $request->pago_mensual;
+                $dato->pago_anual = $pago_anual;
+                $dato->fondofp_mensual = $fondo_mensualvariable;
+                $dato->fondofp_anual = $fondo_anual;
+                $dato->total_impuesto = $request->total_impuesto;
+                $dato->total_impuesto_anual = $total_impuesto_anual;
                 $dato->multa_balance = $request->multaBalance;
+                $dato->codigo_tarifa = $request->codigo_tarifa;
                 $dato->save();
+
+                      //** Guardar calificaciones de matriculas detalle */
+                      if($matriculas!=null){
+
+                         foreach($matriculas as $dato) {
+                              $rDetalle = new CalificacionMatriculas();
+                              $rDetalle->id_matriculas_detalle = $dato->id;
+                              $rDetalle->id_estado_matricula='2';
+                              $rDetalle->nombre_matricula = $dato->tipo_matricula;
+                              $rDetalle->cantidad = $dato->cantidad;
+                              $rDetalle->monto_matricula = $dato->monto;
+                              $rDetalle->pago_mensual = $dato->pago_mensual;
+                              $rDetalle->año_calificacion = $request->año_calificacion;
+                              $rDetalle->estado_calificacion = $request->estado_calificacion;
+                              $rDetalle->save();
+                              }
+                         } 
                 
                //** Si hay multa **//
                if ($request->multaBalance>0){
@@ -2181,8 +2248,32 @@ public function nuevaCalificacion(Request $request){
         }
 
 public function nuevoEstado(Request $request)
-        {
-      
+    {
+           $id_empresa=$request->id;
+           $estado_empresa=$request->estado_empresa;
+
+           if($estado_empresa==1)
+           {
+                $Tipo_operacion='Cierre';
+           }else{
+                    $Tipo_operacion='Reapertura';
+                }
+            
+            $empresa= Empresas
+                ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+                ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+                ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+                ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+                ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+            
+                ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                'contribuyente.nombre as contribuyente','contribuyente.id as id_contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+                'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
+                'giro_comercial.nombre_giro',
+                'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
+                'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+                ->find($id_empresa);   
+
             $regla = array(  
                 'id' => 'required',
                 'estado_empresa' => 'required',
@@ -2199,26 +2290,32 @@ public function nuevoEstado(Request $request)
             ];
             }
             if(Empresas::where('id', $request->id)->first()){
-
-                //** Guardar registro historio en tabla traspasos */
-                $cierre = new Cierres();
+              if($estado_empresa!=$empresa->id_estado_empresa){
+                //** Guardar registro historico en tabla traspasos */
+                $cierre = new CierresReaperturas();
                 $cierre->id_empresa = $request->id;
                 $cierre->fecha_a_partir_de = $request->cierre_apartirdeldia;
+                $cierre->tipo_operacion =$Tipo_operacion;
                 $cierre->save();
-                //** FIN- Guardar registro historio en tabla traspasos */
+                //** FIN- Guardar registro historico en tabla traspasos */
 
                 Empresas::where('id', $request->id)->update([
          
                      'id_estado_empresa' => $request->estado_empresa,
 
                      
-        ]);
+                ]);
 
-        return ['success' => 1];
-    }else{
-        return ['success' => 2];
+                    return ['success' => 1];
+
+                }else{ 
+                        return ['success' => 3];
+                     }
+        }else
+            {
+                return ['success' => 2];
+            }
     }
-        }
 
 
     public function tablaMatriculas($id){
