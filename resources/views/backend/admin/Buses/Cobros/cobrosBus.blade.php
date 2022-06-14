@@ -175,22 +175,7 @@
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
             
-               <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>NÚMERO DE TARJETA:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="input-group mb-3">
-                        <input type="number"  value="{{$calificaciones->id_buses_detalle}}" name="" disabled id="id_buses_detalle" class="form-control" required >                     
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-archive"></i></span>
-                        </div>
-                        
-                  </div>
-                  <input type="number"  value="{{$empresa->id_empresa}}" name="" disabled id="id_empresa" class="form-control" required >
-               </div><!-- /.col-md-6 -->
+             
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
