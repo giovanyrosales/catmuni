@@ -218,7 +218,12 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::post('/admin/buses_detalle/editar', [BusesDetalleController::class, 'editarBus']);
     Route::post('/admin/buses_detalle/ver_buses_especificos', [BusesDetalleController::class, 'VerBusEsp']);
     Route::post('/admin/buses_detalle/eliminar', [BusesDetalleController::class, 'eliminarB']);
-
+    Route::get('/admin/buses/vista/{bus}', [BusesDetalleController::class, 'showBuses']);
+    Route::get('/admin/buses/calificacion/{bus}', [BusesDetalleController::class, 'calificacionBus']);
+    Route::get('/admin/buses/calificaciones/tablabus/{bus}', [BusesDetalleController::class,'tablaCalificacionB']);
+    Route::post('/admin/buses/calificacion/nueva' , [BusesDetalleController::class, 'guardarCalificacionBus']);
+    Route::get('/admin/buses/cobros/{bus}', [BusesDetalleController::class, 'cobrosBus']);
+    Route::post('/admin/buses/calcular-CobrosB', [BusesDetalleController::class, 'calcularCobrosBus']);
 
     //Reportes
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);

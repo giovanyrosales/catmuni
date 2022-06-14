@@ -503,11 +503,7 @@ class RotulosController extends Controller
         $emp1 = '';
         $emp2 = '';
       
-        if ($contribuyente = Contribuyentes::where('id', $rotulo->id_contribuyente)->first())
-        {
-            $contri = $contribuyente->nombre;
-            
-        }
+     
 
         if ($empresa = Empresas::where('id', $rotulo->id_empresa)->first())
         {
@@ -590,7 +586,7 @@ class RotulosController extends Controller
     }
   
  
-        return view('backend.admin.Rotulos.CalificacionRotulo', compact('id','rotulo','tarifa','totalA','totalanual','total','total1','contri','emp','emp1','emp2','contribuyente', 'empresa','calificacion'));
+        return view('backend.admin.Rotulos.CalificacionRotulo', compact('id','rotulo','tarifa','totalA','totalanual','total','total1','emp','emp1','emp2','contribuyente', 'empresa','calificacion'));
     }
 
 //Función para tabla de calificacion de rótulos

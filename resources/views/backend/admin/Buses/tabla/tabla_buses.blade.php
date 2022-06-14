@@ -16,8 +16,8 @@
                                     <tr>
                                     <td>{{$dato->empresa}}</td>
                                     <td>{{$dato->cantidad}}</td>                           
-                                    <td>{{$dato->tarifa}}</td>
-                                    <td>{{$dato->monto_pagar}}</td>
+                                    <td>${{$dato->tarifa}}</td>
+                                    <td>${{$dato->monto_pagar}}</td>
                                    
                                     <td style="text-align: center;">
                                     @if($dato->estado_especificacion=='especificada')
@@ -29,7 +29,7 @@
                                         <i class="fas fa-layer-group"></i>&nbsp; Específicar buses
                                         </button>
                                     @endif
-                                        <button type="button" class="btn btn-info btn-xs" onclick="VerBus_especifico({{$dato->id_buses_detalle}})">
+                                        <button type="button" class="btn btn-info btn-xs" onclick="VistaBus({{$dato->id_buses_detalle}})">
                                         <i class="fas fa-eye"></i>&nbsp; Ver
                                         </button>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="InformacionBus({{$dato->id_buses_detalle}})">

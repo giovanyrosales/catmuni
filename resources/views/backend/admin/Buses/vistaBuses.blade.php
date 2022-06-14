@@ -41,7 +41,7 @@
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                   <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                  <li class="breadcrumb-item active">Vista rótulos</li>
+                  <li class="breadcrumb-item active">Vista Buses</li>
                   </ol>
                 </div>
         </div>
@@ -51,7 +51,7 @@
     <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h5 class="card-category-">Vista detallada del rótulo <span class="badge badge-warning">&nbsp; {{$lista->nom_rotulo}}&nbsp;</span>&nbsp; </h5>
+            <h5 class="card-category-">Buses de la empresa <span class="badge badge-warning">&nbsp;{{$buses->empresa}} &nbsp;</span>&nbsp; </h5>
           </div>
       <!--body-->
         </div>
@@ -59,8 +59,8 @@
         <div class="row">
     <div class="col-md-4 col-sm-8">
 
-    @if($detectorNull== '0')             
-             <a href="#" onclick="CrearCalificacion({{$lista->id}} )" >
+        @if($detectorEsp == '0')             
+             <a href="#" onclick="Realizar({{$buses->id_buses_detalle}})" >
                  <div class="widget stats-widget">
                    <div class="widget-body clearfix bg-info">
                        <div class="pull-left">
@@ -70,40 +70,42 @@
                    </div>
                </div><!-- .widget -->
              </a>
+    
+             @else 
 
-   @else 
+      @if($detectorNull == '0' )
+        
+        <a href="#" onclick="CrearCalificacion({{$buses->id_buses_detalle}})" >
+                      <div class="widget stats-widget">
+                        <div class="widget-body clearfix bg-info">
+                            <div class="pull-left">
+                                <h3 class="widget-title text-white">Realizar calificación</h3>
+                            </div>
+                            <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-star-half"></i></span>
+                        </div>
+                    </div><!-- .widget -->
+        </a>
+     
+     
 
-           @if($calificacion->estado_calificacion == '')
-
-        <a href="#" onclick="CrearCalificacion({{$lista->id}})" >
+        @elseif($calificacion->estado_calificacion == 'calificado')
+        <a href="#" onclick="">
             <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-info">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Calificación</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
+               <div class="widget-body clearfix bg-info">
+                  <div class="pull-left">
+                         <h3 class="widget-title text-white">Calificación realizada &nbsp;{{$calificacion->fecha_calificacion}} </span></h3>
+                  </div>
+                  <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
                 </div>
             </div><!-- .widget -->
         </a>
-
-        @elseif($calificacion->estado_calificacion == 'calificado')
-                      <a href="#" onclick="">
-                                <div class="widget stats-widget">
-                                    <div class="widget-body clearfix bg-info">
-                                        <div class="pull-left">
-                                            <h3 class="widget-title text-white">Calificación realizada &nbsp;{{$calificacion->fecha_calificacion}} </span></h3>
-                                        </div>
-                                        <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
-                                    </div>
-                                </div><!-- .widget -->
-                                </a>
-                      @endif
+      @endif
  
-              @endif
+   @endif
     </div>
    
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="informacionCierre({{$lista->id}})" >
+        <a href="#" onclick="" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -115,23 +117,9 @@
         </a>
     </div>
 
-    @if($detectorNull== '0')
-    <div class="col-md-4 col-sm-8">
-    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
-    <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-green">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>
-                </div>
-            </div><!-- .widget -->
-        </a>
-    </div>
-        @else
 
-        <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="CobrosR({{$lista->id}})" >
+    <div class="col-md-4 col-sm-8">
+        <a href="#" onclick="CobrosB({{$buses->id_buses_detalle}} )" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-green">
                     <div class="pull-left">
@@ -141,7 +129,7 @@
                 </div>
             </div><!-- .widget -->
         </a>
-        @endif
+     
     </div>
 
 </div>
@@ -157,7 +145,7 @@
     <form class="form-horizontal" id="form1">
       <div class="card card-success">
         <div class="card-header">
-          <h3 class="card-title">Reporte datos del Rótulo</h3>
+          <h3 class="card-title">Reporte de buses</h3>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
@@ -171,69 +159,35 @@
                     <tbody>
                     
                       <tr>
-                        <th>Nombre</th>
-                        <td >{{$lista->nom_rotulo}}</td>
+                        <th>Fecha de apertura </th>
+                        <td>{{$buses->fecha_apertura}}</td>
                       </tr>
 
                       <tr>
-                        <th>Actividad económica</th>
-                        <td>{{$lista->actividad_economica}}</td>
+                        <th>Nombre de la empresa</th>
+                        <td>{{$buses->empresa}}</td>
                       </tr>
 
                       <tr>
-                        <th>Empresa</th>
-                        <td>{{$lista->empresas}}</td>
+                        <th>Contribuyente</th>
+                        <td>{{$buses->contribuyente}} {{$buses->apellido}}</td>
+                      </tr>
+
+                      <tr>
+                        <th>Cantidad Buses</th>
+                        <td>{{$buses->cantidad}}</td>
+                      </tr>
+
+                      <tr>
+                        <th>Tarifa</th>
+                        <td>${{$buses->tarifa}}</td>
                       </tr>
                       
                       <xtr>
-                        <th>Fecha apertura</th>
-                        <td>{{$lista->fecha_apertura}} </td>
+                        <th>Monto total a pagar</th>
+                        <td>${{$buses->monto_pagar}}</td>
                       </tr>
 
-                      <tr>
-                        <th>Permiso Instalación</th>
-                        <td>{{$lista->permiso_instalacion}}</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Dirección del rótulo</th>
-                        <td>{{$lista->direccion}}</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Estado</th>
-                        <td>{{$lista->medidas}}</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Total Medidas</th>
-                        <td>{{$lista->total_medidas}}m²</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Caras del rótulo</th>
-                        <td>{{$lista->total_caras}}</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Coordenadas</th>
-                        <td>{{$lista->coordenadas}}</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Inspección realizada por</th>
-                        <td>{{$lista->nom_inspeccion}}</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Cargo</th>
-                        <td>{{$lista->cargo_inspeccion}}</span></td>
-                      </tr>
-
-                      <tr>
-                        <th>Imagen</th>
-                        <td><img src="{{ asset('archivos/' .$lista->imagen) }}"/></span></td>
-                      </tr>
 
                     </tbody>
                   </form>
@@ -283,8 +237,8 @@
                                 <div class = "row">
                                   <div class = "col-md-6">
                                     <div class = "form-group">
-                                      <label>Nombre del Rótulo: <span class="badge badge"> {{$lista->nom_rotulo}}&nbsp;</span></label>
-                                      <label>Dirección del rótulo: <span class="badge badge"> {{$lista->direccion}}&nbsp;</span>&nbsp;</label>
+                                      <label>Nombre del Rótulo: <span class="badge badge"> &nbsp;</span></label>
+                                      <label>Dirección del rótulo: <span class="badge badge">&nbsp;</span>&nbsp;</label>
                                       
                                      </div>
                                    </div>
@@ -368,9 +322,9 @@
                                             id="select-contribuyente-traspaso" 
                                             title="-- Seleccione un registro --"
                                             >
-                                            @foreach($contribuyentes as $contribuyente)
-                                            <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
-                                            @endforeach
+                                            
+                                            <option value=""> </option>
+                                           
                                             </select>
                                       </div>
                                     <!-- finaliza select estado-->  
@@ -427,7 +381,7 @@
 
     <script src="{{ asset('js/jquery.dataTables.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.js') }}" type="text/javascript"></script>
-
+    <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
@@ -454,7 +408,7 @@
     function CrearCalificacion(id)
     {
       openLoading();
-      window.location.href="{{ url('/admin/Rotulos/calificacion') }}/"+id;
+      window.location.href="{{ url('/admin/buses/calificacion') }}/"+id;
     }
         
     function informacionCierre(id)
@@ -512,7 +466,7 @@
     function guardarCierre()
     {
       //Llamar la variable id desde el controlador
-      var id = {{$id}};
+     
       var estado = document.getElementById('select-estado-cierre').value;
       var fecha_cierre = document.getElementById('fecha_cierre').value;
     
@@ -563,7 +517,7 @@
     function guardarTraspaso()
     {
      
-      var id = {{ $id}};
+     
       var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
 
       if(contribuyente === ''){
@@ -608,11 +562,18 @@
       return;
     }
 
-    function CobrosR(id)
+    function Realizar()
+    {
+      toastr.warning('Debe especificar buses primero');
+      return;
+    }
+
+
+    function CobrosB(id)
     {
       openLoading();
 
-      window.location.href="{{ url('/admin/rotulos/cobros') }}/"+id;
+      window.location.href="{{ url('/admin/buses/cobros') }}/"+id;
     }
 
     function NoCobrar()

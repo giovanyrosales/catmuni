@@ -230,13 +230,7 @@
                         <input type="number" name="matricula_comercio" id="matricula_comercio-editar" class="form-control"  placeholder="Matricula de Comercio">
                       </div>
               <!-- /.form-group -->
-              <!-- Inicia Select Giro Comercial -->
-             
-               
-              <!-- finaliza select Giro Comercial-->
-              <!-- Select estado - live search -->
-               
-        <!-- finaliza select estado-->
+        
       <!-- cierra div de row-->       
           
 
