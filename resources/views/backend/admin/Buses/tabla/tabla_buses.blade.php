@@ -29,9 +29,19 @@
                                         <i class="fas fa-layer-group"></i>&nbsp; Específicar buses
                                         </button>
                                     @endif
+                                    
+                                    @if($dato->estado_especificacion=='especificada')
+
                                         <button type="button" class="btn btn-info btn-xs" onclick="VistaBus({{$dato->id_buses_detalle}})">
                                         <i class="fas fa-eye"></i>&nbsp; Ver
                                         </button>
+
+                                    @else
+                                    <button type="button" class="btn btn-info btn-xs" onclick="Realizar({{$dato->id_buses_detalle}})">
+                                        <i class="fas fa-eye"></i>&nbsp; Ver
+                                        </button>
+                                    @endif
+
                                         <button type="button" class="btn btn-primary btn-xs" onclick="InformacionBus({{$dato->id_buses_detalle}})">
                                          <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
@@ -85,6 +95,15 @@
             "responsive": true, "lengthChange": false, "autoWidth": false,
         });
     });
+
+</script>
+
+<script>
+function Realizar()
+    {
+      toastr.warning('Debe especificar buses primero');
+      return;
+    }
 
 </script>
  

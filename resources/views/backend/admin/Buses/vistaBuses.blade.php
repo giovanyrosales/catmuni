@@ -72,9 +72,7 @@
                     </div><!-- .widget -->
         </a>
      
-     
-
-        @elseif($calificacion->estado_calificacion == 'calificado')
+      @elseif($calificacion->estado_calificacion == 'calificado')
         <a href="#" onclick="">
             <div class="widget stats-widget">
                <div class="widget-body clearfix bg-info">
@@ -563,12 +561,7 @@
       return;
     }
 
-    function Realizar()
-    {
-      toastr.warning('Debe especificar buses primero');
-      return;
-    }
-
+    
 
     function CobrosB(id)
     {
