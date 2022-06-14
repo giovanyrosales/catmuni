@@ -175,7 +175,19 @@
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
             
-             
+               <!-- /.form-group -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                        <label hidden>NÚMERO DE TARJETA:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-3">
+                  <div class="input-group mb-3">
+                        <input type="number" hidden value="{{$rotulo->id}}" name="" disabled id="id_rotulos" class="form-control" required >                     
+                       
+                  </div>
+                  <input type="number" hidden value="{{$empresa->id_empresa}}" name="" disabled id="id_empresa" class="form-control" required >
+               </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">

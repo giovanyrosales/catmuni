@@ -59,20 +59,6 @@
         <div class="row">
     <div class="col-md-4 col-sm-8">
 
-        @if($detectorEsp == '0')             
-             <a href="#" onclick="Realizar({{$buses->id_buses_detalle}})" >
-                 <div class="widget stats-widget">
-                   <div class="widget-body clearfix bg-info">
-                       <div class="pull-left">
-                           <h3 class="widget-title text-white">Realizar calificación</h3>
-                       </div>
-                       <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-star-half"></i></span>
-                   </div>
-               </div><!-- .widget -->
-             </a>
-    
-             @else 
-
       @if($detectorNull == '0' )
         
         <a href="#" onclick="CrearCalificacion({{$buses->id_buses_detalle}})" >
@@ -101,7 +87,7 @@
         </a>
       @endif
  
-   @endif
+  
     </div>
    
     <div class="col-md-4 col-sm-8">
