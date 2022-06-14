@@ -94,6 +94,9 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::post('/admin/empresas/show/cierre', [EmpresaController::class,'nuevoEstado']);
     Route::post('/admin/empresas/show/informacion', [EmpresaController::class,'infoTraspaso']);
 
+    Route::get('/admin/empresas/cierres_traspasos/{empresa}', [EmpresaController::class,'cierres_traspasos']);
+    Route::get('/admin/empresas/cierres/tabla/{empresa}', [EmpresaController::class,'tablaCierres']);
+    Route::get('/admin/empresas/traspasos/tabla/{empresa}', [EmpresaController::class,'tablaTraspasos']);
 
     // --- CONTRIBUYENTES ---
     Route::get('/admin/nuevo/contribuyentes/Listar', [ContribuyentesController::class,'listarContribuyentes'])->name('admin.listarContribuyentes.index');
@@ -228,4 +231,16 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     //Reportes
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);
     Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso']);
-    Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'notificacion']);
+    Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion']);
+    Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor']);
+    Route::get('/admin/estado_cuenta_aparatos/pdf/{f1}/{f2}/{ap}/{id}', [reportesController::class, 'estado_cuenta_aparatos']);
+    Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas']);
+    Route::get('/admin/estado_cuenta_maquinas/pdf/{f1}/{f2}/{im}/{ti}/{id}', [reportesController::class, 'estado_cuenta_maquinas']);
+    Route::get('/admin/estado_cuenta_mesas/pdf/{f1}/{f2}/{ime}/{ti}/{id}', [reportesController::class, 'estado_cuenta_mesas']);
+    Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa']);
+    Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa']);
+    Route::get('/admin/traspaso_empresas_historico/pdf/{id}', [reportesController::class, 'traspaso_empresa_historico']);
+    Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']);
+    Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
+    Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
+    

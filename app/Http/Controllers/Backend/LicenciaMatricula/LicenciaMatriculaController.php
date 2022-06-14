@@ -51,6 +51,7 @@ class LicenciaMatriculaController extends Controller
         $regla = array(
             'nombre' => 'Required',
             'monto' => 'Required',
+            'tarifa' => 'Required',
             'tipo_permiso' => 'Required',
         );
 
@@ -62,6 +63,7 @@ class LicenciaMatriculaController extends Controller
             $dato = new LicenciaMatricula();
             $dato->nombre = $request->nombre;
             $dato->monto = $request->monto;
+            $dato->tarifa = $request->tarifa;
             $dato->tipo_permiso = $request->tipo_permiso;
 
             if($dato->save()){
@@ -96,11 +98,12 @@ class LicenciaMatriculaController extends Controller
 
     public function editarLM(Request $request)
     {
-       
+        log::info($request->all());
        $regla = array(
            'id' => 'required',
            'nombre' => 'required',
            'monto' => 'required',
+           'tarifa' => 'required',
            'tipo_permiso' => 'required',
                     
         );
@@ -115,6 +118,7 @@ class LicenciaMatriculaController extends Controller
                 LicenciaMatricula::where('id', $request->id)->update([
                    'nombre' => $request->nombre,
                    'monto' => $request->monto,
+                   'tarifa' => $request->tarifa,
                    'tipo_permiso' => $request->tipo_permiso,
     
                 ]);

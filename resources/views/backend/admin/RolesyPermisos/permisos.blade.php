@@ -100,7 +100,7 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
                     <button type="button" class="btn btn-success" onclick="nuevoUsuario()">Guardar</button>
                 </div>
             </div>
@@ -171,7 +171,7 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
                     <button type="button" class="btn btn-primary" onclick="actualizar()">Guardar</button>
                 </div>
             </div>

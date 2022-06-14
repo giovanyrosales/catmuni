@@ -221,7 +221,8 @@ class MatriculasDetalleController extends Controller
      //*** Inicia editar matrícula y específica.****//
      public function editarMatricula(Request $request)
     {
-        
+        $Detectar_calificacion_martricula=CalificacionMatriculas::where('id_matriculas_detalle', $request->id_editar)
+        ->get();
 
         log::info($request->all());
        
@@ -297,9 +298,20 @@ class MatriculasDetalleController extends Controller
                                 $pago_mensual_total=$tarifa*$request->cantidad_editar;
                                 //*Fin Operación
                                 if($request->cantidad_editar==0){
-                                            $tasa = MatriculasDetalle::find($request->id_editar);
-                                            $tasa->delete();
+
+                                            if($Detectar_calificacion_martricula=!null){
+
+                                                $delete = CalificacionMatriculas::where('id_matriculas_detalle', $request->id_editar);
+                                                $delete->delete();
+                            
+                                                $tasa = MatriculasDetalle::find($request->id);
+                                                $tasa->delete();
+                            
+                                            }else{
                                             
+                                                    $tasa = MatriculasDetalle::find($request->id_editar);
+                                                    $tasa->delete();
+                                                }
                                     }
                                     else
                                         {
@@ -323,9 +335,16 @@ class MatriculasDetalleController extends Controller
                                 MatriculasDetalleEspecifico::where('id_matriculas_detalle', $request->id_matricula_detalle_editar)
                                 ->delete();
                                 if($request->cantidad_editar==0){
+                                    if($Detectar_calificacion_martricula=!null){
+                                        $delete = CalificacionMatriculas::where('id_matriculas_detalle', $request->id_editar);
+                                        $delete->delete();
+
                                     $tasa = MatriculasDetalle::find($request->id_editar);
                                     $tasa->delete();
-                                    
+                                    }else{
+                                        $tasa = MatriculasDetalle::find($request->id_editar);
+                                        $tasa->delete();
+                                    }
                             }
                                 }
                                 DB::commit();
@@ -910,7 +929,7 @@ public function calculo_cobroMesas(Request $request){
             return ['success' => 2];
             
 
-        }else{
+            }else{
 
             return [
                 'success' => 1,

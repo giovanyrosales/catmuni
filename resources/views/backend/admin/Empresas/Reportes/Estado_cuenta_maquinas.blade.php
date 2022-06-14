@@ -174,49 +174,47 @@
                 <p>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
                 Dirección:&nbsp;{{$empresa->direccionCont}}<br>
                 Cuenta Corriente N°:&nbsp;{{$empresa->num_tarjeta}}<br>
-                Empresa o Negocio:&nbsp;{{$empresa->nombre}}<br><br>
-
+                Empresa o Negocio:&nbsp;{{$empresa->nombre}}/Matrícula Maquinas electrónicas <br><br>
+     
                 Estimado(a) señor (a):</p>
                 <p style="text-indent:20">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                     motivo de la presente es para manifestarle que su estado de cuenta en esta
                     Municipalidad es el siguiente:<br>
-            <strong>Impuestos Municipales</strong></p>
-            <p style="font-size:10">*Intereses cálculados con base a tabla proporcionados por el banco nacional de reserva.</p>
+                <strong>Impuestos Municipales</strong></p>
+                <p style="font-size:10">*Intereses cálculados con base a tabla proporcionados por el banco nacional de reserva.</p>
             </td>
-        <tr>
-            <td colspan="2"><hr></td>
-        </tr>
         <tr>
             <th scope="col">Periodo: &nbsp;&nbsp;desde&nbsp; {{$InicioPeriodo}}&nbsp;</th>
             <th scope="col">&nbsp;&nbsp;hasta&nbsp; {{$PagoUltimoDiaMes}}&nbsp;</th>    
         </tr>
         <tr>
-            <td align="right">IMPUESTOS</td>
-            <td align="center">{{$impuesto_año_actual}}</td>
+            <td align="right">TASAS POR SERVICIO MORA</td>
+            <td align="center">${{$impuestos_mora}}</td>
         </tr>
         <tr>
-            <td align="right">IMPUESTO MORA</td>
-            <td align="center">{{$impuestos_mora}}</td>
+            <td align="right">TASAS POR SERVICIO</td>
+            <td align="center">${{$impuesto_año_actual}}</td>
         </tr>
         <tr>
             <td align="right">INTERESES MORATORIOS</td>
-            <td align="center">{{$InteresTotal}}</td>
+            <td align="center">${{$InteresTotal}}</td>
         </tr>
         <tr>
-            <td align="right">MULTAS POR BALANCE ({{$Cantidad_multas}})</td>
-            <td align="center">{{$monto_pago_multaBalance}}</td>
+            <td align="right">MATRÍCULA</td>
+            <td align="center">${{$monto_pago_matricula}}</td>
         </tr>
-        <tr>
-            <td align="right">MULTAS P. EXTEMPORANEOS</td>
-            <td align="center">{{$totalMultaPagoExtemporaneo}}</td>
-        </tr>
+
         <tr>
             <td align="right">FONDO F. PATRONALES 5%</td>
-            <td align="center">{{$fondoFPValor}}</td>
+            <td align="center">${{$fondoFPValor}}</td>
+        </tr>
+        <tr>
+            <td align="right">MUL. MATRÍCULA</td>
+            <td align="center">${{$multa}}</td>
         </tr>
         <tr>
             <th scope="row">Total de Impuestos Adeudados</th>
-            <th align="center">{{$totalPagoValor}}</th>
+            <th align="center">${{$totalPagoValor}}</th>
         </tr>
         <tr>
             <td><hr></td>

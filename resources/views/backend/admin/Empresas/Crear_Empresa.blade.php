@@ -49,7 +49,7 @@
 
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Formulario de datos de la empresa.</h3>
+            <h3 class="card-title"><i class="far fa-plus-square"></i> &nbsp;Formulario de datos de la empresa.</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -260,7 +260,7 @@
           <!-- /.row -->
           </div>
          <!-- /.card-body -->
-         <div class="card-footer">
+         <div class="modal-footer">
                   <button type="button" class="btn btn-success float-right" onclick="nuevo()">Guardar</button>
                   <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
           </div>

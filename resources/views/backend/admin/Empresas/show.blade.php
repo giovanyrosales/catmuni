@@ -16,21 +16,7 @@
  <!-- Para vista detallada fin -->
 
 @stop
-<script>
-function reporte_notificacion(id){
-    
-        var f1=(document.getElementById('f1').value);
 
-        var f2=(document.getElementById('fechahoy').value);
-
-        var ti={{$Tasainteres}};
-        var f3=(document.getElementById('fechahoy').value);
-        var tf='hidden';
-    
-      window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + tf + "/" + id );
-    
-    }
-</script>
 
 <style>
     table{
@@ -52,7 +38,7 @@ function reporte_notificacion(id){
       <div class="container-fluid">
        <div class="row mb-2">
          <div class="col-sm-6">
-            <h4> </h4>
+
            </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
@@ -66,7 +52,7 @@ function reporte_notificacion(id){
       <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h5 class="card-category-">Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; </h5>
+            <h5 class="card-category-"><i class="fas fa-sitemap"></i> &nbsp;Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; </h5>
           </div>
       <!--body-->
       <div class="card-body">
@@ -82,7 +68,7 @@ function reporte_notificacion(id){
             <div class="small-box bg-info">
               <div class="inner">
                 <h3> </h3>
-                <p> Avisos: <span class="badge badge-pill badge-light">0</span></p>
+                <p> Avisos: <span class="badge badge-pill badge-light">{{$alerta_aviso}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -96,7 +82,7 @@ function reporte_notificacion(id){
             <div class="small-box bg-warning">
               <div class="inner">
                 <h3> </h3>
-                <p>Notificaciones: <span class="badge badge-pill badge-light">0</span></p>
+                <p>Notificaciones: <span class="badge badge-pill badge-light">{{$alerta_notificacion}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -130,7 +116,7 @@ function reporte_notificacion(id){
   
         <div class="col-md-4 col-sm-8">
           @if($CE==1)
-                    <a href="#" >
+                    <a href="#" onclick="NoCalificarCE()" >
                             <div class="widget stats-widget">
                               <div class="widget-body clearfix bg-light">
                                   <div class="pull-left">
@@ -181,7 +167,7 @@ function reporte_notificacion(id){
           @endif      
         </div>
         <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="informacionTraspaso({{$empresa->id}})" >
+        <a href="#" onclick="cierreytraspaso({{$empresa->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -193,6 +179,7 @@ function reporte_notificacion(id){
           </a>
         </div>
           <div class="col-md-4 col-sm-8">
+          @if($CE==0)
           <a href="#" onclick="matriculas()" >
                   <div class="widget stats-widget">
                       <div class="widget-body clearfix bg-warning">
@@ -203,6 +190,18 @@ function reporte_notificacion(id){
                       </div>
                   </div><!-- .widget -->
               </a>
+            @else
+            <a href="#" onclick="NoMartriculas()" >
+                  <div class="widget stats-widget">
+                      <div class="widget-body clearfix bg-light">
+                          <div class="pull-left">
+                              <h3 class="widget-title text-black">Matrículas</h3>
+                          </div>
+                          <span class="pull-right big-icon watermark"><i class="fas fa-file-signature"></i>&nbsp;<i class="fas fa-lock"></i></span>
+                      </div>
+                  </div><!-- .widget -->
+              </a>
+              @endif
           </div>
         <div class="col-md-4 col-sm-8">
           <a href="#" onclick="reporteAviso({{$empresa->id}})">
@@ -216,22 +215,35 @@ function reporte_notificacion(id){
             </div><!-- .widget -->
         </a>
     </div>
-
+   
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="reporte_notificacion({{$empresa->id}})">
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-purple">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Generar notificación</h3>
-                        <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
+              @if($CE==0)
+                <a href="#" onclick="reporte_notificacion({{$empresa->id}})">
+                  <div class="widget stats-widget">
+                    <div class="widget-body clearfix bg-purple">
+                     <div class="pull-left">
+                     <h3 class="widget-title text-white">Generar notificación</h3>
+                     <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
                         <input type="hidden" id="f1" value="{{$ultimoCobroEmpresa}}" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-envelope-open-text"></i></span>
                 </div>
+              @else
+                <a href="#" onclick="NoNotificar()">              
+                 <div class="widget stats-widget">
+                  <div class="widget-body clearfix bg-light">
+                    <div class="pull-left">
+                    <h3 class="widget-title text-black">Generar notificación</h3>
+                        <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
+                        <input type="hidden" id="f1" value="{{$ultimoCobroEmpresa}}" class="form-control" >
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-lock"></i></span>
+                </div>
+                @endif
             </div><!-- .widget -->
-        </a>
-
+      </a>
     </div>
+           
     <div class="col-md-4 col-sm-8">
     @if($CE==1)
       <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
@@ -359,7 +371,7 @@ function reporte_notificacion(id){
           <!-- Termina sección cargar datos empresa -->
         
           <div class="card-footer">
-            <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="ListarEmpresas()"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
+            <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="reporteEmpresaDatos({{$empresa->id}})"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
           </div>
         </div>
       </form>
@@ -417,9 +429,6 @@ function reporte_notificacion(id){
                     <div class="card-description">
                      <span class="badge badge-pill badge-dark">Dirección: </span> <br>  {{$empresa->direccionCont}}
                     </div>
-                    <div class="card-footer">
-                     <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="ListarEmpresas()"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
-                   </div>
                   </div><!--Termino ROW -->
 
     
@@ -450,383 +459,6 @@ function reporte_notificacion(id){
 
 <!-- Termina vista detallada-->
 
-<!--Inicia Modal Cierres y Traspasos--------------------------------------------------------------->
-
-<div class="modal fade" id="modalCierresTraspasos">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Cierre y traspaso de empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="formulario-Traspaso">
-            @csrf
-              <div class="card-body">
-<!-- Inicia Formulario Cierres y Traspasos--> 
-<section class="content">
-      <div class="container-fluid">
-       
-      <!-- /.card-header -->
-         <div class="card card-green">
-            <div class="card-header">
-                <h3 class="card-title">FORMULARIO DE CIERRE Y TRASPASO.</h3>
-
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-                  </div>
-            </div>
-        <!-- /.card-header -->
-
-
-        <!-- Campos del formulario Cierres y Traspasos -->
-        <div class="card border-success mb-3"><!-- Panel TRASPASO DE EMPRESA -->
-           <div class="card-header text-success"><label>II. TRASPASO DE EMPRESA</label></div>
-              <div class="card-body">
-
-                <div class="row"><!-- /.ROW2 -->
-
-                  <!-- /.form-group -->
-                  <div class="col-md-6">
-                      <div class="form-group">
-                            <label>TRASPASO A NOMBRE DE:</label>
-                      </div>
-                    </div><!-- /.col-md-6 -->
-                    <!-- /.form-group -->
-
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <!-- Select estado - live search -->
-                              <div class="input-group mb-9">
-                                    <select 
-                                    required
-                                    class="form-control"
-                                    data-style="btn-success"
-                                    data-show-subtext="true" 
-                                    data-live-search="true"   
-                                    id="select-contribuyente-traspaso" 
-                                    title="-- Seleccione un registro --"
-                                    >
-                                    @foreach($contribuyentes as $contribuyente)
-                                    <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
-                                    @endforeach
-                                    </select>
-                              </div>
-                            <!-- finaliza select estado-->  
-                      </div><!-- /.col-md-3 -->
-                    </div><!-- /.form-group -->
-                  <!-- /.form-group -->
-
-                </div><!--  /.ROW2 -->
-
-              <!-- /.form-group -->
-              <div class="row"><!-- /.ROW3 -->
-              <!-- /.form-group -->
-              <div class="col-md-6">
-                  <div class="form-group">
-                       
-                    <!-- Botón Imprimir Traspaso-->
-                    <br>
-                      <button type="button"  onclick="ImpimirTraspaso()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
-                        &nbsp; Imprimir resolución de traspaso&nbsp;</button>
-                      </button>
-                    <!-- /.Botón Imprimir Traspaso -->
-
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                      <!-- Botón Guardar Traspaso -->
-                        <br>
-                        <button type="button"  onclick="guardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
-                        &nbsp; Guardar Traspaso &nbsp;</button>
-                      <!-- /.Botón Guardar Traspaso -->
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              </div><!-- /.ROW3 -->
-
-          </div><!--  /.card-header text-success -->
-        </div> <!-- /.Panel CIERRE DE EMPRESA --> 
-
-     
-         <div class="card border-success mb-3"><!-- Panel CIERRE DE EMPRESA -->
-           <div class="card-header text-success"><label>II. CIERRE DE EMPRESA</label></div>
-              <div class="card-body">
-
-                <div class="row"><!-- /.ROW2 -->
-
-                  <!-- /.form-group -->
-                  <div class="col-md-6">
-                      <div class="form-group">
-                            <label>ESTADO DE LA EMPRESA:</label>
-                      </div>
-                    </div><!-- /.col-md-6 -->
-                    <!-- /.form-group -->
-
-                      <div class="col-md-3">
-                          <div class="form-group">
-                            <!-- Select estado - live search -->
-                              <div class="input-group mb-9">
-                                    <select 
-                                    required
-                                    class="form-control"
-                                    data-style="btn-success"
-                                    data-show-subtext="true" 
-                                    data-live-search="true"   
-                                    id="select-estado_empresa" 
-                                    title="-- Seleccione el estado  --"
-                                    >
-                                      @foreach($estadoempresas as $estado)
-                                      <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
-                                      @endforeach 
-                                    </select>
-                              </div>
-                            <!-- finaliza select estado-->  
-                      </div><!-- /.col-md-3 -->
-                    </div><!-- /.form-group -->
-                  <!-- /.form-group -->
-
-                </div><!--  /.ROW2 -->
-
-              <!-- /.form-group -->
-              <div class="row"><!-- /.ROW3 -->
-              <!-- /.form-group -->
-              <div class="col-md-6">
-                  <div class="form-group">
-                       
-                    <!-- Botón Imprimir Cierre -->
-                    <br>
-                      <button type="button"  onclick="ImpimirCierre()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
-                        &nbsp; Imprimir resolución de Cierre&nbsp;</button>
-                      </button>
-                    <!-- /.Botón Imprimir Cierre -->
-
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                      <!-- Botón Guardar Traspaso -->
-                        <br>
-                        <button type="button"  onclick="guardarEstado()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
-                        &nbsp; Guardar Cierre &nbsp;</button>
-                      <!-- /.Botón Guardar Traspaso -->
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              </div><!-- /.ROW3 -->
-
-          </div><!--  /.card-header text-success -->
-        </div> <!-- /.Panel CIERRE DE EMPRESA --> 
-
-  <!-- Finaliza campos del formulario Cierres y Traspasos -->
-  
-         <!-- /.card-body -->
-         <div class="card-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-          </div>
-         <!-- /.card-footer -->
-
-         </div><!-- Card-body -->
-        </div><!-- /.card Green-->
-      </div><!-- /.container-fluid -->
-    </section>
-
-       </form> <!-- /.formulario-Calificacion2 -->
-      </div> <!-- /.Card-body -->
-   </div> <!-- /.modal-dialog modal-xl -->
-  </div> <!-- /.modal-content -->
- </div> <!-- /.modal-body -->
- </div> <!-- /.modalCIerres y traspasos -->
-
-<!-- Finaliza Modal Cierres y Traspasos--------------------------------------------------------->
-
-
-
-
-<!--Inicia Modal Recalificacion--------------------------------------------------------------------->
-
-<div class="modal fade" id="modalRecalificacion">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Registrar cobro a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="formulario-Recalificacion">
-              <div class="card-body">
-
-  <!-- Inicia Formulario Recalificación--> 
-   <section class="content">
-      <div class="container-fluid">
-        <!-- SELECT2 EXAMPLE -->
-
-        <form class="form-horizontal" id="formulario-Recalificacion">
-        @csrf
-
-          <div class="card card-green">
-            <div class="card-header">
-            <h3 class="card-title">Datos generales.</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-            </div>
-          </div>
-          <!-- /.card-header -->
-          <!-- Campos del formulario de recalificación -->
-          <div class="card-body"><!-- Card-body -->
-            <div class="row"><!-- /.ROW1 -->
-            
-             <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Número de tarjeta:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha de último pago:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                  @if($detectorCobro=='0')
-                        <input  type="text" disabled  name="ultimo_cobro" class="form-control" required >
-                        <input type="hidden" name="id" id="id-editar" class="form-control text-success" >
-                  @else
-                              <input  type="text" value="{{ $ultimo_cobro->fecha_pago }}" disabled  name="ultimo_cobro" class="form-control text-success" required >
-                              <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  @endif
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha hasta donde pagará:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input  type="date" name="nombre" id="nombre-editar" class="form-control" required >
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-              <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Giro Comercial:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- Inicia Select Giro Comercial -->
-               <div class="col-md-6">
-                      <div class="form-group">
-                            <!-- Select Giro Comercial -live search -->
-                                <div class="input-group mb-9">
-                                <select 
-                                required 
-                                disabled
-                                class="form-control" 
-                                data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial-editar" 
-                                required
-                                >
-                                  @foreach($giroscomerciales as $giro)
-                                  <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
-                                  </option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                          </div>
-                  </div>
-              <!-- finaliza select Giro Comercial-->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Tasa de interes:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="text" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-                <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Fecha del interes moratorio:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input type="date" name="nombre" id="nombre-editar" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-               <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Cantidad de meses a pagar:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
-                  <div class="form-group">
-                        <input type="number" value="cant_meses" name="cant_meses" id="cant_meses" class="form-control" >
-                        <input type="hidden" name="id" id="id-editar" class="form-control" >
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-              
-            </div> <!-- /.ROW1 -->
-          <!-- /.col1 -->
-          </div> <!-- /.Card-body -->
-
-        <!-- Finaliza campos del formulario Recalificacion -->
-         <!-- /.card-body -->
-          <div class="card-footer">
-            <button type="button" class="btn btn-success float-right" onclick="RegistrarCobro()"><i class="far fa-money-bill-alt"></i>&nbsp;Registrar Cobro&nbsp;</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-          </div>
-         <!-- /.card-footer -->
-         </div>
-        </div>
-      <!-- /.card -->
-      </form>
-      <!-- /form -->
-      </div>
-    <!-- /.container-fluid -->
-    </section>
-
-     </form> <!-- /.formulario-Recalificacion -->
-    </div> <!-- /.Card-body -->
-   </div> <!-- /.modalRecalificacion -->
-  </div> <!-- /.modal-dialog modal-xl -->
- </div> <!-- /.modal-content -->
-</div> <!-- /.modal-body -->
-
-<!-- Finaliza Modal Recalificacion------------------------------------------------------------------>
-
 
 
 
@@ -846,91 +478,10 @@ function reporte_notificacion(id){
 
 
 <script type="text/javascript">
-
-function guardarTraspaso(){
-
-  
-      
-      var id = {{ $id}};
-      var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
-
-      if(contribuyente === ''){
-            toastr.error('El dato contribuyente es requerido');
-            return;
-        }
-
-        openLoading();
-            var formData = new FormData();
-            formData.append('id', id);
-            formData.append('contribuyente', contribuyente);
-
-            axios.post('/admin/empresas/show/traspaso', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
-
-                if (response.data.success === 1) 
-                   
-                   {
-                       toastr.success('¡Propietario actualizado!');
-                       $('#modalCierresTraspasos').modal('hide');
-                       location.reload();
-                   }
-                   else 
-                   {
-                       toastMensaje('Error al actualizar');
-                       $('#modalCierresTraspasos').modal('hide');
-                              recargar();
-                   }
-             
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar empresa');
-                closeLoading();
-            });
-    }
-
-    function guardarEstado()
-    {
-      //Llamar la variable id desde el controlador
-      var id = {{ $id}};
-      var estado_empresa = document.getElementById('select-estado_empresa').value;
-
-      if(estado_empresa === ''){
-            toastr.error('El estado de la empresa es requerido');
-            return;
-        }
-
-        openLoading();
-            var formData = new FormData();
-            formData.append('id', id);
-            formData.append('estado_empresa', estado_empresa);
-
-            axios.post('/admin/empresas/show/cierre', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
-
-                if (response.data.success === 1) 
-                   
-                   {
-                       toastr.success('¡Estado de la empresa actualizado!');
-                       $('#modalCierresTraspasos').modal('hide');
-                       location.reload();
-                   }
-                   else 
-                   {
-                       toastMensaje('Error al actualizar');
-                       $('#modalCierresTraspasos').modal('hide');
-                              recargar();
-                   }
-             
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar empresa');
-                closeLoading();
-            });
-    }
+function cierreytraspaso(id){
+ 
+  window.location.href="{{ url('/admin/empresas/cierres_traspasos') }}/"+id;
+}
 
 function modalRecalificacion(){
             openLoading();
@@ -953,52 +504,6 @@ function modalRecalificacion(){
     }
 
     
-
-    function informacionTraspaso(id){
-            openLoading();
-            document.getElementById("formulario-Traspaso").reset();
-
-            axios.post('/admin/empresas/show/informacion',{
-                'id': id
-            })
-            .then((response) => {
-              console.log(response);
-                    closeLoading();
-                    if(response.data.success === 1){
-                        $('#modalCierresTraspasos').modal('show');
-
-                        document.getElementById("select-contribuyente-traspaso").options.length = 0;
-                        document.getElementById("select-estado_empresa").options.length = 0;
-
-                        
-                        $.each(response.data.contribuyente, function( key, val ){
-                            if(response.data.idcont == val.id){
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }else{
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }
-                        });
-
-                        $.each(response.data.estado_empresa, function( key, val ){
-                            if(response.data.idesta == val.id){
-                                $('#select-estado_empresa').append('<option value="' +val.id +'" selected="selected">'+val.estado+'</option>');
-                            }else{
-                                $('#select-estado_empresa').append('<option value="' +val.id +'">'+val.estado+'</option>');
-                            }
-                        }); 
-
-                      }else{
-                        toastr.error('Información no encontrada');
-                    }
-
-                })
-                .catch((error) => {
-                    closeLoading();
-                    toastr.error('Información no encontrada');
-                });
-
-    }
-
 
 </script>
 <script>
@@ -1030,11 +535,23 @@ function NoCobrar(){
   toastr.warning('Debe registrar una calificación primero para poder generar un cobro.');
   return;
 }
+function NoCalificarCE(){
+  toastr.warning('Esta empresa no es calificable.');
+  return;
+}
+function NoMartriculas(){
+  toastr.warning('Las matrículas no están disponibles para esta empresa.');
+  return;
+}
+
 function NoCalificar(){
   toastr.warning('Debe registrar una calificación primero para poder generar una recalificación.');
   return;
 }
-
+function NoNotificar(){
+  toastr.warning('Esta empresa no es notificable.');
+  return;
+}
 function Cobros(id){
   openLoading();
 
@@ -1049,13 +566,46 @@ function matriculas(){
 
 
 function reporteAviso(id){
-    
-   
-
+  location.reload();
   window.open("{{ URL::to('/admin/generar_aviso/pdf') }}/" + id );
+ 
+}
+
+function reporte_notificacion(id){
+    
+    var f1=(document.getElementById('f1').value);
+
+    var f2=(document.getElementById('fechahoy').value);
+
+    var ti={{$Tasainteres}};
+    var f3=(document.getElementById('fechahoy').value);
+
+
+  window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
 
 }
 
+function reporteEmpresaDatos(id){
+
+  window.open("{{ URL::to('/admin/generar_reporte/datos_empresa/pdf') }}/"+ id );
+
+
+}
+function modalMensaje(titulo, mensaje){
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            });
+            
+        }
 
 
 </script>
