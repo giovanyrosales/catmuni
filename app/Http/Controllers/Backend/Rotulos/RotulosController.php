@@ -807,6 +807,7 @@ foreach ($calificacion as $dato)
         'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
         'rotulos.coordenadas','rotulos.imagen')
         ->first();
+
         
         if ($calificacion == null)
         { 
@@ -842,7 +843,7 @@ foreach ($calificacion as $dato)
     {
   
         $id_empresa = $request->id_empresa;
-        $id=$request->id;
+        $id=$request->id; //* ID del rótulo.
         $id_rotulo = $request->id_rotulos;
     
             
@@ -850,18 +851,22 @@ foreach ($calificacion as $dato)
         $DetectorEnero=Carbon::parse($request->ultimo_cobro)->format('M');
         $AñoVariable=Carbon::parse($request->ultimo_cobro)->format('Y');
        
-        $Message=0;
-        if($DetectorEnero=='Jan')
-        {
-            $f1=Carbon::createFromDate($AñoVariable,2,1);
-            $InicioPeriodo=Carbon::createFromDate($AñoVariable,2,1);
-            $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-            $Message="Se ha sumado 1 dia";
+        $MesNumero=Carbon::createFromDate($request->ultimo_cobro)->format('d');
+        //log::info($MesNumero);
 
-        }else{
-                $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
-                $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
-                $Message="No se ha sumado dias";
+        if($MesNumero<='15')
+        {
+            $f1=Carbon::parse($request->ultimo_cobro)->format('Y-m-01');
+            $f1=Carbon::parse($f1);
+            $InicioPeriodo=Carbon::createFromDate($f1);
+            $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+            //log::info('inicio de mes');
+        }
+        else
+            {
+            $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
+            $InicioPeriodo=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+            // log::info('fin de mes ');
             }
         
         $f2=Carbon::parse($request->fechaPagara);

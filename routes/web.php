@@ -22,6 +22,7 @@ use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
+use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -228,7 +229,7 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::get('/admin/buses/cobros/{bus}', [BusesDetalleController::class, 'cobrosBus']);
     Route::post('/admin/buses/calcular-CobrosB', [BusesDetalleController::class, 'calcularCobrosBus']);
 
-    //Reportes
+    //REPORTES EMPRESAS
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);
     Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso']);
     Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion']);
@@ -244,3 +245,6 @@ use App\Http\Controllers\Backend\Reportes\reportesController;
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
     
+    //REPORTES RÓTULOS
+    Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
+   
