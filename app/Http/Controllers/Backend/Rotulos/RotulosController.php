@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Backend\Rotulos;
 
 use App\Http\Controllers\Controller;
 use App\Models\CalificacionRotulo;
+use App\Models\CierresReaperturasRotulos;
 use App\Models\CobrosRotulo;
 use App\Models\Contribuyentes;
 use App\Models\InspeccionRotulos;
 use App\Models\Rotulos;
 use App\Models\Empresas;
+use App\Models\EstadoRotulos;
 use App\Models\TarifaRotulo;
 use App\Models\Interes;
 use App\Models\MultasDetalle;
 use App\Models\InteresDetalle;
+use App\Models\TraspasosRotulos;
 use App\Models\Usuario;
 use CreateCalificacionTable;
 use Illuminate\Http\Request;
@@ -408,11 +411,13 @@ class RotulosController extends Controller
 
         if($lista = Rotulos::where('id', $request->id)->first()){
            
-            $contribuyente = Contribuyentes::orderBy('nombre')->get();
+            $empresa = Empresas::orderBy('nombre')->get();
+            $estadorotulo = EstadoRotulos::orderBy('estado')->get();
             return ['success' => 1,
             'idcont' => $lista->id_contribuyente,
-            'contribuyente' => $contribuyente,
-            'rotulos' => $lista
+            'empresa' => $empresa,
+            'rotulos' => $lista,
+            'estadorotulos' => $estadorotulo,
 
             
         ];
@@ -1142,6 +1147,63 @@ foreach ($calificacion as $dato)
             }
 
     }
+
+    public function cierres_traspasos_rotulo($id){
+        
+        $idusuario = Auth::id();
+        $infouser = Usuario::where('id', $idusuario)->first();
+        $estadorotulos = EstadoRotulos::All();
+        $contribuyentes = Contribuyentes::All();
+        $ConsultaEmpresa = Empresas::All();
+        $rotulos = Rotulos::ALL();
+
+        $rotulo= Rotulos
+        ::join('empresa','rotulos.id_empresa','=','rotulos.id')
+        ->join('estado_rotulo','rotulos.id_estado_rotulo','=','estado_rotulo.id')      
+        
+        ->select( 'rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura','rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
+        'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion','rotulos.coordenadas','rotulos.imagen',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+        'estado_rotulo.estado',)
+        ->where('rotulos.id',$id)
+        ->first();
+
+        $Consul_traspasos_r=TraspasosRotulos::latest()
+        ->where('id_empresa',$id)
+        ->first();
+
+        $Consul_cierres=CierresReaperturasRotulos::latest()
+        ->where('id_empresa',$id)
+        ->first();
+
+        if($Consul_traspasos_r===null){
+            $Consul_traspasos_r=0;
+            }
+        else
+            {$Consul_traspasos_r=1;
+            }  
+        
+        if($Consul_cierres===null){
+                $Consul_cierres=0;
+                }
+        else
+                {
+                    $Consul_cierres=1;
+                }
+
+        return view('backend.admin.Empresas.CierresTraspasos.Cierres_traspasos',
+                compact(
+                        'empresa',
+                        'contribuyentes',
+                        'estadorotulos',
+                        'ConsultaEmpresa',
+                        'rotulos',
+                        'Consul_traspasos_r',
+                        'Consul_cierres',
+                        
+                       ));
+    }
+
    
 } //Cierre final
 
