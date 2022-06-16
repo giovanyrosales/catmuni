@@ -829,7 +829,7 @@ class BusesDetalleController extends Controller
         else
             {
             $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+            $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
             // log::info('fin de mes ');
             }
         
@@ -870,9 +870,7 @@ class BusesDetalleController extends Controller
     
       
         //** Inicia - Para obtener la tasa de interes más reciente */
-        $Tasainteres=Interes::latest()
-        ->pluck('monto_interes')
-            ->first();
+        $Tasainteres=$request->tasa_interes;
         //** Finaliza - Para obtener la tasa de interes más reciente */
 
         $calificacion=BusesDetalle        

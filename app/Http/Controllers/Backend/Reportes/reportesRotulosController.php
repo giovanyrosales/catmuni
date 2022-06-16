@@ -58,7 +58,7 @@ class reportesRotulosController extends Controller
 
         $fecha_interes_moratorio=carbon::now();
         $id=$ir;
-    
+        $f1_original=$f1;
             $MesNumero=Carbon::createFromDate($f2)->format('d');
             //log::info($MesNumero);
     
@@ -73,7 +73,7 @@ class reportesRotulosController extends Controller
             else
                 {
                 $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-                $InicioPeriodo=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+                $InicioPeriodo=Carbon::parse($f1_original)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
                 // log::info('fin de mes ');
                 }
     
