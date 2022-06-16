@@ -562,7 +562,6 @@
     }
 
     
-
     function CobrosB(id)
     {
       openLoading();

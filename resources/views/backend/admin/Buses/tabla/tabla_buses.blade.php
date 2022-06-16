@@ -101,7 +101,7 @@
 <script>
 function Realizar()
     {
-      toastr.warning('Debe especificar buses primero');
+      toastr.warning('Debe especificar buses para ver la vista detallada');
       return;
     }
 

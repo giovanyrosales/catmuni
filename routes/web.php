@@ -210,6 +210,10 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/rotulos/cobros/{rotulo}', [RotulosController::class, 'cobros']);
     Route::post('/admin/rotulos/calcular-Cobros', [RotulosController::class, 'calcularCobros']);
 
+    
+    //CIERRE Y TRASPASO DE RÓTULOS
+    Route::get('/admin/rotulos/cierres_traspasos/{rotulo}', [RotulosController::class,'cierres_traspasos_rotulo']);
+
 
     //BUSES
     Route::get('/admin/nuevo/buses/Crear', [BusesDetalleController::class,'index'])->name('admin.crear.buses.index');   
@@ -228,6 +232,7 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::post('/admin/buses/calificacion/nueva' , [BusesDetalleController::class, 'guardarCalificacionBus']);
     Route::get('/admin/buses/cobros/{bus}', [BusesDetalleController::class, 'cobrosBus']);
     Route::post('/admin/buses/calcular-CobrosB', [BusesDetalleController::class, 'calcularCobrosBus']);
+
 
     //REPORTES EMPRESAS
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);
