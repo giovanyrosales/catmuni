@@ -109,7 +109,7 @@ class reportesController extends Controller
         //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
         $PagoUltimoDiaMes=Carbon::parse($f2)->endOfMonth()->format('Y-m-d');
         //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
-
+      
         //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
         $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
         $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
@@ -118,7 +118,8 @@ class reportesController extends Controller
         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
         $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
         //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
-        
+        Log::info('inicion Moratorio aqui');
+        Log::info($FechaDeInicioMoratorio);
 
 
         $calificaciones = calificacion::latest()

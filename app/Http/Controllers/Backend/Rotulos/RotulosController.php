@@ -891,15 +891,11 @@ foreach ($calificacion as $dato)
 
     
         //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-        $DTF=Carbon::parse($request->fechaPagara)->addMonthsNoOverflow(1)->day(1);
-        $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
-        //Log::info($PagoUltimoDiaMes);
+        $PagoUltimoDiaMes=Carbon::parse($request->fechaPagara)->endOfMonth()->format('Y-m-d');
         //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
         //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-        $f_inicio=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(2)->day(1);
-        $UltimoDiaMes=$f_inicio->subDays(1);
-        //Log::info( $UltimoDiaMes);
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
         $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
 
         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);

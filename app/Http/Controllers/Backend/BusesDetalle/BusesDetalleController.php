@@ -856,9 +856,7 @@ class BusesDetalleController extends Controller
         //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
         //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-        $f_inicio=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(2)->day(1);
-        $UltimoDiaMes=$f_inicio->subDays(1);
-        //Log::info( $UltimoDiaMes);
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
         $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
 
         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);

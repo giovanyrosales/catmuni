@@ -682,12 +682,12 @@ public function calculo_cobros_empresa(Request $request)
      //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
      $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
      $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-
-     Log::info($FechaDeInicioMoratorio);
+     
      $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
      $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
      //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
-
+     Log::info('inicion Moratorio aqui');
+     Log::info($FechaDeInicioMoratorio);
    
     //** Inicia - Para obtener la tasa de interes más reciente */
         $Tasainteres=$request->tasa_interes;
