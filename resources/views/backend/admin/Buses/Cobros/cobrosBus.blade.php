@@ -22,6 +22,7 @@
            document.getElementById('select_interes').disabled=true;
          //  document.getElementById('select_interesMesas').disabled=true;
            $('#periodo').hide();
+           $('#estado_de_cuentabuses').hide();
         
         }
 
@@ -83,6 +84,7 @@
                         } 
                         if(response.data.success === 1){
                           $('#periodo').show();
+                          $('#estado_de_cuentabuses').show();
                           document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
                           document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
                           document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
@@ -314,7 +316,12 @@
 
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> </div>
+         <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
+            <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+            onclick="estado_cuenta_buses({{$empresa->id_empresa}});" id="estado_de_cuentabuses" >
+              <i class="fas fa-print"></i> Estado cuenta
+            </button>    
+         </div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -432,7 +439,18 @@
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
         });
+    
+        function estado_cuenta_buses(id_empresa){
 
+        var ib=(document.getElementById('id_buses_detalle').value);
+        var f1=(document.getElementById('ultimo_cobro').value);
+        var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
+        var ti=(document.getElementById('select_interes').value);
+
+        window.open("{{ URL::to('/admin/estado_cuenta/buses/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + ib + "/" + id_empresa );
+
+        }
+        
         function verificar(){
             Swal.fire({
                 title: '¿Desea guardar el Cobro?',

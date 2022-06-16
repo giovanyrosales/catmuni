@@ -17,7 +17,9 @@ class Interes extends Model
     public $timestamps = true;
     protected $fillable = [
         'id',
-        'monto_interes'
+        'monto_interes',
+        'fecha_inicio',
+        'fecha_fin'
       ];
 }
  

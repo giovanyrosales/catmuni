@@ -52,6 +52,7 @@ class reportesController extends Controller
     public function estado_cuenta($f1,$f2,$ti,$f3,$tf,$id) 
     { 
         log::info([$f1,$f2,$ti,$f3,$id,$tf]);
+        $f1_original=$f1;
         $empresa= Empresas
         ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
         ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -83,7 +84,7 @@ class reportesController extends Controller
         else
             {
             $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+            $InicioPeriodo=Carbon::parse($f1_original)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
             // log::info('fin de mes ');
             }
 
@@ -108,7 +109,7 @@ class reportesController extends Controller
         //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
         $PagoUltimoDiaMes=Carbon::parse($f2)->endOfMonth()->format('Y-m-d');
         //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
-
+      
         //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
         $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
         $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
@@ -117,7 +118,8 @@ class reportesController extends Controller
         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
         $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
         //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
-        
+        Log::info('inicion Moratorio aqui');
+        Log::info($FechaDeInicioMoratorio);
 
 
         $calificaciones = calificacion::latest()
@@ -483,6 +485,7 @@ public function aviso($id)
     public function notificacion($f1,$f2,$ti,$f3,$id) 
         { 
             log::info([$f1,$f2,$ti,$f3,$id]);
+            $f1_original=$f1;
             $empresa= Empresas
             ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
             ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -514,7 +517,7 @@ public function aviso($id)
             else
                 {
                 $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-                $InicioPeriodo=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+                $InicioPeriodo=Carbon::parse($f1_original)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
                 // log::info('fin de mes ');
                 }
 
@@ -845,7 +848,7 @@ public function aviso($id)
 
 public function estado_cuenta_licor($f1,$f2,$id){ 
 
-
+    $f1_original=$f1;
     $idusuario = Auth::id();
     $MesNumero=Carbon::createFromDate($f1)->format('d');
     //log::info($MesNumero);
@@ -861,7 +864,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
     else
         {
          $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-         $InicioPeriodo=Carbon::parse($f1)->format('Y-01-01');
+         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-01-01');
         // log::info('fin de mes ');
          }
 
@@ -1049,7 +1052,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
 
         $fechaPagaraAparatos=carbon::parse($f2)->format('Y-12-31');
         $id_matriculadetalleAparatos=$ap;
-
+        $f1_original=$f1;
         $MesNumero=Carbon::createFromDate($f1)->format('d');
         //log::info($MesNumero);
     
@@ -1064,7 +1067,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
         else
             {
              $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-             $InicioPeriodo=Carbon::parse($f1)->format('Y-m-d');
+             $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
             // log::info('fin de mes ');
              }
     
@@ -1218,7 +1221,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
     public function estado_cuenta_sinfonolas($f1,$f2,$is,$ti,$id){ 
 
         $MesNumero=Carbon::createFromDate($f1)->format('d');
-      
+        $f1_original=$f1;
         $fechaPagaraSinfonolas=$f2;
         $id_matriculadetalleSinfonolas=$is;
         $tasa_interes=$ti;
@@ -1236,7 +1239,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
         else
             {
              $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-             $InicioPeriodo=Carbon::parse($f1)->format('Y-m-d');
+             $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
             log::info('fin de mes ');
              }
         $f2=Carbon::parse($f2);
@@ -1602,7 +1605,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
  }
 
  public function estado_cuenta_maquinas($f1,$f2,$im,$ti,$id){ 
-
+    $f1_original=$f1;
     $fechaPagaraMaquinas=$f2;
     $id_matriculadetalleMaquinas=$im;
     $tasa_interes=$ti;
@@ -1622,7 +1625,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
     else
         {
          $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-         $InicioPeriodo=Carbon::parse($f1)->format('Y-m-d');
+         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
         // log::info('fin de mes ');
          }
 
@@ -1957,7 +1960,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
             }
 
 public function estado_cuenta_mesas($f1,$f2,$ime,$ti,$id){ 
-
+    $f1_original=$f1;
     $id_matriculadetalleMesas=$ime;
     $tasa_interes=$ti;
 
@@ -1975,7 +1978,7 @@ public function estado_cuenta_mesas($f1,$f2,$ime,$ti,$id){
     else
         {
          $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-         $InicioPeriodo=Carbon::parse($f1)->format('Y-m-d');
+         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
         // log::info('fin de mes ');
          }
 

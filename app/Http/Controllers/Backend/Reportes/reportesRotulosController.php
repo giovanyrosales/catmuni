@@ -41,6 +41,7 @@ use App\Models\alertas;
 use App\Models\alertas_detalle;
 use App\Models\CalificacionRotulo;
 use App\Models\CierresReaperturas;
+use App\Models\Rotulos;
 use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
@@ -57,7 +58,7 @@ class reportesRotulosController extends Controller
 
         $fecha_interes_moratorio=carbon::now();
         $id=$ir;
-    
+        $f1_original=$f1;
             $MesNumero=Carbon::createFromDate($f2)->format('d');
             //log::info($MesNumero);
     
@@ -72,7 +73,7 @@ class reportesRotulosController extends Controller
             else
                 {
                 $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-                $InicioPeriodo=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+                $InicioPeriodo=Carbon::parse($f1_original)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
                 // log::info('fin de mes ');
                 }
     
@@ -100,10 +101,9 @@ class reportesRotulosController extends Controller
         //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
         //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-        $f_inicio=Carbon::parse($f1)->addMonthsNoOverflow(2)->day(1);
-        $UltimoDiaMes=$f_inicio->subDays(1);
-        //Log::info( $UltimoDiaMes);
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
         $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
+
 
         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
         Log::info('Inicio moratorio inicia aqui');
@@ -313,6 +313,9 @@ class reportesRotulosController extends Controller
         'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
         ->find($id_empresa); 
 
+        $info_rotulo=Rotulos::where('id',$id)
+        ->first();
+
 
         //** Finaliza calculo de cobro licencia licor **/
 
@@ -333,6 +336,7 @@ class reportesRotulosController extends Controller
                     'InteresTotalDollar',
                     'InicioPeriodo',
                     'PagoUltimoDiaMes',
+                    'info_rotulo',
 
 
 

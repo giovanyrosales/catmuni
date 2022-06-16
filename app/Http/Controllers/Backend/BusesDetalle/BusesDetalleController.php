@@ -489,7 +489,7 @@ class BusesDetalleController extends Controller
       
         ->find($id);
 
-        $calificacion = CalificacionBuses::select('calificacion_buses.id', 'calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion')
+        $calificacion = CalificacionBuses::select('calificacion_buses.id', 'calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion','calificacion_buses.id_empresa')
        
         ->where('id_buses_detalle', $id)
         ->latest()
@@ -829,7 +829,7 @@ class BusesDetalleController extends Controller
         else
             {
             $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
-            $InicioPeriodo=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+            $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
             // log::info('fin de mes ');
             }
         
@@ -856,9 +856,7 @@ class BusesDetalleController extends Controller
         //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
         //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-        $f_inicio=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(2)->day(1);
-        $UltimoDiaMes=$f_inicio->subDays(1);
-        //Log::info( $UltimoDiaMes);
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
         $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
 
         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
@@ -870,9 +868,7 @@ class BusesDetalleController extends Controller
     
       
         //** Inicia - Para obtener la tasa de interes más reciente */
-        $Tasainteres=Interes::latest()
-        ->pluck('monto_interes')
-            ->first();
+        $Tasainteres=$request->tasa_interes;
         //** Finaliza - Para obtener la tasa de interes más reciente */
 
         $calificacion=BusesDetalle        

@@ -19,10 +19,11 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
-
+use App\Http\Controllers\Backend\Reportes\reportesBusesController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
 use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -254,4 +255,5 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
+    Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
    
