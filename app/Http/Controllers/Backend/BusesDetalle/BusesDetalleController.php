@@ -489,7 +489,7 @@ class BusesDetalleController extends Controller
       
         ->find($id);
 
-        $calificacion = CalificacionBuses::select('calificacion_buses.id', 'calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion')
+        $calificacion = CalificacionBuses::select('calificacion_buses.id', 'calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion','calificacion_buses.id_empresa')
        
         ->where('id_buses_detalle', $id)
         ->latest()

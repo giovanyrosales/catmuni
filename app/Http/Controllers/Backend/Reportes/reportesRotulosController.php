@@ -41,6 +41,7 @@ use App\Models\alertas;
 use App\Models\alertas_detalle;
 use App\Models\CalificacionRotulo;
 use App\Models\CierresReaperturas;
+use App\Models\Rotulos;
 use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
@@ -313,6 +314,9 @@ class reportesRotulosController extends Controller
         'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
         ->find($id_empresa); 
 
+        $info_rotulo=Rotulos::where('id',$id)
+        ->first();
+
 
         //** Finaliza calculo de cobro licencia licor **/
 
@@ -333,6 +337,7 @@ class reportesRotulosController extends Controller
                     'InteresTotalDollar',
                     'InicioPeriodo',
                     'PagoUltimoDiaMes',
+                    'info_rotulo',
 
 
 
