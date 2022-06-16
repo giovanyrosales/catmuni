@@ -414,7 +414,7 @@ class RotulosController extends Controller
             $empresa = Empresas::orderBy('nombre')->get();
             $estadorotulo = EstadoRotulos::orderBy('estado')->get();
             return ['success' => 1,
-            'idcont' => $lista->id_contribuyente,
+            'idempre' => $lista->id_empresa,
             'empresa' => $empresa,
             'rotulos' => $lista,
             'estadorotulos' => $estadorotulo,
@@ -445,11 +445,11 @@ class RotulosController extends Controller
             'message' => $validar->errors()->first()
         ];
         }
-        if(Rotulos::where('id', $request->id)->first()){
+        if($rotulo = Rotulos::where('id', $request->id)->first()){
 
             Rotulos::where('id', $request->id)->update([
                 
-             
+                'idesta' => $rotulo->id_estado_rotulo,
                  'estado' => $request->estado,
                  'fecha_cierre' => $request->fecha_cierre,
 
@@ -490,6 +490,24 @@ class RotulosController extends Controller
         else{
             return ['success' => 2];
         }
+    }
+
+    public function tablaCierresR($id){
+
+        $historico_cierres=CierresReaperturasRotulos::orderBy('id', 'desc')
+        ->where('id_empresa',$id)
+        ->get();
+
+           
+        return view('backend.admin.Rotulos.CierresTraspasos.tablas.tabla_cierre_r', compact('historico_cierres'));
+    }
+    public function tablaTraspasosR($id){
+
+        $historico_traspasos=TraspasosRotulos::orderBy('id', 'desc')
+        ->where('id_empresa',$id)
+        ->get();
+           
+        return view('backend.admin.Rotulos.CierresTraspasos.tablas.tabla_traspaso_r', compact('historico_traspasos'));
     }
 
 
@@ -1158,12 +1176,12 @@ foreach ($calificacion as $dato)
         $rotulos = Rotulos::ALL();
 
         $rotulo= Rotulos
-        ::join('empresa','rotulos.id_empresa','=','rotulos.id')
-        ->join('estado_rotulo','rotulos.id_estado_rotulo','=','estado_rotulo.id')      
+        ::join('empresa','rotulos.id_empresa','=','empresa.id')
+        ->join('estado_rotulo','rotulos.id_estado_rotulo','=','estado_rotulo.id')  
+           
         
-        ->select( 'rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura','rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
+        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura','rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
         'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion','rotulos.coordenadas','rotulos.imagen',
-        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
         'estado_rotulo.estado',)
         ->where('rotulos.id',$id)
         ->first();
@@ -1191,7 +1209,7 @@ foreach ($calificacion as $dato)
                     $Consul_cierres=1;
                 }
 
-        return view('backend.admin.Empresas.CierresTraspasos.Cierres_traspasos',
+        return view('backend.admin.Rotulos.CierresTraspasos.Cierres_Traspasos',
                 compact(
                         'empresa',
                         'contribuyentes',

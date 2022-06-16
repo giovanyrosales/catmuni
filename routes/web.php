@@ -213,6 +213,8 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     
     //CIERRE Y TRASPASO DE RÓTULOS
     Route::get('/admin/rotulos/cierres_traspasos/{rotulo}', [RotulosController::class,'cierres_traspasos_rotulo']);
+    Route::get('/admin/rotulos/cierres/tabla/{rotulo}', [RotulosController::class,'tablaCierresR']);
+    Route::get('/admin/rotulos/traspasos/tabla/{rotulo}', [RotulosController::class,'tablaTraspasosR']);
 
 
     //BUSES

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TraspasosRotulos extends Model
 {
-    protected $table = 'traspasos_rotulo';
+    protected $table = 'traspaso_rotulo';
     public $timestamps = true;
     protected $fillable = [
         'id',

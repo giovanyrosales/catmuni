@@ -405,11 +405,11 @@ function OcultarhistorialCierres(){
             var id = {{$empresa->id}};
 
             //**Para tabla cierres */
-            var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
+            var ruta = "{{ url('/admin/rotulos/cierres/tabla') }}/"+id;
             $('#tabla_cierres').load(ruta);
 
             //**Para tabla Traspasos */
-            var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
+            var ruta = "{{ url('/admin/rotulos/traspasos/tabla') }}/"+id;
             $('#tabla_traspasos').load(ruta);
 
             document.getElementById("divcontenedor").style.display = "block";

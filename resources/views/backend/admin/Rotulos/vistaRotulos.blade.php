@@ -103,7 +103,7 @@
     </div>
    
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="informacionCierre({{$lista->id}})" >
+        <a href="#" onclick="cierreytraspaso({{$lista->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -451,6 +451,12 @@
       openLoading();
       window.location.href="{{ url('/admin/Rotulos/inspeccion') }}/"+id;
     }
+
+    function cierreytraspaso(id)
+    { 
+    window.location.href="{{ url('/admin/rotulos/cierres_traspasos/') }}/"+id;
+    }
+
     function CrearCalificacion(id)
     {
       openLoading();

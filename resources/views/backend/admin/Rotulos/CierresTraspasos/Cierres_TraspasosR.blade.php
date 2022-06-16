@@ -405,11 +405,11 @@ function OcultarhistorialCierres(){
             var id = {{$empresa->id}};
 
             //**Para tabla cierres */
-            var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
+            var ruta = "{{ url('/admin/rotulos/cierres/tabla') }}/"+id;
             $('#tabla_cierres').load(ruta);
 
             //**Para tabla Traspasos */
-            var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
+            var ruta = "{{ url('/admin/rotulos/traspasos/tabla') }}/"+id;
             $('#tabla_traspasos').load(ruta);
 
             document.getElementById("divcontenedor").style.display = "block";
@@ -433,7 +433,7 @@ function OcultarhistorialCierres(){
 
         function VerEmpresa(id)
         {
-             window.location.href="{{ url('/admin/empresas/show') }}/"+id;
+             window.location.href="{{ url('/admin/Rotulos/show') }}/"+id;
         }
 
         function modalMensaje(titulo, mensaje)
@@ -518,15 +518,15 @@ function OcultarhistorialCierres(){
                     if(response.data.success === 1){
                         
 
-                        document.getElementById("select-empresa-traspaso").options.length = 0;
-                        document.getElementById("select-estado_empresa").options.length = 0;
+                        document.getElementById("select-rotulo-traspaso").options.length = 0;
+                        document.getElementById("select-estado_rotulo").options.length = 0;
 
                         
-                        $.each(response.data.contribuyente, function( key, val ){
-                            if(response.data.idcont == val.id){
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                        $.each(response.data.empresa, function( key, val ){
+                            if(response.data.idempre == val.id){
+                                $('#select-empresa-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
                             }else{
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                                $('#select-empresa-traspaso').append('<option value="' +val.id +'">'+val.nombre+'</option>');
                             }
                         });
 
@@ -580,14 +580,14 @@ function OcultarhistorialCierres(){
                 if (response.data.success === 1) 
                    
                    {
-                       toastr.success('¡Estado de la empresa actualizado!');
+                       toastr.success('¡Estado del rótulo actualizado!');
                        f7();
                        recargarCierres();
                        document.getElementById('Cierre_Apartirdeldia').value='';
                    }
                    else if(response.data.success === 3){
 
-                    modalMensaje('Aviso', 'No ha cambiado el estado de la empresa, debe seleccionar otro.');
+                    modalMensaje('Aviso', 'No ha cambiado el estado del rótulo, debe seleccionar otro.');
                     return;
                     }
                       else 
@@ -598,7 +598,7 @@ function OcultarhistorialCierres(){
              
             })
             .catch((error) => {
-                toastr.error('Error al actualizar empresa');
+                toastr.error('Error al actualizar rótulo');
                 closeLoading();
             });
     }
