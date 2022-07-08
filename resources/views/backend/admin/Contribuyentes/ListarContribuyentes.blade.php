@@ -169,8 +169,10 @@
                      </form>
                     </div>
                     <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success  float-right" onclick="actualizar()">Actualizar</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">
+                      <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                        <button type="button" class="btn btn-success  float-right" onclick="actualizar()">
+                        <i class="fas fa-save"></i>&nbsp;Actualizar</button>
                     </div>
                    </div>
                   </div>
@@ -260,8 +262,8 @@
                      </div>
                      </form>
                     </div>
-                    <div class="modal-footer ">
-                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <div class="card-footer">
+                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i> &nbsp;Cerrar</button>
                     </div>
                    </div>
                   </div>
@@ -300,8 +302,10 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" onclick="eliminarC()">Borrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fas fa-times-circle"></i> &nbsp;Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarC()">
+                    <i class="fas fa-trash-alt"></i> &nbsp;Borrar</button>
                 </div>
             </div>
         </div>

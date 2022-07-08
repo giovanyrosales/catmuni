@@ -44,7 +44,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Licencias y matriculas</h3>
+            <h3 class="card-title"><i class="fas fa-list"></i>&nbsp;Lista de licencias y matriculas</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -82,7 +82,7 @@
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar licencia o matrícula</h4>
+         <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;Agregar licencia o matrícula</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -90,7 +90,7 @@
                <div class="modal-body">
                     <form id="formulario-AgregarLM"> 
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-12">
               <div class="form-group">
                 <label>Nombre:</label>
                         <input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Nombre licencia o matricula">
@@ -98,11 +98,11 @@
                 </div>
               </div>
            
-              <div class="col-md-10">
+              <div class="col-md-12">
                      <div class="form-group">
                           <label>Tipo de permisos:</label>
                           <!-- Select estado - live search -->
-                          <div class="input-group mb-10">
+                          <div class="input-group mb-12">
                                 <select 
                                 required
                                 class="selectpicker"
@@ -119,7 +119,7 @@
                            <!-- finaliza asignar actividad economica-->
                         </div>
                           </div>
-                <div class="col-md-10">
+                <div class="col-md-12">
                 <div class="form-group">
                      <label>Monto:</label>
                         <input type="number" name="monto" id="monto" class="form-control" required placeholder="Monto">
@@ -127,7 +127,7 @@
                 </div>
                 <!-- /.form-group -->
                 <!-- /.form-group -->  
-                <div class="col-md-10">
+                <div class="col-md-12">
                 <div class="form-group">
                      <label>Tarifa:</label>
                         <input type="number"  id="tarifa" class="form-control" required placeholder="Tarifa">
@@ -138,8 +138,10 @@
                 </div>               
                  </div>
                   <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="nuevaLM()"> Guardar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fas fa-times-circle"></i>Cerrar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="nuevaLM()"> 
+                  <i class="fas fa-save"></i> &nbsp;Guardar </button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default">
+                  <i class="fas fa-times-circle"></i>Cancelar</button>
                 </div>
                    </div>
              
@@ -159,15 +161,15 @@
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Actualizar licencia o matricula</h4>
+         <h4 class="modal-title"><i class="far fa-edit"></i>&nbsp;Actualizar licencia o matricula</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                <div class="modal-body">
-                    <form id="formulario-EditarLM"> 
+              <form id="formulario-EditarLM"> 
               <div class="row">
-               <div class="col-md-10">
+               <div class="col-md-12">
                 <div class="form-group">
                   <label>Nombre:</label>
                         <input type="text" name="nombre" id="nombre-editar" class="form-control" required placeholder="Nombre licencia o matricula">
@@ -175,7 +177,7 @@
                 </div>
               </div>
               
-                <div class="col-md-10">
+                <div class="col-md-12">
                      <div class="form-group">
                           <label>Actividad económica:</label>
                           <!-- Select estado - live search -->
@@ -198,7 +200,7 @@
                   </div>
                 <!-- /.form-group -->  
                    
-                <div class="col-md-10">
+                <div class="col-md-12">
                 <div class="form-group">
                      <label>Monto Permiso:</label>
                         <input type="number" name="monto" id="monto-editar" class="form-control" required placeholder="Monto">
@@ -208,7 +210,7 @@
                 <!-- /.form-group -->
 
                 <!-- /.form-group -->  
-                <div class="col-md-10">
+                <div class="col-md-12">
                 <div class="form-group">
                      <label>Tarifa:</label>
                         <input type="number" name="tarifa" id="tarifa-editar" class="form-control" required placeholder="Tarifa">
@@ -219,8 +221,10 @@
                 
                 </div>    
                 <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="actualizarLM()"> Actualizar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="actualizarLM()">
+                  <i class="far fa-edit"></i> &nbsp; Actualizar </button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default">
+                    <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
                 </div>           
                 </div>
                  </div>
@@ -242,7 +246,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Eliminar Tasa de Interés</h4>
+                    <h4 class="modal-title"><i class="far fa-minus-square"></i>&nbsp;Eliminar Tasa de Interés</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -264,8 +268,10 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>Cerrar</button>
-                    <button type="button" class="btn btn-danger" onclick="eliminarLM()">Borrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                      <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarLM()">
+                    <i class="far fa-trash-alt"></i>&nbsp;Borrar</button>
                 </div>
             </div>
         </div>

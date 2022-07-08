@@ -65,10 +65,10 @@
     
           <div class="col-lg-3 col-8">
             <!-- small box -->
-            <div class="small-box bg-info">
+            <div class="small-box bg-default">
               <div class="inner">
                 <h3> </h3>
-                <p> Avisos: <span class="badge badge-pill badge-light">{{$alerta_aviso}}</span></p>
+                <p> Avisos: <span class="badge badge-pill badge-primary">{{$alerta_aviso}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -79,10 +79,10 @@
            <!-- ./col -->
            <div class="col-lg-3 col-8">
             <!-- small box -->
-            <div class="small-box bg-warning">
+            <div class="small-box bg-default">
               <div class="inner">
                 <h3> </h3>
-                <p>Notificaciones: <span class="badge badge-pill badge-light">{{$alerta_notificacion}}</span></p>
+                <p>Notificaciones: <span class="badge badge-pill badge-warning">{{$alerta_notificacion}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -93,10 +93,10 @@
   
           <div class="col-lg-3 col-8">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-default">
               <div class="inner">
                 <h3> </h3>
-                <p>Multas por balance: <span class="badge badge-pill badge-light">{{$Cantidad_multas}}</span></p>
+                <p>Multas por balance: <span class="badge badge-pill badge-danger">{{$Cantidad_multas}}</span></p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -218,7 +218,11 @@
    
     <div class="col-md-4 col-sm-8">
               @if($CE==0)
-                <a href="#" onclick="reporte_notificacion({{$empresa->id}})">
+                    @if($NoNotificar==1)
+                  <a href="#" onclick="Aldia()">
+                    @else 
+                  <a href="#" onclick="reporte_notificacion({{$empresa->id}})">
+                    @endif
                   <div class="widget stats-widget">
                     <div class="widget-body clearfix bg-purple">
                      <div class="pull-left">
@@ -229,7 +233,7 @@
                     <span class="pull-right big-icon watermark"><i class="fas fa-envelope-open-text"></i></span>
                 </div>
               @else
-                <a href="#" onclick="NoNotificar()">              
+                <a href="#" onclick="NoNotificar()">          
                  <div class="widget stats-widget">
                   <div class="widget-body clearfix bg-light">
                     <div class="pull-left">
@@ -550,6 +554,10 @@ function NoCalificar(){
 }
 function NoNotificar(){
   toastr.warning('Esta empresa no es notificable.');
+  return;
+}
+function Aldia(){
+  toastr.warning('Esta empresa se encuentra al día con sus pagos.');
   return;
 }
 function Cobros(id){

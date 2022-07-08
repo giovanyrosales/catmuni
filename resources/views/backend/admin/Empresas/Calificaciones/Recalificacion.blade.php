@@ -20,13 +20,27 @@
 @stop
 <!-- Función para calcular la calificación --------------------------------------------------------->
 <script type="text/javascript">
+
+  function verhistorialCalificaciones(){
+    $('#Div_historico_calificaciones').show();
+    $('#btnOcultarCali').show();
+    $('#btnVerCali').hide();
+    }
+
+    function OcurltarhistorialCalificaciones(){
+    $('#Div_historico_calificaciones').hide();
+    $('#btnVerCali').show();
+    $('#btnOcultarCali').hide();
+    }
+
     function deseleccionarCheck()
       {
           //** Quitamos la selección del check caso especial */
           document.getElementById('gridCheck').checked=false;
           document.getElementById('tarifaAplicada').value='';
       }
-
+      
+      
     function desbloqTarifa()
       {
           if(document.getElementById('gridCheck').checked)
@@ -48,6 +62,8 @@
                 $('#btn_imprimirCalificacion').hide();
                 $('#cerrarModal2').hide();
                 $('#cerrarcalificacion2').hide();
+                $('#Div_historico_calificaciones').hide();
+                $('#btnOcultarCali').hide();
 
                 //**** Para llenar el select de año de calificación *****//
                 var n = (new Date()).getFullYear()
@@ -263,22 +279,64 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
     </section>
 <!-- finaliza content-wrapper-->
 
-<!-- Inicia Formulario Crear Empresa-->
+<!-- Inicia Formulario Recalificar-->
     <section class="content">
       <div class="container-fluid">
         <!-- SELECT2 EXAMPLE -->
 
         <form class="form-horizontal" id="formulario-GenerarRecalificacion">
         @csrf
+  
+        <div class="tab-pane" id="tab_2">
+
+          <form>
+          <div class="card" id="tCalificaciones">
+            <table class="table"  style="border: 50px" data-toggle="table">
+            <thead>
+                <tr>
+                <th style="width: 20%; text-align: center"></th>
+                <th style="width: 40%; text-align: center">Última calificación</th>
+                <th style="width: 40%; text-align: center">Tarifa</th>
+                </tr>
+            </thead>
+            <tbody>
+              <td align="center">
+                <!-- Botón ver historial de Calificaciones -->
+                <button type='button' class='btn btn-block btn-dark'  id="btnVerCali" onclick='verhistorialCalificaciones()'>
+                <i class="fas fa-history"></i>
+                    &nbsp; Ver historial
+                </button>
+                <!-- /. Botón ver historial de Calificaciones -->
+                <!-- Botón Ocultar historial de Calificaciones -->
+                <button type='button' class='btn btn-block btn-secondary'  id="btnOcultarCali" onclick='OcurltarhistorialCalificaciones()'>
+                    <i class="far fa-eye-slash"></i>
+                    &nbsp;Ocultar historial
+                </button>
+                <!-- /. Botón Ocultar historial de Calificaciones -->
+              </td>
+              <td align="center">
+                  <h4><span class="badge badge-pill badge-info">{{$cali_lista->año_calificacion}}</span></h4>
+              </td>
+              <td align="center">
+                <h4><span class="badge badge-pill badge-info">${{$cali_lista->tarifa}}</span></h4>
+              </td>
+            </tr>
+                </tbody>
+              </table>
+                  <div class="col-md-12">
+                    <div class="form-group" id="Div_historico_calificaciones">
+                          <hr>
+                          <div class="col-auto  p-12 text-center" id="tabla_Calificaciones"></div>
+                    </div>
+                </div>
+              </div>
+          </form>
+        </div><!-- /.Cierre de la card -->
+
 
         <div class="card card-info">
           <div class="card-header">
-          <h5 class="modal-title">Registrar recalificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-            </div>
+            <h5 class="modal-title">Registrar recalificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
           </div>
           <!-- /.card-header -->
           
@@ -1031,7 +1089,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
          <div class="card-footer">
          <button type="button" class="btn btn-secondary" onclick="ImprimirCalificacion({{ $empresa->id }})" id="btn_imprimirCalificacion">
          <i class="fa fa-print"></i>&nbsp; Imprimir Calificación&nbsp;</button>
-         <button type="button" class="btn btn-info float-right" onclick="nuevo()"><i class="fas fa-edit">
+         <button type="button" class="btn btn-info float-right" onclick="nuevo()" id="guardarcali"><i class="fas fa-edit">
          </i> &nbsp;Registrar Calificación&nbsp;</button>
          <br><br><button type="button" class="btn btn-default" onclick="deseleccionarCheck()" id="cerrarcalificacion1" data-dismiss="modal">Cerrar</button>
          <button type="button" class="btn btn-warning" onclick="listarEmpresas()" id="cerrarcalificacion2" data-dismiss="modal">Cerrar</button>
@@ -1055,6 +1113,43 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
 <!-- Finaliza Modal Registrar Calificación--------------------------------------------------------->
 
+<!-- Inicia Modal Borrar Calificación-->
+
+ <div class="modal fade" id="modalEliminarCalificacion">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="far fa-minus-square"></i>&nbsp;Eliminar calificación</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-BorrarCalificaciones">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <p>¿Realmente desea eliminar la calificación seleccionada?"</p>
+
+                                    <div class="form-group">
+                                        <input type="hidden" id="idborrar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="borrarCalificacion()">
+                    <i class="far fa-trash-alt"></i>&nbsp;Borrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  <!--Finaliza Modal Borrar calificación-->
 
 @extends('backend.menus.footerjs')
 
@@ -1077,11 +1172,24 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
     <script type="text/javascript">
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
+
+            //**Para tabla calificaciones historico */
+            var id='{{$empresa->id}}';
+            var ruta = "{{ url('/admin/empresas/calificaciones/tablaCalificaciones/') }}/"+id;
+            $('#tabla_Calificaciones').load(ruta);
+
         }); 
 
     </script>
 
 <script>
+
+function modalEliminarCalidicación(id)
+    {
+        $('#idborrar').val(id);
+        $('#modalEliminarCalificacion').modal('show');
+    }
+
 function agregarTarifaFija(){
             
           //  document.getElementById("formulario-Recalificacion").reset();
@@ -1091,6 +1199,53 @@ function agregarTarifaFija(){
 function ImprimirCalificacion(id){
   window.open("{{ URL::to('/admin/reporte/calificacion/pdf') }}/" + id );
 }
+
+function recargar()
+    {
+      var id='{{$empresa->id}}';
+      var ruta = "{{ url('/admin/empresas/calificaciones/tablaCalificaciones/') }}/"+id;
+      window.location.href="{{ url('/admin/empresas/recalificacion') }}/"+id;
+      $('#tabla_Calificaciones').load(ruta);
+    }
+
+function borrarCalificacion()
+    {
+      
+      openLoading()
+      
+     // se envia el ID del rótulo
+      var id = document.getElementById('idborrar').value;
+
+      var formData = new FormData();
+      formData.append('id', id);
+
+            axios.post('/admin/empresas/calificaciones/eliminar', formData, {
+            })
+              .then((response) => {
+                closeLoading()
+                  $('#modalEliminarCalificacion').modal('hide');
+                    
+               if(response.data.success === 1){
+                Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: '¡Calificación eliminada correctamente!',
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
+                  recargar();
+               }else{
+                  toastMensaje('error', 'Error al borrar');
+           
+                    }
+                })
+                
+           .catch(function (error) {
+              closeLoading()
+              toastr.error("Error de Servidor!");
+            }); 
+    }
+
 function GenerarCalificacion(){
             /*Declaramos variables */
             var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
@@ -1242,8 +1397,9 @@ function nuevo(){
                           title: '¡Recalificación registrada correctamente!',
                           showConfirmButton: true,
                          
-                        }).then((result) => {
+                        }).then((result) => {             
                         if (result.isConfirmed) {
+                            $('#guardarcali').hide();
                             $('#btn_imprimirCalificacion').show();
                             $('#cerrarModal1').hide();
                             $('#cerrarcalificacion1').hide();

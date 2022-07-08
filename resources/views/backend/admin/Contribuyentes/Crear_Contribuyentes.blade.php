@@ -119,8 +119,10 @@
           </div>
          <!-- /.card-body -->
          <div class="card-footer">
-                  <button type="button" class="btn btn-Primary float-right" onclick="nuevo()"> Guardar </button>
-                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
+                  <button type="button" class="btn btn-Primary float-right" onclick="nuevo()"> 
+                  <i class="fas fa-save"></i> &nbsp;Guardar </button>
+                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">
+                  <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
                 </div>
          <!-- /.card-footer -->
          </div>

@@ -4,6 +4,7 @@
                             <thead>
                                 <tr>
                                 <th style="width: 22%;">Tipo de Matricula</th>
+                                <th style="width: 10%;">Estado</th>
                                 <th style="width: 10%;">Cantidad</th>
                                 <th style="width: 16%;">Total Matrículas</th>
                                 <th style="width: 14%;">Pago Mensual</th>
@@ -14,6 +15,11 @@
                             @foreach($matriculas as $dato)
                                 <tr>
                                     <td>{{$dato->tipo_matricula}}</td>
+                                    @if($dato->id_estado_moratorio == '1')
+                                    <td align="center"> <span class="badge bg-success">{{$dato->estado_moratorio}}</span></td>
+                                    @elseif($dato->id_estado_moratorio == '2')
+                                    <td align="center"> <span class="badge bg-warning">{{$dato->estado_moratorio}}</span></td>
+                                    @endif
                                     <td>{{$dato->cantidad}}</td>
                                     <td>${{$dato->monto}}</td>
                                     <td>${{$dato->pago_mensual}}</td>
@@ -34,7 +40,7 @@
                                          <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
                                         <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarMatricula({{$dato->id_matriculas_detalle }})">
-                                         <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
+                                       <i class="fas fa-trash" title="Eliminar"></i>&nbsp;
                                         </button>
                                     </td>
                                 </tr>

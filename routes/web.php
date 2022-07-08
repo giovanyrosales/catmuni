@@ -87,6 +87,8 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::post('/admin/empresas/calculo_cobros_licencia_licor', [EmpresaController::class, 'calculo_cobroLicor']);
     Route::get('/admin/empresas/recalificacion/{empresa}', [EmpresaController::class,'Recalificacion']);
     Route::get('/admin/empresas/calificaciones/tabla_matriculas/{empresa}', [EmpresaController::class,'tablaMatriculas']);
+    Route::get('/admin/empresas/calificaciones/tablaCalificaciones/{empresa}', [EmpresaController::class,'tablaCalificaciones']);
+    Route::post('/admin/empresas/calificaciones/eliminar', [EmpresaController::class, 'eliminar_calificacion']);
 
     // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
     Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
@@ -185,12 +187,16 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::post('/admin/empresas/calculo_cobros_maquinas', [MatriculasDetalleController::class, 'calculo_cobroMaquinas']);
     Route::post('/admin/empresas/calculo_cobros_sinfonolas', [MatriculasDetalleController::class, 'calculo_cobroSinfonolas']);
     Route::post('/admin/empresas/calculo_cobros_aparatos', [MatriculasDetalleController::class, 'calculo_cobroAparatos']);
-   
-
+    Route::get('/admin/matriculas_detalle/ver_historial_cobros_aparatos/{id}', [MatriculasDetalleController::class, 'VerHistorialCobros_Aparatos']);
+    Route::get('/admin/matriculas_detalle/ver_historial_cobros_sinfonolas/{id}', [MatriculasDetalleController::class, 'VerHistorialCobros_sinfonolas']);
+    Route::get('/admin/matriculas_detalle/ver_historial_cobros_maquinas/{id}', [MatriculasDetalleController::class, 'VerHistorialCobros_maquinas']);
+    Route::get('/admin/matriculas_detalle/ver_historial_cobros_mesas/{id}', [MatriculasDetalleController::class, 'VerHistorialCobros_mesas']);
+    
     // ---MATRICULAS DETALLE ESPECIFICO
     Route::post('/admin/matriculas_detalle_especifico/agregar', [MatriculasDetalleController::class,'agregar_matriculas_detalle_especifico']);
     Route::post('/admin/matriculas_detalle/especificar', [MatriculasDetalleController::class, 'especificarMatriculas']);
     Route::post('/admin/matriculas_detalle/ver_matriculas_especificas', [MatriculasDetalleController::class, 'VerMatriculaEsp']);
+    
     
     // --- RÓTULOS
     Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');   
@@ -272,7 +278,11 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']);
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
+    //AVISOS Y NOTIFICACIONES DE MATRICULAS
     
+
+
+
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);

@@ -13,6 +13,8 @@ class Calificacion extends Model
         'id',
         'id_empresa',
         'id_estado_licencia_licor',
+        'id_multa',
+        'id_estado_multa',
         'fecha_calificacion',
         'tipo_tarifa',    
         'estado_calificacion',

@@ -127,8 +127,12 @@
             margin: 2px 0 0 0;
             font-size: small;
         }
-
-
+        #uno{
+                font-size: 13px;
+        }
+        #dos{
+                font-size: 13px;
+        }
 
     </style>
 <body>
@@ -174,36 +178,36 @@
             </td>
         </tr>
         <tr>
-            <td>FECHA DE RESOLUCIÓN:</td>
-            <td>{{$dia}},&nbsp;{{$FechaDelDia}}</td>
+            <td id="uno">FECHA DE RESOLUCIÓN:</td>
+            <td id="dos">{{$dia}},&nbsp;{{$FechaDelDia}}</td>
         </tr>
         <tr>
-            <td>NÚMERO DE CUENTA CORRIENTE:</td>
-            <td>{{$empresa->num_tarjeta}}</td>
+            <td id="uno">NÚMERO DE CUENTA CORRIENTE:</td>
+            <td id="dos">{{$empresa->num_tarjeta}}</td>
         </tr>
         <tr>
-            <td> <b>TRASPÁSESE:</b></td>
-            <td>{{$empresa->nombre}}</td>
+            <td id="uno"> <b>TRASPÁSESE:</b></td>
+            <td id="dos">{{$empresa->nombre}}</td>
         </tr>
         <tr>
-            <td>DIRECCIÓN:</td>
-            <td>{{$empresa->direccion}}</td>
+            <td id="uno">DIRECCIÓN:</td>
+            <td id="dos">{{$empresa->direccion}}</td>
         </tr>
         <tr>
-            <td>PROPIEDAD DE:</td>
-            <td>{{$datos_traspaso->propietario_anterior}}</td>
+            <td id="uno">PROPIEDAD DE:</td>
+            <td id="dos">{{$datos_traspaso->propietario_anterior}}</td>
         </tr>
         <tr>
-            <td>GIRO ECONÓMICO:</td>
-            <td>{{$empresa->nombre_giro}}</td>
+            <td id="uno">GIRO ECONÓMICO:</td>
+            <td id="dos">{{$empresa->nombre_giro}}</td>
         </tr>
         <tr>
-            <td>A PARTIR DEL DIA:</td>
-            <td>{{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</td>
+            <td id="uno">A PARTIR DEL DIA:</td>
+            <td id="dos">{{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</td>
         </tr>           
         <tr>
-            <td>A NOMBRE DE:</td>
-            <td>{{$datos_traspaso->propietario_nuevo}}</td>
+            <td id="uno">A NOMBRE DE:</td>
+            <td id="dos">{{$datos_traspaso->propietario_nuevo}}</td>
         </tr>                      
         <tr>
             <td colspan="2" align="left">

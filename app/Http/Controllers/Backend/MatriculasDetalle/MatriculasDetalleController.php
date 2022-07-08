@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\MatriculasDetalle\alert;
 use App\Http\Controllers\Controller;
 use App\Models\Calificacion;
 use App\Models\CalificacionMatriculas;
+use App\Models\Cobros;
 use App\Models\CobrosMatriculas;
 use App\Models\LicenciaMatricula;
 use App\Models\MatriculasDetalle;
@@ -75,17 +76,21 @@ class MatriculasDetalleController extends Controller
 
 
     public function tablaMatriculas($id){
+ 
 
         $matriculas=MatriculasDetalle
         ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+        ->join('estado_moratorio','matriculas_detalle.id_estado_moratorio','=','estado_moratorio.id')
                         
-        ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion',
+        ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion','matriculas_detalle.id_estado_moratorio',
                 'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-                'matriculas.nombre as tipo_matricula')
+                'matriculas.nombre as tipo_matricula',
+                'estado_moratorio.id as id_estado_moratorio','estado_moratorio.estado as estado_moratorio')
         ->where('id_empresa', "=", "$id")     
         ->get();
 
+        
            
         return view('backend.admin.Empresas.Matriculas.agregar.tabla.tabla_matriculas', compact('matriculas'));
     }
@@ -435,6 +440,41 @@ public function agregar_matriculas_detalle_especifico(Request $request){
     }
         
 }
+public function VerHistorialCobros_Aparatos($id)
+{
+
+    $ListaCobrosMatriculas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+return view('backend.admin.Empresas.Cobros.tablas.tabla_historico_cobros_aparatos', compact('ListaCobrosMatriculas'));
+}
+
+public function VerHistorialCobros_sinfonolas($id)
+{
+
+    $ListaCobrosSinfonolas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+return view('backend.admin.Empresas.Cobros.tablas.tabla_historico_cobros_sinfonolas', compact('ListaCobrosSinfonolas'));
+}
+
+public function VerHistorialCobros_maquinas($id)
+{
+
+    $ListaCobrosMaquinas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+return view('backend.admin.Empresas.Cobros.tablas.tabla_historico_cobros_maquinas', compact('ListaCobrosMaquinas'));
+}
+
+public function VerHistorialCobros_mesas($id)
+{
+
+    $ListaCobrosMesas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+return view('backend.admin.Empresas.Cobros.tablas.tabla_historico_cobros_mesas', compact('ListaCobrosMesas'));
+}
 
 public function VerMatriculaEsp(Request $request)
     {
@@ -467,6 +507,7 @@ public function VerMatriculaEsp(Request $request)
     ->join('matriculas AS me', 'me.id', '=', 'm.id_matriculas')
           
     ->select('m.id', 
+             'm.id_matriculas',
              'me.nombre',
             )
     ->where('m.id', $request->id)     

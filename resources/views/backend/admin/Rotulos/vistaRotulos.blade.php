@@ -246,8 +246,10 @@
         </div> <!--end third-->
  <!-- Termina sección cargar datos rótulo -->
             <div class="card-footer">
-            <button type="button" class="btn btn-default" onclick="VerListaRotulo()" data-dismiss="modal">Volver</button>
-                  <button type="button" class="btn btn-success  float-right" onclick="">Imprimir</button>
+            <button type="button" class="btn btn-default" onclick="VerListaRotulo()" data-dismiss="modal">
+                  <i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
+                  <button type="button" class="btn btn-success  float-right" onclick="">
+                  <i class="fas fa-print"></i>&nbsp;Imprimir</button>
           </div>
         </div>
       </form>
