@@ -491,7 +491,7 @@ class BusesController extends Controller
             {
              $detectorNull=0;
              $detectorCobro=0;
-             return view('backend.admin.Buses.Cobros.CobroBus', compact('detectorNull','detectorCobro','ultimo_cobro','detectorCobro','tasasDeInteres',));
+             return view('backend.admin.Buses.Cobros.CobroBus', compact('bus','calificacion','date','detectorNull','detectorCobro','ultimo_cobro','detectorCobro','tasasDeInteres',));
             } else
             {
                 $detectorNull=1;
@@ -651,7 +651,7 @@ class BusesController extends Controller
 
                     Log::info($AñoPago);
                     Log::info($CantidadMeses);
-                    Log::info($tarifa);
+                    Log::info($tarifas);
                     Log::info($impuestosValor);
                     Log::info($impuestos_mora);
                     Log::info('año actual '. $impuesto_año_actual);                    
@@ -779,7 +779,7 @@ class BusesController extends Controller
                         'impuestos_mora_Dollar'=>$impuestos_mora_Dollar,
                         'impuesto_año_actual_Dollar'=>$impuesto_año_actual_Dollar,
                         'Cantidad_MesesTotal'=>$Cantidad_MesesTotal,           
-                        'tarifa'=>$tarifa,
+                        'tarifas'=>$tarifas,
                         'fondoFP'=>$fondoFP,
                         'totalPago'=>$totalPago,
                         'DiasinteresMoratorio'=>$DiasinteresMoratorio,                
