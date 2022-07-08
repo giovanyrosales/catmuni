@@ -444,7 +444,7 @@ public function VerHistorialCobros_Aparatos($id)
 {
 
     $ListaCobrosMatriculas = CobrosMatriculas::where('id_matriculas_detalle', $id)
-        ->get();
+    ->get();
 
 return view('backend.admin.Empresas.Cobros.tablas.tabla_historico_cobros_aparatos', compact('ListaCobrosMatriculas'));
 }
@@ -453,7 +453,7 @@ public function VerHistorialCobros_sinfonolas($id)
 {
 
     $ListaCobrosSinfonolas = CobrosMatriculas::where('id_matriculas_detalle', $id)
-        ->get();
+    ->get();
 
 return view('backend.admin.Empresas.Cobros.tablas.tabla_historico_cobros_sinfonolas', compact('ListaCobrosSinfonolas'));
 }

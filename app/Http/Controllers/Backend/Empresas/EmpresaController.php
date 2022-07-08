@@ -549,12 +549,19 @@ public function show($id)
 
     //**¨Fin detectar los cobros especiales */
 
+
+
+
     //**************************** SOLO PARA MATRÍCULAS ****************************/
+
+
     $fechahoy=carbon::now()->format('Y-m-d');
     $AnioActual=carbon::now()->format('Y');
     $month=03;
     $day=31;
     $fechaLimite=Carbon::createFromDate($AnioActual, $month, $day);
+
+
     $matriculas=MatriculasDetalle
     ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
     ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
@@ -567,36 +574,44 @@ public function show($id)
     ->where('id_empresa', "=", "$id")     
     ->get();
 
+
+
     log::info('-------------------|');
+
+
     foreach($matriculas as $dato)
     {
 
         $id_detalle=$dato->id_matriculas_detalle;
-//*ancla2
+
+        //*ancla2
+
         $ComprobandoPagoAlDia=CobrosMatriculas::latest()
         ->where('id_matriculas_detalle',$id_detalle)
         ->pluck('periodo_cobro_fin')
-            ->first();
-            log::info($ComprobandoPagoAlDia);
+        ->first();
+        log::info($ComprobandoPagoAlDia);
+
         $estado_moratorioM=MatriculasDetalle::where('id',$id_detalle)
-            ->pluck('id_estado_moratorio')
-                ->first();
+        ->pluck('id_estado_moratorio')
+        ->first();
 
         $CantidadDias=ceil(carbon::parse($ComprobandoPagoAlDia)->diffInDays(carbon::parse($fechahoy)));
         log::info('Cantidad de dias transcurridos desde el último pago:'.$CantidadDias);
            
         //*Si es Aparatos Parlantes
-            //* Estado matricula: 1= solvente.
+        //* Estado matricula: 1= solvente.
         if($dato->id_matricula==2){
             if($ComprobandoPagoAlDia>$fechaLimite)  
                     {
-                        if($estado_moratorioM!=1){
-                        MatriculasDetalle::where('id',$id_detalle)
-                        ->update([
-                                    'id_estado_moratorio' =>'1',              
-                                ]);
-                                log::info('estado: solvente');
-                            }else{log::info('estado: Ya estaba en Solvente');}
+                            if($estado_moratorioM!=1){
+                            MatriculasDetalle::where('id',$id_detalle)
+                            ->update([
+                                        'id_estado_moratorio' =>'1',              
+                                    ]);
+                                    log::info('estado: solvente');
+                                }else{log::info('estado: Ya estaba en Solvente');}
+
                     }else{
                             if($estado_moratorioM!=2){
                                     MatriculasDetalle::where('id',$id_detalle)
@@ -605,7 +620,8 @@ public function show($id)
                                             ]);
                                             log::info('estado: en mora');
                                     }else{log::info('estado: Ya estaba en mora');}
-                        }
+                    }
+            //*Si es Mesas de billar o  Sinfonolas
             }else if($dato->id_matricula==1 or $dato->id_matricula==4)
             {
                 if( $CantidadDias<90)  
@@ -616,7 +632,7 @@ public function show($id)
                                     'id_estado_moratorio' =>'1',              
                                 ]);
                                 log::info('estado: solvente');
-                            }else{log::info('estado: Ya estaba en Solvente');}
+                            }else{log::info('estado: Ya estaba en Solvente');}                   
                     }else{
                             if($estado_moratorioM!=2){
                                     MatriculasDetalle::where('id',$id_detalle)
@@ -626,6 +642,8 @@ public function show($id)
                                             log::info('estado: en mora');
                                     }else{log::info('estado: Ya estaba en mora');}
                         }
+
+            //*Si es Maquinas eletrónicas
             }else if($dato->id_matricula==3)
             {
                         if( $CantidadDias<60)  
@@ -654,6 +672,8 @@ public function show($id)
         //*Fin si es Mesas de billar
         log::info('-------------------|');
     }
+
+
     //**************************** FIN-SOLO PARA MATRÍCULAS ****************************/
 
    if ($calificaciones == null)
