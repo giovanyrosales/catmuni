@@ -184,6 +184,11 @@
                         <th>Empresa</th>
                         <td>{{$lista->empresas}}</td>
                       </tr>
+
+                      <tr>
+                        <th>Contribuyente</th>
+                        <td>{{$lista->contribuyente}}</td>
+                      </tr>
                       
                       <xtr>
                         <th>Fecha apertura</th>

@@ -22,7 +22,7 @@
            document.getElementById('select_interes').disabled=true;
          //  document.getElementById('select_interesMesas').disabled=true;
            $('#periodo').hide();
-           $('#estado_de_cuentabuses').hide();
+          // $('#estado_de_cuentaRotulo').hide();
         
         }
 
@@ -30,11 +30,11 @@
 </script>
 
 <script>
-  function calculo(id, valor)
+  function calculo(id_bus, valor)
 {
     /*Declaramos variables */
     var id_empresa = (document.getElementById('id_empresa').value);
-    var id_buses_detalle = (document.getElementById('id_buses_detalle').value);
+    var id_buses = (document.getElementById('id_buses').value);
     var fechaPagara=(document.getElementById('fecha_hasta_donde_pagara').value);
     var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
     var tasa_interes=(document.getElementById('select_interes').value);
@@ -57,16 +57,15 @@
 
     var formData = new FormData();
 
-    formData.append('id', id);
     formData.append('id_empresa', id_empresa);
-    formData.append('id_buses_detalle', id_buses_detalle);
+    formData.append('id_buses', id_buses);
     formData.append('cobrar', valor);
     formData.append('fechaPagara', fechaPagara);
     formData.append('ultimo_cobro', ultimo_cobro);
     formData.append('tasa_interes', tasa_interes);
     formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
-    axios.post('l', formData, {
+    axios.post('/admin/bus/calcular-Cobros', formData, {
             })
             .then((response) => {
                     console.log(response);
@@ -84,7 +83,7 @@
                         } 
                         if(response.data.success === 1){
                           $('#periodo').show();
-                          $('#estado_de_cuentabuses').show();
+                          $('#estado_de_cuentaRotulo').show();
                           document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
                           document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
                           document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
@@ -142,7 +141,7 @@
 
         <div class="card card">
           <div class="card-header">
-          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de &nbsp;<span class="badge badge-warning">&nbsp;{{$calificaciones->empresa}} &nbsp;</span></h5>
+          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de: &nbsp;<span class="badge badge-warning">&nbsp; &nbsp;</span></h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -159,7 +158,7 @@
  
       <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">       
         <li class="nav-item">
-          <a class="nav-link active"  data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> &nbsp;Cobro de Buses</a>
+          <a class="nav-link active"  data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> &nbsp;Rótulos</a>
         </li>
      
        
@@ -185,10 +184,10 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="input-group mb-3">
-                        <input type="number" hidden  value="{{$calificaciones->id_buses_detalle}}" name="" disabled id="id_buses_detalle" class="form-control" required >                     
-                        
+                        <input type="number" hidden value="{{$bus->id_bus}}" name="" disabled id="id_buses" class="form-control" required >                     
+                       
                   </div>
-                  <input type="number" hidden value="{{$empresa->id_empresa}}" name="" disabled id="id_empresa" class="form-control" required >
+                  <input type="number" hidden value="{{$bus->id_empresa}}" name="" disabled id="id_empresa" class="form-control" required >
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
@@ -221,12 +220,27 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" onchange ="calculo({{$calificaciones->id_buses_detalle}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
+                        <input  type="date" onchange ="calculo({{$bus->id_bus}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
-                
+                <div class="col-md-6">
+                  <div class="form-group">
+                        <label>ACTIVIDAD ECONÓMICA:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <!-- Inicia Select Giro Comercial -->
+               <div class="col-md-6">
+                <div class="input-group mb-3">  
+                           <!-- finaliza select estado-->
+                        <input type="text" disabled value="" name="giro_comercial"  id="giroc_comercial" class="form-control" required >
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
+                            </div> 
+                      </div>
+                </div>
+              <!-- finaliza select Giro Comercial-->
                <!-- /.form-group -->
                <!-- /.form-group -->
                <div class="col-md-6">
@@ -317,11 +331,11 @@
         
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
-            <button type="submit" class="btn btn-outline-success btn-sm float-right" 
-            onclick="estado_cuenta_buses({{$empresa->id_empresa}});" id="estado_de_cuentabuses" >
+         <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+            onclick="" id="estado_de_cuentaRotulo" >
               <i class="fas fa-print"></i> Estado cuenta
-            </button>    
-         </div>
+            </button> 
+        </div>
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -389,7 +403,7 @@
 
                           <tr>
                             <th scope="row">TOTAL</th>
-                            <td><label></label></td>
+                            <td><label>$</label></td>
                             <td><label name="totalPago_imp" id="totalPago_imp"></label><label</td>
                           </tr>
                         </table>
@@ -402,14 +416,9 @@
                        &nbsp;Registrar Cobro &nbsp;
                       </button>
 
-            </div><!-- /.Panel Tarifas -->
- 
+            </div><!-- /.Panel Tarifas --> 
         <!-- Finaliza campos del formulario de cobros -->
-
-
         <!-------------------------FINALIZA CONTEDIDO (CAMPOS) ----------------------------------->
-
-
             <!-- Fin /.col -->
             </div>
           <!-- /.row -->
@@ -439,18 +448,8 @@
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
         });
+
     
-        function estado_cuenta_buses(id_empresa){
-
-        var ib=(document.getElementById('id_buses_detalle').value);
-        var f1=(document.getElementById('ultimo_cobro').value);
-        var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
-        var ti=(document.getElementById('select_interes').value);
-
-        window.open("{{ URL::to('/admin/estado_cuenta/buses/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + ib + "/" + id_empresa );
-
-        }
-        
         function verificar(){
             Swal.fire({
                 title: '¿Desea guardar el Cobro?',
@@ -462,9 +461,8 @@
                 cancelButtonText: 'Cancelar',
                 confirmButtonText: 'Guardar'
             }).then((result) => {
-                if (result.isConfirmed) 
-                {
-                    calculo({{$calificaciones->id_buses_detalle}},1);
+                if (result.isConfirmed) {
+                calculo({{$bus->id_bus}},1);
                 }
             });
         }
@@ -482,15 +480,15 @@
                       }).then((result) => {
                         if (result.isConfirmed) 
                                     {
-                                    
+                                     recargar({{$bus->id_bus}});
                                     }
                                 });
                             }
 
 
-  function recargar(id){
+  function recargar(id_bus){
        openLoading();
-       window.location.href="{{ url('/admin/buses/vista') }}/"+id;
+       window.location.href="{{ url('/admin/bus/vista') }}/"+id_bus;
     }
 
         </script>

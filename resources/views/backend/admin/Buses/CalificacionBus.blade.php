@@ -29,7 +29,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Calificación Rótulos</li>
+                            <li class="breadcrumb-item active">Calificación Buses</li>
                         </ol>
                     </div><!-- /.col -->
             </div>
@@ -47,7 +47,7 @@
 
         <div class="card card-success">
           <div class="card-header">
-          <h5 class="modal-title">Realizar calificación a rótulo <span class="badge badge-warning">&nbsp; {{$rotulo->nom_rotulo}}&nbsp;</span>&nbsp;</h5>
+          <h5 class="modal-title">Realizar calificación a buses de: <span class="badge badge-warning">&nbsp;{{$bus->empresas}} &nbsp;</span>&nbsp;</h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -76,7 +76,7 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-3">
                 <div class="form-group">  
-                    <input type="text"  value="{{$rotulo->fecha_apertura}} " disabled id="hora_inspeccion" class="form-control" required >
+                    <input type="text"  value="{{$bus->fecha_inicio}} " disabled id="hora_inspeccion" class="form-control" required >
                     <input type="hidden" name="estado_calificacion" id="estado_calificacion" class="form-control" value="calificado">
                 </div>
             </div>
@@ -120,7 +120,7 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-4">
                 <div class="form-group">  
-                    <input type="text"  value="{{$emp}} " disabled id="hora_inspeccion" class="form-control" required >
+                    <input type="text"  value="{{$bus->empresas}} " disabled id="hora_inspeccion" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -134,34 +134,19 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-4">
                 <div class="form-group">  
-                    <input type="text"  value="{{$emp2}} " disabled id="contribuyente" class="form-control" required >
+                    <input type="text"  value="{{$bus->contri}} {{$bus->ape}} " disabled id="contribuyente" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
                <!-- /.form-group -->
-
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label>DIRECCION:</label>
-                </div>
-            </div><!-- /.col-md-6 -->
-               <!-- Inicia Fecha de Inspección -->
-            <div class="col-md-4">
-                <div class="form-group">  
-                    <input type="text"  value="{{$emp1}} " disabled id="empresa" class="form-control" required >
-                </div>
-            </div>
-              <!-- Finaliza Fecha de Inspección-->
-               <!-- /.form-group -->
-           
-           
+          
             </div>
          </div>
         </div>
        
 
             <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
-            <div class="card-header text-info"><label>III. DESCRIPCIÓN DE RÓTULO O VALLA PUBLICITARIAS</label></div>
+            <div class="card-header text-info"><label>III. DESCRIPCIÓN DE BUSES</label></div>
             <div class="card-body"><!-- Card-body -->
             <div class="row"><!-- /.ROW1 -->
          
@@ -178,7 +163,7 @@
         </div>
      
           <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="calcularCalificacion()">Generar Calificación</button>
+                  <button type="button" class="btn btn-success float-right" onclick="calcularCalificacionB()">Generar Calificación</button>
                   <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
           </div>
 
@@ -192,7 +177,7 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Registrar calificación a rótulo&nbsp;<span class="badge badge-warning">&nbsp; {{$rotulo->nom_rotulo}}&nbsp;</span></h5>
+            <h5 class="modal-title">Registrar calificación a buses de: &nbsp;<span class="badge badge-warning">&nbsp;{{$bus->empresas}} &nbsp;</span></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -224,26 +209,10 @@
          <br>
         
         <div class="card border-success mb-3"><!-- Panel Datos generales de la empresa -->
-         <div class="card-header text-success"><label>I. DATOS GENERALES DEL RÓTULO</label></div>
+         <div class="card-header text-success"><label>I. DATOS GENERALES DEL BUS</label></div>
           <div class="card-body"><!-- Card-body -->
-            <div class="row"><!-- /.ROW1 -->
-            
-             <!-- /.form-group -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Nombre del rótulo:</label>
-                  </div>
-               </div><!-- /.col-md-6 -->
-               <div class="col-md-6">
-                  <div class="form-group">
-                        <input type="text"  value="{{$rotulo->nom_rotulo}}" name="nombre" disabled id="nom_rotulo" class="form-control" required >
-                        <input type="hidden" value="{{$rotulo->id}}" name="id_rotulos" disabled id="id_rotulos" class="form-control" required >
-                        <input type="hidden" value="{{$empresa->id_empresa}}"  disabled id="id_empresa" class="form-control" required >
-                     
-                  </div>
-               </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-         
+            <div class="row"><!-- /.ROW1 -->       
+              
                 <div class="col-md-6">
                   <div class="form-group">
                         <label>Fecha de inicio de operaciones:</label>
@@ -251,33 +220,34 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-success" disabled value="{{$rotulo->fecha_apertura}}" name="created_at" id="created_at" class="form-control" required >
+                        <input  type="date" class="form-control text-success" disabled value="{{$bus->fecha_inicio}}" name="created_at" id="created_at" class="form-control" required >
+                        <input type="hidden" value="{{$bus->id_bus}}"  disabled id="id_bus" class="form-control" required >
+                        <input type="hidden" value="{{$bus->id_empresa}}"  disabled id="id_empresa" class="form-control" required >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-        @foreach($calificacion as $rotulo)
+                      
                <!-- /.form-group -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <label>Dirección:</label>
+                        <label>Empresa:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="text" disabled value="{{$rotulo->direccion}}" name="direccion" id="direccion" class="form-control" required >
+                        <input type="text" disabled value="{{$bus->empresas}}" name="" id="empresa" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
-              <!-- /.form-group -->
-        @endforeach
-               <!-- /.form-group -->
-               <div class="col-md-6">
+                 
+                <!-- /.form-group -->
+                <div class="col-md-6">
                   <div class="form-group">
                         <label>Representante legal:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" disabled value="&nbsp;" name="contribuyente" id="contribuyente" class="form-control" >
+                        <input type="text" disabled value="{{$bus->contri}} {{$bus->ape}}" name="" id="empresa" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->     
@@ -301,7 +271,7 @@
         
             
           <div class="card border-success mb-3" id="Div_Rotulos"><!-- PanelVI. ROTULOS -->
-           <div class="card-header text-success"><label>II. ROTULOS</label></div>
+           <div class="card-header text-success"><label>II. BUSES</label></div>
             <div class="card-body">
 
                <!-- /.form-group -->
@@ -310,27 +280,27 @@
                         
                   <table border="1" width:760px;>
                         <tr>
-                          <th scope="col">RÓTULO</th>
-                          <th scope="col">TOTAL MEDIDAS</th>
-                          <th scope="col">CARAS</th>
+                          <th scope="col">BUS</th>
+                          <th scope="col">PLACA</th>
+                          <th scope="col">RUTA</th>
                           <th scope="col">TARIFA MENSUAL</th> 
                           <th scope="col"> EJERCICIO</th>
                         </tr>
 
                         <tr>
-                      @foreach($calificacion as $rotulo)
+                    @foreach($calificacionB as $bus)
 
-                          <td align="center">{{$rotulo->nom_rotulo}}</td>
-                          <td align="center">{{$rotulo->total_medidas}} </td>
-                          <td align="center">{{$rotulo->total_caras}}</td>
-                          <td align="center">${{$rotulo->monto}}</td>
-                          <td align="center">2022</td>
+                          <td style="width: 150px;" align="center">{{$bus->nom_bus}}</td>
+                          <td style="width: 150px;" align="center">{{$bus->placa}}</td>
+                          <td style="width: 150px;" align="center">{{$bus->ruta}}</td>                          
+                          <td style="width: 150px;" align="center">${{$bus->tarifa}}</td>
+                          <td style="width: 150px;" align="center">2022</td>
                        
                         </tr>
-                        @endforeach 
-               
+                    @endforeach 
+
                         <tr>
-                          <td>ACTIVIDAD ECONOMICA / TARIFA </td>
+                          <td>TARIFA </td>
                           <td></td>
                           <td>IMPUESTO:</td>
                           <td align="center">MENSUAL</td>
@@ -339,25 +309,25 @@
 
                         <tr>
                    
-                          <td align="center">{{$rotulo->actividad_economica}}</td>
+                          <td align="center"></td>
                           <td></td>
                           <td> </td>                         
-                          <td align="center" >${{$total}}<label id= "tarifa_mensual"></label> <input type="hidden" id="tarifa_mensual"></td>                         
-                          <td align="center">${{$total1}}</td>
+                          <td align="center" >${{$totalTarifa}}<label id= "tarifa_mensual"></label> <input type="hidden" id="tarifa_mensual"></td>                         
+                          <td align="center">${{$totalTarifaA}}</td>
                         </tr>
                       
                           
                         <tr>
                           <td rowspan="2"></td>
                           <td colspan="2">Fondo Fiestas Patronales 5%</td>
-                          <td align="center">${{$rotulo->total_impuesto}} </td>
-                          <td align="center">${{$totalA}}</td>
+                          <td align="center">${{$totalTarifaI}}</td>
+                          <td align="center">${{$totalTarifaImA}}</td>
                         </tr>
 
                         <tr>
                           <td colspan="2">TOTAL IMPUESTO</td>
-                          <td align="center" ><strong>${{$rotulo->total_impuesto}} </strong><label id= "total_impuesto"></label> <input type="hidden"  id="total_impuesto"></td>
-                          <td align="center"><strong>${{$totalA}}</strong></td>
+                          <td align="center" ><strong>${{$totalTarifaI}} </strong><label id= "total_impuesto"></label> <input type="hidden"  id="total_impuesto"></td>
+                          <td align="center"><strong>${{$totalTarifaImA}}</strong></td>
                         </tr>
                         
                       </table>
@@ -374,7 +344,7 @@
          <div class="card-footer">
          <button type="button" class="btn btn-secondary" onclick="ImpimirCalificacion()"><i class="fa fa-print">
          </i>&nbsp; Impimir Calificación&nbsp;</button>
-         <button type="button" class="btn btn-success float-right" onclick="nuevaCalificacion()"><i class="fas fa-edit">
+         <button type="button" class="btn btn-success float-right" onclick="nuevaCalificacionB()"><i class="fas fa-edit">
          </i> &nbsp;Registrar Calificación&nbsp;</button>
          <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
           </div>
@@ -415,8 +385,8 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var id={{$id}};
-            var ruta = "{{ url('/admin/rotulos/calificaciones/tablarotulo') }}/"+id;
+            var id_bus = {{$id_bus}};
+            var ruta = "{{ url('/admin/bus/calificaciones/tablabus') }}/"+id_bus;
             $('#tablaDatatable').load(ruta);
             
             document.getElementById("divcontenedor").style.display = "block";
@@ -424,85 +394,91 @@
         });
 
 
-    function calcularCalificacion()
-    {
+        function calcularCalificacionB()
+        {
 
-      var fecha_calificacion = document.getElementById('fecha_calificacion').value;
+          var fecha_calificacion = document.getElementById('fecha_calificacion').value;
 
-      if (fecha_calificacion === '')
-      {
-        toastr.error('La fecha de la calificación es requerida');
-        return;
-      }
+          if (fecha_calificacion === '')
+          {
+            toastr.error('La fecha de la calificación es requerida');
+            return;
+          }
 
-      document.getElementById('fechacalificar').value=fecha_calificacion;
+          document.getElementById('fechacalificar').value=fecha_calificacion;
 
-        $('#modalCalificacion').modal('show');
+            $('#modalCalificacion').modal('show');
 
-      
-    }
+          
+        }
+
+        function nuevaCalificacionB()
+        {       
+
+            var id_bus = {{$id_bus}};     
+            var id_empresa = document.getElementById('id_empresa').value;     
+            var estado_calificacion = document.getElementById('estado_calificacion').value;
+            var fechacalificar = document.getElementById('fechacalificar').value;
+
+          
+            openLoading();
+            var formData = new FormData();
+                formData.append('id_bus', id_bus);
+                formData.append('id_empresa', id_empresa);
+                formData.append('estado_calificacion', estado_calificacion);
+                formData.append('fechacalificar', fechacalificar);
+              
+            
+
+        axios.post('/admin/bus/calificacion/nuevaC_Bus', formData, {
+        })
+            .then((response) => {
+              console.log(response)
+                closeLoading();
+                if(response.data.success === 0){
+                    toastr.error(response.data.message);
+                }
+                if(response.data.success === 1){
+                  Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: '¡Calificación registrada correctamente!',
+                                showConfirmButton: true,
+                          
+                              }).then((result) => {
+                              if (result.isConfirmed) {
+                                  $('#modalCalificacion').modal('hide');
+                                  // window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
+                                  }
+                              });
+                  }
+              
+            })
+            .catch((error) => {
+              Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: '¡Error al registrar la calificación!', 
+                                showConfirmButton: true,
+                              }).then((result) => {
+                              if (result.isConfirmed) {
+                                $('#modalCalificacion').modal('hide');
+                                          closeLoading();
+                                        }
+                              });
+            });
+          
+
+
+        }
+
+   
     
 
-    function nuevaCalificacion()
-  {
    
 
-      var id = {{$id}};     
-      var id_empresa = document.getElementById('id_empresa').value;     
-      var estado_calificacion = document.getElementById('estado_calificacion').value;
-      var fechacalificar = document.getElementById('fechacalificar').value;
 
-    
-      openLoading();
-      var formData = new FormData();
-          formData.append('id_rotulos', id);
-          formData.append('id_empresa', id_empresa);
-          formData.append('estado_calificacion', estado_calificacion);
-          formData.append('fechacalificar', fechacalificar);
-         
-       
-
-  axios.post('/admin/rotulos/calificacion/nuevaC', formData, {
-  })
-      .then((response) => {
-        console.log(response)
-          closeLoading();
-          if(response.data.success === 0){
-              toastr.error(response.data.message);
-          }
-          if(response.data.success === 1){
-            Swal.fire({
-                          position: 'top-end',
-                          icon: 'success',
-                          title: '¡Calificación registrada correctamente!',
-                          showConfirmButton: true,
-                     
-                        }).then((result) => {
-                        if (result.isConfirmed) {
-                            $('#modalCalificacion').modal('hide');
-                            // window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
-                            }
-                        });
-            }
-         
-      })
-      .catch((error) => {
-        Swal.fire({
-                          icon: 'error',
-                          title: 'Oops...',
-                          text: '¡Error al registrar la calificación!', 
-                          showConfirmButton: true,
-                        }).then((result) => {
-                        if (result.isConfirmed) {
-                          $('#modalCalificacion').modal('hide');
-                                    closeLoading();
-                                  }
-                        });
-      });
-     
-
-
-  }
+  
     </script>
 
     @stop

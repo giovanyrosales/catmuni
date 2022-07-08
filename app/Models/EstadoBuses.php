@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class EstadoRotulos extends Model
+class EstadoBuses extends Model
 {
 
-    protected $table = 'estado_rotulo';
+    protected $table = 'estado_buses';
     public $timestamps = false;
     protected $fillable = [
         'id',

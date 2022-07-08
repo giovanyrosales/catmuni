@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Backend\Rotulos;
 
 use App\Http\Controllers\Controller;
 use App\Models\CalificacionRotulo;
-use App\Models\CierresReaperturasRotulos;
+use App\Models\CierresReaperturasRotulo;
 use App\Models\CobrosRotulo;
 use App\Models\Contribuyentes;
 use App\Models\InspeccionRotulos;
 use App\Models\Rotulos;
 use App\Models\Empresas;
-use App\Models\EstadoRotulos;
+use App\Models\EstadoRotulo;
 use App\Models\TarifaRotulo;
 use App\Models\Interes;
 use App\Models\MultasDetalle;
@@ -61,7 +61,7 @@ class RotulosController extends Controller
             'permiso_instalacion' => 'required',
             'fecha_apertura' => 'required',
             'actividad_economica' => 'required',          
-            'estado' => 'required'
+         
         );
     
         $validar = Validator::make($request->all(), $regla, 
@@ -95,6 +95,7 @@ class RotulosController extends Controller
                 
                 $dato = new Rotulos();
                 $dato->id_empresa = $request->empresa;
+                $dato->id_estado_rotulo = $request->estado_rotulo;
                 $dato->nom_rotulo = $request->nom_rotulo;
                 $dato->direccion = $request->direccion;
                 $dato->fecha_apertura = $request->fecha_apertura;
@@ -107,6 +108,7 @@ class RotulosController extends Controller
                 $dato->imagen = $nomImagen;
                 $dato->nom_inspeccion = $request->nom_inspeccion;
                 $dato->cargo_inspeccion = $request->cargo_inspeccion;
+              
 
                 if($dato->save()){
 
@@ -123,6 +125,7 @@ class RotulosController extends Controller
           
         $dato = new Rotulos();
         $dato->id_empresa = $request->empresa;
+        $dato->id_estado_rotulo = $request->estado_rotulo;
         $dato->fecha_apertura = $request->fecha_apertura;
         $dato->direccion = $request->direccion;
         $dato->nom_rotulo = $request->nom_rotulo;
@@ -134,6 +137,7 @@ class RotulosController extends Controller
         $dato->coordenadas = $request->coordenadas;
         $dato->nom_inspeccion = $request->nom_inspeccion;
         $dato->cargo_inspeccion = $request->cargo_inspeccion;
+       
       
       
         if($dato->save()){
@@ -412,12 +416,12 @@ class RotulosController extends Controller
         if($lista = Rotulos::where('id', $request->id)->first()){
            
             $empresa = Empresas::orderBy('nombre')->get();
-            $estadorotulo = EstadoRotulos::orderBy('estado')->get();
+            $estadorotulo = EstadoRotulo::orderBy('estado')->get();
             return ['success' => 1,
-            'idempre' => $lista->id_empresa,
+            'idempre' => $empresa->id_empresa,
             'empresa' => $empresa,
             'rotulos' => $lista,
-            'estadorotulos' => $estadorotulo,
+            'estadorotulo' => $estadorotulo,
 
             
         ];
@@ -431,9 +435,7 @@ class RotulosController extends Controller
   
         $regla = array(  
             'id' => 'required',
-            'estado' => 'required', 
-            'fecha_cierre' => 'required'
-           
+                      
         );
       
         $validar = Validator::make($request->all(), $regla,
@@ -447,11 +449,12 @@ class RotulosController extends Controller
         }
         if($rotulo = Rotulos::where('id', $request->id)->first()){
 
-            Rotulos::where('id', $request->id)->update([
-                
+           $estado_rotulo = EstadoRotulo::where('id', $request->id)->update([
+              
                 'idesta' => $rotulo->id_estado_rotulo,
+             
                  'estado' => $request->estado,
-                 'fecha_cierre' => $request->fecha_cierre,
+                 'fecha_a_partir_de' => $request->cierre_apartirdeldia,
 
                  
          ]);
@@ -494,7 +497,7 @@ class RotulosController extends Controller
 
     public function tablaCierresR($id){
 
-        $historico_cierres=CierresReaperturasRotulos::orderBy('id', 'desc')
+        $historico_cierres=CierresReaperturasRotulo::orderBy('id', 'desc')
         ->where('id_empresa',$id)
         ->get();
 
@@ -504,7 +507,7 @@ class RotulosController extends Controller
     public function tablaTraspasosR($id){
 
         $historico_traspasos=TraspasosRotulos::orderBy('id', 'desc')
-        ->where('id_empresa',$id)
+        ->where('id_empresa',$id) 
         ->get();
            
         return view('backend.admin.Rotulos.CierresTraspasos.tablas.tabla_traspaso_r', compact('historico_traspasos'));
@@ -1162,63 +1165,227 @@ foreach ($calificacion as $dato)
 
     }
 
-    public function cierres_traspasos_rotulo($id){
-        
-        $idusuario = Auth::id();
-        $infouser = Usuario::where('id', $idusuario)->first();
-        $estadorotulos = EstadoRotulos::All();
-        $contribuyentes = Contribuyentes::All();
-        $ConsultaEmpresa = Empresas::All();
-        $rotulos = Rotulos::ALL();
+    //Realizar traspaso
+    public function infoTraspasoR(Request $request)
+    {
+        $empresa = Empresas::ALL();
 
-        $rotulo= Rotulos
-        ::join('empresa','rotulos.id_empresa','=','empresa.id')
-        ->join('estado_rotulo','rotulos.id_estado_rotulo','=','estado_rotulo.id')  
-           
-        
-        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura','rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
-        'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion','rotulos.coordenadas','rotulos.imagen',
-        'estado_rotulo.estado',)
-        ->where('rotulos.id',$id)
-        ->first();
+            $regla = array(
+                'id' => 'required',
+            );
 
-        $Consul_traspasos_r=TraspasosRotulos::latest()
-        ->where('id_empresa',$id)
-        ->first();
+            $validar = Validator::make($request->all(), $regla);
 
-        $Consul_cierres=CierresReaperturasRotulos::latest()
-        ->where('id_empresa',$id)
-        ->first();
+            if ($validar->fails()){ return ['success' => 0];}
 
-        if($Consul_traspasos_r===null){
-            $Consul_traspasos_r=0;
-            }
-        else
-            {$Consul_traspasos_r=1;
-            }  
-        
-        if($Consul_cierres===null){
-                $Consul_cierres=0;
-                }
-        else
-                {
-                    $Consul_cierres=1;
-                }
+            if($lista = Rotulos::where('id', $request->id)->first()){
+                
+                $empresas = Empresas::orderBy('nombre')->get();
+                $estado_rotulo = EstadoRotulo::orderBy('estado')->get();
+                return ['success' => 1,
 
-        return view('backend.admin.Rotulos.CierresTraspasos.Cierres_Traspasos',
-                compact(
-                        'empresa',
-                        'contribuyentes',
-                        'estadorotulos',
-                        'ConsultaEmpresa',
-                        'rotulos',
-                        'Consul_traspasos_r',
-                        'Consul_cierres',
-                        
-                       ));
+                'id_emp' => $lista->id_empresa,
+                'idesta' => $lista->id_estado_rotulo,
+                'empresa' => $empresas,
+                'estado_rotulo' => $estado_rotulo,
+                
+            ];
     }
+        else
+        {
+            return ['success' => 2];
+        }
+    }
+//Realizar traspaso finaliza
 
-   
+        public function cierres_traspasosRotulo($id){
+                    
+            $idusuario = Auth::id();
+            $infouser = Usuario::where('id', $idusuario)->first();
+            $estado_rotulo = EstadoRotulo::All();
+            $ConsultaEmpresa = Empresas::All();
+            $empresas = Empresas::ALL();
+            $contribuyente = Contribuyentes::ALL();
+
+        
+            $rotulo = Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
+            ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+            ->join('estado_rotulo','rotulos.id_estado_rotulo','=', 'estado_rotulo.id')
+                            
+            ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
+            'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
+            'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
+            'rotulos.coordenadas','rotulos.imagen',
+            'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
+            'empresa.nombre as empresas',
+            'estado_rotulo.estado')
+            ->where('rotulos.id', $id)
+            ->find($id);
+
+            
+        
+            return view('backend.admin.Rotulos.CierresTraspasos.Cierres_TraspasosR',
+                    compact(
+                            'estado_rotulo',     
+                            'rotulo',
+                            'ConsultaEmpresa',
+                            'contribuyente',
+                            'empresas',
+                                            
+                        ));
+        }
+
+        public function nuevoEstadoRotulo(Request $request)
+        {
+            log::info($request->all());
+
+                $id = $request->id;
+                $estado_rotulo = $request->estado_rotulo;
+
+                if($estado_rotulo == 1)
+                {
+                    $Tipo_operacion='Cierre';
+                }else
+                {
+                    $Tipo_operacion='Reapertura';
+                }
+
+                $rotulo = Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
+                ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+                ->join('estado_rotulo','rotulos.id_estado_rotulo','=', 'estado_rotulo.id')
+                                
+                ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
+                'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
+                'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
+                'rotulos.coordenadas','rotulos.imagen',
+                'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
+                'empresa.nombre as empresas',
+                'estado_rotulo.estado')
+                ->find($id);
+                
+
+                $regla = array(  
+                    'estado_rotulo' => 'required',
+                    'cierre_apartirdeldia' => 'required',
+                );
+            
+                $validar = Validator::make($request->all(), $regla,
+            
+                );
+                DB::beginTransaction();
+
+                try {
+
+                if ($validar->fails()){ 
+                    return ['success' => 0,
+                    'message' => $validar->errors()->first()
+                ];
+                }
+
+            
+                if(Rotulos::where('id', $request->id)->first()){
+                if($estado_rotulo != $rotulo->id_estado_rotulo){
+                    //** Guardar registro historico en tabla traspasos */
+                    $cierre = new CierresReaperturasRotulo();               
+                    $cierre->id_rotulos = $request->id;
+                    $cierre->fecha_a_partir_de = $request->cierre_apartirdeldia;
+                    $cierre->tipo_operacion = $Tipo_operacion;
+                    $cierre->save();
+                    //** FIN- Guardar registro historico en tabla traspasos */
+
+                    Rotulos::where('id', $request->id)->update([
+            
+                        'id_estado_rotulo' => $request->estado_rotulo,
+                        
+                    ]);
+                    DB::commit();
+                        return ['success' => 1];
+                
+                    }else{ 
+                            return ['success' => 3];
+                        }
+                }
+            }            
+
+                    catch(\Throwable $e){
+                        DB::rollback();   
+                    return ['success' => 2];
+                }
+            
+        }
+
+        public function nuevoTraspasoRotulo(Request $request)
+        {
+
+            log::info($request->all());
+
+            $id = $request->id;
+            $id_empresa = $request->empresa;
+        
+                $rotulo = Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
+                ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+                ->join('estado_rotulo','rotulos.id_estado_rotulo','=', 'estado_rotulo.id')
+                                
+                ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
+                'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
+                'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
+                'rotulos.coordenadas','rotulos.imagen',
+                'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
+                'empresa.nombre as empresas',
+                'estado_rotulo.estado')
+                ->find($id);
+                        
+
+
+                $datos_empresa = Empresas::select('nombre')
+                ->where('id', $id_empresa)
+                ->first();
+        
+
+                $regla = array(  
+                    'id' => 'required',
+                    'empresa' => 'required',
+                );
+            
+                $validar = Validator::make($request->all(), $regla,
+            
+                );
+
+                if ($validar->fails()){ 
+                    return ['success' => 0,
+                    'message' => $validar->errors()->first()
+                ];
+                }
+                if(Rotulos::where('id', $request->id)->first()){
+                    //** Guardar registro historio en tabla traspasos */
+            
+                if($id_empresa != $rotulo->id_empresa){
+                    $traspaso = new TraspasosRotulos();
+                    $traspaso->id_rotulos = $id;            
+                    $traspaso->propietario_anterior = $rotulo->empresas;
+                    $traspaso->propietario_nuevo =  $datos_empresa->nombre;
+                    $traspaso->fecha_a_partir_de = $request->Apartirdeldia;
+                    $traspaso->save();
+                    //** FIN- Guardar registro historio en tabla traspasos */
+                    Rotulos::where('id', $request->id)->update([
+            
+                        'id_empresa' => $request->empresa,
+                        ]);
+
+                        return ['success' => 1];
+
+                    }else{ 
+                        return ['success' => 3];
+                        }
+
+                    }else{
+                        return ['success' => 2];
+                    }
+        }
+
+
+
+        
 } //Cierre final
 
 

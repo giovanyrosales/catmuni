@@ -74,6 +74,7 @@
             <div class="col-md-3">
                 <div class="form-group">  
                     <input type="date" value=" " name="fecha_apertura"  id="fecha_apertura" class="form-control" required >        
+                    <input type="text" hidden value="2"  id="estado_rotulo" class="form-control" required >    
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -158,36 +159,11 @@
                       </div>
                   </div>
     
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label>ESTADO:</label>
-                  </div>
-                </div>
                   <div class="col-md-3">
-                     <div class="form-group">                       
-                        <!-- Select estado - live search -->
-                          <div class="input-group mb-10">
-                                <select 
-                                required
-                                class="selectpicker"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select-estado" 
-                                title="-- Selecione el estado --"
-                                 >
-                                 <option value="Activo">Activo</option>
-                                 <option value="Cerrado">Cerrado</option>
-                                </select> 
-                           </div>
-                           <!-- finaliza asignar actividad economica-->
+                        <div class="form-group">
+                            <label>PERMISO:</label>
                         </div>
-                      </div>
-
-                      <div class="col-md-3">
-                            <div class="form-group">
-                                <label>PERMISO:</label>
-                            </div>
-                      </div>
+                    </div>
                       <div class="col-md-3">
                      <div class="form-group">
                             <div class="input-group mb-10">
@@ -205,8 +181,7 @@
                            </div>
                            <!-- finaliza asignar actividad economica-->
                         </div>
-                      </div>
-
+                      </div> 
                       
                    <!-- /.form-group -->
              
@@ -440,6 +415,7 @@
             
          
             var empresa = document.getElementById('select-empresa').value;
+            var estado_rotulo = document.getElementById('estado_rotulo').value;
             var nom_rotulo = document.getElementById('nom_rotulo').value;
             var direccion = document.getElementById('direccion').value;
             var permiso_instalacion = document.getElementById('select-tipo_permiso').value;
@@ -452,7 +428,7 @@
             var nom_inspeccion = document.getElementById('nom_inspeccion').value;
             var cargo_inspeccion = document.getElementById('cargo_inspeccion').value;
             var actividad_economica = document.getElementById('select-actividad_economica').value;
-            var estado = document.getElementById('select-estado').value;
+         
         
                     
             if(nom_rotulo === '')
@@ -476,12 +452,6 @@
             if (actividad_economica === '')
             {
               toastr.error('Actividad económica es requerida');
-              return;
-            }
-
-            if (estado === '')
-            {
-              toastr.error('Estado es requerido');
               return;
             }
 
@@ -519,6 +489,7 @@
             var formData = new FormData();
            
                 formData.append('empresa', empresa);
+                formData.append('estado_rotulo', estado_rotulo);
                 formData.append('nom_rotulo', nom_rotulo);         
                 formData.append('direccion', direccion);
                 formData.append('permiso_instalacion', permiso_instalacion);          
@@ -531,7 +502,7 @@
                 formData.append('nom_inspeccion', nom_inspeccion);
                 formData.append('cargo_inspeccion', cargo_inspeccion);
                 formData.append('actividad_economica', actividad_economica);
-                formData.append('estado', estado );
+          
         
 
             axios.post('/admin/Rotulos/CrearRotulos', formData, {

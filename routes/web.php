@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
+use App\Http\Controllers\Backend\Buses\BusesController;
 use App\Http\Controllers\Backend\Reportes\reportesBusesController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
@@ -213,10 +214,10 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
 
     
     //CIERRE Y TRASPASO DE RÓTULOS
-    Route::get('/admin/rotulos/cierres_traspasos/{rotulo}', [RotulosController::class,'cierres_traspasos_rotulo']);
-    Route::get('/admin/rotulos/cierres/tabla/{rotulo}', [RotulosController::class,'tablaCierresR']);
-    Route::get('/admin/rotulos/traspasos/tabla/{rotulo}', [RotulosController::class,'tablaTraspasosR']);
-
+    Route::post('/admin/rotulos/show/informacion', [RotulosController::class,'infoTraspasoR']);
+    Route::get('/admin/rotulos/cierres_traspasos/{rotulo}', [RotulosController::class,'cierres_traspasosRotulo']);
+    Route::post('/admin/rotulos/show/cierre', [RotulosController::class,'nuevoEstadoRotulo']);
+    Route::post('/admin/rotulos/show/traspaso', [RotulosController::class,'nuevoTraspasoRotulo']);
 
     //BUSES
     Route::get('/admin/nuevo/buses/Crear', [BusesDetalleController::class,'index'])->name('admin.crear.buses.index');   
@@ -233,9 +234,28 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/buses/calificacion/{bus}', [BusesDetalleController::class, 'calificacionBus']);
     Route::get('/admin/buses/calificaciones/tablabus/{bus}', [BusesDetalleController::class,'tablaCalificacionB']);
     Route::post('/admin/buses/calificacion/nueva' , [BusesDetalleController::class, 'guardarCalificacionBus']);
-    Route::get('/admin/buses/cobros/{bus}', [BusesDetalleController::class, 'cobrosBus']);
+    Route::get('/admin/buses/cobros/{buses}', [BusesDetalleController::class, 'cobrosBus']);
     Route::post('/admin/buses/calcular-CobrosB', [BusesDetalleController::class, 'calcularCobrosBus']);
 
+    // NUEVO MÓDULO BUSES
+    Route::get('/admin/nuevo/bus/Agregar', [BusesController::class,'crearBus'])->name('admin.crear.bus.crear');
+    Route::post('/admin/bus/CrearBuses', [BusesController::class,'nuevoBus']);
+    Route::get('/admin/bus/tabla', [BusesController::class,'tablaBuses']);
+    Route::get('/admin/bus/Listar', [BusesController::class,'listarBus'])->name('admin.listarBus.index');
+    Route::post('/admin/bus/VerB', [BusesController::class, 'informacionBus']); 
+    Route::post('/admin/bus/actualizar', [BusesController::class, 'editarBus']);
+    Route::get('/admin/bus/vista/{buses}', [BusesController::class, 'showBuses']);
+    Route::get('/admin/bus/calificaciones/tablabus/{bus}', [BusesController::class,'tablaCalificacionB']);
+    Route::get('/admin/bus/calificacion/{buses}', [BusesController::class, 'calificacionBuses']);
+    Route::post('/admin/bus/calificacion/nuevaC_Bus' , [BusesController::class, 'guardarCalificacionB']);
+    Route::get('/admin/bus/cobros/{bus}', [BusesController::class, 'cobrosBus']);
+    Route::post('/admin/bus/calcular-Cobros', [BusesController::class, 'calcularCobrosB']);
+
+    //CIERRES Y TRASPASOS DE BUSES
+    Route::post('/admin/buses/show/informacion', [BusesController::class,'infoTraspasoB']);
+    Route::get('/admin/buses/cierres_traspasos/{bus}', [BusesController::class,'cierres_traspasosB']);
+    Route::post('/admin/buses/show/cierre', [BusesController::class,'nuevoEstadoBus']);
+    Route::post('/admin/buses/show/traspaso', [BusesController::class,'nuevoTraspasoBus']);
 
     //REPORTES EMPRESAS
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);

@@ -14,6 +14,7 @@ use App\Models\Empresas;
 use App\Models\Contribuyentes;
 use App\Models\CobrosBuses;
 use App\Models\Interes;
+use App\Models\Usuario;
 use App\Models\MatriculasDetalleEspecifico;
 use App\Models\BusesDetalleEspecifico;
 use App\Models\CalificacionBuses;
@@ -779,7 +780,7 @@ class BusesDetalleController extends Controller
             {
                 $detectorNull=0;
                 $detectorCobro=0;
-                return view('backend.admin.Buses.Cobros.cobroBus', compact('detectorNull','detectorCobro'));
+                return view('backend.admin.Buses.Cobros.cobrosBus', compact('detectorNull','detectorCobro'));
             }
         }
         else
@@ -789,7 +790,7 @@ class BusesDetalleController extends Controller
             {
              $detectorNull=0;
              $detectorCobro=0;
-            return view('backend.admin.Buses.Cobros.cobroBus', compact('buses','calificaciones','calificacion','calificacionB','empresa','tasasDeInteres','date','detectorNull','detectorCobro'));
+            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','empresa','tasasDeInteres','date','detectorNull','detectorCobro'));
             }
             else
             {
@@ -1115,8 +1116,4 @@ class BusesDetalleController extends Controller
             }
 
     }
-
-   
-    
-
 }   

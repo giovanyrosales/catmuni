@@ -16,67 +16,60 @@
 
 window.onload = f4;
 
-function f4(){
+function f4()
+{
   $('#imp_traspaso').hide();
   $('#imp_cierre').hide();
   $('#btn_ocultar_historial_traspasos').hide();
   $('#btn_ocultar_historial_cierres').hide();
   $('#Div_historico').hide();
   $('#Div_historico_cierres').hide();
-  informacionTraspaso({{$empresa->id}});
+  
+  informacionTraspaso({{$rotulo->id}});
+}
+  
 
-  var hayTraspaso={{$Consul_traspasos}};
-
-  if (hayTraspaso==1){
-         $('#historico_traspaso_emp').show(); 
-    }else{
-        $('#historico_traspaso_emp').hide();
-        }
-
-    var hayCierre={{$Consul_cierres}};
-
-    if (hayCierre==1){
-       $('#historico_cierres_emp').show();
-    }else{
-        $('#historico_cierres_emp').hide();
-        }
-
-  }
-
-function f6(){
+function f6()
+{
   $('#imp_traspaso').show();
   $('#historico_traspaso_emp').show();
-  }
+}
 
-function f7(){
+function f7()
+{
   $('#imp_cierre').show();
   $('#historico_cierres_emp').show();
-  }
+}
 
-function verhistorialTraspasos(){
+function verhistorialTraspasos()
+{
   recargarTraspasos();
   $('#Div_historico').show();
   $('#btn_ocultar_historial_traspasos').show();
   $('#btn_ver_historial_traspasos').hide();
 }
-function OcultarhistorialTraspasos(){
+function OcultarhistorialTraspasos()
+{
   $('#Div_historico').hide();
   $('#btn_ocultar_historial_traspasos').hide();
   $('#btn_ver_historial_traspasos').show();
 }
 
-function verhistorialCierres(){
+function verhistorialCierres()
+{
   recargarCierres()
   $('#Div_historico_cierres').show();
   $('#btn_ocultar_historial_cierres').show();
   $('#btn_ver_historial_cierres').hide();
 }
-function OcultarhistorialCierres(){
+function OcultarhistorialCierres()
+{
   $('#Div_historico_cierres').hide();
   $('#btn_ocultar_historial_cierres').hide();
   $('#btn_ver_historial_cierres').show();
 }
 </script>
+
 <style>
     table{
         /*Ajustar tablas*/
@@ -109,7 +102,6 @@ function OcultarhistorialCierres(){
         </div>
     </section>
 
-
  <!-- Main content -->
  <section class="content">
         <div class="container-fluid">
@@ -117,7 +109,7 @@ function OcultarhistorialCierres(){
                 <div class="col-md-12">
                     <div class="card">
                     <div class="card-header">
-                        <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Cierres y traspasos de la empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+                        <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Cierres y traspasos de rótulo &nbsp;<span class="badge badge-warning">&nbsp;{{$rotulo->nom_rotulo}} &nbsp;</span></h5>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                             <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
@@ -130,7 +122,7 @@ function OcultarhistorialCierres(){
                         <div class="container-fluid">
                             <div class="card card-warning">
                             <div class="card-header">
-                                <h3 class="card-title">I. TRASPASO DE EMPRESA</h3>
+                                <h3 class="card-title">I. TRASPASO DE RÓTULOS</h3>
                                 <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                 <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
@@ -154,14 +146,13 @@ function OcultarhistorialCierres(){
                                             <div class="input-group mb-9">
                                                     <select 
                                                     required
-                                                    class="form-control"
-                                                    data-style="btn-success"
+                                                    class="form-control"                                                   
                                                     data-show-subtext="true" 
                                                     data-live-search="true"   
                                                     id="select-empresa-traspaso" 
                                                     title="-- Seleccione un registro --"
                                                     >
-                                                    @foreach($empresa as $empresa)
+                                                    @foreach($empresas as $empresa)
                                                     <option value="{{ $empresa->id }}"> {{ $empresa->nombre }}</option>
                                                     @endforeach
                                                     </select>
@@ -179,6 +170,7 @@ function OcultarhistorialCierres(){
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="date" id="Apartirdeldia" required class="form-control" >
+                                        <input type="text" hidden value="{{$rotulo->id}}" id="id_rotulo" required class="form-control" >
                                     </div>
                                     </div>
                                 <!-- /.form-group --> 
@@ -203,7 +195,7 @@ function OcultarhistorialCierres(){
                                 <div class="form-group">
                                     <!-- Botón Guardar Traspaso -->
                                         <br>
-                                        <button type="button"  onclick="guardarTraspaso({{$empresa->id}})" 
+                                        <button type="button"  onclick="guardarTraspasoRotulo({{$rotulo->id}})" 
                                         class="btn btn-warning btn-sm float-right" ><i class="fas fa-save"></i>
                                         &nbsp; Guardar Traspaso &nbsp;</button>
                                     <!-- /.Botón Guardar Traspaso -->
@@ -252,7 +244,7 @@ function OcultarhistorialCierres(){
                         <div class="container-fluid">
                             <div class="card card-danger">
                             <div class="card-header">
-                                <h3 class="card-title">II. CIERRE Y REAPERTURA DE EMPRESA</h3>
+                                <h3 class="card-title">II. CIERRE Y REAPERTURA DE RÓTULO</h3>
                                 <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                 <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
@@ -266,7 +258,7 @@ function OcultarhistorialCierres(){
                             <!-- /.form-group -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>ESTADO DE LA EMPRESA:</label>
+                                    <label>ESTADO DEL RÓTULO:</label>
                                 </div>
                             </div><!-- /.col-md-6 -->
                             <!-- /.form-group -->
@@ -277,14 +269,13 @@ function OcultarhistorialCierres(){
                                         <div class="input-group mb-9">
                                             <select 
                                             required
-                                            class="form-control"
-                                            data-style="btn-success"
+                                            class="form-control"                                           
                                             data-show-subtext="true" 
                                             data-live-search="true"   
                                             id="select-estado_rotulo" 
                                             title="-- Seleccione el estado  --"
                                             >
-                                                @foreach($estadorotulos as $estado)
+                                                @foreach($estado_rotulo as $estado)
                                                 <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
                                                 @endforeach 
                                             </select>
@@ -303,6 +294,7 @@ function OcultarhistorialCierres(){
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="date" id="Cierre_Apartirdeldia" required class="form-control" >
+                                   
                                 </div>
                                 </div>
                             <!-- /.form-group --> 
@@ -317,7 +309,7 @@ function OcultarhistorialCierres(){
                                 
                             <!-- Botón Imprimir Cierre -->
                                  <br>
-                                <button type="button"  onclick="ImprimirCierre({{$empresa->id}})" id="imp_cierre"  class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                                <button type="button"  onclick="" id="imp_cierre"  class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
                                 &nbsp; Imprimir resolución de Cierre&nbsp;</button>
                                 </button>
                             <!-- /.Botón Imprimir Cierre -->
@@ -328,7 +320,7 @@ function OcultarhistorialCierres(){
                             <div class="form-group">
                                 <!-- Botón Guardar Traspaso -->
                                 <br>
-                                <button type="button"  onclick="guardarEstado()" class="btn btn-danger btn-sm float-right" ><i class="fas fa-save"></i>
+                                <button type="button"  onclick="guardarEstadoRotulo({{$rotulo->id}})" class="btn btn-danger btn-sm float-right" ><i class="fas fa-save"></i>
                                 &nbsp; Guardar Cierre &nbsp;</button>
                                 <!-- /.Botón Guardar Traspaso -->
                             </div>
@@ -374,7 +366,7 @@ function OcultarhistorialCierres(){
                 </section>
     <!-----------------------------------Termina Contenido ------------------------------------------->          
                             <div class="card-footer">
-                                <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}})"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
+                                <button type="button" class="btn btn-default" onclick=""><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
                             </div>
                     </div>
                 </div>
@@ -401,18 +393,11 @@ function OcultarhistorialCierres(){
 
     <script type="text/javascript">
 
-        $(document).ready(function(){   
-            var id = {{$empresa->id}};
-
-            //**Para tabla cierres */
-            var ruta = "{{ url('/admin/rotulos/cierres/tabla') }}/"+id;
-            $('#tabla_cierres').load(ruta);
-
-            //**Para tabla Traspasos */
-            var ruta = "{{ url('/admin/rotulos/traspasos/tabla') }}/"+id;
-            $('#tabla_traspasos').load(ruta);
+        $(document).ready(function()
+        {   
 
             document.getElementById("divcontenedor").style.display = "block";
+
         });
 
         function resolucion_traspaso_historico(id){
@@ -433,7 +418,7 @@ function OcultarhistorialCierres(){
 
         function VerEmpresa(id)
         {
-             window.location.href="{{ url('/admin/Rotulos/show') }}/"+id;
+             window.location.href="{{ url('/admin/empresas/show') }}/"+id;
         }
 
         function modalMensaje(titulo, mensaje)
@@ -455,8 +440,10 @@ function OcultarhistorialCierres(){
             });   
         }
 
-        function guardarTraspaso(id){
+        function guardarTraspasoRotulo(id)
+        {
 
+        var id = document.getElementById('id_rotulo').value;
         var empresa = document.getElementById('select-empresa-traspaso').value;
         var Apartirdeldia = document.getElementById('Apartirdeldia').value;
 
@@ -466,17 +453,18 @@ function OcultarhistorialCierres(){
         }
 
         if(empresa === ''){
-        modalMensaje('Aviso', 'El dato de la empresa es requerido');
+        modalMensaje('Aviso', 'El dato empresa es requerido');
         return;
         }
 
         openLoading();
             var formData = new FormData();
-            formData.append('id', id);
+           
+            formData.append('id', id);          
             formData.append('empresa', empresa);
             formData.append('Apartirdeldia', Apartirdeldia);
 
-            axios.post('/admin/empresas/show/traspaso', formData, {
+            axios.post('/admin/rotulos/show/traspaso', formData, {
             })
             .then((response) => {          
                 closeLoading();
@@ -502,14 +490,15 @@ function OcultarhistorialCierres(){
             
             })
             .catch((error) => {
-                toastr.error('Error al actualizar empresa');
+                toastr.error('Error al actualizar bus');
                 closeLoading();
             });
         }
 
-        function informacionTraspaso(id){
+        function informacionTraspaso(id)
+        {
             openLoading();
-            axios.post('/admin/empresas/show/informacion',{
+            axios.post('/admin/rotulos/show/informacion',{
                 'id': id
             })
             .then((response) => {
@@ -517,20 +506,19 @@ function OcultarhistorialCierres(){
                     closeLoading();
                     if(response.data.success === 1){
                         
-
-                        document.getElementById("select-rotulo-traspaso").options.length = 0;
+                        document.getElementById("select-empresa-traspaso").options.length = 0;
                         document.getElementById("select-estado_rotulo").options.length = 0;
 
-                        
                         $.each(response.data.empresa, function( key, val ){
-                            if(response.data.idempre == val.id){
+                            if(response.data.id_emp == val.id){
                                 $('#select-empresa-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
                             }else{
                                 $('#select-empresa-traspaso').append('<option value="' +val.id +'">'+val.nombre+'</option>');
                             }
+                            
                         });
-
-                        $.each(response.data.estado_empresa, function( key, val ){
+                        
+                        $.each(response.data.estado_rotulo, function( key, val ){
                             if(response.data.idesta == val.id){
                                 $('#select-estado_rotulo').append('<option value="' +val.id +'" selected="selected">'+val.estado+'</option>');
                             }else{
@@ -539,23 +527,23 @@ function OcultarhistorialCierres(){
                         }); 
 
                       }else{
-                        toastr.error('Información no encontrada');
+                        toastr.error('Información no ha sido encontrada');
                     }
 
                 })
                 .catch((error) => {
                     closeLoading();
-                    toastr.error('Información no encontrada');
+                    toastr.error('Información no encontradaaaaaa');
                 });
 
-    }
+        }
 
-    function guardarEstado()
+    function guardarEstadoRotulo()
     {
       //Llamar la variable id desde el controlador
-      var id = {{$empresa->id}};
-      var estado_rotulo = document.getElementById('select-estado_rotulo').value;
-      var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
+        var id = {{$rotulo->id}};
+        var estado_rotulo = document.getElementById('select-estado_rotulo').value;
+        var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
 
       if(estado_rotulo === ''){
             modalMensaje('Aviso', 'El estado del rótulo es requerido.');
@@ -572,7 +560,7 @@ function OcultarhistorialCierres(){
             formData.append('estado_rotulo', estado_rotulo);
             formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
 
-            axios.post('/admin/empresas/show/cierre', formData, {
+            axios.post('/admin/rotulos/show/cierre', formData, {
             })
             .then((response) => {          
                 closeLoading();
