@@ -22,7 +22,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h5>Lista De Rótulos Registrados</h1>
+            <h5>Lista de rótulos registrados</h1>
           </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -253,7 +253,7 @@
                       <div class="card card-green">
                    
           <div class="card-header">
-            <h3 class="card-title">Actualizar Rótulos</h3>
+            <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Actualizar Rótulos</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -500,8 +500,10 @@
          
          </div>
          <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="actualizarRotulo()">Guardar</button>
-                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">Cancelar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="actualizarRotulo()">
+                  <i class="fas fa-save"></i> &nbsp;Guardar</button>
+                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">
+                  <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
           </div>
       <!-- /.card -->
              </div>
@@ -539,8 +541,10 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" onclick="borrarRotulo()">Borrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="borrarRotulo()">
+                    <i class="far fa-trash-alt"></i>&nbsp;Borrar</button>
                 </div>
             </div>
         </div>

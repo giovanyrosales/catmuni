@@ -1034,7 +1034,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
          <div class="card-footer">
          <button type="button" class="btn btn-secondary" onclick="ImprimirCalificacion({{ $empresa->id }})" id="btn_imprimirCalificacion">
          <i class="fa fa-print"></i>&nbsp; Imprimir Calificación&nbsp;</button>
-         <button type="button" class="btn btn-success float-right" onclick="nuevo()"><i class="fas fa-edit">
+         <button type="button" class="btn btn-success float-right" onclick="nuevo()" id="guardarcali"><i class="fas fa-edit">
          </i> &nbsp;Registrar Calificación&nbsp;</button>
          <br><br><button type="button" class="btn btn-default" onclick="deseleccionarCheck()" id="cerrarcalificacion1" data-dismiss="modal">Cerrar</button>
          <button type="button" class="btn btn-warning" onclick="listarEmpresas()" id="cerrarcalificacion2" data-dismiss="modal">Cerrar</button>
@@ -1248,6 +1248,7 @@ function nuevo(){
                      
                         }).then((result) => {
                         if (result.isConfirmed) {
+                            $('#guardarcali').hide();
                             $('#btn_imprimirCalificacion').show();
                             $('#cerrarModal1').hide();
                             $('#cerrarcalificacion1').hide();

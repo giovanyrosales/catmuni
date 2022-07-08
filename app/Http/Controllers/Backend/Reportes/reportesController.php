@@ -36,7 +36,6 @@ use App\Models\LicenciaMatricula;
 use App\Models\MatriculasDetalle;
 use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
-use App\Models\MultasDetalle;
 use App\Models\MatriculasDetalleEspecifico;
 use App\Models\alertas;
 use App\Models\alertas_detalle;
@@ -354,7 +353,7 @@ class reportesController extends Controller
                  }
                  
                 //** Para determinar la cantidad de multas por balance por empresa */
-                $multasBalance=MultasDetalle::select('monto_multa')
+                $multasBalance=calificacion::select('multa_balance')
                 ->where('id_empresa',$id)
                 ->where('id_estado_multa','2')
                     ->get();
@@ -363,7 +362,7 @@ class reportesController extends Controller
                     $monto_pago_multaBalance=0;
 
                     foreach($multasBalance as $dato){
-                        $multaBalance=$dato->monto_multa;
+                        $multaBalance=$dato->multa_balance;
 
                             if ($multaBalance>0)
                             {
@@ -448,7 +447,9 @@ public function aviso($id)
         $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadHTML($view)->setPaper('carta', 'portrait');
-    
+        
+
+
         if($alerta_aviso===null){
 
             $cantidad_avisos=$cantidad+1;
@@ -467,8 +468,17 @@ public function aviso($id)
             ->update([
                         'cantidad' =>$cantidad,              
                     ]);
-             }
-                else{
+             }else if($alerta_aviso>=2){
+
+                $cantidad=0;
+    
+                alertas_detalle::where('id_empresa',$id)
+                ->where('id_alerta','1')
+                ->update([
+                            'cantidad' =>$cantidad,              
+                        ]);
+                 }
+                    else{
                         $cantidad=$alerta_aviso+1;
 
                         alertas_detalle::where('id_empresa',$id)
@@ -753,26 +763,26 @@ public function aviso($id)
                         $totalMultaPagoExtemporaneo=2.86;
                     }
                     
-                    //** Para determinar la cantidad de multas por balance por empresa */
-                    $multasBalance=MultasDetalle::select('monto_multa')
-                    ->where('id_empresa',$id)
-                    ->where('id_estado_multa','2')
-                        ->get();
+                //** Para determinar la cantidad de multas por balance por empresa */
+                $multasBalance=calificacion::select('multa_balance')
+                ->where('id_empresa',$id)
+                ->where('id_estado_multa','2')
+                    ->get();
 
-                        $Cantidad_multas=0;
-                        $monto_pago_multaBalance=0;
+                    $Cantidad_multas=0;
+                    $monto_pago_multaBalance=0;
 
-                        foreach($multasBalance as $dato){
-                            $multaBalance=$dato->monto_multa;
+                    foreach($multasBalance as $dato){
+                        $multaBalance=$dato->multa_balance;
 
-                                if ($multaBalance>0)
-                                {
-                                    $monto_pago_multaBalance= $monto_pago_multaBalance+$multaBalance;
-                                    $Cantidad_multas=$Cantidad_multas+1;
-                                }
-                                
-                    } 
-                    //** Fin- Determinar la cantidad de multas por empresa */ 
+                            if ($multaBalance>0)
+                            {
+                                $monto_pago_multaBalance= $monto_pago_multaBalance+$multaBalance;
+                                $Cantidad_multas=$Cantidad_multas+1;
+                            }
+                            
+                } 
+                //** Fin- Determinar la cantidad de multas por empresa */ 
                 
 
             
@@ -806,7 +816,7 @@ public function aviso($id)
         $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadHTML($view)->setPaper('carta', 'portrait');
-
+            
         $cantidad=0;
         $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
         ->where('id_alerta','2')
@@ -2422,9 +2432,7 @@ public function cierre_empresa($id){
     $datos_cierres=CierresReaperturas::select('fecha_a_partir_de','tipo_operacion','created_at')
     ->where('id_empresa',$id)
     ->latest()->first();
-
-    $cant_resolucion=CierresReaperturas::all()
-    ->count();
+   
 
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -2465,6 +2473,9 @@ public function cierre_empresa($id){
 
     //** Detectar tipo de operación [Cierre][Reapertura] */
     if($datos_cierres->tipo_operacion==='Cierre'){
+        $cant_resolucion=CierresReaperturas::where('tipo_operacion','Cierre')
+        ->count();
+
             $view = View::make('backend.admin.Empresas.Reportes.Cierres_empresas', compact([
 
                     'FechaDelDia',
@@ -2477,6 +2488,9 @@ public function cierre_empresa($id){
 
             ]))->render();
     }else{
+        $cant_resolucion=CierresReaperturas::where('tipo_operacion','Reapertura')
+        ->count();
+        
             $view = View::make('backend.admin.Empresas.Reportes.Reaperturas_empresas', compact([
 
                     'FechaDelDia',
@@ -2785,6 +2799,31 @@ public function reporte_datos_empresa($id){
 
 
 }
+
+
+//********************************* REPORTES [AVISO Y NOTIFICACIONES] ******************************/
+//************************************* SOLO PARA MATRICULAS ***************************************/
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------//
+
+
+
+
+
+
+
+
+
+
+
+
+//***************************** FINALIZA REPORTES [AVISO Y NOTIFICACIONES] **************************/
+//*************************************** SOLO PARA MATRICULAS **************************************/
 
 //** Fin de reportes controller */    
 }

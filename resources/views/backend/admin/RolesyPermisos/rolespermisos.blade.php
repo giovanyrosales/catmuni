@@ -20,7 +20,7 @@
 <section class="content-header">
     <div class="container-fluid">
         <div class="col-sm-12">
-            <h1>Lista de Permisos</h1>
+            <h1><i class="fas fa-list"></i>&nbsp;Lista de Permisos</h1>
         </div>
         <br>
         <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
@@ -52,7 +52,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Nuevo Permiso</h4>
+                <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;Nuevo Permiso</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -82,7 +82,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
-                <button type="button" class="btn btn-success" onclick="agregarPermiso()">Agregar</button>
+                <button type="button" class="btn btn-success" onclick="agregarPermiso()"><i class="fas fa-plus-square"></i>&nbsp;Agregar</button>
             </div>
         </div>
     </div>
@@ -92,7 +92,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Borrar Permiso</h4>
+                <h4 class="modal-title"><i class="far fa-minus-square"></i>&nbsp;Borrar Permiso</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -103,6 +103,9 @@
                         <div class="row">
                             <div class="col-md-12">
 
+                            <p>"Esta acción eliminara el Permiso."</p>
+
+                            <div class="form-group">
                                 <div class="form-group">
                                     <input type="hidden" id="idborrar">
                                 </div>
@@ -114,7 +117,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
-                <button type="button" class="btn btn-danger" onclick="borrar()">Borrar</button>
+                <button type="button" class="btn btn-danger" onclick="borrar()"><i class="fas fa-trash-alt"></i>&nbsp;Borrar</button>
             </div>
         </div>
     </div>

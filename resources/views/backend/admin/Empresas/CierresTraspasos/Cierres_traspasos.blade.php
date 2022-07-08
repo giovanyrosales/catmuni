@@ -54,24 +54,26 @@ function f7(){
   }
 
 function verhistorialTraspasos(){
-  recargarTraspasos();
+  ;
   $('#Div_historico').show();
   $('#btn_ocultar_historial_traspasos').show();
   $('#btn_ver_historial_traspasos').hide();
 }
 function OcultarhistorialTraspasos(){
+    recargarTraspasos()
   $('#Div_historico').hide();
   $('#btn_ocultar_historial_traspasos').hide();
   $('#btn_ver_historial_traspasos').show();
 }
 
 function verhistorialCierres(){
-  recargarCierres()
+ 
   $('#Div_historico_cierres').show();
   $('#btn_ocultar_historial_cierres').show();
   $('#btn_ver_historial_cierres').hide();
 }
 function OcultarhistorialCierres(){
+    recargarCierres()
   $('#Div_historico_cierres').hide();
   $('#btn_ocultar_historial_cierres').hide();
   $('#btn_ver_historial_cierres').show();

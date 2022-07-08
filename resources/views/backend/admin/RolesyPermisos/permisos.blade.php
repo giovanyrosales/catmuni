@@ -51,7 +51,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Nuevo Usuario</h4>
+                    <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;Nuevo Usuario</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -101,7 +101,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
-                    <button type="button" class="btn btn-success" onclick="nuevoUsuario()">Guardar</button>
+                    <button type="button" class="btn btn-success" onclick="nuevoUsuario()"><i class="fas fa-save"></i>&nbsp;Guardar</button>
                 </div>
             </div>
         </div>
@@ -112,7 +112,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Editar Usuario</h4>
+                    <h4 class="modal-title"><i class="fas fa-edit"></i>&nbsp;Editar Usuario</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -172,7 +172,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="actualizar()">Guardar</button>
+                    <button type="button" class="btn btn-primary" onclick="actualizar()"><i class="fas fa-save"></i>&nbsp;Guardar</button>
                 </div>
             </div>
         </div>

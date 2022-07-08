@@ -44,7 +44,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Multas</h3>
+            <h3 class="card-title"><i class="fas fa-list"></i>&nbsp;Lista de tipos de multas</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -82,7 +82,7 @@
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar multas</h4>
+         <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;Agregar multas</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -90,7 +90,7 @@
                <div class="modal-body">
                     <form id="formulario-AgregarMultas"> 
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-12">
               <div class="form-group">
                 <label>Código:</label>
                         <input type="number" name="codigo" id="codigo" class="form-control" required placeholder="Código">
@@ -98,11 +98,11 @@
                 </div>
               </div>
                          
-              <div class="col-md-10">
+              <div class="col-md-12">
                      <div class="form-group">
                           <label>Tipo de multas:</label>
                           <!-- Select estado - live search -->
-                          <div class="input-group mb-10">
+                          <div class="input-group mb-12">
                                 <select 
                                 required
                                 
@@ -120,7 +120,7 @@
                            <!-- finaliza asignar actividad economica-->
                         </div>
                           </div>
-                <div class="col-md-10">
+                <div class="col-md-12">
                 <div class="form-group">
                      <label>Nombre:</label>
                         <input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Nombre">
@@ -130,8 +130,10 @@
                 </div>               
                  </div>
                   <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="nuevaM()"> Guardar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="nuevaM()"> 
+                  <i class="fas fa-save"></i> &nbsp;Guardar </button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default">
+                  <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
                 </div>
                    </div>
              
@@ -151,7 +153,7 @@
         <div class="modal-dialog" style="width:2000px;">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Actualizar multas</h4>
+         <h4 class="modal-title"><i class="far fa-edit"></i>&nbsp;Actualizar multas</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -159,7 +161,7 @@
                <div class="modal-body">
                     <form id="formulario-EditarMultas"> 
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-12">
               <div class="form-group">
                 <label>Código:</label>
                         <input type="number" name="codigo" id="codigo-editar" class="form-control" required placeholder="Nombre licencia o matricula">
@@ -167,11 +169,11 @@
                 </div>
               </div>
               
-                <div class="col-md-10">
+                <div class="col-md-12">
                      <div class="form-group">
                           <label>Tipo de multas:</label>
                           <!-- Select estado - live search -->
-                          <div class="input-group mb-10">
+                          <div class="input-group mb-12">
                                 <select 
                                 required
                                 class="form-control" 
@@ -189,7 +191,7 @@
                         </div>
                 <!-- /.form-group -->  
                      </div>
-                     <div class="col-md-10">
+                     <div class="col-md-12">
                 <div class="form-group">
                      <label>Nombre:</label>
                         <input type="text" name="nombre" id="nombre-editar" class="form-control" required placeholder="Monto">
@@ -200,8 +202,10 @@
                 
                 </div>    
                 <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="actualizarMulta()"> Actualizar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="actualizarMulta()">
+                  <i class="far fa-edit"></i>&nbsp; Actualizar </button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default">
+                  <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
                 </div>           
                    </div>
                  </div>
@@ -222,7 +226,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Eliminar Multa</h4>
+                    <h4 class="modal-title"><i class="far fa-minus-square"></i>&nbsp;Eliminar Multa</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -244,8 +248,10 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" onclick="eliminarMulta()">Borrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarMulta()">
+                    <i class="far fa-trash-alt"></i>&nbsp;Borrar</button>
                 </div>
             </div>
         </div>

@@ -174,7 +174,7 @@
                 <p>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
                 Dirección:&nbsp;{{$empresa->direccionCont}}<br>
                 Cuenta Corriente N°:&nbsp;{{$empresa->num_tarjeta}}<br>
-                Negocio o empresa:&nbsp;{{$empresa->nombre}}<br><br>
+                Buses de la empresa: &nbsp;{{$empresa->nombre}}<br><br>
 
                 Estimado(a) señor (a):</p>
                 <p style="text-indent:20">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El

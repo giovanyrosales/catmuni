@@ -265,8 +265,10 @@
           </div>
          <!-- /.card-body -->
          <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="editar()">Guardar</button>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="editar()">
+                  <i class="fas fa-save"></i>&nbsp;Guardar</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                  <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
           </div>
          <!-- /.card-footer -->
          </div>

@@ -58,11 +58,6 @@
 
 
 <script>
-
-
-
-
-
     $(function () {
         $("#tabla").DataTable({
             "paging": true,

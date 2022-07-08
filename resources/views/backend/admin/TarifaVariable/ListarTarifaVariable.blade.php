@@ -44,7 +44,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Tarifa variable</h3>
+            <h3 class="card-title"><i class="fas fa-table"></i>&nbsp;Tabla variable según su actividad económica</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -83,7 +83,7 @@
         <div class="modal-dialog" style="width:1300px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tarifa variable</h4>
+                    <h4 class="modal-title"><i class="fas fa-donate"></i>&nbsp;Tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -191,7 +191,7 @@
         <div class="modal-dialog dtr-modal-content">
         <div class="modal-content">
          <div class="modal-header">
-         <h4 class="modal-title">Agregar tarifa variable</h4>
+         <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;Agregar tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -279,8 +279,10 @@
                    
             <div class="form-group">
               <div class="card-footer">
-                  <button type="button" class="btn btn-success float-right" onclick="nuevaTarifaV()"> Guardar </button>
-                  <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="nuevaTarifaV()"> 
+                  <i class="fas fa-save"></i> &nbsp;Guardar </button>
+                  <button type="button" data-dismiss="modal" class="btn btn-default">
+                  <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
                 </div>
                 </div>
            <!-- /.col -->
@@ -305,7 +307,7 @@
         <div class="modal-dialog" style="width:1300px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tarifa variable</h4>
+                    <h4 class="modal-title"><i class="far fa-edit"></i>&nbsp;Atualizar tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -395,8 +397,10 @@
                       </div>
                            <!-- finaliza select Asignar Representante-->
                            <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success  float-right" onclick="actualizarTarifaV()">Actualizar</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">
+                      <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                        <button type="button" class="btn btn-success  float-right" onclick="actualizarTarifaV()">
+                        <i class="far fa-edit"></i>&nbsp;Actualizar</button>
                     </div>
                   <!--finaliza los campos del formulario-->
                      </div>
@@ -413,7 +417,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Eliminar tarifa variable</h4>
+                    <h4 class="modal-title"><i class="far fa-minus-square"></i>&nbsp;Eliminar tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -435,8 +439,10 @@
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" onclick="eliminarD()">Borrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarD()">
+                    <i class="far fa-trash-alt"></i>&nbsp;Borrar</button>
                 </div>
             </div>
         </div>

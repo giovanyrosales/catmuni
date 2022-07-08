@@ -127,7 +127,9 @@
             margin: 2px 0 0 0;
             font-size: small;
         }
-
+        #uno{
+                font-size: 13px;
+        }
 
 
     </style>
@@ -173,32 +175,32 @@
             </td>
         </tr>
         <tr>
-            <td>FECHA DE RESOLUCIÓN:</td>
-            <td>{{$dia}},&nbsp;{{$FechaDelDia}}</td>
+            <td id="uno">FECHA DE RESOLUCIÓN:</td>
+            <td id="uno">{{$dia}},&nbsp;{{$FechaDelDia}}</td>
         </tr>
         <tr>
-            <td>NÚMERO DE CUENTA CORRIENTE:</td>
-            <td>{{$empresa->num_tarjeta}}</td>
+            <td id="uno">NÚMERO DE CUENTA CORRIENTE:</td>
+            <td id="uno">{{$empresa->num_tarjeta}}</td>
         </tr>
         <tr>
-            <td> <b>CIERRESE:</b></td>
-            <td>{{$empresa->nombre}}</td>
+            <td id="uno"> <b>CIERRESE:</b></td>
+            <td id="uno">{{$empresa->nombre}}</td>
         </tr>
         <tr>
-            <td>DIRECCIÓN:</td>
-            <td>{{$empresa->direccion}}</td>
+            <td id="uno">DIRECCIÓN:</td>
+            <td id="uno">{{$empresa->direccion}}</td>
         </tr>
         <tr>
-            <td>PROPIEDAD DE:</td>
-            <td>{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}</td>
+            <td id="uno">PROPIEDAD DE:</td>
+            <td id="uno">{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}</td>
         </tr>
         <tr>
-            <td>GIRO ECONÓMICO:</td>
-            <td>{{$empresa->nombre_giro}}</td>
+            <td id="uno">GIRO ECONÓMICO:</td>
+            <td id="uno">{{$empresa->nombre_giro}}</td>
         </tr>
         <tr>
-            <td>A PARTIR DEL DIA:</td>
-            <td>{{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</td>
+            <td id="uno">A PARTIR DEL DIA:</td>
+            <td id="uno">{{$diaApartirDe}}, &nbsp;{{$FechaDelDiaApartirDe}}</td>
             
         </tr>                               
         <tr>

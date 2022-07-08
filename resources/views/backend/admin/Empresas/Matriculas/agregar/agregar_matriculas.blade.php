@@ -355,6 +355,8 @@ function f4(){
     </div>
 
     <!--Finaliza Modal Especificar Matrícula-->
+
+
 <!--Inicia Modal ver Matrícula y matrícula específica-->
     
 <div class="modal fade bd-example-modal-lg" id="modalVerMatriculaEsp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -362,7 +364,10 @@ function f4(){
             <div class="modal-content">
               <!--Contenido del modal-->
                <div class="modal-header">
-                    <h4 class="modal-title"><i class="far fa-file-alt"></i>&nbsp;Vista detallada de la matrícula</h4>
+                    <h5 class="modal-title"><i class="far fa-file-alt"></i>&nbsp;
+                    Vista detallada de la matrícula:&nbsp; <label id="nombre_matricula"></label>
+                    <input type="hidden" id="id_de_matricula">
+                </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -373,7 +378,42 @@ function f4(){
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
+
+                                <!-- Cajitas para estadísticas inicia aquí -->
+                                <section class="content" id="seccionAlertas">
+                                     
+                                    <div class="container-fluid">
+                                        <!-- Small boxes (Stat box) -->
+                                        <div class="m-0 row justify-content-center" >
+                                             <div class="col-lg-8 col-2">
+                                                <center>
+                                                <h3 class="btn btn-primary"> Avisos: <span class="badge badge-pill badge-light">0</span></h3> &nbsp;
+                                                <h3 class="btn btn-primary"> Notificaciones: <span class="badge badge-pill badge-light">0</span></h3>
+                                                </center>
+                                            </div>
+                                        </div>
+                                        <!-- ./col -->
+                                    </div>
+                                   
+                                    <!-- Cajitas para estadísticas termina aquí -->
+
+                                    <div class="card" >
+                                        <div class="card-header">
+                                            <b>Avisos y notificaciones</b>
+                                        </div>
+                                        <div class="card-body">
+                                            <a href="#" class="btn btn-outline-info"><i class="fas fa-exclamation-circle"></i>&nbsp;Generar aviso</a>
+                                            <a href="#" class="btn btn-outline-warning"><i class="fas fa-envelope-open-text"></i>&nbsp;Generar notificación</a>
+                                        </div>
+                                        </div>
+                                        </section>
                                     <!--Tabla 1-->
+                                    <div class="card" >
+                                        <div class="card-header">
+                                            <b>Información General</b>
+                                        </div>
+                                        <div class="card-body">
+
                                     <table class="table table-hover table-striped" id="VerMatriculasEsp_detallada" style="border: 100px" data-toggle="table">
                                     <form id="formulario-show">
                                     <tbody>
@@ -409,6 +449,8 @@ function f4(){
                              
                                 </tbody>
                                 </table>
+                                </div>
+                                </div>
                             </div>
                                     
                         <!-----------------------------------Termina  Contenido Editar Matrícuila específica ------------------------------------------->
@@ -1095,12 +1137,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
             var id={{$id}};
                      window.location.href="{{ url('/admin/empresas/show') }}/"+id;
         }
-        function VerMatricula_especifica(id_matriculas_detalle){
-         
-                openLoading();
-                    window.location.href="{{ url('/admin/matriculas_detalle/vistaMatriculas') }}/"+id_matriculas_detalle;
 
-        }
         
         function borrarFila(elemento){
             var tabla = elemento.parentNode.parentNode;
@@ -1258,7 +1295,17 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                         var infodetalle = response.data.listado;
                 
                         var caracteristica = response.data.mdetalle.nombre;
-             
+                        var id_de_matricula = response.data.mdetalle.id_matriculas;
+                        
+                        if(id_de_matricula=='2'){
+                            $('#seccionAlertas').hide();
+                        }else{
+                            $('#seccionAlertas').show();
+                            }
+
+                        document.getElementById('nombre_matricula').innerHTML=caracteristica; 
+                        document.getElementById('id_de_matricula').value=id_de_matricula; 
+
                         for (var i = 0; i < infodetalle.length; i++) {
                  
 
