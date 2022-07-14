@@ -2397,7 +2397,7 @@ public function nuevaCalificacion(Request $request){
                 }
         }
 
-public function nuevoEstado(Request $request)
+    public function nuevoEstado(Request $request)
     {
            $id_empresa=$request->id;
            $estado_empresa=$request->estado_empresa;

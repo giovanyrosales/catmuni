@@ -89,7 +89,7 @@
     </div>
    
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="" >
+        <a href="#" onclick="cierreytraspasoBus({{$buses->id_buses_detalle}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -399,11 +399,14 @@
      $('#tablaDatatable').load(ruta);
     }
     
-    function CrearInspeccion(id)
-    {
-      openLoading();
-      window.location.href="{{ url('/admin/Rotulos/inspeccion') }}/"+id;
+    function cierreytraspasoBus(id_buses_detalle)
+    { 
+
+        window.location.href="{{ url('/admin/buses/cierres_traspasosB') }}/"+id_buses_detalle;
+
     }
+
+
     function CrearCalificacion(id)
     {
       openLoading();

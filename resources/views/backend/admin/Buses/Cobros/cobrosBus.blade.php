@@ -66,7 +66,7 @@
     formData.append('tasa_interes', tasa_interes);
     formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
-    axios.post('l', formData, {
+    axios.post('/admin/buses/calcular-CobrosB', formData, {
             })
             .then((response) => {
                     console.log(response);
@@ -305,9 +305,6 @@
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-            
-              
-              
             </div> <!-- /.ROW1 -->
             </div> <!-- /.card card-success -->
             </div> <!-- /.card-header text-success -->
@@ -451,7 +448,8 @@
 
         }
         
-        function verificar(){
+        function verificar()
+        {
             Swal.fire({
                 title: '¿Desea guardar el Cobro?',
                 text: "",

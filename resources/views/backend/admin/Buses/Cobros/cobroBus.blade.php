@@ -141,7 +141,7 @@
 
         <div class="card card">
           <div class="card-header">
-          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de: &nbsp;<span class="badge badge-warning">&nbsp; &nbsp;</span></h5>
+          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de: &nbsp;<span class="badge badge-warning">&nbsp;{{$bus->nom_bus}} &nbsp;</span></h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -172,7 +172,14 @@
           <!-- Campos del formulario de cobros -->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
-          <div class="card-header text-success"><b>DATOS GENERALES</b>.</div>
+          <div class="card-header text-success"><b>DATOS GENERALES</b>.
+
+                <button type="button" class="btn btn-outline-info btn-sm float-right" 
+                    onclick="historial_cobros_Buses()" id="Historial_cobros_aparatosIMP" >
+                    <i class="fas fa-history"></i> Historial de cobros
+                </button> 
+        
+          </div>               
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
             
@@ -422,9 +429,41 @@
             <!-- Fin /.col -->
             </div>
           <!-- /.row -->
+        </div>
+      </div><!-- /.ROWPADRE -->
+  </div> <!-- pills-Home-->
+
+
+<!-- Modal Historial de cobros  Buses-->
+<div class="modal fade" id="historial_cobros_buses">
+      <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-history"></i> &nbsp;Historial de cobros: <b>Buses</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+               <div class="modal-body" id="tres">
+                    <form id="formulario_historial_cobros_buses">        
+                 <!-- /.card-header -->
+                
+                  <!--inicia los campos del formulario ver-->
+                        <div class="col-md-12">
+                            <div class="form-group" id="Div_historico_cobros_buses">
+                                <div class="col-auto  p-12 text-center" id="tabla_historico_cobros_buses"></div>
+                            </div>
+                        </div>
+                  <!--finaliza los campos del formulario-->
+                     </form>
+                  </div>
+                <div class="card-footer">
+                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i> &nbsp;Cerrar</button>
+                </div>
           </div>
-        </div><!-- /.ROWPADRE -->
-          </div> <!-- pills-Home-->
+    </div>
+</div>
+<!-- FIN Modal Historial de cobros Buses -->
 
 
 
@@ -445,12 +484,14 @@
 
      
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function()
+        {
             document.getElementById("divcontenedor").style.display = "block";
         });
 
     
-        function verificar(){
+        function verificar()
+        {
             Swal.fire({
                 title: '¿Desea guardar el Cobro?',
                 text: "",
@@ -467,7 +508,8 @@
             });
         }
 
-        function cobro_registrado(){
+        function cobro_registrado()
+        {
                       Swal.fire({
                       title: 'Cobro registrado correctamente',
                       //text: "Puede modificarla en la opción [Editar]",
@@ -483,13 +525,28 @@
                                      recargar({{$bus->id_bus}});
                                     }
                                 });
-                            }
+        }
 
+   
 
-  function recargar(id_bus){
+  function recargar(id_bus)
+  {
        openLoading();
        window.location.href="{{ url('/admin/bus/vista') }}/"+id_bus;
-    }
+  }
+
+
+  function historial_cobros_Buses()
+  {
+        var id_bus=document.getElementById("id_buses").value; 
+
+        $('#historial_cobros_buses').css('overflow-y', 'auto');
+        $('#historial_cobros_buses').modal({backdrop: 'static', keyboard: false})
+
+        var ruta = "{{ url('/admin/bus/ver_historial_cobros_buses') }}/"+id_bus;
+        $('#tabla_historico_cobros_buses').load(ruta);
+
+  }
 
         </script>
 

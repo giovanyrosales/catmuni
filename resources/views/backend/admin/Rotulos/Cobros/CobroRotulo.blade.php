@@ -173,7 +173,14 @@
           <!-- Campos del formulario de cobros -->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
-          <div class="card-header text-success"><b>DATOS GENERALES</b>.</div>
+          <div class="card-header text-success"><b>DATOS GENERALES</b>.
+        
+                <button type="button" class="btn btn-outline-info btn-sm float-right" 
+                    onclick="historial_cobros_Rotulos()" id="Historial_cobros_aparatosIMP" >
+                    <i class="fas fa-history"></i> Historial de cobros
+                </button> 
+        
+        </div>
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
             
@@ -417,20 +424,49 @@
                        &nbsp;Registrar Cobro &nbsp;
                       </button>
 
-            </div><!-- /.Panel Tarifas -->
- 
+            </div><!-- /.Panel Tarifas --> 
         <!-- Finaliza campos del formulario de cobros -->
-
-
         <!-------------------------FINALIZA CONTEDIDO (CAMPOS) ----------------------------------->
-
-
             <!-- Fin /.col -->
             </div>
           <!-- /.row -->
           </div>
         </div><!-- /.ROWPADRE -->
           </div> <!-- pills-Home-->
+
+<!-- Modal Historial de cobros rótulos-->
+<div class="modal fade" id="historial_cobros_rotulos">
+      <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-history"></i> &nbsp;Historial de cobros: <b>Buses</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+               <div class="modal-body" id="tres">
+                    <form id="formulario_historial_cobros_rotulos">        
+                 <!-- /.card-header -->
+                
+                  <!--inicia los campos del formulario ver-->
+                        <div class="col-md-12">
+                            <div class="form-group" id="Div_historico_cobros_rotulos">
+                                <div class="col-auto  p-12 text-center" id="tabla_historico_cobros_rotulos"></div>
+                            </div>
+                        </div>
+                  <!--finaliza los campos del formulario-->
+                     </form>
+                  </div>
+                <div class="card-footer">
+                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i> &nbsp;Cerrar</button>
+                </div>
+          </div>
+    </div>
+</div>
+<!-- FIN Modal Historial de cobros rótulos -->
+
+
+
 
 
 
@@ -502,12 +538,25 @@
                             }
 
 
-  function recargar(id){
+  function recargar(id)
+  {
        openLoading();
        window.location.href="{{ url('/admin/Rotulos/vista') }}/"+id;
-    }
+  }
 
-        </script>
+  function historial_cobros_Rotulos()
+  {
+        var id=document.getElementById("id_rotulos").value; 
+
+        $('#historial_cobros_rotulos').css('overflow-y', 'auto');
+        $('#historial_cobros_rotulos').modal({backdrop: 'static', keyboard: false})
+
+        var ruta = "{{ url('/admin/rotulos/ver_historial_cobros_rotulos') }}/"+id;
+        $('#tabla_historico_cobros_rotulos').load(ruta);
+
+  }
+
+  </script>
 
 <style>
 @media screen 

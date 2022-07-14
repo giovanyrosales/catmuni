@@ -13,6 +13,7 @@ use App\Models\MatriculasDetalle;
 use App\Models\Empresas;
 use App\Models\Contribuyentes;
 use App\Models\CobrosBuses;
+use App\Models\EstadoBuses;
 use App\Models\Interes;
 use App\Models\Usuario;
 use App\Models\MatriculasDetalleEspecifico;
@@ -851,8 +852,7 @@ class BusesDetalleController extends Controller
 
     
         //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
-        $DTF=Carbon::parse($request->fechaPagara)->addMonthsNoOverflow(1)->day(1);
-        $PagoUltimoDiaMes=$DTF->subDays(1)->format('Y-m-d');
+        $PagoUltimoDiaMes=Carbon::parse($request->fechaPagara)->endOfMonth()->format('Y-m-d');
         //Log::info($PagoUltimoDiaMes);
         //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
 
@@ -869,7 +869,9 @@ class BusesDetalleController extends Controller
     
       
         //** Inicia - Para obtener la tasa de interes más reciente */
-        $Tasainteres=$request->tasa_interes;
+        $Tasainteres=Interes::latest()
+        ->pluck('monto_interes')
+            ->first();
         //** Finaliza - Para obtener la tasa de interes más reciente */
 
         $calificacion=BusesDetalle        
@@ -877,10 +879,10 @@ class BusesDetalleController extends Controller
        
                               
         ->select('buses_detalle.id as id_buses_detalle', 'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.tarifa',
-        'buses_detalle.fecha_apertura','buses_detalle.estado_especificacion' ,      
+               'buses_detalle.fecha_apertura','buses_detalle.estado_especificacion' ,      
                'empresa.id as id_empresa', 'empresa.nombre as empresa','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
-                'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta',
-                'empresa.telefono')
+               'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta',
+               'empresa.telefono')
 
                             
         ->find($id);
@@ -893,7 +895,7 @@ class BusesDetalleController extends Controller
         ->latest()
         ->first(); 
           
-         //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
+        //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
      
           
 
@@ -1116,4 +1118,62 @@ class BusesDetalleController extends Controller
             }
 
     }
+
+
+    /// CIERRE Y TRASPASO DE BUSES DETALLE
+    public function cierres_traspasosBus($id_buses_detalle){
+            
+        $idusuario = Auth::id();
+        $infouser = Usuario::where('id', $idusuario)->first();
+        $estado_buses = EstadoBuses::All();
+        $ConsultaEmpresa = Empresas::All();
+        $empresas = Empresas::ALL();
+        $contribuyente = Contribuyentes::ALL();
+
+      
+
+        $bus=BusesDetalle        
+        ::join('empresa','buses_detalle.id_empresa','=','empresa.id')
+        ->join('estado_buses', 'buses_detalle.id_estado_buses', '=','estado_buses.id')
+       
+                              
+        ->select('buses_detalle.id as id_buses_detalle', 'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.tarifa',
+               'buses_detalle.fecha_apertura','buses_detalle.estado_especificacion' ,      
+               'empresa.id as id_empresa', 'empresa.nombre as empresa','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
+               'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta',
+               'empresa.telefono',
+               'estado_buses.estado')
+
+            ->where('buses_detalle.id',$id_buses_detalle)                
+        ->first();
+
+        $calificacionB=BusesDetalleEspecifico
+        ::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
+                            
+        //Consulta para mostrar los rótulos que pertenecen a una sola empresa
+                              
+        ->select('buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
+        'buses_detalle.cantidad','<buses_detalle.monto_pagar','buses_detalle.fecha_apertura','buses_detalle.tarifa')
+      
+        ->where('id_buses_detalle',$id_buses_detalle)                
+        ->first();
+
+
+       
+        return view('backend.admin.Buses.CierreTraspaso.Cierre_TraspasoBus',
+                compact(
+                        'estado_buses',     
+                        'bus',
+                        'ConsultaEmpresa',
+                        'contribuyente',
+                        'empresas',
+                        'calificacionB'
+                        
+                       
+                    ));
+    }
+
+
+
+
 }   

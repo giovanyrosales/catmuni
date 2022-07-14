@@ -388,13 +388,13 @@ class RotulosController extends Controller
   
 
             if ($calificacion == null)
-              {
+            {
                 $detectorNull = 0;
-              }
+            }
 
                 else
                 {
-                $detectorNull = 1;
+                    $detectorNull = 1;
                 }
               
 
@@ -609,8 +609,7 @@ class RotulosController extends Controller
         $total1 = round(($total * 12),2);
         
 
-    }
-  
+    }  
  
         return view('backend.admin.Rotulos.CalificacionRotulo', compact('id','rotulo','tarifa','totalA','totalanual','total','total1','emp','emp1','emp2','contribuyente', 'empresa','calificacion'));
     }
@@ -1382,6 +1381,16 @@ foreach ($calificacion as $dato)
                         return ['success' => 2];
                     }
         }
+
+        public function VerHistorialCobros_Rotulos($id)
+        {
+    
+            $ListaCobrosRotulo = CobrosRotulo::where('id_rotulos', $id)
+            ->get();
+    
+        return view('backend.admin.Rotulos.Cobros.tablas.tabla_historico_Cobrosrotulo', compact('ListaCobrosRotulo'));
+        }
+    
 
 
 

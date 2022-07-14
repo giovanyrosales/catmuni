@@ -1018,6 +1018,16 @@ class BusesController extends Controller
         return view('backend.admin.Empresas.CierresTraspasos.tablas.tabla_cierres', compact('historico_cierres'));
     }
 
+    public function VerHistorialCobros_Buses($id)
+    {
+
+        $ListaCobrosBuses = CobrosBus::where('id_buses', $id)
+        ->get();
+
+      return view('backend.admin.Buses.Cobros.tablas.tabla_historico_Cobrosbus', compact('ListaCobrosBuses'));
+    }
+
+
 
 
 
