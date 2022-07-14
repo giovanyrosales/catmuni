@@ -14,7 +14,7 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 
-
+ 
 
 
 @stop
@@ -294,9 +294,10 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
             <table class="table"  style="border: 50px" data-toggle="table">
             <thead>
                 <tr>
-                <th style="width: 20%; text-align: center"></th>
-                <th style="width: 40%; text-align: center">Última calificación</th>
-                <th style="width: 40%; text-align: center">Tarifa</th>
+                <th style="width: 15%; text-align: center"></th>
+                <th style="width: 23%; text-align: center">Última calificación</th>
+                <th style="width: 20%; text-align: center">Tarifa</th>
+                <th style="width: 20%; text-align: center">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -304,13 +305,13 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                 <!-- Botón ver historial de Calificaciones -->
                 <button type='button' class='btn btn-block btn-dark'  id="btnVerCali" onclick='verhistorialCalificaciones()'>
                 <i class="fas fa-history"></i>
-                    &nbsp; Ver historial
+                    &nbsp; Ver Historial
                 </button>
                 <!-- /. Botón ver historial de Calificaciones -->
                 <!-- Botón Ocultar historial de Calificaciones -->
                 <button type='button' class='btn btn-block btn-secondary'  id="btnOcultarCali" onclick='OcurltarhistorialCalificaciones()'>
                     <i class="far fa-eye-slash"></i>
-                    &nbsp;Ocultar historial
+                    &nbsp;Ocultar Historial
                 </button>
                 <!-- /. Botón Ocultar historial de Calificaciones -->
               </td>
@@ -319,6 +320,13 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
               </td>
               <td align="center">
                 <h4><span class="badge badge-pill badge-info">${{$cali_lista->tarifa}}</span></h4>
+              </td>
+              <td align="center">
+              <button type='button' class='btn btn-block btn-info'  id="btnOcultarCali" onclick='AgregarTarifaAnterior()'>
+              <span class="badge badge-pill badge-light"><i class="fas fa-plus"></i></span>
+                    &nbsp;Agregar Tarifa Anterior
+                    <i class="fas fa-hand-holding-usd"></i>
+                </button>
               </td>
             </tr>
                 </tbody>
@@ -347,7 +355,10 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
         <!-- Campos del formulario de recalificación -->
          <div class="card border-success mb-3"><!-- Panel Datos generales de la empresa -->
-         <div class="card-header text-info"><label>I.DATOS DE LA RECALIFICACIÓN</label></div>
+         <div class="card-header text-info"><label>I.DATOS DE LA RECALIFICACIÓN</label>
+         <input type="hidden"  id="anio_actual" value="{{$anio_actual}}">
+         <input type="hidden"  id="calificacion_anio_anterior" value="{{$cali_lista->año_calificacion}}">
+        </div>
           <div class="card-body"><!-- Card-body -->
             <div class="row"><!-- /.ROW1 -->
             
@@ -828,7 +839,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
                   <div class="form-group">
                   <table border="1" width:1080px;>
                           <tr>
-                            <th scope="col">MARTRICULAS</th>
+                            <th scope="col">MATRICULAS</th>
                             <th scope="col">CANT.</th>
                             <th scope="col">MONTO</th>
                             <th scope="col">P. MENSUAL</th>
@@ -1169,6 +1180,7 @@ axios.post('/admin/empresas/calculo_calificacion', formData, {
 
 
 
+
     <script type="text/javascript">
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
@@ -1432,6 +1444,74 @@ function listarEmpresas(){
   window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
 }
 
+function AgregarTarifaAnterior(){
+var anio_actual=document.getElementById('anio_actual').value;
+var calificacion_anio_anterior=document.getElementById('calificacion_anio_anterior').value;
+
+if(calificacion_anio_anterior==anio_actual)
+                {
+                    toastr.warning('No puede calificar un año mayor que el actual');
+                    return;
+                }
+
+  const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
+swalWithBootstrapButtons.fire({
+  title: '¿Realmente desea agregar la tarifa anterior?',
+  text: "¡No podrás revertir esto!",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Si, Agregar!',
+  cancelButtonText: 'No, Cancelar!',
+  reverseButtons: true
+}).then((result) => {
+  
+  if (result.isConfirmed) {
+
+    var id_empresa = document.getElementById('id_empresa').value;
+    var formData = new FormData();
+    formData.append('id_empresa', id_empresa);
+    axios.post('/admin/empresas/calificacion/asignar_anterior', formData, {
+      })
+      .then((response) => {
+          closeLoading();
+          if(response.data.success === 1){
+            recargarTabla();
+            swalWithBootstrapButtons.fire(
+            'Tarifa agregada!',
+            'La tarifa anterior ha sido aplicada.',
+            'success')            
+          }
+         
+      })
+
+  } else if (
+    /* Read more about handling dismissals below */
+    result.dismiss === Swal.DismissReason.cancel
+  ) {
+    swalWithBootstrapButtons.fire(
+      'Cancelado',
+      'No se ha agregado la tarifa',
+      'error'
+    )
+  }
+})
+
+}
+
+
+function recargarTabla(){
+  var id='{{$empresa->id}}';
+      var ruta = "{{ url('/admin/empresas/calificaciones/tablaCalificaciones/') }}/"+id;
+      window.location.href="{{ url('/admin/empresas/recalificacion') }}/"+id;
+      $('#tabla_Calificaciones').load(ruta);
+}
 </script> 
 
 

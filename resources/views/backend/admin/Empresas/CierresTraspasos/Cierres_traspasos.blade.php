@@ -54,7 +54,7 @@ function f7(){
   }
 
 function verhistorialTraspasos(){
-  ;
+  
   $('#Div_historico').show();
   $('#btn_ocultar_historial_traspasos').show();
   $('#btn_ver_historial_traspasos').hide();
@@ -407,11 +407,11 @@ function OcultarhistorialCierres(){
             var id = {{$empresa->id}};
 
             //**Para tabla cierres */
-            var ruta = "{{ url('/admin/rotulos/cierres/tabla') }}/"+id;
+            var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
             $('#tabla_cierres').load(ruta);
 
             //**Para tabla Traspasos */
-            var ruta = "{{ url('/admin/rotulos/traspasos/tabla') }}/"+id;
+            var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
             $('#tabla_traspasos').load(ruta);
 
             document.getElementById("divcontenedor").style.display = "block";

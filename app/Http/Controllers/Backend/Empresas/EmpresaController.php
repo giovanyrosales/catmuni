@@ -308,6 +308,12 @@ public function Recalificacion($id)
     $actividadeseconomicas = ActividadEconomica::All();
     $calificaciones = calificacion::All();
 
+    $calificacion_anterior=calificacion::latest()
+    ->where('id_empresa', $id)
+    ->first();
+
+    $anio_actual=carbon::now()->format('Y');
+
     $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
     ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
 
@@ -385,7 +391,7 @@ public function Recalificacion($id)
         ->where('id_empresa',$id)
         ->first();
     
-    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('monto','montoMatriculaValor','detectorNull','empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','matriculas','cali_lista'));
+    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('monto','montoMatriculaValor','detectorNull','empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','matriculas','cali_lista','anio_actual'));
     
 }
 
@@ -592,6 +598,14 @@ public function show($id)
         ->first();
         log::info($ComprobandoPagoAlDia);
 
+        if($ComprobandoPagoAlDia===null){
+            $ComprobandoPagoAlDia=MatriculasDetalle::where('id',$id_detalle)
+            ->pluck('inicio_operaciones')
+            ->first();
+        }else{
+
+        }
+
         $estado_moratorioM=MatriculasDetalle::where('id',$id_detalle)
         ->pluck('id_estado_moratorio')
         ->first();
@@ -624,46 +638,70 @@ public function show($id)
             //*Si es Mesas de billar o  Sinfonolas
             }else if($dato->id_matricula==1 or $dato->id_matricula==4)
             {
-                if( $CantidadDias<90)  
-                    {
-                        if($estado_moratorioM!=1){
+                if($ComprobandoPagoAlDia>$fechaLimite)
+                {
+                    if($estado_moratorioM!=1){
                         MatriculasDetalle::where('id',$id_detalle)
                         ->update([
                                     'id_estado_moratorio' =>'1',              
                                 ]);
                                 log::info('estado: solvente');
-                            }else{log::info('estado: Ya estaba en Solvente');}                   
-                    }else{
-                            if($estado_moratorioM!=2){
-                                    MatriculasDetalle::where('id',$id_detalle)
-                                    ->update([
-                                                'id_estado_moratorio' =>'2',              
-                                            ]);
-                                            log::info('estado: en mora');
-                                    }else{log::info('estado: Ya estaba en mora');}
-                        }
+                            }else{log::info('estado: Ya estaba en Solvente');}  
 
+                }else
+                    {
+                        if( $CantidadDias<90)  
+                            {
+                                if($estado_moratorioM!=1){
+                                MatriculasDetalle::where('id',$id_detalle)
+                                ->update([
+                                            'id_estado_moratorio' =>'1',              
+                                        ]);
+                                        log::info('estado: solvente');
+                                    }else{log::info('estado: Ya estaba en Solvente');}                   
+                            }else{
+                                    if($estado_moratorioM!=2){
+                                            MatriculasDetalle::where('id',$id_detalle)
+                                            ->update([
+                                                        'id_estado_moratorio' =>'2',              
+                                                    ]);
+                                                    log::info('estado: en mora');
+                                            }else{log::info('estado: Ya estaba en mora');}
+                                }
+                    }
             //*Si es Maquinas eletrónicas
             }else if($dato->id_matricula==3)
             {
-                        if( $CantidadDias<60)  
-                        {
-                            if($estado_moratorioM!=1){
-                            MatriculasDetalle::where('id',$id_detalle)
-                            ->update([
-                                        'id_estado_moratorio' =>'1',              
-                                    ]);
-                                    log::info('estado: solvente');
-                                }else{log::info('estado: Ya estaba en Solvente');}
-                        }else{
-                                if($estado_moratorioM!=2){
-                                        MatriculasDetalle::where('id',$id_detalle)
-                                        ->update([
-                                                    'id_estado_moratorio' =>'2',              
-                                                ]);
-                                                log::info('estado: en mora');
-                                        }else{log::info('estado: Ya estaba en mora');}
-                            }
+                if($ComprobandoPagoAlDia>$fechaLimite)
+                {
+                    if($estado_moratorioM!=1){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'1',              
+                                ]);
+                                log::info('estado: solvente');
+                            }else{log::info('estado: Ya estaba en Solvente');}  
+                            
+                }else{
+                            if( $CantidadDias<60)  
+                            {
+                                if($estado_moratorioM!=1){
+                                MatriculasDetalle::where('id',$id_detalle)
+                                ->update([
+                                            'id_estado_moratorio' =>'1',              
+                                        ]);
+                                        log::info('estado: solvente');
+                                    }else{log::info('estado: Ya estaba en Solvente');}
+                            }else{
+                                    if($estado_moratorioM!=2){
+                                            MatriculasDetalle::where('id',$id_detalle)
+                                            ->update([
+                                                        'id_estado_moratorio' =>'2',              
+                                                    ]);
+                                                    log::info('estado: en mora');
+                                            }else{log::info('estado: Ya estaba en mora');}
+                                }
+                        }
             }
         log::info($dato->id_matriculas_detalle);
         //*Fin si es Aparatos Parlantes
@@ -1740,7 +1778,7 @@ public function calculo_calificacion(Request $request)
    $licenciaMatricula= $licencia+ $matricula;
    $licenciaMatriculaSigno=$signo . $licenciaMatricula;
 
-
+    //ancla3
 
    //************* Declarando variables globales para operacion Multa por Balance *************//
    $Year=$año_calificacion;
@@ -1976,7 +2014,8 @@ public function calculo_calificacion(Request $request)
                         {
                           $multabalance=2.86;
                         }
-                }   
+                }
+               
          }
    //************* Fin de calculando Multa por Balance *************//
 
@@ -2172,6 +2211,107 @@ public function calculo_calificacion(Request $request)
  
 
 //Registrar Calificación y recalificación
+public function asignar_anterior(Request $request){
+
+$calificacion_anterior=calificacion::latest()
+->where('id_empresa', $request->id_empresa)
+->first();
+
+//*** Para aumentar el año de calificación */
+$Anio_a_calificar=$calificacion_anterior->año_calificacion+1;
+
+//*** Para recuperar la fecha actual */
+$fechahoy=carbon::now()->format('Y-m-d');
+
+//ancla4
+
+//************* Declarando variables globales para operacion Multa por Balance *************//
+   $Year=$Anio_a_calificar;
+   $month='03';
+   $day='31';
+   $anioActual=Carbon::now()->year;
+   $CantMesesMulta=0;
+   $f1=Carbon::parse($fechahoy);
+   $f2=Carbon::createFromDate($Year, $month, $day);
+
+//************* Calculando y determinando Multa por Balance *************//
+$EstadoCalificacion='recalificado';
+
+
+//*........ Calculando Multa por Balance .............................]
+
+       if($f1->lt($f2))
+       {
+           if($Year != $anioActual)
+           {
+               $DeterminacionDeMulta='Aplica multa';
+
+               $CantMesesMulta=ceil(($f1->floatDiffInRealMonths($f2)));
+               $multabalance=round((($CantMesesMulta*$calificacion_anterior->pago_mensual)*0.02),2);
+               if($multabalance<2.86)
+               {
+                 $multabalance=2.86;
+               }
+
+           }
+           else
+           {
+               $DeterminacionDeMulta='No aplica multa';
+               $CantMesesMulta=0;
+               $multabalance='0.00';
+           }
+           
+       }else
+       { 
+               $DeterminacionDeMulta='Aplica multa';
+               $CantMesesMulta=ceil(($f1->floatDiffInRealMonths($f2)));
+               $multabalance=round((($CantMesesMulta*$calificacion_anterior->pago_mensual)*0.02),2);
+               if($multabalance<2.86)
+               {
+                 $multabalance=2.86;
+               }
+       }
+
+log::info($DeterminacionDeMulta);
+log::info($CantMesesMulta);
+log::info($multabalance);
+log::info($f1);
+log::info($f2);
+
+
+$dato = new calificacion();
+$dato->id_empresa = $request->id_empresa;
+$dato->id_estado_licencia_licor ='2';
+$dato->id_multa =$calificacion_anterior->id_multa;
+$dato->id_estado_multa ='2';
+$dato->fecha_calificacion = $fechahoy;
+$dato->tipo_tarifa = $calificacion_anterior->tipo_tarifa;
+$dato->estado_calificacion = $EstadoCalificacion;
+$dato->licencia =$calificacion_anterior->licencia;
+$dato->matricula = $calificacion_anterior->matricula;
+$dato->total_mat_permisos = $calificacion_anterior->total_mat_permisos;
+$dato->fondofp_licencia_permisos = $calificacion_anterior->fondofp_licencia_permisos;
+$dato->pago_anual_permisos = $calificacion_anterior->pago_anual_permisos;
+$dato->activo_total = $calificacion_anterior->activo_total;
+$dato->deducciones = $calificacion_anterior->deducciones;
+$dato->activo_imponible = $calificacion_anterior->activo_imponible;
+$dato->año_calificacion =$Anio_a_calificar;
+$dato->tarifa = $calificacion_anterior->tarifa;
+$dato->tarifa_colones = $calificacion_anterior->tarifa_colones;
+$dato->pago_mensual = $calificacion_anterior->pago_mensual;
+$dato->pago_anual = $calificacion_anterior->pago_anual;
+$dato->fondofp_mensual = $calificacion_anterior->fondofp_mensual;
+$dato->fondofp_anual = $calificacion_anterior->fondofp_anual ;
+$dato->total_impuesto = $calificacion_anterior->total_impuesto;
+$dato->total_impuesto_anual = $calificacion_anterior->total_impuesto_anual;
+$dato->multa_balance = $multabalance;
+$dato->codigo_tarifa = $calificacion_anterior->codigo_tarifa;
+$dato->save();
+
+return ['success' => 1];
+}
+
+
 public function nuevaCalificacion(Request $request){
   log::info($request->all());
 

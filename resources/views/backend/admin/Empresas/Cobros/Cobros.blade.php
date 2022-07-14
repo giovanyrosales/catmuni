@@ -1538,8 +1538,8 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="input-group mb-3">
-                  <input type="hidden"  value="" id="id_matriculadetalleMesas" disabled >
-                        <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaMesas" class="form-control" required >
+                  <input type="text"  value="" id="id_matriculadetalleMesas" disabled >
+                        <input type="number"  value="{{ $empresa->num_tarjeta }}"   id="num_tarjetaMesas" class="form-control" required >
                         
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>

@@ -89,6 +89,7 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/empresas/calificaciones/tabla_matriculas/{empresa}', [EmpresaController::class,'tablaMatriculas']);
     Route::get('/admin/empresas/calificaciones/tablaCalificaciones/{empresa}', [EmpresaController::class,'tablaCalificaciones']);
     Route::post('/admin/empresas/calificaciones/eliminar', [EmpresaController::class, 'eliminar_calificacion']);
+    Route::post('/admin/empresas/calificacion/asignar_anterior', [EmpresaController::class, 'asignar_anterior']);
 
     // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
     Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
@@ -278,6 +279,7 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']);
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
+    
     //AVISOS Y NOTIFICACIONES DE MATRICULAS
     
 

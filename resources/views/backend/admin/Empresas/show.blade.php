@@ -254,7 +254,7 @@
               <div class="widget stats-widget">
                   <div class="widget-body clearfix bg-success">
                       <div class="pull-left">
-                          <h3 class="widget-title text-white">Registrar Cobro</h3>
+                          <h3 class="widget-title text-white">Generar Cobro</h3>
                       </div>
                       <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
                   </div>
@@ -266,7 +266,7 @@
                   <div class="widget stats-widget">
                               <div class="widget-body clearfix bg-success">
                                   <div class="pull-left">
-                                      <h3 class="widget-title text-white">Registrar Cobro</h3>
+                                      <h3 class="widget-title text-white">Generar Cobro</h3>
                                   </div>
                                   <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
                               </div>
@@ -277,7 +277,7 @@
                           <div class="widget stats-widget">
                               <div class="widget-body clearfix bg-success">
                                   <div class="pull-left">
-                                      <h3 class="widget-title text-white">Registrar Cobro</h3>
+                                      <h3 class="widget-title text-white">Generar Cobro</h3>
                                   </div>
                                   <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
                               </div>
