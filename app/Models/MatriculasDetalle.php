@@ -13,8 +13,13 @@ class MatriculasDetalle extends Model
         'id',
         'id_empresa',
         'id_matriculas',
+        'id_estado_moratorio',
         'cantidad',
         'monto',
-        'pago_mensual'
+        'pago_mensual',
+        'inicio_operaciones',
+        'estado_especificacion',
+
+
       ];
 }

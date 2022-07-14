@@ -76,11 +76,12 @@ function f4(){
                 <table class="table"  style="border: 80px" data-toggle="table">
                         <thead>
                            <tr>
-                            <th style="width: 25%; text-align: center">Tipo de Matricula</th>
-                            <th style="width: 25%; text-align: center">Cantidad</th>
-                            <th style="width: 25%; text-align: center">Total Matrículas</th>
-                            <th style="width: 14%; text-align: center">Pago Mensual</th>
-                            <th style="width: 15%; text-align: center">Opciones</th>
+                            <th style="width: 35%; text-align: center">Tipo de Matricula</th>
+                            <th style="width: 13%; text-align: center">Cantidad</th>
+                            <th style="width: 25%; text-align: center">Inicio de Operaciones</th>
+                            <th style="width: 22%; text-align: center">Total Matrículas</th>
+                            <th style="width: 18%; text-align: center">Pago Mensual</th>
+                            <th style="width: 15%; text-align: center">&nbsp;</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -99,8 +100,13 @@ function f4(){
                         </td>
 
                         <td>
+                          <input type="date" name="inicio_operaciones" id="inicio_operaciones" required class="form-control" >
+                        </td>
+
+                        <td>
                         <input  id='monto_matricula' class='form-control' disabled min='1' style='max-width: 250px' type='text' value=''/>
                         </td>
+
 
                         <td>
                         <input  id='pago_mensual' class='form-control' disabled min='1' style='max-width: 250px' type='text' value=''/>
@@ -202,7 +208,7 @@ function f4(){
     <!--Inicia Modal Editar Matrícula y matrícula específica-->
     
     <div class="modal fade bd-example-modal-lg" id="modalEditarMatricula" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
               <!--Contenido del modal-->
                <div class="modal-header">
@@ -223,6 +229,7 @@ function f4(){
                                     <tr>
                                         <th style="width: 32%; text-align: center">Tipo de Matricula</th>
                                         <th style="width: 15%; text-align: center">Cantidad</th>
+                                        <th style="width: 20%; text-align: center">Inicio de operaciones</th>
                                         <th style="width: 25%; text-align: center">Total Matrículas</th>
                                         <th style="width: 20%; text-align: center">Pago Mensual</th>
                                         <th style="width: 25%; text-align: center">Opciones</th>
@@ -239,7 +246,9 @@ function f4(){
                                     <td>
                                     <input  id='cantidad-editar' disabled class='form-control' min='1' style='max-width: 250px' type='text' value=''/>
                                     </td>
-
+                                    <td>
+                                    <input type="date" name="inicio_operaciones-editar" id="inicio_operaciones-editar" required class="form-control" >
+                                    </td>
                                     <td>
                                     <input  id='monto-editar' class='form-control' disabled min='1' style='max-width: 250px' type='text' value=''/>
                                     </td>
@@ -275,7 +284,7 @@ function f4(){
                                 </tbody>
                                 </table>
                                 <br>
-                                    <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEditar"><i class="far fa-plus-square"></i> &nbsp; Especificar nueva matrícula</button>               
+                            <!--/.  <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEditar"><i class="far fa-plus-square"></i> &nbsp; Especificar nueva matrícula</button>   -->            
                                 <br>
                                 </div>
                                     
@@ -360,7 +369,7 @@ function f4(){
 <!--Inicia Modal ver Matrícula y matrícula específica-->
     
 <div class="modal fade bd-example-modal-lg" id="modalVerMatriculaEsp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
               <!--Contenido del modal-->
                <div class="modal-header">
@@ -652,8 +661,8 @@ document.getElementById('pago_mensual').value=Total_pago_mensual;
 function AgregarMatricula(){
     var id={{$id}};
     var tipo_matricula = document.getElementById("select_matriculas").value; 
-    var cantidad = document.getElementById("cantidad").value;
-    
+    var cantidad = document.getElementById("cantidad").value; 
+    var inicio_operaciones = document.getElementById("inicio_operaciones").value; 
 
     if(tipo_matricula==0){
                             modalMensaje('Aviso', 'Debe selecionar una matrícula');
@@ -664,17 +673,23 @@ function AgregarMatricula(){
                             modalMensaje('Aviso', 'Debe ingresar una cantidad');
                             return;
                         }
+
     if(cantidad==0){
                             modalMensaje('Aviso', 'Debe ingresar una cantidad mayor a 0');
                             return;
                    }
+
+    if(inicio_operaciones==""){
+                            modalMensaje('Aviso', 'Debe ingresar la fecha de inicio de operaciones');
+                            return;
+                        }
 
   openLoading();
   var formData = new FormData();
   formData.append('id_empresa', id);
   formData.append('tipo_matricula', tipo_matricula);
   formData.append('cantidad', cantidad);
-
+  formData.append('inicio_operaciones', inicio_operaciones);
 
   axios.post('/admin/matriculas_detalle/agregar', formData, {
   })
@@ -687,11 +702,11 @@ function AgregarMatricula(){
             agregado();
             resetbtn();
             }
-            else if(response.data.success === 2){
-                modalMensaje('Matrícula repetida!', 'Para agregar más o eliminarlas seleccione las opciones [Editar o Eliminar]');
-                resetbtn();
-                return;
-            }
+           //**   else if(response.data.success === 2){
+           //**   modalMensaje('Matrícula repetida!', 'Para agregar más o eliminarlas seleccione las opciones [Editar o Eliminar]');
+           //**   resetbtn();
+           //**   return;
+           //**   }
          
       })
       .catch((error) => {
@@ -818,6 +833,7 @@ function InformacionMatricula(id)
                         $('#modalEditarMatricula').css('overflow-y', 'auto');
                         $('#modalEditarMatricula').modal({backdrop: 'static', keyboard: false})
                         $('#id-editar').val(response.data.matriculas_detalle.id);
+                        $('#inicio_operaciones-editar').val(response.data.matriculas_detalle.inicio_operaciones);
                         $('#cantidad-editar').val(cantidadMatriculaEditar);
                         $('#id_matriculas_detalle-editar').val(response.data.matriculas_detalle.id);
                         $('#monto-editar').val(response.data.montoDolar);
@@ -895,8 +911,9 @@ function InformacionMatricula(id)
     {
             var cantidad_editar = document.getElementById('cantidad-editar').value;
             var tipo_matricula_editar = document.getElementById('select_matriculas-editar').value;
-            var id_editar = document.getElementById('id-editar').value;
-
+            var id_editar = document.getElementById('id-editar').value; 
+            var inicio_operaciones_editar = document.getElementById('inicio_operaciones-editar').value;
+            
             //Datos matrícula específica
             var id_matricula_detalle_editar = document.getElementById('id_matriculas_detalle-editar').value;
             var cod_municipal_editar = $("input[name='cod_municipaleditararray[]']").map(function(){return $(this).val();}).get();
@@ -972,7 +989,8 @@ function InformacionMatricula(id)
     formData.append('hayregistro', hayregistro);  
     formData.append('id_editar', id_editar);
     formData.append('cantidad_editar', cantidad_editar);
-    formData.append('tipo_matricula_editar', tipo_matricula_editar);
+    formData.append('tipo_matricula_editar', tipo_matricula_editar); 
+    formData.append('inicio_operaciones_editar', inicio_operaciones_editar);
     console.log(hayregistro);
     openLoading() 
     // llenar array para enviar

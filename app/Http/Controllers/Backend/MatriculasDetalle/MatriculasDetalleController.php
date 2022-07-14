@@ -83,8 +83,8 @@ class MatriculasDetalleController extends Controller
         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
         ->join('estado_moratorio','matriculas_detalle.id_estado_moratorio','=','estado_moratorio.id')
                         
-        ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion','matriculas_detalle.id_estado_moratorio',
-                'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion','matriculas_detalle.id_estado_moratorio','matriculas_detalle.inicio_operaciones',
+                'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones as inicio_operacionesEmp','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
                 'matriculas.nombre as tipo_matricula',
                 'estado_moratorio.id as id_estado_moratorio','estado_moratorio.estado as estado_moratorio')
         ->where('id_empresa', "=", "$id")     
@@ -109,9 +109,10 @@ class MatriculasDetalleController extends Controller
             return ['success' => 0];
         }
 
-        if (MatriculasDetalle::where('id_empresa', $request->id_empresa)->where('id_matriculas', $request->tipo_matricula)->first()) {
-           return ['success' => 2];   
-        }
+        //** Para comprobar si una matricula ya existe en los registro y no se permita agregar una repetida */
+        //** if (MatriculasDetalle::where('id_empresa', $request->id_empresa)->where('id_matriculas', $request->tipo_matricula)->first()) {
+        //** return ['success' => 2];   
+        //** }
         
         //* Operación
         
@@ -127,6 +128,8 @@ class MatriculasDetalleController extends Controller
         $md = new MatriculasDetalle();
         $md->id_empresa = $request->id_empresa;
         $md->id_matriculas = $request->tipo_matricula;
+        $md->id_estado_moratorio ='1';
+        $md->inicio_operaciones = $request->inicio_operaciones;
         $md->cantidad = $request->cantidad;
         $md->monto = $monto_total;
         $md->pago_mensual = $pago_mensual_total;
@@ -204,7 +207,7 @@ class MatriculasDetalleController extends Controller
     ->join('matriculas_detalle AS me', 'me.id', '=', 'm.id_matriculas_detalle')
           
     ->select('m.id','m.id_matriculas_detalle', 'm.cod_municipal','m.codigo','m.num_serie','m.direccion',
-             'me.cantidad','me.monto',
+             'me.cantidad','me.monto', 'me.inicio_operaciones',
             )
     ->where('m.id_matriculas_detalle', $request->id)     
     ->get();
@@ -323,6 +326,7 @@ class MatriculasDetalleController extends Controller
                                             MatriculasDetalle::where('id', $request->id_editar)
                                             ->update([
                                                         'cantidad' => $request->cantidad_editar,
+                                                        'inicio_operaciones'=>$request->inicio_operaciones_editar,
                                                         'monto' => $monto_total,
                                                         'pago_mensual' =>$pago_mensual_total,               
                                                     ]);

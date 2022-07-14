@@ -2,18 +2,19 @@
                        <table id="tabla" class="table table-bordered table-striped" style="border: 80px" data-toggle="table" width="80%">
 
                             <thead>
-                                <tr>
-                                <th style="width: 22%;">Tipo de Matricula</th>
-                                <th style="width: 10%;">Estado</th>
-                                <th style="width: 10%;">Cantidad</th>
-                                <th style="width: 16%;">Total Matrículas</th>
-                                <th style="width: 14%;">Pago Mensual</th>
-                                <th style="width: 40%;">Opciones</th>
+                                <tr id="uno">
+                                <th style="width: 20%;">Tipo de Matricula</th>
+                                <th style="width: 12%;">Estado</th>
+                                <th style="width: 15%;">Cantidad</th>
+                                <th style="width: 20%;">Inicio de Operaciones</th>
+                                <th style="width: 15%;">Total Matrículas</th>
+                                <th style="width: 15%;">Pago Mensual</th>
+                                <th style="width: 55%;">Opciones</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($matriculas as $dato)
-                                <tr>
+                                <tr id="dos">
                                     <td>{{$dato->tipo_matricula}}</td>
                                     @if($dato->id_estado_moratorio == '1')
                                     <td align="center"> <span class="badge bg-success">{{$dato->estado_moratorio}}</span></td>
@@ -21,6 +22,7 @@
                                     <td align="center"> <span class="badge bg-warning">{{$dato->estado_moratorio}}</span></td>
                                     @endif
                                     <td>{{$dato->cantidad}}</td>
+                                    <td>{{$dato->inicio_operaciones}}</td>
                                     <td>${{$dato->monto}}</td>
                                     <td>${{$dato->pago_mensual}}</td>
                                     <td style="text-align: center;"> 
@@ -88,3 +90,19 @@
     });
 
 </script>
+<style>
+#tres {
+  overflow: hidden;
+
+}
+
+
+        #uno{
+                font-size: 13px;
+        }
+        #dos{
+                font-size: 13px;
+        }
+
+
+    </style>
