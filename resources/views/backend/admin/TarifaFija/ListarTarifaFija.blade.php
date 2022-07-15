@@ -129,7 +129,7 @@
                           <!-- Select estado - live search -->
                           <div class="input-group mb-6">
                                 <select 
-                                required
+                                required                                
                                 class="selectpicker"  
                                 data-show-subtext="true" 
                                 data-live-search="true"   
@@ -242,6 +242,7 @@
                           <div class="input-group mb-9">
                                 <select 
                                 required
+                                disabled
                                 class="form-control" 
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -265,6 +266,7 @@
                           <div class="input-group mb-6">
                                 <select 
                                 required
+
                                 class="form-control"
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -570,6 +572,8 @@
 
     }
 
+
+/*
     function modalEliminarTarifa(id)
     {
         $('#idborrar').val(id);
@@ -611,7 +615,7 @@
               toastr.error("Error de Servidor!");
                }); 
     }
-
+*/
     // Función para llenar select
 
     function llenarSelect()

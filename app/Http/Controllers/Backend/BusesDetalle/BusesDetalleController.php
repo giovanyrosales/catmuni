@@ -1153,10 +1153,10 @@ class BusesDetalleController extends Controller
         //Consulta para mostrar los rótulos que pertenecen a una sola empresa
                               
         ->select('buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
-        'buses_detalle.cantidad','<buses_detalle.monto_pagar','buses_detalle.fecha_apertura','buses_detalle.tarifa')
+        'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.fecha_apertura','buses_detalle.tarifa')
       
         ->where('id_buses_detalle',$id_buses_detalle)                
-        ->first();
+        ->get();
 
 
        

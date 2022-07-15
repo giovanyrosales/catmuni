@@ -32,9 +32,7 @@
                                     <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                     </button>
 
-                                    <button type="button" class="btn btn-danger btn-xs" onclick=" modalEliminarTarifa({{ $tarifa_fija->id }})">
-                                    <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
-                                    </button>
+                                    
                                     </td>
                                 </tr>
                             @endforeach

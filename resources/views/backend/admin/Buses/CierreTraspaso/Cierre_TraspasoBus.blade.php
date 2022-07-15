@@ -187,7 +187,7 @@ window.onload = f4;
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="text"value="{{$dato->nombre}}" id="Apartirdeldia" required class="form-control" >
-                                        <input type="text" hidden value="" id="id_buses_detalle" required class="form-control" >
+                                        <input type="text"  value="{{$dato->id_buses_detalle}}" id="id_buses_detalle" required class="form-control" >
                                     </div>
                                     </div>
 
