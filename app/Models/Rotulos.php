@@ -17,8 +17,10 @@ class Rotulos extends Model
     public $timestamps = false;
     protected $fillable = [
           'id',
+          'id_contribuyente',
           'id_empresa',
           'id_estado_rotulo',
+          'nFicha',
           'nom_rotulo',
           'actividad_economica',
           'direccion',
@@ -28,7 +30,8 @@ class Rotulos extends Model
           'medidas',
           'total_medidas',
           'total_caras',                
-          'fecha_cierre'
+          'fecha_cierre',
+
       ];
 
 

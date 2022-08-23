@@ -10,7 +10,7 @@
                                     <th style="width: 15%;">Nombre</th>
                                     <th style="width: 10%;">Placa</th>
                                     <th style="width: 10%;">Ruta</th>
-                                    <th style="width: 20%;">Empresas</th>
+                                    <th style="width: 20%;">Representante</th>
                                     <th style="width: 13%;">Tarifa</th>
                                     <th style="width: 13%;">Total Pagar</th>
                                     
@@ -19,22 +19,22 @@
                             </thead>
                             <tbody>
 
-                            @foreach($calificacionB as $bus)
+                        @foreach($bus as $bus)
+
                                 <tr>
                                     <td>{{$bus->nom_bus}}</td>
                                     <td>{{$bus->placa}}</td>
                                     <td>{{$bus->ruta}}</td>
-                                    <td>{{$bus->empresas}}</td>
+                                    <td>{{$contri}}</td>
                                     <td>
-                                    <input  id="tarifa" class='form-control' disabled min='1' style='max-width: 250px' type="text" value="${{$bus->tarifa}} "/></td>
+                                    <input  id="tarifa" class='form-control' disabled min='1' style='max-width: 250px' type="text" value="${{$dato->tarifa}}"/></td>
                                     <td>
-                                    <input  id="tpagar" class='form-control' disabled min='1' style='max-width: 250px' type="text" value="${{$bus->total_pagar}} "/></td>
-                                    
-                                    
+                                    <input  id="tpagar" class='form-control' disabled min='1' style='max-width: 250px' type="text" value="${{$dato->total_pagar}} "/></td>
+                           
                                 </tr>
-
-                            @endforeach
-
+                                
+                        @endforeach   
+                          
                             </tbody>
 
                         </table>

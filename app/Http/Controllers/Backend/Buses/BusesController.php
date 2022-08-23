@@ -51,8 +51,9 @@ class BusesController extends Controller
          $idusuario = Auth::id();
          $infouser = Usuario::where('id', $idusuario)->first();
          $empresas = Empresas::ALL();
+         $contribuyentes = Contribuyentes::ALL();
  
-       return view('backend.admin.Buses.CrearBus', compact('empresas'));
+       return view('backend.admin.Buses.CrearBus', compact('empresas','contribuyentes'));
  
     }
 
@@ -84,7 +85,9 @@ class BusesController extends Controller
     
                
                 $dato = new Buses();
+                $dato->id_contribuyente = $request->contribuyente;
                 $dato->id_empresa = $request->empresa;
+                $dato->nFicha = $request->nFicha;
                 $dato->nom_bus = $request->nom_bus;
                 $dato->fecha_inicio = $request->fecha_inicio;
                 $dato->placa = $request->placa;
@@ -102,17 +105,49 @@ class BusesController extends Controller
                     
     }
 
-    //Función Tabla Buses
-     public function tablaBuses(Buses $lista){
+    //Función para llenar el select Actividad Especifica
+    public function buscarEmpresaBus(Request $request)
+    {
 
-             
-        $lista=Buses::join('empresa','buses.id_empresa','=','empresa.id')
-                     
-                      
-        ->select('buses.id AS id_bus','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-        'empresa.nombre as empresas')
+        $empresa = Empresas::
+        where('id_contribuyente',$request->id_select)
+        ->orderBy('nombre', 'ASC')
         ->get();
-          
+
+        return ['success' => 1,
+        'empresa' => $empresa,
+         
+        ];
+
+    }
+    //Terminar llenar select
+
+    //Función Tabla Buses
+    public function tablaBuses(Buses $lista)
+    {
+                                                                                                                                                                                              
+        $lista = Buses::orderBy('nom_bus')->get();
+
+        foreach($lista as $dato) 
+        {
+            $nom_apellido = ' ';
+            $nom_empresa = ' ';
+
+            if ($info = Contribuyentes::where ('id', $dato->id_contribuyente)->first())
+            {
+               $nom_apellido = $info->nombre . ' ' . $info->apellido;{}
+            }
+
+            if ($info = Empresas::where ('id',$dato->id_empresa)->first())
+            {
+                $nom_empresa = $info->nombre;
+            }
+
+            $dato->cont = $nom_apellido;
+            $dato->empr = $nom_empresa;
+
+        }
+       
         return view('backend.admin.Buses.tabla.tablaListarBuses', compact('lista'));
     }
     //Termina función tabla Buses
@@ -122,8 +157,9 @@ class BusesController extends Controller
     {
    
         $empresas = Empresas::All();
+        $contribuyentes = Contribuyentes::ALL();
      
-        return view('backend.admin.Buses.ListarBus', compact('empresas'));
+        return view('backend.admin.Buses.ListarBus', compact('empresas','contribuyentes'));
     }
     //Termina función Listar Buses
 
@@ -134,15 +170,15 @@ class BusesController extends Controller
         $regla = array(
             'id' => 'required',
         
-    );
+        );
 
         $validar = Validator::make($request->all(), $regla);
 
         if ($validar->fails()){ return ['success' => 0];}
 
         if ($bus = Buses::where('id', $request->id)->first())
-           {
-          
+        {
+            $contribuyentes = Contribuyentes::orderby('nombre')->get();
             $empresas = Empresas::orderby('nombre')->get();
                 
                 return['success' => 1,
@@ -151,8 +187,8 @@ class BusesController extends Controller
                 'id_emp' => $bus->id_empresa,
                 'empresa' => $empresas,
 
-                 ];
-           }
+                ];
+        }
             else
             {
                 return ['success' => 2];
@@ -166,19 +202,19 @@ class BusesController extends Controller
     //Función para editar buses
     public function editarBus(Request $request)
     {
-         log::info($request->all());
+        log::info($request->all());
             
-         $regla = array(  
-             'nom_bus' => 'required',
+        $regla = array(  
+            'nom_bus' => 'required',
             
              
-         );
+        );
  
-         $validar = Validator::make($request->all(), $regla);
+        $validar = Validator::make($request->all(), $regla);
  
-         if ($validar->fails()){ return ['success' => 0];} 
+        if ($validar->fails()){ return ['success' => 0];} 
  
-         if(Buses::where('id', $request->id)->first()){
+        if(Buses::where('id', $request->id)->first()){
 
             Buses::where('id', $request->id)->update([
      
@@ -189,14 +225,16 @@ class BusesController extends Controller
                  'ruta'=> $request->ruta,                
                  'telefono' => $request->telefono
              
-             ]);
+            ]);
      
-             return ['success' => 1];
-         }else{
-             return ['success' => 2];
-         }      
+                return ['success' => 1];
+                
+            }else{
+                
+                    return ['success' => 2];
+
+                }      
  
-      
  
     }
     //Termina función para editar rótulos
@@ -205,72 +243,74 @@ class BusesController extends Controller
     //Función vista detallada
     public function showBuses($id_bus)
     {
+
         $contribuyentes = Contribuyentes::All();
         $empresas = Empresas::ALL();
-         
-      
-        $bus=Buses::join('empresa','buses.id_empresa','=','empresa.id')
-                ->join('contribuyente', 'empresa.id_contribuyente', '=', 'contribuyente.id')
-            
-
-        ->select('buses.id AS id_bus','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-        'empresa.nombre as empresas', 
-        'contribuyente.nombre as contri' , 'contribuyente.apellido as ape')
-        ->find($id_bus);
-
-        $calificacionB = Buses::join('empresa','buses.id_empresa','=','empresa.id')
-                                
-        //Consulta para mostrar los buses que pertenecen a una sola empresa
-                              
-                ->select('buses.id AS id_bus','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-                'empresa.nombre as empresas', )
-                
-                ->where('id_empresa', $bus->id_empresa)
-                ->get();
-        
-         //Termina consulta para mostrar los buses que pertenecen a una sola empresa
-         $calificacion = CalificacionBus::select('calificacion_bus.id', 'calificacion_bus.fecha_calificacion','calificacion_bus.estado_calificacion','calificacion_bus.id_empresa')
        
-         ->where('id_buses', $id_bus)
-         ->latest()
-         ->first();
 
-         if ($calificacion == null)
-         {
-           $detectorNull = 0;
-         }
-           else
-           {
-           $detectorNull = 1;
-           }
+        $lista = Buses::where('id', $id_bus)->first();
+ 
         
-           
+            $contri = ' ';
+            $emp = ' ';
 
-        return view('backend.admin.Buses.showBus', compact('id_bus','bus','contribuyentes','empresas','calificacionB','calificacion','detectorNull',));
+            if ($contribuyente = Contribuyentes::where ('id', $lista->id_contribuyente)->first())
+            {
+                $contri = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+            }
+ 
+            if ($empresa = Empresas::where ('id',$lista->id_empresa)->first())
+            {
+                $emp= $empresa->nombre;
+            }
+
+            if ($estado = EstadoBuses::where ('id', $lista->id_estado_buses)->first())
+            {
+                $estado = $estado->estado;
+            }
+
+       
+        //Termina consulta para mostrar los buses que pertenecen a una sola empresa
+        $calificacion = CalificacionBus::
+        select('calificacion_bus.id', 'calificacion_bus.fecha_calificacion','calificacion_bus.estado_calificacion','calificacion_bus.id_empresa')
+       
+        ->where('id_buses', $id_bus)
+        ->latest()
+        ->first();
+
+
+        if ($calificacion == null)
+        {
+           $detectorNull = 0;
+        }
+            else
+            {
+                $detectorNull = 1;
+            }
+        
+
+        return view('backend.admin.Buses.showBus', compact('lista','estado','contribuyentes','empresas','calificacion','detectorNull','emp','contri'));
+
 
     }
-    //Termina vista detallada
+//Termina vista detallada
 
 //Función para tabla de calificacion de buses
     public function tablaCalificacionB($id_bus)
     {
-        $bus = Buses::where('id', $id_bus)->first();
-     
-        $calificacionB = Buses::join('empresa','buses.id_empresa','=','empresa.id')
-                                
-//Consulta para mostrar los buses que pertenecen a una sola empresa
-                      
-        ->select('buses.id AS id_bus','buses.id_empresa','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-        'empresa.nombre as empresas', )
-        
-        ->where('id_empresa', $bus->id_empresa)
-        ->get();
+        $bus = Buses::where('id', $id_bus)->get();
 
-//Termina consulta para mostrar los buses que pertenecen a una sola empresa
+        $buses = Buses::where('id', $id_bus)->first();
 
+        if ($contribuyente = Contribuyentes::where ('id', $buses->id_contribuyente)->first())
+        {
+            $contri = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+        }
+
+   
             $tBus = TarifaBus::orderBy('id', 'ASC')->get();  
 
-            foreach ($calificacionB as $dato)
+            foreach ($bus as $dato)
             {
                 $tarifa_mensual = 0;
                 $fondoF = 0.05;
@@ -287,48 +327,53 @@ class BusesController extends Controller
                 log::info($tarifa_mensual);
                 $total1 = $total1 + $tarifa_mensual;
                 log::info($total1);
+
             }
 
    
 
-        return view('backend.admin.Buses.tabla.tabla_busC', compact('calificacionB','total','total1','bus','tBus','tarifa_mensual','dato','tarifa'));
+        return view('backend.admin.Buses.tabla.tabla_busC', compact('total','contri','buses','total1','bus','tBus','tarifa_mensual','dato','tarifa'));
          
     }
 //Termica tabla de la calificación de buses
 
 // GENERAR CALIFICACION DE BUSES
-    public function calificacionBuses ($id_bus)
+    public function calificacionBuses ($id)
     {
        
-       $empresa = Empresas::ALL();
-       $bus = Buses::where('id', $id_bus)->first();
+        $empresa = Empresas::ALL();
+        $bus = Buses::where('id', $id)->get();
        
         $contribuyente = Contribuyentes::orderBy('id', 'ASC')->get();
       //  $empresa = Empresas::orderBy('id', 'ASC')->get();
 
-        $bus=Buses::join('empresa','buses.id_empresa','=','empresa.id')
-        ->join('contribuyente', 'empresa.id_contribuyente', '=', 'contribuyente.id')
-  
+        $lista = Buses::where('id', $id)->first();
+    
+       
+            $contri = ' ';
+            $emp = ' ';
 
-        ->select('buses.id AS id_bus','buses.id_empresa','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-        'empresa.nombre as empresas', 
-        'contribuyente.nombre as contri' , 'contribuyente.apellido as ape')
-        ->find($id_bus);
-              
-        $calificacionB = Buses::join('empresa','buses.id_empresa','=','empresa.id')
-                                
-        //Consulta para mostrar los buses que pertenecen a una sola empresa
-                              
-            ->select('buses.id AS id_bus','buses.id_empresa','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-            'empresa.nombre as empresas', )
-            ->where('id_empresa', $bus->id_empresa)
-            ->get();
+            if ($contribuyente = Contribuyentes::where ('id', $lista->id_contribuyente)->first())
+            {
+               $contri = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+            }
+            
+            if ($empresa = Empresas::where ('id',$lista->id_empresa)->first())
+            {
+                $emp= $empresa->nombre;
+            }
+
+            if ($estado = EstadoBuses::where ('id', $lista->id_estado_buses)->first())
+            {
+                $estado = $estado->estado;
+            }
+
         
         //Termina consulta para mostrar los buses que pertenecen a una sola empresa        
         $contador=0;
         $tBus = TarifaBus::orderBy('id', 'ASC')->get();  
 
-            foreach ($calificacionB as $dato)
+            foreach ($bus as $dato)
             {
                 $tarifa_mensual = 0;
                 $fondoF = 0.05;
@@ -353,7 +398,7 @@ class BusesController extends Controller
 
             }
       
-        return view('backend.admin.Buses.CalificacionBus', compact('id_bus','contador','bus','totalTarifaImA','totalTarifaI','totalTarifaA','totalTarifa','calificacionB','contribuyente','empresa'));
+        return view('backend.admin.Buses.CalificacionBus', compact('id','lista','emp','contri','contador','bus','totalTarifaImA','totalTarifaI','totalTarifaA','totalTarifa','contribuyente','empresa'));
     }
 // TERMINA GENERAR CALIFICACION DE BUSES
 
@@ -364,13 +409,15 @@ class BusesController extends Controller
         
         $fecha_calificacion = $request->fechacalificar;
         $estado_calificaion =  $request->estado_calificacion;
-        $id_bus = $request->id_bus;
+        $id_bus = $request->id;
         $id_empresa = $request->id_empresa;
+        $id_contribuyente = $request->id_contribuyente;
       
         log::info('Fecha calificacion ' . $fecha_calificacion);
         log::info('Estado calificacion ' . $estado_calificaion);
         log::info('ID bus ' . $id_bus);
         log::info('ID empresa ' . $id_empresa);
+        log::info('ID contribuyente ' . $id_contribuyente);
 
               
         $tBus = TarifaBus::orderBy('id', 'ASC')->get();
@@ -378,15 +425,7 @@ class BusesController extends Controller
      //   log::info($tBus);
              
       
-            $calificacionB = Buses::join('empresa','buses.id_empresa','=','empresa.id')
-                                
-            //Consulta para mostrar los buses que pertenecen a una sola empresa
-                                  
-                ->select('buses.id AS id_bus','buses.id_empresa','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-                'empresa.nombre as empresas', )
-                ->where('id_empresa', $id_empresa)
-                ->get();
-            
+    $calificacionB = Buses::where('id', $id_bus)->get();
             
                     log::info($calificacionB);
                   $contador=0;
@@ -418,8 +457,9 @@ class BusesController extends Controller
                 log::info('contador ' . $contador);
 
                     $dt = new CalificacionBus();
-                    $dt->id_buses = $dato->id_bus;
+                    $dt->id_buses = $dato->id;
                     $dt->id_empresa = $request->id_empresa;
+                    $dt->id_contribuyente = $request->id_contribuyente;
                     $dt->fecha_calificacion = $request->fechacalificar;
                     $dt->estado_calificacion = $request->estado_calificacion;
                     $dt->tarifa_mensual = $dato->tarifa;
@@ -455,7 +495,7 @@ class BusesController extends Controller
 
     //Termina consulta para mostrar los buses que pertenecen a una sola empresa
 
-         $bus=Buses::join('empresa','buses.id_empresa','=','empresa.id')
+        $bus=Buses::join('empresa','buses.id_empresa','=','empresa.id')
         ->join('contribuyente', 'empresa.id_contribuyente', '=', 'contribuyente.id')
   
 
@@ -484,7 +524,7 @@ class BusesController extends Controller
                 $detectorCobro=0;
                 return view('backend.admin.Buses.Cobros.CobroBus', compact('detectorNull','detectorCobro'));
             }
-        } else
+        }else
         {  
             $detectorNull=1;
             if ($ultimo_cobro == null)
@@ -800,6 +840,7 @@ class BusesController extends Controller
 //Realizar traspaso
     public function infoTraspasoB(Request $request)
     {
+        
         $empresa = Empresas::ALL();
 
             $regla = array(
@@ -809,56 +850,80 @@ class BusesController extends Controller
             $validar = Validator::make($request->all(), $regla);
 
             if ($validar->fails()){ return ['success' => 0];}
+            
+            if($lista = Buses::where('id', $request->id)->first())
+            {
 
-            if($lista = Buses::where('id', $request->id)->first()){
-                
-                $empresas = Empresas::orderBy('nombre')->get();
+                $empresa = Empresas::orderBy('nombre')->get();
                 $estado_buses = EstadoBuses::orderBy('estado')->get();
+                $contribuyente = Contribuyentes::orderBy('nombre')->get();
+             
                 return ['success' => 1,
 
                 'id_emp' => $lista->id_empresa,
                 'idesta' => $lista->id_estado_buses,
-                'empresa' => $empresas,
-                'estado_buses' => $estado_buses,
+                'id_contri' => $lista->id_contribuyente,
+                'empresa' => $empresa,
+                'estado_buses' => $estado_buses,                
+                'contribuyente' => $contribuyente,
+               
                 
-            ];
-    }
-        else
-        {
-            return ['success' => 2];
-        }
+                    ];
+            }
+            else
+            {
+                return ['success' => 2];
+            }
     }
 //Realizar traspaso finaliza
 
-    public function cierres_traspasosB($id_bus){
-            
+    public function cierres_traspasosB($id)
+    {
+                   
         $idusuario = Auth::id();
         $infouser = Usuario::where('id', $idusuario)->first();
         $estado_buses = EstadoBuses::All();
         $ConsultaEmpresa = Empresas::All();
         $empresas = Empresas::ALL();
-        $contribuyente = Contribuyentes::ALL();
+        $contribuyentes = Contribuyentes::ALL();
 
       
-        $bus=Buses::join('empresa','buses.id_empresa','=','empresa.id')
-        ->join('estado_buses', 'buses.id_estado_buses', '=','estado_buses.id')
-           
+        $lista = Buses::where('id', $id)->first();
 
-        ->select('buses.id AS id_bus','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-        'empresa.id','empresa.nombre',   
-        'estado_buses.estado')
-        ->where('buses.id',$id_bus)
-        ->first();
+    
+            $contri = ' ';
+            $emp = ' ';
+            $estado = ' ';
 
+            if ($contribuyente = Contribuyentes::where ('id', $lista->id_contribuyente)->first())
+            {
+               $contri = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+               $id = $contribuyente->id;
+            }
+            
+            if ($empresa = Empresas::where ('id',$lista->id_empresa)->first())
+            {
+                $emp= $empresa->nomb8re;
+            }
+
+            if ($estado = EstadoBuses::where ('id', $lista->id_estado_buses)->first())
+            {
+                $estado = $estado->estado;
+            }
+
+    
        
         return view('backend.admin.Buses.CierresTraspasos.Cierre_TraspasoB',
                 compact(
-                        'estado_buses',     
-                        'bus',
+                        'estado_buses',                    
                         'ConsultaEmpresa',
-                        'contribuyente',
+                        'contribuyentes',
                         'empresas',
-                        'id_bus'
+                        'id',
+                        'lista',
+                        'contri',
+                        'emp',
+                        'estado'
                        
                     ));
     }
@@ -867,7 +932,7 @@ class BusesController extends Controller
     {
         log::info($request->all());
 
-            $id_bus = $request->id_bus;
+            $id = $request->id;
             $estado_buses = $request->estado_buses;
 
             if($estado_buses == 1)
@@ -886,7 +951,7 @@ class BusesController extends Controller
             ->select('buses.id','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
             'empresa.nombre as empresas',            
             'estado_buses.estado')
-            ->find($id_bus);
+            ->find($id);
               
 
             $regla = array(  
@@ -942,28 +1007,39 @@ class BusesController extends Controller
     public function nuevoTraspasoBus(Request $request)
     {
 
-        log::info($request->all());
-
-        $id_bus = $request->id_bus;
+        $id = $request->id;
         $id_empresa = $request->empresa;
-     
-            $bus=Buses::join('empresa','buses.id_empresa','=','empresa.id')
-            ->join('contribuyente', 'empresa.id_contribuyente', '=', 'contribuyente.id')
-            ->join('estado_buses','buses.id_estado_buses', '=', 'estado_buses.id')
-      
-    
-            ->select('buses.id AS id_bus','buses.id_empresa','buses.nom_bus','buses.fecha_inicio','buses.placa','buses.ruta','buses.telefono',
-            'empresa.nombre as empresas', 
-            'contribuyente.nombre as contri' , 'contribuyente.apellido as ape',
-            'estado_buses.estado')
-            ->find($id_bus);
-                  
+        $id_contribuyente = $request->contribuyente;
+        
+        $lista = Buses::orderBy('nom_bus')->get();
 
+            foreach($lista as $dato) 
+            {
+                $nom_apellido = ' ';
+                $nom_empresa = ' ';
 
+                if ($info = Contribuyentes::where ('id', $dato->id_contribuyente)->first())
+                {
+                $nom_apellido = $info->nombre . ' ' . $info->apellido;{}
+                }
+
+                if ($info = Empresas::where ('id',$dato->id_empresa)->first())
+                {
+                    $nom_empresa = $info->nombre;
+                }
+
+                $dato->cont = $nom_apellido;
+                $dato->empr = $nom_empresa;
+
+            }
+       
             $datos_empresa = Empresas::select('nombre')
             ->where('id', $id_empresa)
             ->first();
-     
+
+            $datos_contribuyente = Contribuyentes::select('nombre','apellido')
+            ->where('id', $id_contribuyente)
+            ->first();
 
             $regla = array(  
                 'id' => 'required',
@@ -979,27 +1055,31 @@ class BusesController extends Controller
                 'message' => $validar->errors()->first()
             ];
             }
-            if(Buses::where('id', $request->id_bus)->first()){
+
+            if(Buses::where('id', $request->id)->first()){
                 //** Guardar registro historio en tabla traspasos */
             
-            if($id_empresa != $bus->id_empresa){
-                $traspaso = new TraspasosBuses();
-                $traspaso->id_buses = $id_bus;            
-                $traspaso->propietario_anterior = $bus->empresas;
-                $traspaso->propietario_nuevo =  $datos_empresa->nombre;
+            if($id_contribuyente != $lista->id_contribuyente){
+                $traspaso = new TraspasosBuses();              
+                $traspaso->id_buses = $id;            
+                $traspaso->contribuyente_anterior = $lista->cont;
+                $traspaso->contribuyente_nuevo = $datos_contribuyente->nombre;
+                $traspaso->empresa_anterior = $lista->empr;
+                $traspaso->empresa_nueva =  $datos_empresa->nombre;
                 $traspaso->fecha_a_partir_de = $request->Apartirdeldia;
                 $traspaso->save();
                 //** FIN- Guardar registro historio en tabla traspasos */
-                Buses::where('id', $request->id_bus)->update([
+                Buses::where('id', $request->id)->update([
          
-                     'id_empresa' => $request->empresa,
+                    'id_contribuyente' => $request->contribuyente,
+                    'id_empresa' => $request->empresa,
                     ]);
 
                     return ['success' => 1];
 
-                 }else{ 
+                }else{ 
                     return ['success' => 3];
-                      }
+                    }
 
                 }else{
                     return ['success' => 2];
@@ -1026,6 +1106,24 @@ class BusesController extends Controller
 
       return view('backend.admin.Buses.Cobros.tablas.tabla_historico_Cobrosbus', compact('ListaCobrosBuses'));
     }
+
+     //Función para llenar el select Actividad Especifica
+    public function buscarEmpresaBusTraspaso(Request $request)
+    {
+ 
+          $empresa = Empresas::
+          where('id_contribuyente',$request->id_select)
+          ->orderBy('nombre', 'ASC')
+          ->get();
+ 
+          return ['success' => 1,
+          'empresa' => $empresa,
+          
+          ];
+ 
+     }
+     //Terminar llenar select
+ 
 
 
 

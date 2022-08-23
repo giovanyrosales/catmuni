@@ -112,7 +112,7 @@ window.onload = f4;
                 <div class="col-md-12">
                     <div class="card">
                     <div class="card-header">
-                        <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Cierres y traspasos de bus &nbsp;<span class="badge badge-warning">&nbsp;&nbsp;</span></h5>
+                        <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Cierres y traspasos de bus &nbsp;<span class="badge badge-warning">&nbsp;{{$bus->empresa}}&nbsp;</span></h5>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                             <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
@@ -180,20 +180,21 @@ window.onload = f4;
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>BUSES:</label>                          
+                                        <label>BUS:</label>                          
                                     </div>
-                                    </div>
+                                </div>
+
                                 <!-- /.form-group --> 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text"value="{{$dato->nombre}}" id="Apartirdeldia" required class="form-control" >
-                                        <input type="text"  value="{{$dato->id_buses_detalle}}" id="id_buses_detalle" required class="form-control" >
+                                        <input type="checkbox" name="skills" id="buses" value="{{$dato->nombre}}">{{$dato->nombre}}</br>                                      
+                                        <input type="text" hidden value="{{$dato->id_buses_detalle}}" id="id_buses_detalle" required class="form-control" >
                                     </div>
-                                    </div>
-
+                                </div>
+                            
                             @endforeach 
-                                </div><!--  /.ROW2 -->
 
+                                </div><!--  /.ROW2 -->
                                 <!-- /.form-group -->
                                 <div class="row"><!-- /.ROW3 -->
                                 <!-- /.form-group -->
@@ -307,14 +308,14 @@ window.onload = f4;
                                 <div class="form-group">
                                     <label>A PARTIR DEL DÍA:</label>                          
                                 </div>
-                                </div>
+                            </div>
                             <!-- /.form-group --> 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="date" id="Cierre_Apartirdeldia" required class="form-control" >
                                    
                                 </div>
-                                </div>
+                            </div>
                             <!-- /.form-group --> 
 
                             </div><!--  /.ROW2 -->
@@ -348,12 +349,12 @@ window.onload = f4;
                             <hr>
                             <div class="row" id="historico_cierres_emp"><!-- /.ROW4 -->
                                
-                               <div class="col-md-6">
+                            <div class="col-md-6">
                                <div class="form-group">
                                    <h5>HISTÓRICO</h5>
                                </div>
-                               </div>
-                               <div class="col-md-6">
+                            </div>
+                            <div class="col-md-6">
                                <div class="form-group">
                                    <!-- Botón ver historial de cierres y reaperturas -->
                                        <button type="button" id="btn_ver_historial_cierres"   onclick="verhistorialCierres()" 
@@ -368,12 +369,12 @@ window.onload = f4;
                                        &nbsp; Ocultar historial &nbsp;</button>
                                    <!-- /.Botón ver historial de cierres y reaperturas -->
                                </div>
-                               </div><!-- /.col-md-6 -->
-                               <div class="col-md-12">
+                            </div><!-- /.col-md-6 -->
+                            <div class="col-md-12">
                                <div class="form-group" id="Div_historico_cierres">
                                     <div class="col-auto  p-12 text-center" id="tabla_cierres"></div>
                                </div>
-                             </div>
+                            </div>
                    
                            </div><!-- /.ROW4 -->
 
@@ -461,56 +462,56 @@ window.onload = f4;
         function guardarTraspasoBus(id)
         {
 
-        var id_buses_detalle = document.getElementById('id_buses_detalle').value;
-        var empresa = document.getElementById('select-empresa-traspaso').value;
-        var Apartirdeldia = document.getElementById('Apartirdeldia').value;
+            var id_buses_detalle = document.getElementById('id_buses_detalle').value;
+            var empresa = document.getElementById('select-empresa-traspaso').value;
+            var Apartirdeldia = document.getElementById('Apartirdeldia').value;
 
-        if(Apartirdeldia===''){
-        modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
-        return;
-        }
+            if(Apartirdeldia===''){
+            modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
+            return;
+            }
 
-        if(empresa === ''){
-        modalMensaje('Aviso', 'El dato empresa es requerido');
-        return;
-        }
+            if(empresa === ''){
+            modalMensaje('Aviso', 'El dato empresa es requerido');
+            return;
+            }
 
-        openLoading();
-            var formData = new FormData();
-            formData.append('id', id);
-            formData.append('id_buses_detalle', id_buses_detalle);
-            formData.append('empresa', empresa);
-            formData.append('Apartirdeldia', Apartirdeldia);
+            openLoading();
+                var formData = new FormData();
+                    formData.append('id', id);
+                    formData.append('id_buses_detalle', id_buses_detalle);
+                    formData.append('empresa', empresa);
+                    formData.append('Apartirdeldia', Apartirdeldia);
 
-            axios.post('/admin/buses/show/traspaso', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
+                    axios.post('/admin/buses/show/traspaso', formData, {
+                    })
+                    .then((response) => {          
+                        closeLoading();
 
-                if (response.data.success === 1) 
+                        if (response.data.success === 1) 
+                            
+                            {
+                                toastr.success('¡Propietario actualizado!');
+                                f6();
+                                recargarTraspasos();
+                                document.getElementById('Apartirdeldia').value='';
+                        
+                            }
+                            else if(response.data.success === 3){
+
+                            modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
+                            return;
+                            }else
+                                {
+                                    toastMensaje('Error al actualizar');
+
+                                }
                     
-                    {
-                        toastr.success('¡Propietario actualizado!');
-                        f6();
-                        recargarTraspasos();
-                        document.getElementById('Apartirdeldia').value='';
-                
-                    }
-                    else if(response.data.success === 3){
-
-                    modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
-                    return;
-                    }else
-                        {
-                            toastMensaje('Error al actualizar');
-
-                        }
-            
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar bus');
-                closeLoading();
-            });
+                    })
+                    .catch((error) => {
+                        toastr.error('Error al actualizar bus');
+                        closeLoading();
+                    });
         }
 
         function informacionTraspaso(id)
@@ -544,7 +545,7 @@ window.onload = f4;
                             }
                         }); 
 
-                      }else{
+                    }else{
                         toastr.error('Información no ha sido encontrada');
                     }
 

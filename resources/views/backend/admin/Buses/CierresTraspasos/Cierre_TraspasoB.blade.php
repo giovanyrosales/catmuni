@@ -16,58 +16,61 @@
 
 window.onload = f4;
 
-function f4()
-{
-  $('#imp_traspaso').hide();
-  $('#imp_cierre').hide();
-  $('#btn_ocultar_historial_traspasos').hide();
-  $('#btn_ocultar_historial_cierres').hide();
-  $('#Div_historico').hide();
-  $('#Div_historico_cierres').hide();
+    function f4()
+    {
+        $('#imp_traspaso').hide();
+        $('#imp_cierre').hide();
+        $('#btn_ocultar_historial_traspasos').hide();
+        $('#btn_ocultar_historial_cierres').hide();
+        $('#Div_historico').hide();
+        $('#Div_historico_cierres').hide();
+        
+        informacionTraspaso({{$lista->id}});
+
+    }
   
-  informacionTraspaso({{$bus->id_bus}});
-}
-  
 
-function f6()
-{
-  $('#imp_traspaso').show();
-  $('#historico_traspaso_emp').show();
-}
+    function f6()
+    {
+        $('#imp_traspaso').show();
+        $('#historico_traspaso_emp').show();
+    }
 
-function f7()
-{
-  $('#imp_cierre').show();
-  $('#historico_cierres_emp').show();
-}
+    function f7()
+    {
+        $('#imp_cierre').show();
+        $('#historico_cierres_emp').show();
+    }
 
-function verhistorialTraspasos()
-{
-  recargarTraspasos();
-  $('#Div_historico').show();
-  $('#btn_ocultar_historial_traspasos').show();
-  $('#btn_ver_historial_traspasos').hide();
-}
-function OcultarhistorialTraspasos()
-{
-  $('#Div_historico').hide();
-  $('#btn_ocultar_historial_traspasos').hide();
-  $('#btn_ver_historial_traspasos').show();
-}
+    function verhistorialTraspasos()
+    {
+        recargarTraspasos();
+        $('#Div_historico').show();
+        $('#btn_ocultar_historial_traspasos').show();
+        $('#btn_ver_historial_traspasos').hide();
+    }
 
-function verhistorialCierres()
-{
-  recargarCierres()
-  $('#Div_historico_cierres').show();
-  $('#btn_ocultar_historial_cierres').show();
-  $('#btn_ver_historial_cierres').hide();
-}
-function OcultarhistorialCierres()
-{
-  $('#Div_historico_cierres').hide();
-  $('#btn_ocultar_historial_cierres').hide();
-  $('#btn_ver_historial_cierres').show();
-}
+    function OcultarhistorialTraspasos()
+    {
+        $('#Div_historico').hide();
+        $('#btn_ocultar_historial_traspasos').hide();
+        $('#btn_ver_historial_traspasos').show();
+    }
+
+    function verhistorialCierres()
+    {
+        recargarCierres()
+        $('#Div_historico_cierres').show();
+        $('#btn_ocultar_historial_cierres').show();
+        $('#btn_ver_historial_cierres').hide();
+    }
+    
+    function OcultarhistorialCierres()
+    {
+        $('#Div_historico_cierres').hide();
+        $('#btn_ocultar_historial_cierres').hide();
+        $('#btn_ver_historial_cierres').show();
+    }
 </script>
 
 <style>
@@ -109,7 +112,7 @@ function OcultarhistorialCierres()
                 <div class="col-md-12">
                     <div class="card">
                     <div class="card-header">
-                        <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Cierres y traspasos de bus &nbsp;<span class="badge badge-warning">&nbsp;{{$bus->nom_bus}} &nbsp;</span></h5>
+                        <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Cierres y traspasos de bus &nbsp;<span class="badge badge-warning">&nbsp;{{$lista->nom_bus}} &nbsp;</span></h5>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                             <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
@@ -132,8 +135,8 @@ function OcultarhistorialCierres()
                             <div class="card-body">
                                 <div class="row"><!-- /.ROW2 -->
 
-                                <!-- /.form-group -->
-                                <div class="col-md-6">
+                                 <!-- /.form-group -->
+                                 <div class="col-md-6">
                                     <div class="form-group">
                                             <label>TRASPASO A NOMBRE DE:</label>
                                     </div>
@@ -146,35 +149,57 @@ function OcultarhistorialCierres()
                                             <div class="input-group mb-9">
                                                     <select 
                                                     required
-                                                    class="form-control"                                                   
+                                                    class="form-control"                                                                                                     
                                                     data-show-subtext="true" 
                                                     data-live-search="true"   
-                                                    id="select-empresa-traspaso" 
+                                                    id="select-contribuyente-traspaso" 
                                                     title="-- Seleccione un registro --"
+                                                    onchange="llenarSelect()"
                                                     >
-                                                    @foreach($empresas as $empresa)
-                                                    <option value="{{ $empresa->id }}"> {{ $empresa->nombre }}</option>
+                                                    @foreach($contribuyentes as $contribuyente)
+                                                    <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}{{$contribuyente->apellido}} </option>
                                                     @endforeach
                                                     </select>
                                             </div>
                                             <!-- finaliza select estado-->  
-                                    </div><!-- /.col-md-3 -->
+                                        </div><!-- /.col-md-3 -->
                                     </div><!-- /.form-group -->
+                                   
+                       
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label id="empresaDiv">ASIGNAR EMPRESA:</label>
+                                </div>
+                            </div><!-- /.col-md-6 --> 
+
+                            <div class="col-md-6">
+                                <div class="form-group" id= "asignar-empresaDIV">                          
+                                    <!-- Select estado - live search -->
+                                    <div class="input-group mb-3" >                        
+                                    <select class="form-control"  id="select-empresa-traspaso"                         
+                                    >
+                                    </select>
+
+                                    </div>
+                                </div>
+                            </div>
+   
                                     <!-- /.form-group -->
                                     <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>A PARTIR DEL DÍA:</label>                          
-                                    </div>
-                                    </div>
-                                <!-- /.form-group --> 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="date" id="Apartirdeldia" required class="form-control" >
-                                        <input type="text" hidden value="{{$bus->id_bus}}" id="id_bus" required class="form-control" >
-                                    </div>
+                                        <div class="form-group">
+                                            <label>A PARTIR DEL DÍA:</label>                          
+                                        </div>
                                     </div>
                                 <!-- /.form-group --> 
-                                </div><!--  /.ROW2 -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="date" id="Apartirdeldia" required class="form-control" >
+                                            <input type="text" hidden value="{{$lista->id}}" id="id_bus" required class="form-control" >
+                                        </div>
+                                    </div>
+                                    <!-- /.form-group --> 
+                                    </div><!--  /.ROW2 -->
 
                                 <!-- /.form-group -->
                                 <div class="row"><!-- /.ROW3 -->
@@ -184,7 +209,7 @@ function OcultarhistorialCierres()
                                 
                                     <!-- Botón Imprimir Traspaso-->
                                     <br>
-                                    <button type="button"  onclick="ImprimirTraspaso({{$empresa->id}})" id="imp_traspaso" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                                    <button type="button"  onclick="ImprimirTraspaso()" id="imp_traspaso" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
                                         &nbsp; Imprimir resolución &nbsp;</button>
                                     </button>
                                     <!-- /.Botón Imprimir Traspaso -->
@@ -195,7 +220,7 @@ function OcultarhistorialCierres()
                                 <div class="form-group">
                                     <!-- Botón Guardar Traspaso -->
                                         <br>
-                                        <button type="button"  onclick="guardarTraspasoBus({{$bus->id_bus}})" 
+                                        <button type="button"  onclick="guardarTraspasoBus({{$lista->id}})" 
                                         class="btn btn-warning btn-sm float-right" ><i class="fas fa-save"></i>
                                         &nbsp; Guardar Traspaso &nbsp;</button>
                                     <!-- /.Botón Guardar Traspaso -->
@@ -289,14 +314,13 @@ function OcultarhistorialCierres()
                                 <div class="form-group">
                                     <label>A PARTIR DEL DÍA:</label>                          
                                 </div>
-                                </div>
+                            </div>
                             <!-- /.form-group --> 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="date" id="Cierre_Apartirdeldia" required class="form-control" >
-                                   
+                                    <input type="date" id="Cierre_Apartirdeldia" required class="form-control" >                                   
                                 </div>
-                                </div>
+                            </div>
                             <!-- /.form-group --> 
 
                             </div><!--  /.ROW2 -->
@@ -390,13 +414,19 @@ function OcultarhistorialCierres()
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
 
     <script type="text/javascript">
 
         $(document).ready(function()
         {   
-
+            var id = {{$lista->id}};
             document.getElementById("divcontenedor").style.display = "block";
+
+        
 
         });
 
@@ -443,60 +473,60 @@ function OcultarhistorialCierres()
         function guardarTraspasoBus(id)
         {
 
-        var id_bus = document.getElementById('id_bus').value;
-        var empresa = document.getElementById('select-empresa-traspaso').value;
-        var Apartirdeldia = document.getElementById('Apartirdeldia').value;
+            var id = document.getElementById('id_bus').value;
+            var empresa = document.getElementById('select-empresa-traspaso').value;
+            var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
+            var Apartirdeldia = document.getElementById('Apartirdeldia').value;
 
-        if(Apartirdeldia===''){
-        modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
-        return;
-        }
+            if(Apartirdeldia==='')
+            {
+                modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
+                return;
+            }
 
-        if(empresa === ''){
-        modalMensaje('Aviso', 'El dato empresa es requerido');
-        return;
-        }
-
-        openLoading();
+       
+            openLoading();
             var formData = new FormData();
-            formData.append('id', id);
-            formData.append('id_bus', id_bus);
-            formData.append('empresa', empresa);
-            formData.append('Apartirdeldia', Apartirdeldia);
+                formData.append('id', id);           
+                formData.append('empresa', empresa);
+                formData.append('contribuyente' , contribuyente);
+                formData.append('Apartirdeldia', Apartirdeldia);
 
-            axios.post('/admin/buses/show/traspaso', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
+                axios.post('/admin/buses/show/traspaso', formData, {
+                })
+                .then((response) => {          
+                    closeLoading();
 
-                if (response.data.success === 1) 
-                    
-                    {
-                        toastr.success('¡Propietario actualizado!');
-                        f6();
-                        recargarTraspasos();
-                        document.getElementById('Apartirdeldia').value='';
-                
-                    }
-                    else if(response.data.success === 3){
-
-                    modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
-                    return;
-                    }else
+                    if (response.data.success === 1) 
+                        
                         {
-                            toastMensaje('Error al actualizar');
-
+                            toastr.success('¡Propietario actualizado!');
+                            f6();
+                            recargarTraspasos();
+                            document.getElementById('Apartirdeldia').value='';
+                    
                         }
-            
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar bus');
-                closeLoading();
-            });
+                        else if(response.data.success === 3)
+                        {
+                            modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
+                            return;
+                        }else
+                            {
+                                toastMensaje('Error al actualizar');
+
+                            }
+                
+                })
+                .catch((error) => {
+                    toastr.error('Error al actualizar bus');
+                    closeLoading();
+                });
         }
 
         function informacionTraspaso(id)
         {
+
+            console.log(id);
             openLoading();
             axios.post('/admin/buses/show/informacion',{
                 'id': id
@@ -508,6 +538,7 @@ function OcultarhistorialCierres()
                         
                         document.getElementById("select-empresa-traspaso").options.length = 0;
                         document.getElementById("select-estado_buses").options.length = 0;
+                        document.getElementById("select-contribuyente-traspaso").options.length = 0;
 
                         $.each(response.data.empresa, function( key, val ){
                             if(response.data.id_emp == val.id){
@@ -516,6 +547,14 @@ function OcultarhistorialCierres()
                                 $('#select-empresa-traspaso').append('<option value="' +val.id +'">'+val.nombre+'</option>');
                             }
                             
+                        });
+
+                        $.each(response.data.contribuyente, function( key, val ){
+                            if(response.data.id_contri == val.id){
+                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                            }else{
+                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                            }
                         });
                         
                         $.each(response.data.estado_buses, function( key, val ){
@@ -538,51 +577,85 @@ function OcultarhistorialCierres()
 
         }
 
+        function llenarSelect()
+        {
+             var id_select = document.getElementById('select-contribuyente-traspaso').value;
+          
+           
+             var formData = new FormData();
+             formData.append('id_select', id_select);
+             
+            axios.post('/admin/bus/buscar-traspaso', formData, {
+              })
+            .then((response) => {
+            
+               document.getElementById("select-empresa-traspaso").options.length = 0;
+               $('#empresaDiv').show();
+               $('#asignar-empresaDIV').show();
+          
+            
+                $.each(response.data.empresa, function( key, val ){
+                       $('#select-empresa-traspaso').append('<option value="' +val.id +'">'+val.nombre+'</option>').select2();
+                       
+                            
+                    });
+
+               })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });
+            
+             
+        }
+
     function guardarEstadoBus()
     {
-      //Llamar la variable id desde el controlador
-      var id_bus = {{$bus->id_bus}};
-      var estado_buses = document.getElementById('select-estado_buses').value;
-      var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
+        //Llamar la variable id desde el controlador
+        var id = {{$lista->id}};
+        var estado_buses = document.getElementById('select-estado_buses').value;
+        var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
 
-      if(estado_buses === ''){
+        if(estado_buses === '')
+        {
             modalMensaje('Aviso', 'El estado del bus es requerido.');
             return;
         }
-        if(cierre_apartirdeldia === ''){
+
+        if(cierre_apartirdeldia === '')
+        {
             modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
             return;
         }
 
         openLoading();
             var formData = new FormData();
-            formData.append('id_bus', id_bus);
-            formData.append('estado_buses', estado_buses);
-            formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
+                formData.append('id', id);            
+                formData.append('estado_buses', estado_buses);
+                formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
 
             axios.post('/admin/buses/show/cierre', formData, {
             })
             .then((response) => {          
                 closeLoading();
 
-                if (response.data.success === 1) 
-                   
-                   {
+                if (response.data.success === 1)  
+                {
                        toastr.success('¡Estado del bus actualizado!');
                        f7();
                        recargarCierres();
                        document.getElementById('Cierre_Apartirdeldia').value='';
-                   }
-                   else if(response.data.success === 3){
-
+                }
+                else if(response.data.success === 3)
+                {
                     modalMensaje('Aviso', 'No ha cambiado el estado del bus, debe seleccionar otro.');
                     return;
+                }
+                    else 
+                    {
+                            toastMensaje('Error al actualizar');
+                               
                     }
-                      else 
-                            {
-                                toastMensaje('Error al actualizar');
-                                
-                            }
              
             })
             .catch((error) => {
@@ -593,14 +666,14 @@ function OcultarhistorialCierres()
 
     function recargarCierres()
     {
-        var id={{$empresa->id}};
+       
         var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
             $('#tabla_cierres').load(ruta);
     }
 
     function recargarTraspasos()
     {
-        var id={{$empresa->id}};
+        var id={{$lista->id}};
         var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
             $('#tabla_traspasos').load(ruta);
     }

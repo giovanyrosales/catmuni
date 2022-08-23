@@ -1674,7 +1674,7 @@ public function nuevaEmpresa(Request $request){
 
 //Función para llenar el select Actividad Especifica
     public function buscarActividadEsp(Request $request)
-     {
+    {
  
      $actividad_especifica = ActividadEspecifica::
         where('id_actividad_economica',$request->id_select)

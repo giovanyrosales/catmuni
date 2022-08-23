@@ -10,7 +10,7 @@
                                     <th style="width: 15%;">Nombre</th>
                                     <th style="width: 15%;">Placa</th>
                                     <th style="width: 15%;">Fecha de apertura</th>
-                                    <th style="width: 20%;">Empresa</th>
+                                    <th style="width: 20%;">Representante</th>
                                     <th style="width: 20%;">Acción</th>
                             </tr>
                             </thead>
@@ -21,12 +21,12 @@
                                     <td>{{$bus->nom_bus}} </td>
                                     <td>{{$bus->placa}}</td>
                                     <td>{{$bus->fecha_inicio}}</td>
-                                    <td>{{$bus->empresas}}</td>
+                                    <td>{{$bus->cont}}</td>
                                     <td style="text-align: center;">
-                                        <button type="button" class="btn btn-dark btn-xs" onclick="VistaBuses ({{$bus->id_bus}})" data-toggle="modal" >
+                                        <button type="button" class="btn btn-dark btn-xs" onclick="VistaBuses({{$bus->id}})" data-toggle="modal" >
                                         <i class="fas fa-search" title="Ver Registro"></i>&nbsp; Ver 
                                         </button>     
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="informacionBuses ({{$bus->id_bus}})">
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="informacionBuses ({{$bus->id}})">
                                         <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
                                         <button type="button" class="btn btn-danger btn-xs" onclick="">

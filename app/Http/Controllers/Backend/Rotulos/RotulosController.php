@@ -47,13 +47,15 @@ class RotulosController extends Controller
         $idusuario = Auth::id();
         $infouser = Usuario::where('id', $idusuario)->first();
         $empresas = Empresas::ALL();
+        $contribuyentes = Contribuyentes::ALL();
 
-      return view('backend.admin.Rotulos.CrearRotulos', compact('empresas'));
+      return view('backend.admin.Rotulos.CrearRotulos', compact('empresas','contribuyentes'));
 
     }
 
     //Agregar Rótulo
-    public function nuevoRotulo(Request $request){
+    public function nuevoRotulo(Request $request)
+    {
 
         $regla = array(
     
@@ -94,8 +96,10 @@ class RotulosController extends Controller
             if($estado){
                 
                 $dato = new Rotulos();
+                $dato->id_contribuyente = $request->contribuyente;
                 $dato->id_empresa = $request->empresa;
                 $dato->id_estado_rotulo = $request->estado_rotulo;
+                $dato->nFicha = $request->nFicha;
                 $dato->nom_rotulo = $request->nom_rotulo;
                 $dato->direccion = $request->direccion;
                 $dato->fecha_apertura = $request->fecha_apertura;
@@ -124,11 +128,13 @@ class RotulosController extends Controller
      
           
         $dato = new Rotulos();
+        $dato->id_contribuyente = $request->contribuyente;
         $dato->id_empresa = $request->empresa;
         $dato->id_estado_rotulo = $request->estado_rotulo;
         $dato->fecha_apertura = $request->fecha_apertura;
         $dato->direccion = $request->direccion;
         $dato->nom_rotulo = $request->nom_rotulo;
+        $dato->nFicha = $request->nFicha;
         $dato->actividad_economica = $request->actividad_economica;
         $dato->permiso_instalacion = $request->permiso_instalacion;
         $dato->medidas = $request->medidas;
@@ -150,19 +156,34 @@ class RotulosController extends Controller
     //Termina registrar rotulo
 
     //Función Tabla Rótulos
-    public function tablaRotulos(Rotulos $lista){
+    public function tablaRotulos(Rotulos $lista)
+    {
 
-             
-        $lista=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
-                     
-                      
-        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura','rotulos.permiso_instalacion','rotulos.medidas',
-        'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.direccion','rotulos.cargo_inspeccion','rotulos.coordenadas','rotulos.imagen',
-        'empresa.nombre as empresas')
-        ->get();
-    
+        $rotulo = Rotulos::ALL();
+
+        $lista = Rotulos::orderBy('nom_rotulo')->get();
+
+        foreach($lista as $dato) 
+        {
+            $nom_apellido = ' ';
+            $nom_empresa = ' ';
+
+            if ($info = Contribuyentes::where ('id', $dato->id_contribuyente)->first())
+            {
+               $nom_apellido = $info->nombre . ' ' . $info->apellido;
+            }
+
+            if ($info = Empresas::where ('id',$dato->id_empresa)->first())
+            {
+                $nom_empresa = $info->nombre;
+            }
+
+            $dato->cont = $nom_apellido;
+            $dato->empr = $nom_empresa;
+
+        }
       
-        return view('backend.admin.Rotulos.tabla.tablalistarotulos', compact('lista'));
+        return view('backend.admin.Rotulos.tabla.tablalistarotulos', compact('lista','rotulo'));
     }
     //Termina función tabla Rótulos
 
@@ -171,14 +192,16 @@ class RotulosController extends Controller
     {
    
         $empresas = Empresas::All();
+        $contribuyentes = Contribuyentes::ALL();
      
-        return view('backend.admin.Rotulos.ListarRotulos', compact('empresas'));
+    
+        return view('backend.admin.Rotulos.ListarRotulos', compact('empresas','contribuyentes'));
     }
     //Termina función Listar Rótulos
 
     //Ver informacón del rótulo
     public function informacionRotulo(Request $request)
-      {
+    {
        
         $regla = array(
             'id' => 'required',
@@ -190,17 +213,25 @@ class RotulosController extends Controller
         if ($validar->fails()){ return ['success' => 0];}
 
         if ($lista = Rotulos::where('id', $request->id)->first())
-           {
-          
-            $empresas = Empresas::orderby('nombre')->get();
-                
-                return['success' => 1,
-       
-                'rotulos' => $lista,             
-                'id_empre' => $lista->id_empresa,
-                'empresa' => $empresas,
-                 ];
-           }
+        {
+            
+                $contribuyentes = Contribuyentes::orderby('nombre')->get();
+                $empresa = Empresas::orderby('nombre')->get();               
+            
+                $empresas = Empresas::where ('id',$lista->id_empresa)->get();
+
+                    return['success' => 1,
+        
+                    'rotulos' => $lista,             
+                    'id_empre' => $lista->id_empresa,
+                    'empresa' => $empresas,
+                    'id_cont' => $lista->id_contribuyente,
+                    'contribuyente' => $contribuyentes, 
+
+                    ];
+                 
+
+        }        
             else
             {
                 return ['success' => 2];
@@ -226,7 +257,7 @@ class RotulosController extends Controller
             'medidas' => 'required',
             'total_medidas' => 'required',
             'total_caras' => 'required',
-            'empresa' => 'required',
+          
             'coordenadas' => 'required',
             'cargo_inspeccion' => 'required',
             
@@ -242,9 +273,11 @@ class RotulosController extends Controller
 
         try {
 
-        if($data = Rotulos::where('id', $request->id)->first()){
+        if($data = Rotulos::where('id', $request->id)->first())
+        {
 
-            if($request->hasFile('imagen')){
+            if($request->hasFile('imagen'))
+            {
              
                 $imagenOld = $data->imagen;
 
@@ -258,12 +291,13 @@ class RotulosController extends Controller
                 $avatar = $request->file('imagen');
                 $estado = Storage::disk('archivos')->put($nomImagen, \File::get($avatar));
 
-                     if($estado)
-                        {
+                    if($estado)
+                    {
 
                         Rotulos::where('id', $request->id)->update([
                             
-                            'id_empresa' => $request->empresa,
+                       
+                            'nFicha' => $request->nFicha,
                             'nom_rotulo' => $request->nom_rotulo,
                             'actividad_economica' => $request->actividad_economica,
                             'direccion' => $request->direccion,
@@ -281,7 +315,8 @@ class RotulosController extends Controller
                         ]);
                     
 
-                            if(Storage::disk('archivos')->exists($imagenOld)){
+                            if(Storage::disk('archivos')->exists($imagenOld))
+                            {
                                 Storage::disk('archivos')->delete($imagenOld);
                             }
 
@@ -294,10 +329,13 @@ class RotulosController extends Controller
                        
                         DB::commit();
                             return ['success' => 1];
-        }else{
+            }else{
+
             Rotulos::where('id', $request->id)->update([
                    
-                'id_empresa' => $request->empresa,
+              
+                
+                'nFicha' => $request->nFicha,
                 'nom_rotulo' => $request->nom_rotulo,
                 'actividad_economica' => $request->actividad_economica,
                 'direccion' => $request->direccion,
@@ -321,20 +359,20 @@ class RotulosController extends Controller
             return ['success' => 1];
         }
 
-     
+    
+        }   else 
+            {
+            return ['success' => 2];
+    
+            }
+            }  
+            catch(\Throwable $e){
+                DB::rollback();    
 
-    }   else 
-        {
-        return ['success' => 2];
- 
+                return ['success' => 3];
         }
-        }  
-        catch(\Throwable $e){
-            DB::rollback();    
 
-            return ['success' => 3];
     }
-}
     //Termina función para editar rótulos
 
     //Función para eliminar rótulos
@@ -354,15 +392,24 @@ class RotulosController extends Controller
     {
         $contribuyentes = Contribuyentes::All();
         $empresas = Empresas::ALL();
+   
          
       
-        $lista=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
-                                            
-                      
-        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura','rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
-        'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion','rotulos.coordenadas','rotulos.imagen',
-        'empresa.nombre as empresas')
-        ->find($id);
+        $lista = Rotulos::where ('id', $id)->first();
+
+        $contri = ' ';
+        $emp = '';
+
+        if ($contribuyente = Contribuyentes::where('id', $lista->id_contribuyente)->first())
+        {
+            $contri  = $contribuyente->nombre . ' ' . $contribuyente->apellido;
+        }
+
+        if ($empresa = Empresas::where('id', $lista->id_empresa)->first())
+        {
+            $emp = $empresa->nombre;
+        }
+
     
 
         $calificacion = CalificacionRotulo::latest()
@@ -398,104 +445,15 @@ class RotulosController extends Controller
                 }
               
 
-        return view('backend.admin.Rotulos.vistaRotulos', compact('id','lista','contribuyentes','empresas','calificacion','detectorNull'));
+        return view('backend.admin.Rotulos.vistaRotulos', compact('id','lista','contribuyentes','empresas','calificacion','detectorNull','emp','contri'));
 
     }
     //Termina vista detallada
-    
-    public function infoCierre(Request $request)
+        
+   
+
+    public function tablaCierresR($id)
     {
-        $regla = array(
-            'id' => 'required',
-        );
-
-        $validar = Validator::make($request->all(), $regla);
-
-        if ($validar->fails()){ return ['success' => 0];}
-
-        if($lista = Rotulos::where('id', $request->id)->first()){
-           
-            $empresa = Empresas::orderBy('nombre')->get();
-            $estadorotulo = EstadoRotulo::orderBy('estado')->get();
-            return ['success' => 1,
-            'idempre' => $empresa->id_empresa,
-            'empresa' => $empresa,
-            'rotulos' => $lista,
-            'estadorotulo' => $estadorotulo,
-
-            
-        ];
-    }else{
-        return ['success' => 2];
-    }
-    }
-
-    public function nuevoEstadoR(Request $request)
-    {
-  
-        $regla = array(  
-            'id' => 'required',
-                      
-        );
-      
-        $validar = Validator::make($request->all(), $regla,
-      
-        );
-
-        if ($validar->fails()){ 
-            return ['success' => 0,
-            'message' => $validar->errors()->first()
-        ];
-        }
-        if($rotulo = Rotulos::where('id', $request->id)->first()){
-
-           $estado_rotulo = EstadoRotulo::where('id', $request->id)->update([
-              
-                'idesta' => $rotulo->id_estado_rotulo,
-             
-                 'estado' => $request->estado,
-                 'fecha_a_partir_de' => $request->cierre_apartirdeldia,
-
-                 
-         ]);
-
-            return ['success' => 1];
-        }else{
-            return ['success' => 2];
-        }
-    }
-
-    public function traspasoR (Request $request)
-    {
-        $regla = array(
-            'id' => 'required',
-            'contribuyente' => 'required',
-        );
-
-        $validar = Validator::make($request->all(), $regla,
-    );
-
-    if ($validar->fails())
-    {
-        return ['success' => 0,
-        'message' => $validar->errors()->first()
-    ];
-    }
-    if (Rotulos::where('id', $request->id)->first())
-    {
-        Rotulos::where('id', $request->id)->update([
-            
-            'id_contribuyente' => $request->contribuyente,
-        ]);
-
-        return ['success' => 1];
-    }
-        else{
-            return ['success' => 2];
-        }
-    }
-
-    public function tablaCierresR($id){
 
         $historico_cierres=CierresReaperturasRotulo::orderBy('id', 'desc')
         ->where('id_empresa',$id)
@@ -504,7 +462,9 @@ class RotulosController extends Controller
            
         return view('backend.admin.Rotulos.CierresTraspasos.tablas.tabla_cierre_r', compact('historico_cierres'));
     }
-    public function tablaTraspasosR($id){
+
+    public function tablaTraspasosR($id)
+    {
 
         $historico_traspasos=TraspasosRotulos::orderBy('id', 'desc')
         ->where('id_empresa',$id) 
@@ -516,24 +476,35 @@ class RotulosController extends Controller
 
     public function calificacionRotulo ($id)
     {
+
         $contribuyente = Contribuyentes::ALL();
         $empresa = Empresas::ALL();
-        $rotulo = Rotulos::ALL();
-       
+  
+        $rotulos = Rotulos
+        ::join('contribuyente','rotulos.id_contribuyente','=','contribuyente.id')
+        ->join('empresa','rotulos.id_empresa','=','empresa.id')
+
+        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.direccion','rotulos.fecha_apertura','rotulos.permiso_instalacion','rotulos.medidas','rotulos.nFicha',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido',
+        'empresa.nombre as empresa')
+        ->find($id);
+            
         $contribuyente = Contribuyentes::orderBy('id', 'ASC')->get();
 
+        $calificacion = Rotulos::where ('id', $id)->get();
+
         $rotulo = Rotulos::where ('id', $id)->first();
+
 
         $contri = ' ';
         $emp = '';
         $emp1 = '';
-        $emp2 = '';
+        $emp2 = ''; 
       
      
 
         if ($empresa = Empresas::where('id', $rotulo->id_empresa)->first())
-        {
-           
+        {           
 
            
             $emp = $empresa->nombre;
@@ -542,20 +513,93 @@ class RotulosController extends Controller
             
         
         }
-        $empresa = Rotulos::where('id', $id)->first();
-     
-        $calificacion=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
-                                
-        //Consulta para mostrar los rótulos que pertenecen a una sola empresa
-                      
-        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
-        'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
-        'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
-        'rotulos.coordenadas','rotulos.imagen',
-        'empresa.nombre as empresas')
+
+        if ($contribuyente = Contribuyentes::where('id', $rotulo->id_contribuyente)->first())
+        {           
+
+           
+            $contri = $contribuyente->nombre;
+            $apellido = $contribuyente->apellido;           
+            
         
-        ->where('id_empresa', $empresa->id_empresa)
-        ->get();
+        }
+        
+        $empresa = Rotulos::where('id', $id)->first();
+      
+
+        $tRotulo = TarifaRotulo::orderBy('id', 'ASC')->get();
+        $rotulos = Rotulos::orderBy('id', 'ASC')->get();
+    
+        $total1 = 0;
+        $totalanual = 0;
+        $totalA = 0;
+        $total = 0;
+        $monto_tarifa = 0;
+        $total_medidas = 0;
+        $fondoF = 0.05;
+        $total_impuesto = 0;
+       
+//Calculo de la calificación de rótulos
+    foreach ($calificacion as $dato)
+    {
+        $tarifa_mensual = 0;
+        
+        foreach($tRotulo as $tarifa)
+        {
+            if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
+            {
+                $tarifa_mensual = $tarifa->monto_tarifa; 
+                    
+                    if($dato->total_caras > 1)
+                    {
+                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                    }
+                 
+            break;         
+
+           }  
+          
+            else if($dato->total_medidas > 8)
+            {
+                $tarifa_mensual = $dato->total_medidas;
+
+                    if($dato->total_caras >1)
+                    {
+                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                    }
+                    
+            break;
+          
+            }
+
+        }
+
+        $total = $total + $tarifa_mensual;
+        $dato->monto = $tarifa_mensual;           
+        $total1 = round(($total * 12),2);
+        $totalImpuesto = round ($tarifa_mensual + ($tarifa_mensual * $fondoF),2);
+        $totalAnual = round($total1 + ($total1 * $fondoF),2);
+        
+        log::info('tarifa sin fondo fiesta ' . $total);
+        log::info('total impuesto mensual con fondo fiesta ' . $totalImpuesto);
+        log::info('Impuesto Anual sin fondo fiesta ' . $total1);
+        log::info('Impuesto anual con fondo fiesta ' . $totalAnual);
+     
+    }
+      
+        
+        return view('backend.admin.Rotulos.CalificacionRotulo', compact('id','calificacion','totalImpuesto','rotulo','tarifa_mensual','contri','apellido','tarifa','totalA','totalAnual','total','total1','emp','emp1','emp2','contribuyente','empresa','rotulos'));
+        
+    }
+
+//Función para tabla de calificacion de rótulos
+
+    public function tablaCalificacionR($id)
+    {
+        $rotulo = Rotulos::where('id', $id)->first();    
+     
+        $calificacion = Rotulos::where('id', $id)->get();
+ 
 
         $tRotulo = TarifaRotulo::orderBy('id', 'ASC')->get();          
     
@@ -575,11 +619,11 @@ class RotulosController extends Controller
         
         foreach($tRotulo as $tarifa)
         {
-           if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
-           {
+            if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
+            {
                 $tarifa_mensual = $tarifa->monto_tarifa; 
                     
-                    if($dato->total_caras >1)
+                    if($dato->total_caras > 1)
                     {
                         $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
                     }
@@ -588,7 +632,7 @@ class RotulosController extends Controller
 
            }  
           
-           else if($dato->total_medidas > 8)
+            else if($dato->total_medidas > 8)
             {
                 $tarifa_mensual = $dato->total_medidas;
 
@@ -608,79 +652,10 @@ class RotulosController extends Controller
         $totalA = round($dato->total_impuesto *12);
         $total1 = round(($total * 12),2);
         
-
-    }  
- 
-        return view('backend.admin.Rotulos.CalificacionRotulo', compact('id','rotulo','tarifa','totalA','totalanual','total','total1','emp','emp1','emp2','contribuyente', 'empresa','calificacion'));
-    }
-
-//Función para tabla de calificacion de rótulos
-
-    public function tablaCalificacionR($id)
-    {
-        $empresa = Rotulos::where('id', $id)->first();
      
-        $calificacion=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
-                                
-//Consulta para mostrar los rótulos que pertenecen a una sola empresa
-                      
-        ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
-        'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
-        'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
-        'rotulos.coordenadas','rotulos.imagen',
-        'empresa.nombre as empresas')
-        
-        ->where('id_empresa', $empresa->id_empresa)
-        ->get();
-
- //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
-
-    $tRotulo = TarifaRotulo::orderBy('id', 'ASC')->get();          
-      
-        $monto_tarifa = 0;
-        $total_medidas = 0;
-        $fondoF = 0.05;
-        $total = 0;
-        $total_impuesto = 0;
-       
-//Calculo de la calificación de rótulos
-    foreach ($calificacion as $dato)
-    {
-        $tarifa_mensual = 0;
-        
-        foreach($tRotulo as $tarifa)
-        {
-           if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
-           {
-                $tarifa_mensual = $tarifa->monto_tarifa; 
-               
-                    if($dato->total_caras >1)
-                    {
-                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
-                    }
-               break;
-
-              
-           }  
-          
-           else if($dato->total_medidas > 8)
-           {
-                $tarifa_mensual = $dato->total_medidas;
-                    if($dato->total_caras >1)
-                    {
-                        $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
-                    }
-               break;
-           }
-          
-        }
-
-        $dato->monto = $tarifa_mensual;
-        $dato->total_impuesto	 = round($tarifa_mensual + ($tarifa_mensual * $fondoF),2);
-        
     }
   
-        return view('backend.admin.Rotulos.tabla.tablarotulo', compact('calificacion','total_impuesto','tarifa_mensual','dato'));
+        return view('backend.admin.Rotulos.tabla.tablarotulo', compact('calificacion','totalA','total1','total_impuesto','tarifa_mensual','dato'));
          
     }
     //Termica calculo de la calificación de rótulos
@@ -694,6 +669,7 @@ class RotulosController extends Controller
         $estado_calificaion =  $request->estado_calificacion;
         $id_rotulo = $request->id_rotulos;
         $id_empresa = $request->id_empresa;
+        $id_contribuyente = $request->id_contribuyente;
        // $id_empresa = Rotulos::select('id_empresa')->where('id',$id_rotulo)->first();
 
  
@@ -714,51 +690,50 @@ class RotulosController extends Controller
             $tarifa_mensual = 0;
   
       
-        $calificacion=Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
-                                         
-                    ->select('rotulos.id','rotulos.nom_rotulo',            
-                    'rotulos.total_medidas', 'rotulos.total_caras',                 
-                    'empresa.nombre as empresas')
-                    
-                    ->where('id_empresa', $id_empresa)
-                    ->get();
-            
-                    log::info($calificacion);
-                  $contador=0;
+            $calificacion = Rotulos::where('id', $id_rotulo)->get();
+ 
+
+                log::info($calificacion);
+                $contador=0;
+
 //Calculo de la calificación de rótulos
 foreach ($calificacion as $dato)
 {
     
    
-   foreach($tRotulo as $tarifa)
-   {
-      if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
-      {
-           $tarifa_mensual = $tarifa->monto_tarifa; 
-              
-               if($dato->total_caras >1)
-               {
-                   $tarifa_mensual = $tarifa->monto_tarifa * $dato->total_caras;
-               }           
-         
-      }  
+    foreach($tRotulo as $tarifa)
+    {
+        if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
+        {
+            $tarifa_mensual = $tarifa->monto_tarifa; 
+                
+                if($dato->total_caras >1)
+                {
+                    $tarifa_mensual = $tarifa->monto_tarifa * $dato->total_caras;
+                }           
+            
+        }  
      
-      else if($dato->total_medidas > 8)
-       {
-           $tarifa_mensual = $dato->total_medidas;
+        else if($dato->total_medidas > 8)
+        {
+            $tarifa_mensual = $dato->total_medidas;
 
-               if($dato->total_caras >1)
-               {
-                   $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
-               }   
-         
-       }
+                if($dato->total_caras >1)
+                {
+                    $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                }   
+            
+        }
     
-   }
+    }
 
+        
+        $dato->monto = $tarifa_mensual;
+        $total_impuesto = round($tarifa_mensual + ($tarifa_mensual * $fondoF),2);
+      
         $tarifa->tarifa_mensual = $tarifa_mensual;
-        $tarifa->total_impuesto	 = round($tarifa_mensual + ($tarifa_mensual * $fondoF),2);
-
+        $tarifa->total_impuesto	 = $total_impuesto;
+        
         
         log::info($tarifa_mensual);
         
@@ -768,6 +743,7 @@ foreach ($calificacion as $dato)
         $dt = new CalificacionRotulo();
         $dt->id_rotulos = $dato->id;
         $dt->id_empresa = $request->id_empresa;
+        $dt->id_contribuyente = $request->id_contribuyente;
         $dt->fecha_calificacion = $request->fechacalificar;
         $dt->estado_calificacion = $request->estado_calificacion;
         $dt->tarifa_mensual = $tarifa->tarifa_mensual;
@@ -804,7 +780,7 @@ foreach ($calificacion as $dato)
         ->where('id_empresa', $empresa->id_empresa)
         ->get();
 
- //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
+//Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
 
         $rotulo = Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
         ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
@@ -841,6 +817,7 @@ foreach ($calificacion as $dato)
             {
                 $detectorNull=0;
                 $detectorCobro=0;
+
                 return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('detectorNull','detectorCobro'));
             }
         }
@@ -849,14 +826,17 @@ foreach ($calificacion as $dato)
             $detectorNull=1;
             if ($ultimo_cobro == null)
             {
-             $detectorNull=0;
-             $detectorCobro=0;
-            return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('rotulo','empresa','date','ultimo_cobro','calificacion','detectorNull','detectorCobro','tasasDeInteres',));
+
+                $detectorNull=0;
+                $detectorCobro=0;
+
+                return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('rotulo','empresa','date','ultimo_cobro','calificacion','detectorNull','detectorCobro','tasasDeInteres',));
             }
             else
             {
                 $detectorNull=1;
                 $detectorCobro=1;
+
                 return view('backend.admin.Rotulos.Cobros.CobroRotulo', compact('rotulo','empresa','date','ultimo_cobro','calificacion','detectorNull','date','detectorCobro','tasasDeInteres'));
             }
         }
@@ -887,7 +867,7 @@ foreach ($calificacion as $dato)
             $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
             //log::info('inicio de mes');
         }
-        else
+            else
             {
             $f1=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1);
             $InicioPeriodo=Carbon::parse($request->ultimo_cobro)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
@@ -941,7 +921,7 @@ foreach ($calificacion as $dato)
         ->where('id_rotulos', "=", "$id")
         ->first();
 
-         //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
+        //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
      
           
 
@@ -964,14 +944,15 @@ foreach ($calificacion as $dato)
                  ->get();
 
                 $tarifa_total=0;
-                 foreach($tarifas as $dt)
-                 {
+                foreach($tarifas as $dt)
+                {
                     $tarifa=$dt->tarifa_mensual;
                     $tarifa_total=$tarifa_total+$tarifa;
 
-                 }
+                }
                 //** Inicia Foreach para cálculo de impuesto por años */
-                foreach ($periodo as $dt) {
+                foreach ($periodo as $dt) 
+                {
 
                     $AñoPago =$dt->format('Y');
                 
@@ -980,9 +961,9 @@ foreach ($calificacion as $dato)
                     log::info($tarifa_total);
             
                             if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
-                                {
-                                    $CantidadMeses=ceil(($f1->floatDiffInRealMonths($PagoUltimoDiaMes)));
-                                }
+                            {
+                                $CantidadMeses=ceil(($f1->floatDiffInRealMonths($PagoUltimoDiaMes)));
+                            }
                             else
                                 {
 
@@ -1168,6 +1149,7 @@ foreach ($calificacion as $dato)
     public function infoTraspasoR(Request $request)
     {
         $empresa = Empresas::ALL();
+  
 
             $regla = array(
                 'id' => 'required',
@@ -1177,34 +1159,59 @@ foreach ($calificacion as $dato)
 
             if ($validar->fails()){ return ['success' => 0];}
 
-            if($lista = Rotulos::where('id', $request->id)->first()){
+            if($lista = Rotulos::where('id', $request->id)->first())
+            {
                 
                 $empresas = Empresas::orderBy('nombre')->get();
                 $estado_rotulo = EstadoRotulo::orderBy('estado')->get();
-                return ['success' => 1,
+                $contribuyentes = Contribuyentes::orderBy('nombre')->get();
 
-                'id_emp' => $lista->id_empresa,
-                'idesta' => $lista->id_estado_rotulo,
-                'empresa' => $empresas,
-                'estado_rotulo' => $estado_rotulo,
+                    return ['success' => 1,
+
+                        'id_emp' => $lista->id_empresa,
+                        'idesta' => $lista->id_estado_rotulo,
+                        'empresa' => $empresas,
+                        'id_contri' => $lista->id_contribuyente,
+                        'contribuyente' => $contribuyentes,
+                        'estado_rotulo' => $estado_rotulo,
                 
-            ];
-    }
-        else
-        {
-            return ['success' => 2];
-        }
+                    ];
+            }
+                else
+                {
+                    return ['success' => 2];
+                }
+
     }
 //Realizar traspaso finaliza
 
-        public function cierres_traspasosRotulo($id){
+        
+//Función para llenar el select Actividad Especifica
+        public function buscarEmpresaTraspaso(Request $request)
+        {
+
+            $empresa = Empresas::
+            where('id_contribuyente', $request->id_select)
+            ->orderBy('nombre', 'ASC')
+            ->get();
+
+            return ['success' => 1,
+            'empresa' => $empresa,
+            
+                ];
+
+        }
+//Terminar llenar select
+
+        public function cierres_traspasosRotulo($id)
+        {
                     
             $idusuario = Auth::id();
             $infouser = Usuario::where('id', $idusuario)->first();
             $estado_rotulo = EstadoRotulo::All();
             $ConsultaEmpresa = Empresas::All();
             $empresas = Empresas::ALL();
-            $contribuyente = Contribuyentes::ALL();
+            $contribuyentes = Contribuyentes::ALL();
 
         
             $rotulo = Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
@@ -1220,7 +1227,6 @@ foreach ($calificacion as $dato)
             'estado_rotulo.estado')
             ->where('rotulos.id', $id)
             ->find($id);
-
             
         
             return view('backend.admin.Rotulos.CierresTraspasos.Cierres_TraspasosR',
@@ -1228,8 +1234,9 @@ foreach ($calificacion as $dato)
                             'estado_rotulo',     
                             'rotulo',
                             'ConsultaEmpresa',
-                            'contribuyente',
+                            'contribuyentes',
                             'empresas',
+                            
                                             
                         ));
         }
@@ -1306,10 +1313,11 @@ foreach ($calificacion as $dato)
                 }
             }            
 
-                    catch(\Throwable $e){
+                    catch(\Throwable $e)
+                    {
                         DB::rollback();   
                     return ['success' => 2];
-                }
+                    }
             
         }
 
@@ -1320,30 +1328,37 @@ foreach ($calificacion as $dato)
 
             $id = $request->id;
             $id_empresa = $request->empresa;
+            $id_contribuyente = $request->contribuyente;
+
         
-                $rotulo = Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
-                ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-                ->join('estado_rotulo','rotulos.id_estado_rotulo','=', 'estado_rotulo.id')
-                                
-                ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
-                'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
-                'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
-                'rotulos.coordenadas','rotulos.imagen',
-                'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
-                'empresa.nombre as empresas',
-                'estado_rotulo.estado')
-                ->find($id);
-                        
+            $rotulo = Rotulos::join('empresa','rotulos.id_empresa','=','empresa.id')
+            ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+            ->join('estado_rotulo','rotulos.id_estado_rotulo','=', 'estado_rotulo.id')
+            ->join('contribuyente', 'empresa.id_contribuyente', '=', 'contribuyente.id')
+                            
+            ->select('rotulos.id','rotulos.nom_rotulo','rotulos.actividad_economica','rotulos.fecha_apertura',
+            'rotulos.direccion','rotulos.permiso_instalacion','rotulos.medidas',
+            'rotulos.total_medidas', 'rotulos.total_caras','rotulos.nom_inspeccion','rotulos.cargo_inspeccion',
+            'rotulos.coordenadas','rotulos.imagen',
+            'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica','actividad_economica.mora',
+            'empresa.nombre as empresas',
+            'estado_rotulo.estado',
+            'contribuyente.nombre as contri', 'contribuyente.apellido as apellido')
+            ->find($id);
 
-
+                    
                 $datos_empresa = Empresas::select('nombre')
                 ->where('id', $id_empresa)
+                ->first();
+
+                $datos_contribuyente = Contribuyentes::select('nombre')
+                ->where('id', $id_contribuyente)
                 ->first();
         
 
                 $regla = array(  
                     'id' => 'required',
-                    'empresa' => 'required',
+                    
                 );
             
                 $validar = Validator::make($request->all(), $regla,
@@ -1358,17 +1373,21 @@ foreach ($calificacion as $dato)
                 if(Rotulos::where('id', $request->id)->first()){
                     //** Guardar registro historio en tabla traspasos */
             
-                if($id_empresa != $rotulo->id_empresa){
+                if($id_contribuyente != $rotulo->id_contribuyente){
                     $traspaso = new TraspasosRotulos();
                     $traspaso->id_rotulos = $id;            
-                    $traspaso->propietario_anterior = $rotulo->empresas;
-                    $traspaso->propietario_nuevo =  $datos_empresa->nombre;
+                    $traspaso->contribuyente_anterior = $rotulo->contri;
+                    $traspaso->contribuyente_nuevo =  $datos_contribuyente->nombre;
+                    $traspaso->empresa_anterior = $rotulo->empresas;
+                    $traspaso->empresa_nueva = $datos_empresa->nombre;
                     $traspaso->fecha_a_partir_de = $request->Apartirdeldia;
                     $traspaso->save();
                     //** FIN- Guardar registro historio en tabla traspasos */
                     Rotulos::where('id', $request->id)->update([
             
-                        'id_empresa' => $request->empresa,
+                        'id_contribuyente' => $request->contribuyente,
+                        'id_empresa' => $request->empresas,
+
                         ]);
 
                         return ['success' => 1];
@@ -1385,11 +1404,30 @@ foreach ($calificacion as $dato)
         public function VerHistorialCobros_Rotulos($id)
         {
     
-            $ListaCobrosRotulo = CobrosRotulo::where('id_rotulos', $id)
-            ->get();
+                $ListaCobrosRotulo = CobrosRotulo::where('id_rotulos', $id)
+                ->get();
     
-        return view('backend.admin.Rotulos.Cobros.tablas.tabla_historico_Cobrosrotulo', compact('ListaCobrosRotulo'));
+            return view('backend.admin.Rotulos.Cobros.tablas.tabla_historico_Cobrosrotulo', compact('ListaCobrosRotulo'));
         }
+
+
+    //Función para llenar el select Actividad Especifica
+        public function buscarEmpresa(Request $request)
+        {
+
+            $empresa = Empresas::
+            where('id_contribuyente',$request->id_select)
+            ->orderBy('nombre', 'ASC')
+            ->get();
+
+            return ['success' => 1,
+            'empresa' => $empresa,
+            
+            ];
+
+        }
+    //Terminar llenar select
+
     
 
 

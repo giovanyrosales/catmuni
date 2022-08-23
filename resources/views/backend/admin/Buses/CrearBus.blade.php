@@ -75,14 +75,28 @@ function f4()
                    <!-- /.form-group -->
             <div class="col-md-3">
                   <div class="form-group">
+                        <label>NÚMERO DE FICHA:</label>
+                  </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Fecha de Inspección -->
+            <div class="col-md-3">
+                <div class="form-group">  
+                    <input type="text" value=" "  id="nFicha" class="form-control" required >
+                    <input type="text" hidden value="2"  id="estado_buses" class="form-control" required >        
+                </div>
+            </div>
+              <!-- Finaliza Fecha de Inspección-->
+               <!-- /.form-group -->
+
+            <div class="col-md-3">
+                  <div class="form-group">
                         <label>FECHA DE APERTURA:</label>
                   </div>
             </div><!-- /.col-md-6 -->
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-3">
                 <div class="form-group">  
-                    <input type="date" value=" "  id="fecha_inicio" class="form-control" required >
-                    <input type="text" hidden value="2"  id="estado_buses" class="form-control" required >        
+                    <input type="date" value=" "  id="fecha_inicio" class="form-control" required >                        
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -94,6 +108,7 @@ function f4()
                     <label>NOMBRE DEL BUS:</label>
                 </div>
             </div><!-- /.col-md-6 -->
+
                <!-- Inicia Nombre de Rótulo -->
             <div class="col-md-3">
                 <div class="form-group">  
@@ -101,6 +116,7 @@ function f4()
                 </div>
             </div>
             <!-- Finaliza Nombre del Rótulo-->
+
             <!-- /.form-group -->
             <div class="col-md-3">
                     <div class="form-group">
@@ -114,46 +130,20 @@ function f4()
                 </div>
             </div>
 
-            <div class="col-md-3">
-                      <div class="form-group">
-                        <label>RUTA:</label>
-                    </div>
-                </div><!-- /.col-md-6 -->
+              <div class="col-md-3">
+                  <div class="form-group">
+                      <label>RUTA:</label>
+                  </div>
+              </div><!-- /.col-md-6 -->
                 <!-- Inicia Nombre de Rótulo -->
-                <div class="col-md-3">
+              <div class="col-md-3">
                 <div class="form-group">  
                    <input type="text"  name="" id="ruta" class="form-control" required >
                 </div>
-            </div>
-
-              <div class="col-md-3">
-                <div class="form-group">
-                    <label>ASIGNAR EMPRESA:</label>
-                </div>
-              </div><!-- /.col-md-6 -->            
-                    <div class="col-md-3">
-                      <div class="form-group">
-                              <!-- Select live search -->
-                              <div class="input-group mb-14">
-                                <select 
-                                class="selectpicker" 
-                                data-show-subtext="true" 
-                                data-live-search="true" 
-                                id="select-empresa" 
-                                title="-- Seleccione una empresa --"
-                                
-                                >
-                                  @foreach($empresas as $empresa)
-                                  <option value="{{ $empresa->id }}"> {{ $empresa->nombre }}</option>
-                                  @endforeach 
-                                </select> 
-                                </div>
-                           <!-- finaliza select Asignar Representante-->
-                      </div>
-                  </div>
-    
-                  <div class="col-md-3">
-                      <div class="form-group">
+              </div>
+           
+                <div class="col-md-3">
+                    <div class="form-group">
                         <label>TELÉFONO:</label>
                     </div>
                 </div><!-- /.col-md-6 -->
@@ -165,8 +155,60 @@ function f4()
                </div>
 
             </div>
-            <!-- /.row -->
             </div>
+        </div>
+          </div>
+                <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
+                <div class="card-header text-info"><label>II. DATOS DEL REPRESENTANTE LEGAL</label></div>
+                <div class="card-body"><!-- Card-body -->
+
+                <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>ASIGNAR CONTRIBUYENTE:</label>
+                    </div>
+                </div><!-- /.col-md-6 -->            
+                    <div class="col-md-3">
+                      <div class="form-group">
+                              <!-- Select live search -->
+                              <div class="input-group mb-14">
+                                <select 
+                                class="selectpicker" 
+                                data-show-subtext="true" 
+                                data-live-search="true" 
+                                id="select-contribuyente" 
+                                title="-- Seleccione un contribuyente --"
+                                onchange="llenarSelect()"
+                                
+                                >
+                                  @foreach($contribuyentes as $contribuyente)
+                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }} {{$contribuyente->apellido}}</option>
+                                  @endforeach 
+                                </select> 
+                                </div>
+                           <!-- finaliza select Asignar Representante-->
+                      </div>
+                  </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label id="empresaDiv">ASIGNAR EMPRESA:</label>
+                        </div>
+                    </div><!-- /.col-md-6 --> 
+
+                    <div class="col-md-3">
+                        <div class="form-group" id= "asignar-empresaDIV">                          
+                              <!-- Select estado - live search -->
+                            <div class="input-group mb-3" >                        
+                              <select class="form-control"  id="select-empresa"                         
+                              >
+                              </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+          
          <!-- Fin /.col -->
             </div>
           </div>
@@ -215,6 +257,9 @@ function f4()
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
          
+          $('#empresaDiv').hide();
+          $('#asignar-empresaDIV').hide();
+        
         
           });
 
@@ -226,7 +271,9 @@ function f4()
       function agregarBus(id)
         {            
          
+            var contribuyente = document.getElementById('select-contribuyente').value;
             var empresa = document.getElementById('select-empresa').value;
+            var nFicha = document.getElementById('nFicha').value;
             var nom_bus = document.getElementById('nom_bus').value;
             var fecha_inicio = document.getElementById('fecha_inicio').value;           
             var placa = document.getElementById('placa').value;
@@ -269,7 +316,9 @@ function f4()
             openLoading();
             var formData = new FormData();
            
+                formData.append('contribuyente', contribuyente);
                 formData.append('empresa', empresa);
+                formData.append('nFicha', nFicha);
                 formData.append('nom_bus', nom_bus);         
                 formData.append('fecha_inicio', fecha_inicio);
                 formData.append('placa', placa);          
@@ -305,6 +354,39 @@ function f4()
 
         }
     // TERMINA AGREGAR BUS    
+
+      function llenarSelect()
+      {
+             var id_select = document.getElementById('select-contribuyente').value;
+          
+           
+             var formData = new FormData();
+             formData.append('id_select', id_select);
+             
+            axios.post('/admin/rotulos/buscarE', formData, {
+              })
+            .then((response) => {
+            
+               document.getElementById("select-empresa").options.length = 0;
+               $('#empresaDiv').show();
+               $('#asignar-empresaDIV').show();
+          
+            
+                $.each(response.data.empresa, function( key, val ){
+                       $('#select-empresa').append('<option value="' +val.id +'">'+val.nombre+'</option>').select2();
+                       
+                            
+                    });
+
+               })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });
+            
+             
+      }
+
         
     </script> 
 
@@ -334,6 +416,7 @@ function f4()
 
         function resetbtn()
         {
+              document.getElementById('select-contribuyente').value="";
               document.getElementById('select-empresa').value=""; 
               document.getElementById('nom_bus').value=""; 
               document.getElementById('fecha_inicio').value=""; 

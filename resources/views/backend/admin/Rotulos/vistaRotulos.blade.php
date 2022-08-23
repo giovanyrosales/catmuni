@@ -179,15 +179,24 @@
                         <th>Actividad económica</th>
                         <td>{{$lista->actividad_economica}}</td>
                       </tr>
+                  @if($emp == '')  
 
-                      <tr>
+                      <tr hidden>
                         <th>Empresa</th>
-                        <td>{{$lista->empresas}}</td>
+                        <td>{{$emp}}</td>
                       </tr>
 
+                    @else 
+                      
+                      <tr>
+                        <th>Empresa</th>
+                        <td>{{$emp}}</td>
+                      </tr>
+                      
+                  @endif
                       <tr>
                         <th>Contribuyente</th>
-                        <td>{{$lista->contribuyente}}</td>
+                        <td>{{$contri}}</td>
                       </tr>
                       
                       <xtr>

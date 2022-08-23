@@ -206,7 +206,7 @@
                    <div class="col-md-4">
                      <div class="form-group">
                         <label>Código:</label>
-                        <input type="text" name="codigo" id="codigo-editar" class="form-control" required placeholder="Código">
+                        <input type="text" disabled name="codigo" id="codigo-editar" class="form-control" required placeholder="Código">
                         <input type="hidden" name="id" id="id-editar" class="form-control" >
                       </div>
                    </div>
@@ -266,7 +266,7 @@
                           <div class="input-group mb-6">
                                 <select 
                                 required
-
+                                disabled
                                 class="form-control"
                                 data-style="btn-success"
                                 data-show-subtext="true" 

@@ -2,11 +2,12 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                <th style="width: 20%;">Empresa</th>
-                                <th style="width: 15%;">Cantidad</th>
-                                <th style="width: 15%;">Tarifa</th>
-                                <th style="width: 15%;">Pago Mensual</th>
-                                <th style="width: 25%;">Opciones</th>
+                                <th style="width: 8%;">N° Ficha</th>
+                                <th style="width: 27%;">Representante</th>
+                                <th style="width: 10%;">Cantidad</th>
+                                <th style="width: 10%;">Tarifa</th>
+                                <th style="width: 12%;">Pago Mensual</th>
+                                <th style="width: 30%;">Opciones</th>
                                
                             </tr>
                             </thead>
@@ -14,7 +15,8 @@
                            
                             @foreach($buses as $dato)
                                     <tr>
-                                    <td>{{$dato->empresa}}</td>
+                                    <td>{{$dato->nFicha}}</td>
+                                    <td>{{$dato->cont}}</td>
                                     <td>{{$dato->cantidad}}</td>                           
                                     <td>${{$dato->tarifa}}</td>
                                     <td>${{$dato->monto_pagar}}</td>
@@ -25,14 +27,14 @@
                                         <i class="fas fa-check-circle"></i>&nbsp;Bus Específicado
                                         </button>
                                     @else
-                                        <button type="button" class="btn btn-dark btn-xs" onclick="EspecificarB({{$dato->id_buses_detalle}})">
+                                        <button type="button" class="btn btn-dark btn-xs" onclick="EspecificarB({{$dato->id}})">
                                         <i class="fas fa-layer-group"></i>&nbsp; Específicar buses
                                         </button>
                                     @endif
                                     
                                     @if($dato->estado_especificacion=='especificada')
 
-                                        <button type="button" class="btn btn-info btn-xs" onclick="VistaBus({{$dato->id_buses_detalle}})">
+                                        <button type="button" class="btn btn-info btn-xs" onclick="VistaBus({{$dato->id}})">
                                         <i class="fas fa-eye"></i>&nbsp; Ver
                                         </button>
 
@@ -42,10 +44,10 @@
                                         </button>
                                     @endif
 
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="InformacionBus({{$dato->id_buses_detalle}})">
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="InformacionBus({{$dato->id}})">
                                          <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
-                                        <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarBus({{$dato->id_buses_detalle }})">
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarBus({{$dato->id }})">
                                          <i class="fas fa-trash" title="Eliminar"></i>&nbsp; Eliminar
                                         </button>
                                     </td>

@@ -220,6 +220,9 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::post('/admin/rotulos/calcular-Cobros', [RotulosController::class, 'calcularCobros']);
 
     Route::get('/admin/rotulos/ver_historial_cobros_rotulos/{id}', [RotulosController::class, 'VerHistorialCobros_Rotulos']);
+
+    Route::post('/admin/rotulos/buscarE', [RotulosController::class,'buscarEmpresa'] );
+    Route::post('/admin/rotulos/buscar-traspaso', [RotulosController::class,'buscarEmpresaTraspaso'] );
     
     //CIERRE Y TRASPASO DE RÓTULOS
     Route::post('/admin/rotulos/show/informacion', [RotulosController::class,'infoTraspasoR']);
@@ -245,6 +248,8 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/buses/cobros/{buses}', [BusesDetalleController::class, 'cobrosBus']);
     Route::post('/admin/buses/calcular-CobrosB', [BusesDetalleController::class, 'calcularCobrosBus']);
 
+    Route::post('/admin/bus/buscar-traspasoBus', [BusesDetalleController::class,'buscarEmpresaBuses'] );
+
     Route::get('/admin/buses/cierres_traspasosB/{buses}', [BusesDetalleController::class,'cierres_traspasosBus']);
 
     // NUEVO MÓDULO BUSES
@@ -254,13 +259,13 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/bus/Listar', [BusesController::class,'listarBus'])->name('admin.listarBus.index');
     Route::post('/admin/bus/VerB', [BusesController::class, 'informacionBus']); 
     Route::post('/admin/bus/actualizar', [BusesController::class, 'editarBus']);
-    Route::get('/admin/bus/vista/{buses}', [BusesController::class, 'showBuses']);
+    Route::get('/admin/bus/vista/{bus}', [BusesController::class, 'showBuses']);
     Route::get('/admin/bus/calificaciones/tablabus/{bus}', [BusesController::class,'tablaCalificacionB']);
     Route::get('/admin/bus/calificacion/{buses}', [BusesController::class, 'calificacionBuses']);
     Route::post('/admin/bus/calificacion/nuevaC_Bus' , [BusesController::class, 'guardarCalificacionB']);
     Route::get('/admin/bus/cobros/{bus}', [BusesController::class, 'cobrosBus']);
     Route::post('/admin/bus/calcular-Cobros', [BusesController::class, 'calcularCobrosB']);
-
+    Route::post('/admin/bus/buscarE', [BusesController::class,'buscarEmpresaBus'] );
   
 
     //CIERRES Y TRASPASOS DE BUSES
@@ -268,6 +273,7 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/buses/cierres_traspasos/{bus}', [BusesController::class,'cierres_traspasosB']);
     Route::post('/admin/buses/show/cierre', [BusesController::class,'nuevoEstadoBus']);
     Route::post('/admin/buses/show/traspaso', [BusesController::class,'nuevoTraspasoBus']);
+    Route::post('/admin/bus/buscar-traspaso', [BusesController::class,'buscarEmpresaBusTraspaso'] );
 
     //REPORTES EMPRESAS
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);

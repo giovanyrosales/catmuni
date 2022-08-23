@@ -163,6 +163,32 @@
                 </div>
             </div>
 
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>ASIGNAR EMPRESA:</label>
+                </div>
+              </div><!-- /.col-md-6 -->            
+                    <div class="col-md-3">
+                      <div class="form-group">
+                              <!-- Select live search -->
+                              <div class="input-group mb-14">
+                                <select 
+                                class="form-control" 
+                                data-show-subtext="true" 
+                                data-live-search="true" 
+                                id="select-empresa-editar" 
+                                title="-- Seleccione una empresa --"
+                                
+                                >
+                                  @foreach($contribuyentes as $contribuyente)
+                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }} {{$contribuyente->apellido}}</option>
+                                  @endforeach 
+                                </select> 
+                                </div>
+                           <!-- finaliza select Asignar Representante-->
+                      </div>
+                  </div>
+
               <div class="col-md-3">
                 <div class="form-group">
                     <label>ASIGNAR EMPRESA:</label>
@@ -338,6 +364,7 @@
            
           
                 document.getElementById("select-empresa-editar").options.length = 0;
+                document.getElementById("select-empresa-editar").options.length = 0;
 
                   $.each(response.data.empresa, function( key, val ){
                             if(response.data.id_emp == val.id){
@@ -347,6 +374,14 @@
                             }
                            
                         });
+                  
+                $.each(response.data.contribuyente, function( key, val ){
+                if(response.data.id_contri == val.id){
+                          $('#select-contribuyente-ver').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                      }else{
+                          $('#select-contribuyente-ver').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                      }
+                });
                         
 
                   }
@@ -421,10 +456,11 @@
 
   <script>
 
-    function VistaBuses(id)
+    function VistaBuses(id_bus)
     {
+   
         openLoading();
-        window.location.href="{{ url('/admin/bus/vista') }}/"+id;
+        window.location.href="{{ url('/admin/bus/vista') }}/"+id_bus;
 
     }
      function agregado()

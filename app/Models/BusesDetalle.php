@@ -12,11 +12,20 @@ class BusesDetalle extends Model
     protected $fillable = [
         'id',
         'id_empresa',
+        'id_contribuyente',
+        'nFicha',
         'fecha_apertura',
         'cantidad',
         'monto_pagar',
         'tarifa',
         'estado_especificacion',
+        'nom_empresa',
+        'dir_empresa',
+        'nit_empresa',
+        'tel_empresa',
+        'email_empresa',
+        'r_comerciante'
+
        
       ];
 }

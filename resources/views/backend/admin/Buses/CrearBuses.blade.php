@@ -72,86 +72,138 @@ function f4(){
                 <div class="card">
 
                
-                <div class="card-header text-info"><h2>Buses</h2></div>
+                <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
+                <div class="card-header text-info"><label>I. DATOS BUSES</label></div>
                 <div class="card-body"><!-- Card-body -->
+          <!-- /.card-header -->
+               
+            <!-- <h3 class="card-title"><i class="far fa-plus-square"></i> &nbsp;Formulario de datos de la empresa.</h3> -->
 
             <!-- LISTA DE MATRICULAS  -->
-             <div class="tab-pane" id="tab_2">
-             <div class="row">
+            <div class="tab-pane" id="tab_2">
+            <div class="row">
                <!-- /.form-group -->
-               <div class="col-md-2">
-                <div class="form-group">
-                    <label>Fecha de Apertura:</label>
+                <div class="col-md-4">
+                   <div class="form-group">
+                          <label>N° de Ficha:</label>
+                          <input type="number"  id="nFicha" class="form-control"  placeholder="0000" >
+                          <input type="number"  id="estado_buses" value="2" class="form-control" hidden placeholder="0000" >
+                    </div>
                 </div>
-            </div><!-- /.col-md-6 -->
-               <!-- Inicia Fecha de Inspección -->
-            <div class="col-md-3">
-                <div class="form-group">  
-                    <input type="date"  value=" "  id="fecha_apertura" class="form-control" required >
-                </div>
+           
+            <div class="col-md-4">
+                    <div class="form-group">
+                          <label>Fecha de Apertura:</label>
+                          <input type="date"  id="fecha_apertura" class="form-control"  placeholder="" >
+                    </div>  
             </div>
-              <!-- Finaliza Fecha de Inspección-->
-               <!-- /.form-group -->
-            </div>    
-          </div>
+
+            <div class="col-md-4">
+                <label>Contribuyente</label>
+                    <select class='form-control seleccion' onchange='multiplicar(this)'  style='max-width: 300px' id='select_contribuyente'>
+                            <option  value='0'> --Seleccione el contribuyente -- </option>
+                            
+                            @foreach($contribuyentes as $data)
+                                <option value="{{ $data->id }}"   data-pagoM='17.14'> {{ $data->nombre }} {{$data->apellido}} </option>                                
+                            @endforeach>
+                                            
+                    </select>
+            </div>
+
+            <div class="col-md-4">
+                    <div class="form-group">
+                          <label>Cantidad de Buses:</label>
+                          <input  id='cantidad' onchange='multiplicar(this)' class='form-control' min='1' style='max-width: 400px' type='number' value=''/>                        
+
+                    </div>  
+            </div>
+          
+            <div class="col-md-4">
+                    <div class="form-group">
+                          <label>Total Tarifa:</label>
+                          <input  id='monto_matricula' class='form-control' disabled min='1' style='max-width: 400px' type='text' value=''/>                        
+
+                    </div>  
+            </div>
+
+            <div class="col-md-4">
+                    <div class="form-group">
+                          <label>Pago Mensual:</label>
+                          <input  id='pago_mensual' class='form-control' disabled min='1' style='max-width: 300px' type='text' value=''/>                       
+
+                    </div>  
+            </div>
+
+            </div>
             <form>
-                     
-                         <div class="card" id="tmatriculas">
-
-                <table class="table"  style="border: 80px" data-toggle="table">
-                        <thead>
-                           <tr>
-                         
-                            <th style="width: 25%; text-align: center">Empresa</th>
-                            <th style="width: 25%; text-align: center">Cantidad de buses</th>   
-                            <th style="width: 25%; text-align: center">Total Tarifa</th>               
-                            <th style="width: 14%; text-align: center">Pago Mensual</th>
-                            <th style="width: 15%; text-align: center">Opciones</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-
-                            <td>
-                            <select class='form-control seleccion'  style='max-width: 250px' id='select_empresa'  >
-                                <option value='0'> --  Seleccione la empresa  -- </option>
-                                @foreach($empresas as $data)
-                                <option value="{{ $data->id }}" data-pagoM='17.14'> {{ $data->nombre }}</option>                                
-                                @endforeach>
-                   
-                            </select>
-                            </td>
-
-                                <td>
-                                <input  id='cantidad' onchange='multiplicar(this)' class='form-control' min='1' style='max-width: 250px' type='number' value=''/>                        
-                                </td>
-
-                                <td>
-                                <input  id='monto_matricula' class='form-control' disabled min='1' style='max-width: 250px' type='text' value=''/>
-                                </td>
-
-                                <td>
-                                <input  id='pago_mensual' class='form-control' disabled min='1' style='max-width: 250px' type='text' value=''/>
-                                </td>
-
-                                <td>
-                                <button type='button' class='btn btn-block btn-success'  id="btnAdd" onclick='verificar() '>
-                                    <i class="far fa-plus-square"></i> 
-                                    &nbsp;Agregar
-                                </button>
-                                </td>
-
-                                </tr>
-                                       </tbody>
-                                       </table>
-                                   </div>
-                                </div>
-                            </div>           
-                        </form>
-                     </div>
-                 </div>
             </div>
+                </div>                        
+                </div>
+             
+                
+                    <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
+                    <div class="card-header text-info"><label>II. INFORMACIÓN DEL PROPIETARIO</label></div>
+                    <div class="card-body"><!-- Card-body -->
+                    
+                    <div class="row"> <!-- Row -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Nombre empresa:</label>
+                                <input type="text" name="nit" id="nom_empresa" class="form-control"  placeholder="" >
+                            </div>
+                        </div>
+           
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Dirección:</label>
+                                <input type="text" name="nit" id="dir_empresa" class="form-control"  placeholder="" >
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>NIT de la empresa:</label>
+                                <input type="text" name="nit" id="nit_empresa" class="form-control"  placeholder="" >
+                            </div>
+                        </div>
+                    </div> <!-- Cierre row -->
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Teléfono:</label>
+                                <input type="text" name="nit" id="tel_empresa" class="form-control"  placeholder="" >
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Correo electrónico:</label>
+                                <input type="text" name="email" id="email_empresa" class="form-control"  placeholder="" >
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Registro de comerciante:</label>
+                                <input type="text" name="r_comerciante" id="r_comerciante" class="form-control"  placeholder="" >
+                            </div>
+                        </div>
+                    </div>
+            </div>      
+            </div>
+            <div class="card-footer"> 
+                  <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">
+                  <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
+                  <button type="button" class="btn btn-success float-right" onclick="agregarBus()">
+                  <i class="fas fa-save"></i>&nbsp;Guardar</button>
+          </div>
+                        </form>
+                           
+         
   
-         </section>
+        </section>
         
     
 
@@ -172,6 +224,10 @@ function f4(){
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
 
     <script type="text/javascript">
         $(document).ready(function()
@@ -179,6 +235,8 @@ function f4(){
             var ruta = "{{ url('/admin/buses/tabla') }}/";
             $('#tablaDatatable').load(ruta);
             document.getElementById("divcontenedor").style.display = "block";
+
+            $('#empresaDIV').hide();
         });
     </script>
 
@@ -191,7 +249,7 @@ function f4(){
                 var pago_mensual=0;
                
                        
-                var sel = document.getElementById("select_empresa");  
+                var sel = document.getElementById("select_contribuyente");  
                 var selected = sel.options[sel.selectedIndex];         
                 var tarifa=selected.getAttribute('data-pagoM');              
                 var cantidad = document.getElementById("cantidad").value; 
@@ -212,45 +270,66 @@ function f4(){
         function agregarBus()
         {
             
-            var empresa = document.getElementById("select_empresa").value; 
+            var contribuyente = document.getElementById("select_contribuyente").value;            
             var fecha_apertura = document.getElementById("fecha_apertura").value;
             var cantidad = document.getElementById("cantidad").value;
+            var nFicha = document.getElementById("nFicha").value;
             var monto_pagar = document.getElementById("pago_mensual").value;
             var tarifa = document.getElementById("monto_matricula").value;
+            var estado_buses = document.getElementById("estado_buses").value;
+            var nom_empresa = document.getElementById("nom_empresa").value;
+            var dir_empresa = document.getElementById("dir_empresa").value;
+            var nit_empresa = document.getElementById("nit_empresa").value;
+            var tel_empresa = document.getElementById("tel_empresa").value;
+            var email_empresa = document.getElementById("email_empresa").value;
+            var r_comerciante = document.getElementById("r_comerciante").value;
             
 
-                if(fecha_apertura=="")
+                if(fecha_apertura == "")
                 {
                     modalMensaje('Aviso', 'Debe ingresar una fecha');
                     return;
                 }
 
-                if(empresa==0)
+                if(nFicha == "")
                 {
-                    modalMensaje('Aviso', 'Debe selecionar una empresa');
+                    modalMensaje('Aviso', 'Debe ingresar un número de ficha');
+                    return;
+                }
+
+                if(contribuyente == 0)
+                {
+                    modalMensaje('Aviso', 'Debe selecionar un contribuyente');
                     return;
                 }
                                     
-                if(cantidad=="")
+                if(cantidad == "")
                 {
                     modalMensaje('Aviso', 'Debe ingresar una cantidad');
                     return;
                 }
 
-                if(cantidad==0)
+                if(cantidad == 0)
                 {
                     modalMensaje('Aviso', 'Debe ingresar una cantidad mayor a 0');
                     return;
                 }
 
             openLoading();
-            var formData = new FormData();    
-         
-            formData.append('empresa', empresa);
-            formData.append('fecha_apertura',fecha_apertura);
-            formData.append('cantidad', cantidad);
-            formData.append('tarifa', tarifa);
-            formData.append('monto_pagar', monto_pagar);
+            var formData = new FormData();             
+                formData.append('contribuyente', contribuyente);                
+                formData.append('fecha_apertura', fecha_apertura);
+                formData.append('cantidad', cantidad);
+                formData.append('nFicha', nFicha);
+                formData.append('tarifa', tarifa);
+                formData.append('monto_pagar', monto_pagar);
+                formData.append('estado_buses', estado_buses);
+                formData.append('nom_empresa', nom_empresa);
+                formData.append('dir_empresa', dir_empresa);
+                formData.append('nit_empresa', nit_empresa);
+                formData.append('tel_empresa', tel_empresa);
+                formData.append('email_empresa', email_empresa);
+                formData.append('r_comerciante', r_comerciante);
            
 
 
@@ -259,20 +338,17 @@ function f4(){
                         .then((response) => {
                             console.log(response)
                             closeLoading();
-                            if(response.data.success === 0){
+                            if(response.data.success === 0)
+                            {
                                 toastr.error(response.data.message);
                             }
-                            else if(response.data.success === 1){
+                            else if(response.data.success === 1)
+                            {
                                 agregado();
                                 resetbtn();
                                 
-                                }
-                                else if(response.data.success === 2){
-                                modalMensaje('Empresa repetida!', 'Para agregar más o eliminarlas seleccione las opciones [Editar o Eliminar]');
-                                resetbtn();
-                                return;
                             }
-                             
+                                
                         })
                         .catch((error) => {
                             fallo('Error!', 'Error al agregar el bus');
@@ -298,7 +374,7 @@ function f4(){
         document.getElementById('monto_matricula').value=""; 
         document.getElementById('cantidad').value=""; 
         document.getElementById('pago_mensual').value=""; 
-        document.getElementById('select_empresa').value=0; 
+        document.getElementById('select_contribuyente').value=0; 
     } 
     
     function agregado()
@@ -359,7 +435,8 @@ function f4(){
             });
     }
 
-    function agregado_buses_especifico(){
+    function agregado_buses_especifico()
+    {
             Swal.fire({
                 title: 'Bus específico agregado',
                 text: "Puede modificarla en la opción [Editar]",
@@ -376,7 +453,7 @@ function f4(){
                         f3()
                 }
             });
-        }
+    }
 
         function modalMensaje(titulo, mensaje)
         {
@@ -395,19 +472,18 @@ function f4(){
             
         }
 
-    function VistaBus(id)
-    {
-        openLoading();
-        window.location.href="{{ url('/admin/buses/vista/') }}/"+id;
+        function VistaBus(id)
+        {
+            openLoading();
+            window.location.href="{{ url('/admin/buses/vista/') }}/"+id;
 
-    }
+        }
 
-    function ListarBuses()
-    {
+        function ListarBuses()
+        {
             openLoading();
             window.location.href="{{ url('/admin/buses/Listar') }}/";
-
-    }
+        }
 
 
 

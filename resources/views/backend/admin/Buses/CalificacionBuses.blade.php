@@ -47,7 +47,7 @@
 
         <div class="card card-success">
           <div class="card-header">
-          <h5 class="modal-title">Realizar calificación a bus <span class="badge badge-warning">&nbsp;{{$emp}} &nbsp;</span>&nbsp;</h5>
+          <h5 class="modal-title">Realizar calificación a bus <span class="badge badge-warning">&nbsp; &nbsp;</span>&nbsp;</h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -120,7 +120,7 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-4">
                 <div class="form-group">  
-                    <input type="text"  value="{{$emp}} " disabled id="hora_inspeccion" class="form-control" required >
+                    <input type="text"  value=" " disabled id="hora_inspeccion" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -134,7 +134,7 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-4">
                 <div class="form-group">  
-                    <input type="text"  value="{{$contri}} &nbsp; {{$ape}}" disabled id="contribuyente" class="form-control" required >
+                    <input type="text"  value="" disabled id="contribuyente" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -148,7 +148,7 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-4">
                 <div class="form-group">  
-                    <input type="text"  value="{{$emp1}}" disabled id="empresa" class="form-control" required >
+                    <input type="text"  value="" disabled id="empresa" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
@@ -192,7 +192,7 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Registrar calificación a buses de la empresa&nbsp;<span class="badge badge-warning">&nbsp;{{$emp}} &nbsp;</span></h5>
+            <h5 class="modal-title">Registrar calificación a buses de la empresa&nbsp;<span class="badge badge-warning">&nbsp; &nbsp;</span></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -236,9 +236,9 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text"  value="{{$emp}}" name="nombre" disabled id="nom_empresa" class="form-control" required >
-                        <input type="hidden" value="{{$buses->id_empresa}}"  disabled id="id_empresa" class="form-control" required >
-                        <input type="hidden" value="{{$buses->id}}"  disabled id="id_buses_detalle" class="form-control" required >
+                        <input type="text"  value="" name="nombre" disabled id="nom_empresa" class="form-control" required >
+                        <input type="hidden" value=""  disabled id="id_empresa" class="form-control" required >
+                        <input type="hidden" value=""  disabled id="id_buses_detalle" class="form-control" required >
                         
                      
                   </div>
@@ -265,7 +265,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" disabled value="{{$contri}}&nbsp;{{$ape}}" name="contribuyente" id="contribuyente" class="form-control" >
+                        <input type="text" disabled value="" name="contribuyente" id="contribuyente" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->     
@@ -307,17 +307,15 @@
 
                         <tr>
                   
-                        @foreach($calificacionB as $dato)
 
-                          <td style="width: 150px;" align="center">{{$dato->nombre}}</td>
-                          <td style="width: 150px;" align="center">{{$dato->placa}}</td>
-                          <td style="width: 150px;" align="center">{{$dato->ruta}}</td>
-                          <td style="width: 150px;" align="center">${{$Total}}</td>
-                          <td style="width: 150px;" align="center">2022</td>
+                          <td style="width: 150px;" align="center"></td>
+                          <td style="width: 150px;" align="center"></td>
+                          <td style="width: 150px;" align="center"></td>
+                          <td style="width: 150px;" align="center"></td>
+                          <td style="width: 150px;" align="center"></td>
                        
                         </tr>
-                        @endforeach 
-                   
+                      
                
                         <tr>
                           <td> </td>
@@ -339,13 +337,13 @@
                         <tr>
                           <td rowspan="2"></td>
                           <td colspan="2">Fondo Fiestas Patronales 5%</td>
-                          <td align="center">${{$buses->monto_pagar}} </td>
+                          <td align="center">$ </td>
                           <td align="center">${{$TotalAF}}</td>
                         </tr>
 
                         <tr>
                           <td colspan="2">TOTAL IMPUESTO</td>
-                          <td align="center" ><strong>${{$buses->monto_pagar}} </strong><label id= "total_impuesto"></label> <input type="hidden"  id="total_impuesto"></td>
+                          <td align="center" ><strong>$ </strong><label id= "total_impuesto"></label> <input type="hidden"  id="total_impuesto"></td>
                           <td align="center"><strong>${{$TotalAF}}</strong></td>
                         </tr>
                         
@@ -404,7 +402,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var id={{$id}};
+           var id = {{$id}};
             var ruta = "{{ url('/admin/buses/calificaciones/tablabus') }}/"+id;
             $('#tablaDatatable').load(ruta);
             
@@ -432,66 +430,66 @@
     }
     
 
-  function nuevaCalificacion()
-  {
-   
-      var id_empresa = document.getElementById('id_empresa').value;
-      var id_buses_detalle = document.getElementById('id_buses_detalle').value;       
-      var estado_calificacion = document.getElementById('estado_calificacion').value;
-      var fechacalificar = document.getElementById('fechacalificar').value;
+      function nuevaCalificacion()
+      {
+      
+          var id_empresa = document.getElementById('id_empresa').value;
+          var id_buses_detalle = document.getElementById('id_buses_detalle').value;       
+          var estado_calificacion = document.getElementById('estado_calificacion').value;
+          var fechacalificar = document.getElementById('fechacalificar').value;
 
-    
-      openLoading();
-      var formData = new FormData();
-       
-          formData.append('id_empresa', id_empresa);
-          formData.append('id_buses_detalle', id_buses_detalle);             
-          formData.append('estado_calificacion', estado_calificacion);
-          formData.append('fechacalificar', fechacalificar);
-         
-       
+        
+          openLoading();
+          var formData = new FormData();
+          
+              formData.append('id_empresa', id_empresa);
+              formData.append('id_buses_detalle', id_buses_detalle);             
+              formData.append('estado_calificacion', estado_calificacion);
+              formData.append('fechacalificar', fechacalificar);
+            
+          
 
-  axios.post('/admin/buses/calificacion/nueva', formData, {
-  })
-      .then((response) => {
-        console.log(response)
-          closeLoading();
-          if(response.data.success === 0){
-              toastr.error(response.data.message);
-          }
-          if(response.data.success === 1){
-            Swal.fire({
-                          position: 'top-end',
-                          icon: 'success',
-                          title: '¡Calificación registrada correctamente!',
-                          showConfirmButton: true,
-                     
-                        }).then((result) => {
-                        if (result.isConfirmed) {
-                            $('#modalCalificacion').modal('hide');
-                            // window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
-                            }
-                        });
-            }
-         
-      })
-      .catch((error) => {
-        Swal.fire({
-                          icon: 'error',
-                          title: 'Oops...',
-                          text: '¡Error al registrar la calificación!', 
-                          showConfirmButton: true,
-                        }).then((result) => {
-                        if (result.isConfirmed) {
-                          $('#modalCalificacion').modal('hide');
-                                    closeLoading();
+        axios.post('/admin/buses/calificacion/nueva', formData, {
+        })
+            .then((response) => {
+              console.log(response)
+                closeLoading();
+                if(response.data.success === 0){
+                    toastr.error(response.data.message);
+                }
+                if(response.data.success === 1){
+                  Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: '¡Calificación registrada correctamente!',
+                                showConfirmButton: true,
+                          
+                              }).then((result) => {
+                              if (result.isConfirmed) {
+                                  $('#modalCalificacion').modal('hide');
+                                  // window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
                                   }
-                        });
-      });
-     
+                              });
+                  }
+              
+            })
+            .catch((error) => {
+              Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: '¡Error al registrar la calificación!', 
+                                showConfirmButton: true,
+                              }).then((result) => {
+                              if (result.isConfirmed) {
+                                $('#modalCalificacion').modal('hide');
+                                          closeLoading();
+                                        }
+                              });
+            });
+          
 
 
-  }
+      }
     </script>
 
     @stop

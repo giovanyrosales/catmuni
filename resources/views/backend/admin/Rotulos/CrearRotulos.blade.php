@@ -49,7 +49,7 @@
 
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title">Formulario Inscripción de Rótulos</h3>
+            <h3 class="card-title">INSCRIPCIÓN DE RÓTULOS</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -62,10 +62,22 @@
         <div class="card-body"><!-- Card-body -->
           <!-- /.card-header -->
             <div class="card-body">
+
             <div class="row">
-              <!-- /.form-group -->
-                   <!-- /.form-group -->
             <div class="col-md-3">
+                  <div class="form-group">
+                        <label>NÚMERO DE FICHA:</label>
+                  </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Fecha de Inspección -->
+            <div class="col-md-3">
+                <div class="form-group">  
+                    <input type="text" value=" " name="nFicha"  id="nFicha" class="form-control" required >        
+                   
+                </div>
+            </div>
+              <!-- Finaliza Fecha de Inspección-->
+              <div class="col-md-3">
                   <div class="form-group">
                         <label>FECHA DE APERTURA:</label>
                   </div>
@@ -79,22 +91,26 @@
             </div>
               <!-- Finaliza Fecha de Inspección-->
                <!-- /.form-group -->
-
-           <!-- /.form-group -->
+            </div>
+               <!-- /.form-group -->
+            <div class="row">
+            <!-- /.form-group -->
            <div class="col-md-3">
                 <div class="form-group">
                     <label>NOMBRE DEL RÓTULO:</label>
                 </div>
             </div><!-- /.col-md-6 -->
                <!-- Inicia Nombre de Rótulo -->
-            <div class="col-md-3">
+            <div class="col-md-9">
                 <div class="form-group">  
                    <input type="text"  name="nom_rotulo" id="nom_rotulo" class="form-control" required >
                 </div>
             </div>
             <!-- Finaliza Nombre del Rótulo-->
             <!-- /.form-group -->
-   
+            </div>
+
+            <div class="row">
             <div class="col-md-3">
                       <div class="form-group">
                         <label>DIRECCIÓN DEL RÓTULO:</label>
@@ -106,7 +122,9 @@
                    <input type="text"  name="" id="direccion" class="form-control" required >
                 </div>
             </div>
-
+            </div>
+            
+            <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
                     <label>ACTIVIDAD ECONÓMICA:</label>
@@ -132,10 +150,10 @@
                 </div>
               <!-- /.row -->
            
-            
+
               <div class="col-md-3">
                 <div class="form-group">
-                    <label>ASIGNAR EMPRESA:</label>
+                    <label>ASIGNAR CONTRIBUYENTE:</label>
                 </div>
             </div><!-- /.col-md-6 -->            
                     <div class="col-md-3">
@@ -146,19 +164,22 @@
                                 class="selectpicker" 
                                 data-show-subtext="true" 
                                 data-live-search="true" 
-                                id="select-empresa" 
-                                title="-- Seleccione una empresa --"
+                                id="select-contribuyente" 
+                                title="-- Seleccione un contribuyente --"
+                                onchange="llenarSelect()"
                                 
                                 >
-                                  @foreach($empresas as $empresa)
-                                  <option value="{{ $empresa->id }}"> {{ $empresa->nombre }}</option>
+                                  @foreach($contribuyentes as $contribuyente)
+                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }} {{$contribuyente->apellido}}</option>
                                   @endforeach 
                                 </select> 
                                 </div>
                            <!-- finaliza select Asignar Representante-->
                       </div>
                   </div>
+            </div>
     
+            <div class="row">
                   <div class="col-md-3">
                         <div class="form-group">
                             <label>PERMISO:</label>
@@ -182,8 +203,25 @@
                            <!-- finaliza asignar actividad economica-->
                         </div>
                       </div> 
-                      
+               
                    <!-- /.form-group -->
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label id="empresaDiv">ASIGNAR EMPRESA:</label>
+                  </div>
+                </div><!-- /.col-md-6 --> 
+
+                 <div class="col-md-3">
+                     <div class="form-group" id= "asignar-empresaDIV">                          
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-3" >                        
+                          <select class="form-control"  id="select-empresa"                         
+                          >
+                           </select>
+
+                         </div>
+                     </div>
+                 </div>
              
                 <!-- Finaliza Nombre del Rótulo-->
                 <!-- /.form-group -->
@@ -403,7 +441,8 @@
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
          
-           $('#actividad-especificaDIV').hide();
+            $('#empresaDiv').hide();
+           $('#asignar-empresaDIV').hide();
         
           });
 
@@ -415,7 +454,8 @@
       function agregarRotulo(id)
         {
             
-         
+            var nFicha = document.getElementById('nFicha').value;
+            var contribuyente = document.getElementById('select-contribuyente').value;
             var empresa = document.getElementById('select-empresa').value;
             var estado_rotulo = document.getElementById('estado_rotulo').value;
             var nom_rotulo = document.getElementById('nom_rotulo').value;
@@ -436,6 +476,12 @@
             if(nom_rotulo === '')
             {
               toastr.error('El nombre del rótulo es requerido');
+              return;
+            }
+
+            if(nFicha === '')
+            {
+              toastr.error('El número de ficha es requerido');
               return;
             }
             
@@ -486,10 +532,18 @@
                 toastr.error('Las coordenadas son requeridas');
                 return;
             }
+
+            if (contribuyente === '')
+            {
+                toastr.error('Debe seleccionar un contribuyente');
+                return;
+            }
             
             openLoading();
             var formData = new FormData();
-           
+
+                formData.append('nFicha', nFicha);
+                formData.append('contribuyente', contribuyente);
                 formData.append('empresa', empresa);
                 formData.append('estado_rotulo', estado_rotulo);
                 formData.append('nom_rotulo', nom_rotulo);         
@@ -539,6 +593,40 @@
         }
         
     // Función para llenar select
+
+        function llenarSelect()
+        {
+             var id_select = document.getElementById('select-contribuyente').value;
+          
+           
+             var formData = new FormData();
+             formData.append('id_select', id_select);
+             
+            axios.post('/admin/rotulos/buscarE', formData, {
+              })
+            .then((response) => {
+            
+               document.getElementById("select-empresa").options.length = 0;
+               $('#empresaDiv').show();
+               $('#asignar-empresaDIV').show();
+          
+            
+                $.each(response.data.empresa, function( key, val ){
+                       $('#select-empresa').append('<option value="' +val.id +'">'+val.nombre+'</option>').select2();
+                       
+                            
+                    });
+
+               })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });
+            
+             
+        }
+
+// Termina función
     </script> 
 
     

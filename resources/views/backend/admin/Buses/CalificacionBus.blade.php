@@ -47,7 +47,7 @@
 
         <div class="card card-success">
           <div class="card-header">
-          <h5 class="modal-title">Realizar calificación a buses de: <span class="badge badge-warning">&nbsp;{{$bus->empresas}} &nbsp;</span>&nbsp;</h5>
+          <h5 class="modal-title">Realizar calificación a bus: <span class="badge badge-warning">&nbsp;{{$lista->nom_bus}} &nbsp;</span>&nbsp;</h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -76,7 +76,7 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-3">
                 <div class="form-group">  
-                    <input type="text"  value="{{$bus->fecha_inicio}} " disabled id="hora_inspeccion" class="form-control" required >
+                    <input type="text"  value="{{$lista->fecha_inicio}} " disabled id="hora_inspeccion" class="form-control" required >
                     <input type="hidden" name="estado_calificacion" id="estado_calificacion" class="form-control" value="calificado">
                 </div>
             </div>
@@ -111,7 +111,39 @@
         
         
         <div class="row"><!-- /.ROW1 -->
-     
+
+        <div class="col-md-2">
+                <div class="form-group">
+                    <label>REPRESENTANTE:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Fecha de Inspección -->
+            <div class="col-md-4">
+                <div class="form-group">  
+                    <input type="text"  value="{{$contri}} " disabled id="contribuyente" class="form-control" required >
+                </div>
+            </div>
+              <!-- Finaliza Fecha de Inspección-->
+               <!-- /.form-group -->
+
+    @if($emp === ' ')
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label hidden>NOMBRE EMPRESA:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Fecha de Inspección -->
+            <div class="col-md-4">
+                <div class="form-group">  
+                    <input hidden type="text"  value="{{$emp}} " disabled id="hora_inspeccion" class="form-control" required >
+                </div>
+            </div>
+              <!-- Finaliza Fecha de Inspección-->
+               <!-- /.form-group -->
+
+        @else
+
             <div class="col-md-2">
                 <div class="form-group">
                     <label>NOMBRE EMPRESA:</label>
@@ -120,25 +152,13 @@
                <!-- Inicia Fecha de Inspección -->
             <div class="col-md-4">
                 <div class="form-group">  
-                    <input type="text"  value="{{$bus->empresas}} " disabled id="hora_inspeccion" class="form-control" required >
+                    <input type="text"  value="{{$emp}} " disabled id="hora_inspeccion" class="form-control" required >
                 </div>
             </div>
               <!-- Finaliza Fecha de Inspección-->
                <!-- /.form-group -->
-           
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label>REPRESENTANTE:</label>
-                </div>
-            </div><!-- /.col-md-6 -->
-               <!-- Inicia Fecha de Inspección -->
-            <div class="col-md-4">
-                <div class="form-group">  
-                    <input type="text"  value="{{$bus->contri}} {{$bus->ape}} " disabled id="contribuyente" class="form-control" required >
-                </div>
-            </div>
-              <!-- Finaliza Fecha de Inspección-->
-               <!-- /.form-group -->
+            
+    @endif      
           
             </div>
          </div>
@@ -177,7 +197,7 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Registrar calificación a buses de: &nbsp;<span class="badge badge-warning">&nbsp;{{$bus->empresas}} &nbsp;</span></h5>
+            <h5 class="modal-title">Registrar calificación a buses de: &nbsp;<span class="badge badge-warning">&nbsp;{{$emp}} &nbsp;</span></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -220,25 +240,41 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-success" disabled value="{{$bus->fecha_inicio}}" name="created_at" id="created_at" class="form-control" required >
-                        <input type="hidden" value="{{$bus->id_bus}}"  disabled id="id_bus" class="form-control" required >
-                        <input type="hidden" value="{{$bus->id_empresa}}"  disabled id="id_empresa" class="form-control" required >
+                        <input  type="date" class="form-control text-success" disabled value="{{$lista->fecha_inicio}}" name="created_at" id="created_at" class="form-control" required >
+                        <input type="" value="{{$lista->id}}"  disabled id="id_bus" class="form-control" required >
+                        <input type="" value="{{$lista->id_empresa}}"  disabled id="id_empresa" class="form-control" required >
+                        <input type="" value="{{$lista->id_contribuyente}}"  disabled id="id_contribuyente" class="form-control" required >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-                      
+        @if($emp === ' ')              
                <!-- /.form-group -->
                <div class="col-md-6">
+                  <div class="form-group">
+                        <label hidden>Empresa:</label>
+                  </div>
+               </div><!-- /.col-md-6 -->
+               <div class="col-md-6">
+                  <div class="form-group">
+                        <input hidden type="text" disabled value="{{$emp}}" name="" id="empresa" class="form-control" >
+                  </div>
+               </div><!-- /.col-md-6 -->
+            
+            @else   
+
+                  <!-- /.form-group -->
+              <div class="col-md-6">
                   <div class="form-group">
                         <label>Empresa:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" disabled value="{{$bus->empresas}}" name="" id="empresa" class="form-control" >
+                        <input type="text" disabled value="{{$emp}}" name="" id="empresa" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
-                 
+
+        @endif
                 <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -247,7 +283,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" disabled value="{{$bus->contri}} {{$bus->ape}}" name="" id="empresa" class="form-control" >
+                        <input type="text" disabled value="{{$contri}}" name="" id="empresa" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->     
@@ -288,7 +324,7 @@
                         </tr>
 
                         <tr>
-                    @foreach($calificacionB as $bus)
+                    @foreach($bus as $bus)
 
                           <td style="width: 150px;" align="center">{{$bus->nom_bus}}</td>
                           <td style="width: 150px;" align="center">{{$bus->placa}}</td>
@@ -385,8 +421,8 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var id_bus = {{$id_bus}};
-            var ruta = "{{ url('/admin/bus/calificaciones/tablabus') }}/"+id_bus;
+            var id = {{$id}};
+            var ruta = "{{ url('/admin/bus/calificaciones/tablabus') }}/"+id;
             $('#tablaDatatable').load(ruta);
             
             document.getElementById("divcontenedor").style.display = "block";
@@ -415,16 +451,18 @@
         function nuevaCalificacionB()
         {       
 
-            var id_bus = {{$id_bus}};     
-            var id_empresa = document.getElementById('id_empresa').value;     
+            var id = {{$id}};     
+            var id_empresa = document.getElementById('id_empresa').value;  
+            var id_contribuyente = document.getElementById('id_contribuyente').value;   
             var estado_calificacion = document.getElementById('estado_calificacion').value;
             var fechacalificar = document.getElementById('fechacalificar').value;
 
           
             openLoading();
             var formData = new FormData();
-                formData.append('id_bus', id_bus);
+                formData.append('id', id);
                 formData.append('id_empresa', id_empresa);
+                formData.append('id_contribuyente' , id_contribuyente);
                 formData.append('estado_calificacion', estado_calificacion);
                 formData.append('fechacalificar', fechacalificar);
               
@@ -472,13 +510,6 @@
 
         }
 
-   
-    
-
-   
-
-
-  
     </script>
 
     @stop

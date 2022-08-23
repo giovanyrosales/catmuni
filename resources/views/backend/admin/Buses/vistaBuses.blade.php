@@ -51,7 +51,11 @@
     <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h5 class="card-category-">Buses de la empresa <span class="badge badge-warning">&nbsp;{{$buses->empresa}} &nbsp;</span>&nbsp; </h5>
+      @if($buses->nom_empresa == '')
+          <h5 class="card-category-">Buses del contribuyente <span class="badge badge-warning">&nbsp;{{$buses->contri}} &nbsp;{{$buses->apellido}}</span>&nbsp; </h5>
+        @else
+          <h5 class="card-category-">Buses de la empresa <span class="badge badge-warning">&nbsp;{{$buses->nom_empresa}} &nbsp;</span>&nbsp; </h5>
+      @endif
           </div>
       <!--body-->
         </div>
@@ -61,7 +65,7 @@
 
       @if($detectorNull == '0' )
         
-        <a href="#" onclick="CrearCalificacion({{$buses->id_buses_detalle}})" >
+        <a href="#" onclick="CrearCalificacion({{$buses->id}})" >
                       <div class="widget stats-widget">
                         <div class="widget-body clearfix bg-info">
                             <div class="pull-left">
@@ -158,18 +162,38 @@
                     <tbody>
                     
                       <tr>
+                        <th>Número de ficha </th>
+                        <td>{{$buses->nFicha}}</td>
+                      </tr>
+
+                      <tr>
                         <th>Fecha de apertura </th>
                         <td>{{$buses->fecha_apertura}}</td>
                       </tr>
-
+            @if($buses->nom_empresa == '')
                       <tr>
-                        <th>Nombre de la empresa</th>
-                        <td>{{$buses->empresa}}</td>
+                        <th hidden>Nombre de la empresa</th>
+                        <td hidden>{{$buses->nom_empresa}}</td>
                       </tr>
 
                       <tr>
+                        <th hidden>Dirección de la empresa</th>
+                        <td hidden>{{$buses->dir_empresa}}</td>
+                      </tr>
+                  @else
+                      <tr>
+                        <th>Nombre de la empresa</th>
+                        <td>{{$buses->nom_empresa}}</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Dirección de la empresa</th>
+                        <td>{{$buses->dir_empresa}}</td>
+                      </tr>
+            @endif
+                      <tr>
                         <th>Contribuyente</th>
-                        <td>{{$buses->contribuyente}} {{$buses->apellido}}</td>
+                        <td>{{$buses->contri}} {{$buses->apellido}}</td>
                       </tr>
 
                       <tr>
@@ -538,18 +562,18 @@
                 closeLoading();
 
                 if (response.data.success === 1) 
-                   
-                   {
+                {
+
                        toastr.success('¡Propietario actualizado!');
                        $('#modalCierresTraspasos').modal('hide');
                        location.reload();
-                   }
-                   else 
-                   {
-                       toastMensaje('Error al actualizar');
-                       $('#modalCierresTraspasos').modal('hide');
-                              recargar();
-                   }
+                }
+                else 
+                {
+                    toastMensaje('Error al actualizar');
+                    $('#modalCierresTraspasos').modal('hide');
+                    recargar();
+                }
              
             })
             .catch((error) => {

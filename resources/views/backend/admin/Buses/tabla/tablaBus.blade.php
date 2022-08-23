@@ -15,15 +15,16 @@
                             </thead>
                             <tbody>
 
-                         
+                            @foreach($calificacion as $bus) 
+
                                 <tr>
                                    
-                                    <td>{{$Cbus}}</td>
-                                    <td>${{$Tbus}}</td>
-                                    <td>${{$Mbus}}</td>                                   
+                                    <td>{{$calificacion->cantidad}}</td>
+                                    <td>${{$calificacion->tarifa}}</td>
+                                    <td>${{$calificacion->monto_pagar}}</td>                                   
                                    
                                 </tr>
-
+                            @endforeach
                           
 
                             </tbody>

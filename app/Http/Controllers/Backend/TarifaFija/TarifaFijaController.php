@@ -50,10 +50,10 @@ class TarifaFijaController extends Controller
      
         foreach($tarifa_fija as $ll)
         {
+
             $ll->limite_inferior = number_format($ll->limite_inferior, 2, '.', ',');
             $ll->limite_superior = number_format($ll->limite_superior, 2, '.', ',');
-            $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');
-           
+            $ll->impuesto_mensual = number_format($ll->impuesto_mensual, 2, '.', ',');           
        
         }
          
@@ -125,7 +125,7 @@ class TarifaFijaController extends Controller
         $actividad_economica = ActividadEconomica::orderby('rubro')->get();
         $actividad_especifica = ActividadEspecifica::orderby('nom_actividad_especifica')->get();
      
-     return ['success' => 1,
+        return ['success' => 1,
 
          'tarifa_fija' => $lista,
          'idact_eco' => $lista->id_actividad_economica,
@@ -133,13 +133,15 @@ class TarifaFijaController extends Controller
          'idact_esp' =>$lista->id_actividad_especifica,
          'actividad_especifica' => $actividad_especifica,
         ];
-     }else{
-         return ['success' => 2];
-     }
-     }
 
-     public function editarTarifaF(Request $request)
-     {
+        }else{
+            return ['success' => 2];
+        }
+
+    }
+
+    public function editarTarifaF(Request $request)
+    {
        
        $regla = array(
            'id' => 'required',
@@ -150,10 +152,10 @@ class TarifaFijaController extends Controller
                     
         );
 
-       $validar = Validator::make($request->all(), $regla);
+            $validar = Validator::make($request->all(), $regla);
 
-       if ($validar->fails()){ return ['success' => 0];} 
-       
+            if ($validar->fails()){ return ['success' => 0];} 
+            
        if(TarifaFija::where('id', $request->id)->first())
        {
 
@@ -169,10 +171,10 @@ class TarifaFijaController extends Controller
             ]);
 
                return ['success' => 1];
-           }else {
+        }else{
                return['success' => 2];
-           }              
-       }
+            }              
+    }
 
     public function eliminarTarifaF(Request $request)
     {
@@ -201,9 +203,9 @@ class TarifaFijaController extends Controller
     //Terminar llenar select
 
     
-      //Función para llenar el select Actividad Especifica
-      public function buscarActividadEditar(Request $request)
-        {
+    //Función para llenar el select Actividad Especifica
+     public function buscarActividadEditar(Request $request)
+    {
    
        $actividad_especifica = ActividadEspecifica::
           where('id_actividad_economica',$request->id_select)
@@ -215,7 +217,7 @@ class TarifaFijaController extends Controller
           'idact' =>$actividad_especifica->id_actividad_especifica,
           ];
   
-        }
-      //Terminar llenar select
+    }
+    //Terminar llenar select
 
 }

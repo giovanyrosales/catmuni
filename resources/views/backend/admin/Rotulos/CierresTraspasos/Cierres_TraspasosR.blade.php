@@ -16,58 +16,60 @@
 
 window.onload = f4;
 
-function f4()
-{
-  $('#imp_traspaso').hide();
-  $('#imp_cierre').hide();
-  $('#btn_ocultar_historial_traspasos').hide();
-  $('#btn_ocultar_historial_cierres').hide();
-  $('#Div_historico').hide();
-  $('#Div_historico_cierres').hide();
+    function f4()
+    {
+        $('#imp_traspaso').hide();
+        $('#imp_cierre').hide();
+        $('#btn_ocultar_historial_traspasos').hide();
+        $('#btn_ocultar_historial_cierres').hide();
+        $('#Div_historico').hide();
+        $('#Div_historico_cierres').hide();
+        
+        informacionTraspaso({{$rotulo->id}});
+        
+    }
   
-  informacionTraspaso({{$rotulo->id}});
-}
-  
 
-function f6()
-{
-  $('#imp_traspaso').show();
-  $('#historico_traspaso_emp').show();
-}
+    function f6()
+    {
+        $('#imp_traspaso').show();
+        $('#historico_traspaso_emp').show();
+    }
 
-function f7()
-{
-  $('#imp_cierre').show();
-  $('#historico_cierres_emp').show();
-}
+    function f7()
+    {
+        $('#imp_cierre').show();
+        $('#historico_cierres_emp').show();
+    }
 
-function verhistorialTraspasos()
-{
-  recargarTraspasos();
-  $('#Div_historico').show();
-  $('#btn_ocultar_historial_traspasos').show();
-  $('#btn_ver_historial_traspasos').hide();
-}
-function OcultarhistorialTraspasos()
-{
-  $('#Div_historico').hide();
-  $('#btn_ocultar_historial_traspasos').hide();
-  $('#btn_ver_historial_traspasos').show();
-}
+    function verhistorialTraspasos()
+    {
+        recargarTraspasos();
+        $('#Div_historico').show();
+        $('#btn_ocultar_historial_traspasos').show();
+        $('#btn_ver_historial_traspasos').hide();
+    }
+    function OcultarhistorialTraspasos()
+    {
+        $('#Div_historico').hide();
+        $('#btn_ocultar_historial_traspasos').hide();
+        $('#btn_ver_historial_traspasos').show();
+    }
 
-function verhistorialCierres()
-{
-  recargarCierres()
-  $('#Div_historico_cierres').show();
-  $('#btn_ocultar_historial_cierres').show();
-  $('#btn_ver_historial_cierres').hide();
-}
-function OcultarhistorialCierres()
-{
-  $('#Div_historico_cierres').hide();
-  $('#btn_ocultar_historial_cierres').hide();
-  $('#btn_ver_historial_cierres').show();
-}
+    function verhistorialCierres()
+    {
+        recargarCierres()
+        $('#Div_historico_cierres').show();
+        $('#btn_ocultar_historial_cierres').show();
+        $('#btn_ver_historial_cierres').hide();
+    }
+
+    function OcultarhistorialCierres()
+    {
+        $('#Div_historico_cierres').hide();
+        $('#btn_ocultar_historial_cierres').hide();
+        $('#btn_ver_historial_cierres').show();
+    }
 </script>
 
 <style>
@@ -139,7 +141,6 @@ function OcultarhistorialCierres()
                                     </div>
                                     </div><!-- /.col-md-6 -->
                                     <!-- /.form-group -->
-
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <!-- Select estado - live search -->
@@ -149,17 +150,38 @@ function OcultarhistorialCierres()
                                                     class="form-control"                                                   
                                                     data-show-subtext="true" 
                                                     data-live-search="true"   
-                                                    id="select-empresa-traspaso" 
+                                                    id="select-contribuyente-traspaso" 
                                                     title="-- Seleccione un registro --"
+                                                    onchange="llenarSelect()"
                                                     >
-                                                    @foreach($empresas as $empresa)
-                                                    <option value="{{ $empresa->id }}"> {{ $empresa->nombre }}</option>
+                                                    @foreach($contribuyentes as $contribuyente)
+                                                    <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }} {{$contribuyente->apellido}}</option>
                                                     @endforeach
                                                     </select>
                                             </div>
                                             <!-- finaliza select estado-->  
                                     </div><!-- /.col-md-3 -->
                                     </div><!-- /.form-group -->
+                 
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label id="empresaDiv">ASIGNAR EMPRESA:</label>
+                            </div>
+                        </div><!-- /.col-md-6 --> 
+
+                        <div class="col-md-3">
+                            <div class="form-group" id= "asignar-empresaDIV">                          
+                                <!-- Select estado - live search -->
+                                <div class="input-group mb-3" >                        
+                                <select class="form-control"  id="select-empresa"                         
+                                >
+                                </select>
+
+                                </div>
+                            </div>
+                        </div>
+                                 
                                     <!-- /.form-group -->
                                     <div class="col-md-6">
                                     <div class="form-group">
@@ -184,7 +206,7 @@ function OcultarhistorialCierres()
                                 
                                     <!-- Botón Imprimir Traspaso-->
                                     <br>
-                                    <button type="button"  onclick="ImprimirTraspaso({{$empresa->id}})" id="imp_traspaso" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
+                                    <button type="button"  onclick="ImprimirTraspaso()" id="imp_traspaso" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
                                         &nbsp; Imprimir resolución &nbsp;</button>
                                     </button>
                                     <!-- /.Botón Imprimir Traspaso -->
@@ -396,14 +418,17 @@ function OcultarhistorialCierres()
         $(document).ready(function()
         {   
 
-            document.getElementById("divcontenedor").style.display = "block";
+            document.getElementById("divcontenedor").style.display = "block";          
 
         });
 
-        function resolucion_traspaso_historico(id){
+        function resolucion_traspaso_historico(id)
+        {
             window.open("{{ URL::to('/admin/traspaso_empresas_historico/pdf')}}/"+ id)
         }
-        function resolucion_cierre_historico(id){
+
+        function resolucion_cierre_historico(id)
+        {
             window.open("{{ URL::to('/admin/cierres_empresas_historico/pdf')}}/"+ id)
         }
         
@@ -443,26 +468,25 @@ function OcultarhistorialCierres()
         function guardarTraspasoRotulo(id)
         {
 
-        var id = document.getElementById('id_rotulo').value;
-        var empresa = document.getElementById('select-empresa-traspaso').value;
-        var Apartirdeldia = document.getElementById('Apartirdeldia').value;
+            var id = document.getElementById('id_rotulo').value;
+            var empresa = document.getElementById('select-empresa-traspaso').value;
+            var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
+            var Apartirdeldia = document.getElementById('Apartirdeldia').value;
 
-        if(Apartirdeldia===''){
-        modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
-        return;
-        }
+                if(Apartirdeldia==='')
+                {
+                    modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
+                    return;
+                }
 
-        if(empresa === ''){
-        modalMensaje('Aviso', 'El dato empresa es requerido');
-        return;
-        }
-
+     
         openLoading();
-            var formData = new FormData();
-           
-            formData.append('id', id);          
-            formData.append('empresa', empresa);
-            formData.append('Apartirdeldia', Apartirdeldia);
+
+            var formData = new FormData();           
+                formData.append('id', id);          
+                formData.append('empresa', empresa);
+                formData.append('contribuyente', contribuyente)
+                formData.append('Apartirdeldia', Apartirdeldia);
 
             axios.post('/admin/rotulos/show/traspaso', formData, {
             })
@@ -470,22 +494,23 @@ function OcultarhistorialCierres()
                 closeLoading();
 
                 if (response.data.success === 1) 
-                    
-                    {
+                {
+
                         toastr.success('¡Propietario actualizado!');
                         f6();
                         recargarTraspasos();
                         document.getElementById('Apartirdeldia').value='';
                 
-                    }
-                    else if(response.data.success === 3){
+                }
+                    else if(response.data.success === 3)
+                    {
 
-                    modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
-                    return;
+                        modalMensaje('Aviso', 'El contribuyente seleccionado ya es el representante de la empresa, debe seleccionar otro.');
+                    
+                            return;
                     }else
                         {
                             toastMensaje('Error al actualizar');
-
                         }
             
             })
@@ -507,7 +532,9 @@ function OcultarhistorialCierres()
                     if(response.data.success === 1){
                         
                         document.getElementById("select-empresa-traspaso").options.length = 0;
+                        document.getElementById("select-contribuyente-traspaso").options.length = 0;
                         document.getElementById("select-estado_rotulo").options.length = 0;
+                        
 
                         $.each(response.data.empresa, function( key, val ){
                             if(response.data.id_emp == val.id){
@@ -516,6 +543,14 @@ function OcultarhistorialCierres()
                                 $('#select-empresa-traspaso').append('<option value="' +val.id +'">'+val.nombre+'</option>');
                             }
                             
+                        });
+
+                        $.each(response.data.contribuyente, function( key, val ){
+                        if(response.data.id_contri == val.id){
+                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                            }else{
+                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                            }
                         });
                         
                         $.each(response.data.estado_rotulo, function( key, val ){
@@ -540,16 +575,20 @@ function OcultarhistorialCierres()
 
     function guardarEstadoRotulo()
     {
-      //Llamar la variable id desde el controlador
-        var id = {{$rotulo->id}};
+    //Llamar la variable id desde el controlador
+    
+      
         var estado_rotulo = document.getElementById('select-estado_rotulo').value;
         var cierre_apartirdeldia = document.getElementById('Cierre_Apartirdeldia').value;
 
-      if(estado_rotulo === ''){
+        if(estado_rotulo === '')
+        {
             modalMensaje('Aviso', 'El estado del rótulo es requerido.');
             return;
         }
-        if(cierre_apartirdeldia === ''){
+
+        if(cierre_apartirdeldia === '')
+        {
             modalMensaje('Aviso', 'No ha seleccionado la fecha a partir del día');
             return;
         }
@@ -566,22 +605,24 @@ function OcultarhistorialCierres()
                 closeLoading();
 
                 if (response.data.success === 1) 
-                   
-                   {
-                       toastr.success('¡Estado del rótulo actualizado!');
-                       f7();
-                       recargarCierres();
-                       document.getElementById('Cierre_Apartirdeldia').value='';
-                   }
-                   else if(response.data.success === 3){
+                {
+                    toastr.success('¡Estado del rótulo actualizado!');
+                    f7();
+                    recargarCierres();
 
-                    modalMensaje('Aviso', 'No ha cambiado el estado del rótulo, debe seleccionar otro.');
-                    return;
+                    document.getElementById('Cierre_Apartirdeldia').value='';
+
+                }
+                    else if(response.data.success === 3)
+                    {
+
+                        modalMensaje('Aviso', 'No ha cambiado el estado del rótulo, debe seleccionar otro.');
+                        return;
+
                     }
                       else 
                             {
-                                toastMensaje('Error al actualizar');
-                                
+                                toastMensaje('Error al actualizar');                                
                             }
              
             })
@@ -591,22 +632,49 @@ function OcultarhistorialCierres()
             });
     }
 
-    function recargarCierres()
-    {
-        var id={{$empresa->id}};
-        var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
-            $('#tabla_cierres').load(ruta);
-    }
+        function recargarCierres()
+        { 
+            var id={{$empresas->id}};
+            var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;
+                $('#tabla_cierres').load(ruta);
+        }
 
-    function recargarTraspasos()
-    {
-        var id={{$empresa->id}};
-        var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
-            $('#tabla_traspasos').load(ruta);
-    }
+        function recargarTraspasos()
+        {
+            var id={{$empresas->id}};
+            var ruta = "{{ url('/admin/empresas/traspasos/tabla') }}/"+id;
+                $('#tabla_traspasos').load(ruta);
+        }
+
+        function llenarSelect()
+        {
+            var id_select = document.getElementById('select-contribuyente-traspaso').value;
+          
+           
+            var formData = new FormData();
+                formData.append('id_select', id_select);
+                
+                axios.post('/admin/rotulos/buscar-traspaso', formData, {
+                })
+                .then((response) => {
+                    
+                    document.getElementById("select-empresa-traspaso").options.length = 0;
+                            
+            
+                $.each(response.data.empresa, function( key, val ){
+                       $('#select-empresa-traspaso').append('<option value="' +val.id +'">'+val.nombre+'</option>').select2();
+                       
+                            
+                    });
+
+               })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });            
+             
+        }
 
 </script>
 
-
-  
 @endsection

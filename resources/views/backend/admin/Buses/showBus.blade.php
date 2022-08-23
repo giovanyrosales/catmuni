@@ -51,7 +51,7 @@
     <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h5 class="card-category-">Vista detallada del bus <span class="badge badge-warning">&nbsp; {{$bus->nom_bus}}&nbsp;</span>&nbsp; </h5>
+            <h5 class="card-category-">Vista detallada del bus <span class="badge badge-warning">&nbsp; {{$lista->nom_bus}} &nbsp;</span>&nbsp; </h5>
           </div>
       <!--body-->
         </div>
@@ -61,16 +61,16 @@
 
     @if($detectorNull == '0')
 
-    <a href="#" onclick="CrearCalificacionBus({{$bus->id_bus}})" >
-        <div class="widget stats-widget">
-            <div class="widget-body clearfix bg-info">
-                <div class="pull-left">
-                    <h3 class="widget-title text-white">Calificación</h3>
+        <a href="#" onclick="CrearCalificacionBus({{$lista->id}})" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-info">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Calificación</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
-                <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
-            </div>
-        </div><!-- .widget -->
-    </a>
+            </div><!-- .widget -->
+        </a>
 
     @elseif($calificacion->estado_calificacion == 'calificado')
                   <a href="#" onclick="">
@@ -88,7 +88,7 @@
     </div>
 
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="cierreytraspasoBus({{$bus->id_bus}})" >
+        <a href="#" onclick="cierreytraspasoBus({{$lista->id}})" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
@@ -101,7 +101,7 @@
     </div>
 
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="CobrosBus({{$bus->id_bus}})" >
+        <a href="#" onclick="CobrosBus()" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-green">
                     <div class="pull-left">
@@ -141,42 +141,49 @@
                     
                       <tr>
                         <th>Nombre</th>
-                        <td>{{$bus->nom_bus}}</td>
+                        <td>{{$lista->nom_bus}}</td>
                       </tr>
-                     
+              @if($emp === ' ')       
                       <tr>
-                        <th>Empresa</th>
-                        <td>{{$bus->empresas}}</td>
+                        <th hidden>Empresa</th>
+                        <td hidden>{{$emp}}</td>
                       </tr>
 
+                    @else
+
+                      <tr>
+                        <th>Empresa</th>
+                        <td>{{$emp}}</td>
+                      </tr>
+              @endif
                       <tr>
                         <th>Contribuyente</th>
-                        <td>{{$bus->contri}} {{$bus->ape}}</td>
+                        <td>{{$contri}}</td>
                       </tr>
                       
                       <tr>
                         <th>Fecha apertura</th>
-                        <td>{{$bus->fecha_inicio}} </td>
+                        <td>{{$lista->fecha_inicio}} </td>
                       </tr>
 
                       <tr>
                         <th>Placa</th>
-                        <td>{{$bus->placa}}</span></td>
+                        <td>{{$lista->placa}}</span></td>
                       </tr>
 
                       <tr>
                         <th>Ruta</th>
-                        <td>{{$bus->ruta}}</span></td>
+                        <td>{{$lista->ruta}}</span></td>
                       </tr>
 
                       <tr>
                         <th>Teléfono</th>
-                        <td>{{$bus->telefono}}</span></td>
+                        <td>{{$lista->telefono}}</span></td>
                       </tr>
 
                       <tr>
                         <th>Estado</th>
-                        <td>{{$bus->estado_bus}}</span></td>
+                        <td>{{$estado}}</span></td>
                       </tr>                      
                      
                     </tbody>
@@ -218,24 +225,24 @@
 
     function recargar()
     {
-     var ruta = "{{ url('/admin/bus/tabla') }}";
-     $('#tablaDatatable').load(ruta);
+        var ruta = "{{ url('/admin/bus/tabla') }}";
+        $('#tablaDatatable').load(ruta);
     }
     
    
-    function CrearCalificacionBus(id_bus)
+    function CrearCalificacionBus(id)
     {
+
       openLoading();
-      window.location.href="{{ url('/admin/bus/calificacion') }}/"+id_bus;
+        window.location.href="{{ url('/admin/bus/calificacion') }}/"+id;
     }
 
-    function cierreytraspasoBus(id_bus)
+    function cierreytraspasoBus(id)
     { 
-    window.location.href="{{ url('/admin/buses/cierres_traspasos') }}/"+id_bus;
+      console.log(id);
+        window.location.href="{{ url('/admin/buses/cierres_traspasos') }}/"+id;
     }
 
-        
-    
     </script>
 
 
@@ -254,12 +261,6 @@
 
       window.location.href="{{ url('/admin/bus/cobros') }}/"+id_bus;
     }
-
-
-    
-    
-    
-    
 
     </script>
 @stop

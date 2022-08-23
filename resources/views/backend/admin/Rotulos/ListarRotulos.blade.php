@@ -239,7 +239,7 @@
 
 <!-- /Modal editar rótulos-->
 <div class="modal fade" id="modalEditarRotulos">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title"></h4>
@@ -269,6 +269,14 @@
             <div class="row">
               <!-- /.form-group -->
                    <!-- /.form-group -->
+
+                   <div class="col-md-4">
+                      <div class="form-group">
+                        <label>NÚMERO DE FICHA:</label>
+                        <input type="text" id="nFicha-editar" class="form-control"  required placeholder="Número" >                  
+                     </div>
+                    </div>
+
                    <div class="col-md-8">
                       <div class="form-group">
                         <label>NOMBRE DEL RÓTULO:</label>
@@ -278,7 +286,6 @@
                     </div>
            <!-- /.form-group -->
            
-
            <div class="col-md-4">
                      <div class="form-group">
                           <label>ACTIVIDAD ECONÓMICA:</label>
@@ -299,16 +306,41 @@
                            <!-- finaliza asignar actividad economica-->
                         </div>
                           </div>
+
+          <div class="col-md-4">
+                     <div class="form-group">
+                          <label>CONTRIBUYENTE:</label>
+                          <!-- Select estado - live search -->
+                          <div class="input-group mb-10">
+                                <select 
+                                required  
+                                disabled                             
+                                class="form-control" 
+                                data-style="btn-success"
+                                data-show-subtext="true" 
+                                data-live-search="true"  
+                                id="select-contribuyente-editar" 
+                                title="-- Selecione actividad económica --"
+                                 >
+                                  @foreach($contribuyentes as $contribuyente)
+                                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }} {{$contribuyente->apellido}}</option>
+                                  @endforeach 
+                                 </select> 
+                           </div>
+                           <!-- finaliza asignar actividad economica-->
+                        </div>
+                          </div>
                
               <!-- /.row -->
            
-                 <div class="col-md-8">
+                 <div class="col-md-4">
                       <div class="form-group">
                       <label>ASIGNAR EMPRESA:</label>
                               <!-- Select live search -->
                               <div class="input-group mb-14">
                                 <select 
                                 required 
+                                disabled
                                 class="form-control" 
                                 data-style="btn-success"
                                 data-show-subtext="true" 
@@ -325,7 +357,6 @@
                       </div>
                   </div>
     
-                    
                 
                    <div class="col-md-4">
                      <div class="form-group">
@@ -348,14 +379,6 @@
                         </div>
                       </div>
 
-                      
-                      <div class="col-md-8">
-                      <div class="form-group">
-                        <label>DIRECCIÓN DEL RÓTULO:</label>
-                        <input type="text" name="" id="direccion-editar" class="form-control"  required placeholder="Dirección del rótulo" >
-                     </div>
-                    </div>
-
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Fecha de apertura:</label>
@@ -363,6 +386,13 @@
                      </div>
                     </div>
                 <!-- Finaliza Nombre del Rótulo-->
+
+                <div class="col-md-12">
+                      <div class="form-group">
+                        <label>DIRECCIÓN DEL RÓTULO:</label>
+                        <input type="text" name="" id="direccion-editar" class="form-control"  required placeholder="Dirección del rótulo" >
+                     </div>
+                    </div>
                 <!-- /.form-group -->
                
             </div>
@@ -578,6 +608,11 @@
             var ruta = "{{ url('/admin/Rotulos/tabla') }}";
             $('#tablaDatatable').load(ruta);
             document.getElementById("divcontenedor").style.display = "block";
+
+          
+
+
+
         });
 </script>
 
@@ -585,6 +620,8 @@
       
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
+
+           
         });
 
 </script>
@@ -679,7 +716,8 @@
             if(response.data.success === 1){
             $('#modalEditarRotulos').modal('show');
 
-            $('#id-editar').val(response.data.rotulos.id);           
+            $('#id-editar').val(response.data.rotulos.id);  
+            $('#nFicha-editar').val(response.data.rotulos.nFicha);
             $('#nom_rotulo-editar').val(response.data.rotulos.nom_rotulo);
             $('#fecha_apertura-editar').val(response.data.rotulos.fecha_apertura);
             $('#select-actividad_economica-editar').val(response.data.rotulos.actividad_economica);
@@ -691,15 +729,26 @@
             $('#select-permiso_instalacion-editar').val(response.data.rotulos.permiso_instalacion);       
             $('#nom_inspeccion-editar').val(response.data.rotulos.nom_inspeccion);
             $('#cargo_inspeccion-editar').val(response.data.rotulos.cargo_inspeccion);
-          
+
+                     
           
                   document.getElementById("select-empresa-editar").options.length = 0;
+                  document.getElementById("select-contribuyente-editar").options.length = 0;
 
+                 
                   $.each(response.data.empresa, function( key, val ){
                             if(response.data.id_empre == val.id){
                                 $('#select-empresa-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
                             }else{
                                 $('#select-empresa-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
+                            }
+                        });
+
+                  $.each(response.data.contribuyente, function( key, val ){
+                            if(response.data.id_cont == val.id){
+                                $('#select-contribuyente-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
+                            }else{
+                                $('#select-contribuyente-editar').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
                             }
                         });
 
@@ -719,7 +768,8 @@
     function actualizarRotulo()        
     {
         var id = document.getElementById('id-editar').value;
-        var empresa = document.getElementById('select-empresa-editar').value;
+     
+        var nFicha = document.getElementById('nFicha-editar').value;
         var nom_rotulo = document.getElementById('nom_rotulo-editar').value;
         var actividad_economica = document.getElementById('select-actividad_economica-editar').value;        
         var direccion = document.getElementById('direccion-editar').value;
@@ -745,7 +795,8 @@
         openLoading();
             var formData = new FormData();
             formData.append('id', id);
-            formData.append('empresa', empresa);
+          
+            formData.append('nFicha', nFicha);
             formData.append('nom_rotulo', nom_rotulo);
             formData.append('actividad_economica',actividad_economica);
             formData.append('direccion',direccion);
@@ -759,7 +810,7 @@
             formData.append('imagen', imagen.files[0]);
             formData.append('cargo_inspeccion', cargo_inspeccion);
             
-            
+          
             axios.post('/admin/Rotulos/Editar', formData, {
             })
             .then((response) => {

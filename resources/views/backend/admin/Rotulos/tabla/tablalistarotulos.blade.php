@@ -8,10 +8,10 @@
                             <thead>
                                 <tr>    
                                     <th style="width: 20%;">Nombre</th>
-                                    <th style="width: 20%;">Dirección</th>
-                                    <th style="width: 15%;">Fecha de apertura</th>
+                                    <th style="width: 24%;">Dirección</th>
+                                    <th style="width: 13%;">Fecha de apertura</th>
                                     <th style="width: 10%;">Permiso</th>
-                                    <th style="width: 20%;">Acción</th>
+                                    <th style="width: 18%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>

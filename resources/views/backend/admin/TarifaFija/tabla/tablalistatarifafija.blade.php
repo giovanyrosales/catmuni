@@ -13,7 +13,7 @@
                                 <th style="width: 15%;">Limite inferior</th>
                                 <th style="width: 15%;">Limite superior</th>
                                 <th style="width: 15%;">Impuesto mensual</th>
-                                <th style="width: 20%;">Acción</th>
+                                <th style="width: 15%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -29,10 +29,9 @@
                                     <td style="text-align: center;">
                                                                    
                                     <button type="button" class="btn btn-primary btn-xs" onclick="editarTarifa({{ $tarifa_fija->id }})">
-                                    <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
-                                    </button>
-
-                                    
+                                        <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
+                                    </button>   
+                                                                     
                                     </td>
                                 </tr>
                             @endforeach

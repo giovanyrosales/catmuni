@@ -12,8 +12,10 @@ class Buses extends Model
     protected $fillable = [
         'id',
         'id_empresa',
+        'id_contribuyente',
         'id_estado_buses',
         'nom_bus',
+        'nFicha',
         'fecha_inicio',
         'placa',
         'ruta',

@@ -12,9 +12,10 @@ class TraspasosRotulos extends Model
     protected $fillable = [
         'id',
         'id_rotulos',
-        'id_empresa',
-        'propietario_anterior',
-        'propietario_nuevo',
+        'contribuyente_anterior',
+        'contribuyente_nuevo',
+        'empresa_anterior',
+        'empresa_nueva',
         'fecha_a_partir_de',
       ];
 }

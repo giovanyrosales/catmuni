@@ -12,8 +12,10 @@ class TraspasosBuses extends Model
     protected $fillable = [
         'id',
         'id_buses',
-        'propietario_anterior',
-        'propietario_nuevo',
+        'contribuyente_anterior',
+        'contribuyente_nuevo',
+        'empresa_anterior',
+        'empresa_nueva',
         'fecha_a_partir_de',
       ];
 }
