@@ -14,7 +14,9 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
   
-    <style>
+<style>
+
+
 #tres {
   overflow: hidden;
 
@@ -65,8 +67,6 @@
         #dos{
                 font-size: 13px;
         }
-
-
     </style>
 
 @stop
@@ -103,30 +103,22 @@
 
     function f1()
         {
-           document.getElementById('select_interesMesas').disabled=true;
+          //document.getElementById('select_interesMesas').disabled=true;
            $('#periodo').hide();
            $('#periodoLicor').hide();
            $('#periodoMesas').hide();
            $('#periodoMaquinas').hide();
            $('#periodoSinfonolas').hide();
            $('#periodoAparatos').hide();
-           $('#estado_de_cuentaIMP').hide();
+           $('#estado_de_cuentaIMP').hide(); 
            $('#estado_de_cuenta_licorIMP').hide();
            $('#estado_de_cuenta_aparatosIMP').hide();
            $('#estado_de_cuenta_sinfonolasIMP').hide();
            $('#estado_de_cuenta_maquinasIMP').hide();
            $('#estado_de_cuenta_mesasIMP').hide();
-          }
-        function recuperariD($id)//*** Para recuperar los ID de las matriculas detalle */
-        {
-         var id=$id; 
-         document.getElementById('id_matriculadetalleMesas').value=id;
-         document.getElementById('id_matriculadetalleMaquinas').value=id;
-         document.getElementById('id_matriculadetalleAparatos').value=id;
-         document.getElementById('id_matriculadetalleSinfonolas').value=id;
          
-        }
-        
+          }
+      
 window.onload = f1;
 
 </script>
@@ -134,18 +126,14 @@ window.onload = f1;
 <!-- Función para calcular el pago momentaneo------------------------------------------>
 <script> 
 function info_cobros_matriculas()//*** Para recuperar los ID de las matriculas detalle */
-        {
-        var id_matriculadetalleMesas=(document.getElementById('id_matriculadetalleMesas').value);
-        var id_matriculadetalleMaquinas=(document.getElementById('id_matriculadetalleMaquinas').value);
-        var id_matriculadetalleSinfonolas=(document.getElementById('id_matriculadetalleSinfonolas').value);
-        var id_matriculadetalleAparatos=(document.getElementById('id_matriculadetalleAparatos').value);
+{
+var id_empresa='{{$empresa->id}}';
+var id_matriculadetalle=(document.getElementById('id_matriculadetalle').value);
 
-        var formData = new FormData();
+var formData = new FormData();
+formData.append('id_matriculadetalle', id_matriculadetalle);
+formData.append('id_empresa', id_empresa);
 
-formData.append('id_matriculadetalleMesas', id_matriculadetalleMesas);
-formData.append('id_matriculadetalleMaquinas', id_matriculadetalleMaquinas);
-formData.append('id_matriculadetalleSinfonolas', id_matriculadetalleSinfonolas);
-formData.append('id_matriculadetalleAparatos', id_matriculadetalleAparatos);
 
  axios.post('/admin/empresas/info_cobro_matriculas', formData, {
         })
@@ -155,44 +143,60 @@ formData.append('id_matriculadetalleAparatos', id_matriculadetalleAparatos);
 
                   if(response.data.success === 1){
                     
-                    if(response.data.ultimo_cobroMesas!=null)
+                    //** Si la matricula es Mesas de billar */
+                    if (response.data.id_matriculaReg===1)
                     {
-                        document.getElementById('ultimo_cobroMesas').value=response.data.ultimo_cobroMesas.periodo_cobro_fin;
-                        document.getElementById('ultimo_cobroMesas').disabled=true;
+                        if(response.data.ultimo_cobroMesas!=null)
+                        {
+                            document.getElementById('ultimo_cobroMesas').value=response.data.ultimo_cobroMesas.periodo_cobro_fin;
+                            document.getElementById('ultimo_cobroMesas').disabled=true;
 
-                    }else{
-                          document.getElementById('ultimo_cobroMesas').value='';
-                          document.getElementById('ultimo_cobroMesas').disabled=false;
-                         }
+                        }else{
+                              document.getElementById('ultimo_cobroMesas').value=response.data.inicio_operaciones;
+                              document.getElementById('ultimo_cobroMesas').disabled=false;
+                            }
+                      }
 
-                    if(response.data.ultimo_cobroMaquinas!=null)
+                    //** Si la matricula es Maquinas Electrónicas */
+                    if (response.data.id_matriculaReg===3)   
                     {
-                        document.getElementById('ultimo_cobroMaquinas').value=response.data.ultimo_cobroMaquinas.periodo_cobro_fin;
-                        document.getElementById('ultimo_cobroMaquinas').disabled=true;
+                        if(response.data.ultimo_cobroMaquinas!=null)
+                        {
+                            document.getElementById('ultimo_cobroMaquinas').value=response.data.ultimo_cobroMaquinas.periodo_cobro_fin;
+                            document.getElementById('ultimo_cobroMaquinas').disabled=true;
+                        }
+                        else{
+                              document.getElementById('ultimo_cobroMaquinas').value=response.data.inicio_operaciones;
+                              document.getElementById('ultimo_cobroMaquinas').disabled=false;
+                            }
                     }
-                    else{
-                          document.getElementById('ultimo_cobroMaquinas').value='';
-                          document.getElementById('ultimo_cobroMaquinas').disabled=false;
-                         }
 
-                    if(response.data.ultimo_cobroSinfonolas!=null)
+                    //** Si la matricula es Sinfonolas */
+                    if (response.data.id_matriculaReg===4)
                     {
-                        document.getElementById('ultimo_cobroSinfonolas').value=response.data.ultimo_cobroSinfonolas.periodo_cobro_fin;
-                        document.getElementById('ultimo_cobroSinfonolas').disabled=true;
-                    }else{
-                          document.getElementById('ultimo_cobroSinfonolas').value='';
-                          document.getElementById('ultimo_cobroSinfonolas').disabled=false;
-                         }
+                        if(response.data.ultimo_cobroSinfonolas!=null)
+                        {
+                            document.getElementById('ultimo_cobroSinfonolas').value=response.data.ultimo_cobroSinfonolas.periodo_cobro_fin;
+                            document.getElementById('ultimo_cobroSinfonolas').disabled=true;
+                        }else{
+                              document.getElementById('ultimo_cobroSinfonolas').value=response.data.inicio_operaciones;
+                              document.getElementById('ultimo_cobroSinfonolas').disabled=false;
+                            }
+                    }
 
-                    if(response.data.ultimo_cobroAparatos==null)
+                    //** Si la matricula es Aparatos Parlantes */
+                    if (response.data.id_matriculaReg===2)
                     {
-                        document.getElementById('ultimo_cobroAparatos').value='';
-                        document.getElementById('ultimo_cobroAparatos').disabled=false;
+                        if(response.data.ultimo_cobroAparatos==null)
+                        {
+                            document.getElementById('ultimo_cobroAparatos').value=response.data.inicio_operaciones;
+                            document.getElementById('ultimo_cobroAparatos').disabled=false;
 
-                    }else{
-                          document.getElementById('ultimo_cobroAparatos').value=response.data.ultimo_cobroAparatos.periodo_cobro_fin;
-                          document.getElementById('ultimo_cobroAparatos').disabled=true;
-                         }
+                        }else{
+                              document.getElementById('ultimo_cobroAparatos').value=response.data.ultimo_cobroAparatos.periodo_cobro_fin;
+                              document.getElementById('ultimo_cobroAparatos').disabled=true;
+                            }
+                     }//** FIn - Si la matricula es Aparatos Parlantes */
 
                   }  
               })
@@ -249,7 +253,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                 console.log(response);
                   closeLoading();
                   if(response.data.success ===0){
-                    toastr.error('La fecha selecionada no puede ser menor o igual a la del ultimo mes de pago.');
+                    toastr.error('La fecha selecionada no puede ser menor o igual a la del último mes de pago.');
                     document.getElementById('hasta').innerHTML= '';
                     document.getElementById('cant_meses').value='';      
                     document.getElementById('fondoFP_imp').innerHTML='$-';
@@ -330,7 +334,7 @@ formData.append('ultimo_cobro', ultimo_cobroLicor);
                 console.log(response);
                   closeLoading();
                   if(response.data.success ===0){
-                    toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
+                    toastr.error('La fecha selecionada no puede ser menor a la del último pago');
                     document.getElementById('hastaLicor').innerHTML= '';
                     document.getElementById('LicenciaLicor_imp').innerHTML='';
                     document.getElementById('MultaLicor_imp').innerHTML='';
@@ -364,7 +368,7 @@ function calculo_cobros_mesas(id, valor)
 {
 
     /*Declaramos variables */
-    var id_matriculadetalleMesas=(document.getElementById('id_matriculadetalleMesas').value);
+    var id_matriculadetalleMesas=(document.getElementById('id_matriculadetalle').value);
     var fechaPagaraMesas=(document.getElementById('fecha_hasta_donde_pagaraMesas').value);
     var ultimo_cobroMesas=(document.getElementById('ultimo_cobroMesas').value);
     var tasa_interesMesas=(document.getElementById('select_interesMesas').value);
@@ -463,7 +467,7 @@ formData.append('estado', estado);
 function calculo_cobros_maquinas(id, valor)
 {
     /*Declaramos variables */
-    var id_matriculadetalleMaquinas=(document.getElementById('id_matriculadetalleMaquinas').value);
+    var id_matriculadetalleMaquinas=(document.getElementById('id_matriculadetalle').value);
     var fechaPagaraMaquinas=(document.getElementById('fecha_hasta_donde_pagaraMaquinas').value);
     var ultimo_cobroMaquinas=(document.getElementById('ultimo_cobroMaquinas').value);
     var tasa_interesMaquinas=(document.getElementById('select_interesMaquinas').value);
@@ -563,7 +567,7 @@ formData.append('fecha_interesMoratorioMaquinas', fecha_interesMoratorioMaquinas
 function calculo_cobros_sinfonolas(id, valor)
 {
     /*Declaramos variables */
-    var id_matriculadetalleSinfonolas=(document.getElementById('id_matriculadetalleSinfonolas').value);
+    var id_matriculadetalleSinfonolas=(document.getElementById('id_matriculadetalle').value);
     var fechaPagaraSinfonolas=(document.getElementById('fecha_hasta_donde_pagaraSinfonolas').value);
     var ultimo_cobroSinfonolas=(document.getElementById('ultimo_cobroSinfonolas').value);
     var tasa_interesSinfonolas=(document.getElementById('select_interesSinfonolas').value);
@@ -663,7 +667,7 @@ formData.append('fecha_interesMoratorioSinfonolas', fecha_interesMoratorioSinfon
 function calculo_cobros_aparatos(id, valor)
 {
     /*Declaramos variables */
-    var id_matriculadetalleAparatos=(document.getElementById('id_matriculadetalleAparatos').value);
+    var id_matriculadetalleAparatos=(document.getElementById('id_matriculadetalle').value);
     var ultimo_cobroAparatos=(document.getElementById('ultimo_cobroAparatos').value);
     var fecha_pagaraAparatos=(document.getElementById('fecha_hasta_donde_pagaraAparatos').value);
     openLoading();
@@ -1016,10 +1020,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
       <!-- Nav.Items--> 
     <!--  <h5><i class="fas fa-cash-register"></i> &nbsp;Tipo de cobro: </h5>--> 
  
-      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">       
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"> 
+        @if($MatriculasNull==1)      
         <li class="nav-item">
           <a class="nav-link active"  data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> &nbsp;Impuestos</a>
         </li>
+        @endif
         @if($licencia>'0.00')
         <li class="nav-item">
           <a class="nav-link" data-toggle="pill" href="#pills-licencia_licor" role="tab" aria-controls="pills-profile" aria-selected="false"><i class="fas fa-file-invoice-dollar"></i>&nbsp;Licencia Licor</a>
@@ -1028,14 +1034,16 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
         @if($MatriculasNull== '0')
         @foreach($matriculasRegistradas as $dato)
         <li class="nav-item">
-          <a class="nav-link"  data-toggle="pill" href="#pills-{{$dato->slug}}" onclick="recuperariD({{$dato->id}}),info_cobros_matriculas()" role="tab" aria-controls="pills-contact" aria-selected="false"><i class="fas fa-coins"></i>&nbsp;{{$dato->tipo_matricula}}</a>
+          <a class="nav-link"  data-toggle="pill" href="#pills-{{$dato->slug}}"  role="tab" aria-controls="pills-contact" aria-selected="false"><i class="fas fa-coins"></i>&nbsp;{{$dato->tipo_matricula}}</a>
         </li>
         @endforeach
         @endif
       </ul>
       <div class="tab-content" id="pills-tabContent">
       <hr>
+
 <!------------------------------------------------------- Nav.Items ( Impuestos Empresa )------------------------------------------------------------------------------------------------------>  
+@if($MatriculasNull==1)  
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
         
           <div class="row" id="cobros_empresa"><!-- /.ROWPADRE -->
@@ -1052,20 +1060,24 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
             <form action="/admin/estado_cuenta/pdf" method="POST" id="formularioCalculo">
            @csrf
              <div class="row"><!-- /.ROW1 -->
-            
+             
                <!-- /.form-group -->
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="form-group">   
                         <label>NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
+               <div class="col-md-4">
                   <div class="input-group mb-3">
+                         <input type="hidden"  value="" id="id_matriculadetalle" disabled ><!-- Para cargar id m. detalle si es necesario -->
                         <input type="number"  value="{{ $empresa->num_tarjeta }}" name="num_tarjeta" disabled id="num_tarjeta" class="form-control" required >
-                        
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
+                        &nbsp;
+                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <i class="fas fa-info-circle"></i>
+                        </button> 
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -1088,6 +1100,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                                     <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                                   </div>
                     @endif
+
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -1215,7 +1228,6 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
               
-              
             </div> <!-- /.ROW1 -->
             </div> <!-- /.card card-success -->
             </div> <!-- /.card-header text-success -->
@@ -1333,7 +1345,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
           </div>
         </div><!-- /.ROWPADRE -->
           </div> <!-- pills-Home-->
+          @endif
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
+
 <div class="tab-pane fade" id="pills-licencia_licor" role="tabpanel" aria-labelledby="pills-contact-tab">
           
           <section class="content-header" id="tab_licencia_licor">
@@ -1511,7 +1525,8 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 </div><!-- pills-MatriculasLicencias-->
 
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
-<div class="tab-pane fade" id="pills-mesa_de_billar" role="tabpanel" aria-labelledby="pills-contact-tab">
+@if($tipo_matricula==1)
+<div class="tab-pane fade show active" id="pills-mesa_de_billar" role="tabpanel" aria-labelledby="pills-contact-tab">
           
           <section class="content-header" id="tab_mesa_de_billar">
         
@@ -1536,14 +1551,18 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         <label>NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
+               <div class="col-md-5">
                   <div class="input-group mb-3">
-                  <input type="text"  value="" id="id_matriculadetalleMesas" disabled >
-                        <input type="number"  value="{{ $empresa->num_tarjeta }}"   id="num_tarjetaMesas" class="form-control" required >
+                  <input type="hidden"  value="" id="id_matriculadetalle" disabled >
+                        <input type="number"  value="{{ $empresa->num_tarjeta }}"   id="num_tarjetaMesas" class="form-control" required  disabled>
                         
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
+                        &nbsp;
+                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <i class="fas fa-info-circle"></i>
+                        </button> 
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -1778,9 +1797,10 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
           </section>
 
 </div><!-- pills-MatriculasLicencias-->
-
+@endif
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
-<div class="tab-pane fade" id="pills-maquinas_electronicas" role="tabpanel" aria-labelledby="pills-contact-tab">
+@if($tipo_matricula==3)
+<div class="tab-pane fade show active" id="pills-maquinas_electronicas" role="tabpanel" aria-labelledby="pills-contact-tab">
           
       <section class="content-header" id="tab_maquinas_electronicas">
         <div class="container-fluid">
@@ -1806,14 +1826,18 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         <label>NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
+               <div class="col-md-5">
                   <div class="input-group mb-3">
-                  <input type="hidden"  value="" id="id_matriculadetalleMaquinas" disabled >
+                  <input type="hidden"  value="" id="id_matriculadetalle" disabled >
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaMaquinas" class="form-control" required >
                         
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
+                        &nbsp;
+                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <i class="fas fa-info-circle"></i>
+                        </button> 
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -2046,10 +2070,10 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
             </div>
           </section>            
      </div><!-- pills-MatriculasLicencias-->
-
+@endif
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>    
-
-<div class="tab-pane fade" id="pills-aparatos_parlantes" role="tabpanel" aria-labelledby="pills-contact-tab">
+@if($tipo_matricula==2)
+<div class="tab-pane fade show active" id="pills-aparatos_parlantes" role="tabpanel" aria-labelledby="pills-contact-tab">
           
  <section class="content-header" id="tab_aparatos_parlantes">
  <div class="container-fluid">
@@ -2061,11 +2085,13 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-info"><b>DATOS GENERALES</b>.
+    
                 <button type="button" class="btn btn-outline-info btn-sm float-right" 
                   onclick="historial_cobros_Aparatos()" id="Historial_cobros_aparatosIMP" >
                   <i class="fas fa-history"></i> Historial de cobros
-                </button> 
-         </div>
+                </button>
+
+              </div>
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
             
@@ -2087,14 +2113,18 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         <label>NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
+               <div class="col-md-5">
                   <div class="input-group mb-3">
-                  <input type="hidden"  value="" id="id_matriculadetalleAparatos" disabled >
+                  <input type="hidden"  id="id_matriculadetalle" disabled >
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaAparatos" class="form-control" required >
                         
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
+                        &nbsp;
+                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <i class="fas fa-info-circle"></i>
+                        </button> 
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -2132,8 +2162,8 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
-               <div class="col-md-4">
-                <div class="input-group mb-3">  
+               <div class="col-md-6">
+                <div class="input-group mb-6">  
                 <!-- finaliza select estado-->
                         <input type="text" disabled value="{{ $empresa->nombre_giro }}" id="giroc_comercialAparatos" class="form-control" required >
                             <div class="input-group-append">
@@ -2245,10 +2275,10 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                                 </section>
                      
           </div><!-- pills-MatriculasLicencias-->
-
+@endif
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>    
-
-<div class="tab-pane fade" id="pills-sinfonolas" role="tabpanel" aria-labelledby="pills-contact-tab">
+@if($tipo_matricula==4)
+<div class="tab-pane fade show active" id="pills-sinfonolas" role="tabpanel" aria-labelledby="pills-contact-tab">
           
           <section class="content-header" id="tab_pills-sinfonolas">
               <div class="container-fluid">
@@ -2273,14 +2303,18 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         <label>NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <div class="col-md-3">
+               <div class="col-md-5">
                   <div class="input-group mb-3">
-                  <input type="hidden"  value="" id="id_matriculadetalleSinfonolas" disabled >
+                        <input type="hidden"  value="" id="id_matriculadetalle" disabled >
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaSinfonolas" class="form-control" required >
                         
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
+                        &nbsp;
+                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <i class="fas fa-info-circle"></i>
+                        </button> 
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -2519,6 +2553,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
           </section>
 
 </div><!-- pills-MatriculasLicencias-->
+@endif
 <!------------------------------------------------------- /.Nav.Items------------------------------------------------------------------------------------------------------>
 </div>
        </div>
@@ -2536,9 +2571,98 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
       </div>
     <!-- /.container-fluid -->
     </section>
-<!-- Finaliza Formulario Calificar Empresa-->
+<!-- Finaliza Formulario -->
 
+<!-- Modal info cali -->
+<div class="modal fade" id="modal_info_cali">
+      <div class="modal-dialog" >
+            <div class="modal-content card border-dark mb-3" style="border-radius: 60px;">
+                
+                <!-- /.card-header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" style="padding-left: 140px;">
+                            <i class="fas fa-history"></i>
+                            &nbsp;Última <b>calificación</b> 
+                    </h5>
+                </div>
+               <div class="modal-body" id="tres">
+                    <form id="formulario_info_cali">        
+                <!-- /.card-header -->
+                @if($cali_lista=='0')
+                        <div class="callout callout-info">
+                              <h5><i class="fas fa-info"></i> Nota:</h5>
+                              <h5> No tiene <span class="badge badge-warning">ninguna calificación</span></h5> 
+                        </div>
+                          
+                @else
+                    <!--inicia los campos del formulario ver-->
+                    <table class="table"  style="border: 50px" data-toggle="table">
+                    <thead>
+                        <tr>
+                        <td style="width: 15%; text-align: center"><b>Año</b></td>
+                        <td style="width: 15%; text-align: center"><b>Tarifa</b></td>
+                        @if($MatriculasNull==0)
+                        <td style="width: 15%; text-align: center"><b>Matrícula</b></td>
+                        @endif
+                        <td style="width: 25%; text-align: center"><b>Base imponible</b></td>
+                    
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <td align="center">
+                                <h4>
+                                  <span class="badge badge-pill badge-dark">
+                                    {{$cali_lista->año_calificacion}}
+                                </span>
+                              </h4>
+                            </td>
 
+                            <td align="center">
+                              <h4>
+                                <span class="badge badge-pill badge-info">
+                                            @if($MatriculasNull==0)
+                                            ${{$cali_lista->pago_mensual}} 
+                                            @else
+                                            ${{$cali_lista->tarifa}}
+                                            @endif
+                                </span>
+                              </h4>
+                            </td>
+
+                            @if($MatriculasNull==0)
+                                <td align="center">
+                                  <h4>
+                                    <span class="badge badge-pill badge-info">
+                                            ${{$cali_lista->monto_matricula}} 
+                                    </span>
+                                  </h4>
+                                </td>
+                              @endif
+
+                            <td align="center">
+                              <h4>
+                                <span class="badge badge-pill badge-dark">
+                                            @if($MatriculasNull==0)
+                                              {{$cali_lista->cantidad}} 
+                                            @else
+                                              1
+                                            @endif
+                                </span>
+                              </h4>
+                            </td>
+
+                          </tr>
+                          </tbody>
+                          </table>
+                  @endif
+                  <!--finaliza los campos del formulario-->
+                     </form>
+                  </div>
+
+          </div>
+    </div>
+</div>
+<!-- FIN Modal info cali -->
 
 
 @extends('backend.menus.footerjs')
@@ -2562,6 +2686,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
     <script type="text/javascript">
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
+
+            recuperariD()
+            info_cobros_matriculas()
         });
     </script>
 
@@ -2573,13 +2700,16 @@ function VerEmpresa(id){
 window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 
 }
+
+//** Reportes de estados de cuenta */
 function reporte_empresa(id){
-    
+
     var f1=(document.getElementById('ultimo_cobro').value);
     var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
     var ti=(document.getElementById('select_interes').value);
     var f3=(document.getElementById('fecha_interes_moratorio').value);
     var tf=(document.getElementById('tarifaMes').value);
+
 
   window.open("{{ URL::to('/admin/estado_cuenta/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + tf + "/" + id );
 
@@ -2597,7 +2727,7 @@ function reporte_aparatos(id){
   
 var f1=(document.getElementById('ultimo_cobroAparatos').value);
 var f2=(document.getElementById('fecha_hasta_donde_pagaraAparatos').value);
-var ap=(document.getElementById('id_matriculadetalleAparatos').value);
+var ap=(document.getElementById('id_matriculadetalle').value);
 
 window.open("{{ URL::to('/admin/estado_cuenta_aparatos/pdf') }}/" + f1 + "/" + f2 + "/" + ap + "/" + id );
 
@@ -2607,7 +2737,7 @@ function reporte_sinfonolas(id){
   
   var f1=(document.getElementById('ultimo_cobroSinfonolas').value);
   var f2=(document.getElementById('fecha_hasta_donde_pagaraSinfonolas').value);
-  var is=(document.getElementById('id_matriculadetalleSinfonolas').value);
+  var is=(document.getElementById('id_matriculadetalle').value);
   var ti=(document.getElementById('select_interesSinfonolas').value);
 
   window.open("{{ URL::to('/admin/estado_cuenta_sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + is + "/" + ti + "/" + id );
@@ -2618,7 +2748,7 @@ function reporte_sinfonolas(id){
   
   var f1=(document.getElementById('ultimo_cobroMaquinas').value);
   var f2=(document.getElementById('fecha_hasta_donde_pagaraMaquinas').value);
-  var im=(document.getElementById('id_matriculadetalleMaquinas').value);
+  var im=(document.getElementById('id_matriculadetalle').value);
   var ti=(document.getElementById('select_interesMaquinas').value);
 
   window.open("{{ URL::to('/admin/estado_cuenta_maquinas/pdf') }}/" + f1 + "/" + f2 + "/" + im + "/" + ti + "/" + id );
@@ -2629,12 +2759,16 @@ function reporte_sinfonolas(id){
   
   var f1=(document.getElementById('ultimo_cobroMesas').value);
   var f2=(document.getElementById('fecha_hasta_donde_pagaraMesas').value);
-  var ime=(document.getElementById('id_matriculadetalleMesas').value);
+  var ime=(document.getElementById('id_matriculadetalle').value);
   var ti=(document.getElementById('select_interesMesas').value);
 
   window.open("{{ URL::to('/admin/estado_cuenta_mesas/pdf') }}/" + f1 + "/" + f2 + "/" + ime + "/" + ti + "/" + id );
   
   }
+
+//** FIN - Reportes de estados de cuenta */
+
+
 function GenerarCobro()
         {
             $('#modalregistrarCobros').modal('show');
@@ -2798,6 +2932,7 @@ function cobro_registrado(){
        window.location.href="{{ url('/admin/empresas/show') }}/"+id;
     }
 
+//** Funciones para abrir modales de historiales de cobros */
     function historial_cobros_empresa(id){
    
       $('#historial_cobros_empresas').modal('show');
@@ -2811,7 +2946,7 @@ function cobro_registrado(){
 
    function historial_cobros_Aparatos()
    {
-    var id=document.getElementById("id_matriculadetalleAparatos").value; 
+    var id=document.getElementById("id_matriculadetalle").value; 
 
     $('#historial_cobros_aparatos').css('overflow-y', 'auto');
     $('#historial_cobros_aparatos').modal({backdrop: 'static', keyboard: false})
@@ -2822,7 +2957,7 @@ function cobro_registrado(){
    }
    function historial_cobros_sinfonolas()
    {
-    var id=document.getElementById("id_matriculadetalleSinfonolas").value; 
+    var id=document.getElementById("id_matriculadetalle").value; 
 
     $('#historial_cobros_sinfonolas').css('overflow-y', 'auto');
     $('#historial_cobros_sinfonolas').modal({backdrop: 'static', keyboard: false})
@@ -2834,7 +2969,7 @@ function cobro_registrado(){
 
    function historial_cobros_maquinas()
    {
-    var id=document.getElementById("id_matriculadetalleMaquinas").value; 
+    var id=document.getElementById("id_matriculadetalle").value; 
 
     $('#historial_cobros_maquinas').css('overflow-y', 'auto');
     $('#historial_cobros_maquinas').modal({backdrop: 'static', keyboard: false})
@@ -2846,7 +2981,7 @@ function cobro_registrado(){
 
    function historial_cobros_mesas()
    {
-    var id=document.getElementById("id_matriculadetalleMesas").value; 
+    var id=document.getElementById("id_matriculadetalle").value; 
 
     $('#historial_cobros_mesas').css('overflow-y', 'auto');
     $('#historial_cobros_mesas').modal({backdrop: 'static', keyboard: false})
@@ -2855,7 +2990,26 @@ function cobro_registrado(){
     $('#tabla_historico_cobros_mesas').load(ruta);
 
    }
-  
+//** FIN - Funciones para abrir modales de historiales de cobros */
+
+
+function recuperariD()//*** Para recuperar los ID de las matriculas detalle */
+        {
+
+        //recuper ID del detalle.
+         var id='{{$id_detalleM}}'; 
+         document.getElementById('id_matriculadetalle').value=id;
+
+        }
+
+function abrir_modal()
+{
+    $('#modal_info_cali').css('overflow-y', 'auto');
+    $('#modal_info_cali').modal({backdrop: 'fixed', keyboard: false})
+}
+
+
+
 </script> 
 
 <style>

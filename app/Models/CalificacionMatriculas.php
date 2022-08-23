@@ -15,9 +15,18 @@ class CalificacionMatriculas extends Model
           'id_estado_matricula',
           'nombre_matricula',
           'cantidad',
+          'fecha_calificacion',
           'monto_matricula',
           'pago_mensual',
+          'fondofp',
+          'pago_anual',
+          'tarifa_colones',
+          'total_impuesto_mat',
+          'fondofp_impuesto_mat',
           'año_calificacion',
           'estado_calificacion',
+          'tipo_tarifa',
+          'codigo_tarifa'
+          
       ];
 }

@@ -169,34 +169,37 @@
         </tr>
         <tr>
             <td colspan="2">
-                <p><b>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
+                <p style="font-size: 14px;"><b>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
                 Presente.</b></p>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <p style="text-align: justify">Aprovecho la oportunidad para saludarle y a la vez informarle que la falta de pago de los tributos
+                <p style="text-align: justify;  font-size: 14px;">Aprovecho la oportunidad para saludarle y a la vez informarle que la falta de pago de los tributos
                 municipales en el plazo o fecha límite correspondiente, coloca al sujeto pasivo en situación de mora, sin necesidad de requerimiento 
                 de parte de la administración tributaria municipal y sin tomar en consideración, las causas o motivos de esa falta de pago. Art. 45 
-                (Ley General Tributaria).</p>
+                (Ley General Tributaria).
+                <br>
                 <br>
                 Nombre del Negocio o Empresa en Mora:&nbsp; <strong>{{$empresa->nombre}}</strong><br>
                 Direccion: &nbsp;<strong>{{$empresa->direccion}}</strong></p>
             </td>
         <tr>
             <td colspan="2">
-                <p style="text-align: justify">La mora del sujeto pasivo producirá, entre otros, los siguientes efectos: 1º Hace exigible la deuda
+                <p style="text-align: justify;  font-size: 14px;">La mora del sujeto pasivo producirá, entre otros, los siguientes efectos: 1º Hace exigible la deuda
                     tributaria, 2º Da lugar al devengo de intereses moratorios, 3º Da lugar a la aplicación de multas, por
                     configurar dicha mora, una infracción tributaria. Los intereses moratorios se aplicarán desde el
                     vencimiento de plazo en que debió pagarse el tributo hasta el día de la extinción total de la obligación
                     tributaria. Art. 46 (Ley General Tributaria), Por tanto, es necesario que se acerque al Departamento
                     de Catastro Tributario de esta Municipalidad a la mayor brevedad posible, para cancelar la deuda o
                     solicitar de manera escrita un plan de pago.
-                </p>
+                    <br>
                     Agradecemos de antemano la atención prestada a esta nota, y esperamos la disposición necesaria
                     para solventar su situación. 
+                </p>
                     <br>
-                <p>Atentamente.</p>
+                        <img src="{{ asset('images/LeyT.png') }}"   alt="" height="115px" width="595px">
+                <p>Atentamente.</p>           
             </td>
         </tr>
         <tr align="center">

@@ -78,29 +78,7 @@
                 </ul>
              </li>
             
-            <!-- Grupo Empresas -->
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="fas fa-building"></i>
-                                    <p>Empresas 
-                                    <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                <a href="{{ route('admin.crear.empresa.index') }}" target="frameprincipal" class="nav-link">
-                                    <i class="fas fa-plus-circle nav-icon"></i>
-                                    <p>Agregar nueva empresa</p>
-                                    </a>
-                                    </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.listarEmpresa.index') }}" target="frameprincipal" class="nav-link">
-                                    <i class="fas fa-list-ol nav-icon"></i>
-                                    <p>Listar empresas</p>
-                                </a>
-                                </li>
-                            </ul>
-                <!-- Finaliza Grupo Empresas -->
+            
                 <!-- Grupo Contribuyentes -->
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -122,6 +100,30 @@
                             </li>
                         </ul>
                 <!-- Finaliza Grupo Contribuyentes -->
+
+                <!-- Grupo Empresas -->
+                <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-building"></i>
+                                    <p>Empresas 
+                                    <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                <a href="{{ route('admin.crear.empresa.index') }}" target="frameprincipal" class="nav-link">
+                                    <i class="fas fa-plus-circle nav-icon"></i>
+                                    <p>Agregar nueva empresa</p>
+                                    </a>
+                                    </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.listarEmpresa.index') }}" target="frameprincipal" class="nav-link">
+                                    <i class="fas fa-list-ol nav-icon"></i>
+                                    <p>Listar empresas</p>
+                                </a>
+                                </li>
+                            </ul>
+                <!-- Finaliza Grupo Empresas -->
 
                  <!-- Grupo Rótulos -->
                          <li class="nav-item">

@@ -619,6 +619,10 @@ function OcultarhistorialCierres(){
             $('#tabla_traspasos').load(ruta);
     }
 
+
+
+
+
 </script>
 
 

@@ -23,7 +23,7 @@ class ControlController extends Controller
 
         // Rol 1: Encargado-Empresas
         if($user->hasPermissionTo('url.empresa.crear.index')){
-            $ruta = 'admin.crear.empresa.index';
+            $ruta = 'admin.cobrar.empresa.index';
         }
 
         // Rol 2: Encargado-Inmuebles

@@ -82,6 +82,11 @@
              margin: 0;
              padding: 0;
          }
+         
+        #left{
+                font-size: 11px;
+                float: left;
+             }
 
         #uno{
                 font-size: 11px;
@@ -210,62 +215,70 @@
 <tr>
     <td colspan="2"> 
         <table id="tabla" align="center">
-                                <tr>
-                                    <th colspan="4"> TOTALES</th>
-                                    <th scope="col">T. LICENCIAS</th>
-                                    <th scope="col">T. MATRICULAS</th>
-                                    <th scope="col">T. MAT. O PER.</th>
-                                </tr>
+
                                 @if($detectorNull==1)
                                 <tr>
-                                    <th scope="col">MARTRICULAS</th>
-                                    <th scope="col">CANT.</th>
-                                    <th scope="col">MONTO</th>
-                                    <th scope="col">P. MENSUAL</th>
-                                    <td>${{$ultimaCalificacion->licencia}} </td>
-                                    <td>${{$ultimaCalificacion->matricula}}</td>
-                                    <td>${{$ultimaCalificacion->total_mat_permisos}} </h6></td>
+                                    <th scope="col">&nbsp;ACTIVIDAD ECONOMICA</th>
+                                    <th scope="col">BASE IMPONIBLE</th>
+                                    <th scope="col">LICENCIAS</th>
+                                    <th scope="col">MATRICULAS</th>
+                                    <th scope="col">PAGO POR MAT. O PER.</th>
                                 </tr>
                                 <tr>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>$0.00</td>
+                                    <td>$0.00</td>
+                                    <td>$0.00</td>
                                 </tr>
                                 @else
                                 <tr>
-                                    <th scope="col">MARTRICULAS</th>
-                                    <th scope="col">CANT.</th>
-                                    <th scope="col">MONTO</th>
-                                    <th scope="col">P. MENSUAL</th>
-                                    <td>${{$ultimaCalificacion->licencia}} </td>
-                                    <td>${{$ultimaCalificacion->matricula}}</td>
-                                    <td>${{$ultimaCalificacion->total_mat_permisos}}</td>
+                                    <th scope="col">&nbsp;ACTIVIDAD ECONOMICA</th>
+                                    <th scope="col">BASE IMPONIBLE</th>
+                                    <th scope="col">LICENCIAS</th>
+                                    <th scope="col">MATRICULAS</th>
+                                    <th scope="col">PAGO POR MAT. O PER.</th>
                                 </tr>
                                 @foreach($matriculas as $dato)
                                 <tr>
                                     <td>{{$dato->tipo_matricula}}</td>
-                                    <td align="center" >{{$dato->cantidad}}</td>
-                                    <td>${{$dato->monto}}</td>
+                                    <td>@if($detectorNull==1)
+                                            1
+                                        @else 
+                                        {{$ultimaCalificacion->cantidad}}
+                                        @endif
+                                    </td>
+                                    <td>@if($detectorNull==1)
+                                        ${{$ultimaCalificacion->licencia}}
+                                        @else 
+                                        $0.0
+                                        @endif
+                                    </td>
                                     <td>${{$dato->pago_mensual}}</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
+                                    <td>${{$dato->monto}}</td>
+
                                     @endforeach
                                 </tr>
 
                                 @endif
                                 <tr>
-                                    <td rowspan="2" colspan="5"></td>
+                                    <td rowspan="2" colspan="3"></td>
                                     <th><b>Fondo F. P. </b></th>
-                                    <td>${{$ultimaCalificacion->fondofp_licencia_permisos}}</td>                              >
+                                    <td>@if($detectorNull==1)
+                                        ${{$ultimaCalificacion->fondofp_licencia_permisos}}
+                                        @else
+                                        ${{$ultimaCalificacion->fondofp}}
+                                        @endif
+                                    </td>                              
                                 </tr>
                                 <tr>
                                     <th><b>Pago Anual </b></th>
-                                    <td>${{$ultimaCalificacion->pago_anual_permisos}}</td>
+                                    <td>@if($detectorNull==1)
+                                        ${{$ultimaCalificacion->pago_anual_permisos}}
+                                        @else
+                                        ${{$ultimaCalificacion->pago_anual}}
+                                        @endif
+                                    </td>
                                 </tr>
         </table>
     </td>
@@ -288,9 +301,22 @@
                       <tr>
                         <td align="center">{{$empresa->nombre}}</td>
                         <td> {{$ultimaCalificacion->codigo_tarifa}} </td>
-                        <td align="center">1</td>
+                        <td align="center">
+                            @if($detectorNull==1)
+                                1
+                            @else
+                                {{$ultimaCalificacion->cantidad}}
+                            @endif
+                            
+                        </td>
                         <td>¢{{$ultimaCalificacion->tarifa_colones}} </td>
-                        <td>${{$ultimaCalificacion->tarifa}}</td>
+                        <td>
+                            @if($detectorNull==1)
+                                ${{$ultimaCalificacion->tarifa}}
+                            @else
+                                ${{$ultimaCalificacion->pago_mensual}}
+                            @endif
+                        </td>
                       </tr>
 
                       <tr>
@@ -311,8 +337,18 @@
                       <tr>
                         <th scope="row">MENSUAL</th>
                         <td colspan="2">${{$ultimaCalificacion->pago_mensual}}</td>
-                        <td>${{$ultimaCalificacion->fondofp_mensual}}</td>
-                        <td>${{$ultimaCalificacion->total_impuesto}}</td>
+                        <td>@if($detectorNull==1)
+                            ${{$ultimaCalificacion->fondofp_mensual}}
+                            @else
+                            ${{$ultimaCalificacion->fondofp_impuesto_mat}}
+                            @endif
+                        </td>
+                        <td>@if($detectorNull==1)
+                            ${{$ultimaCalificacion->total_impuesto}}
+                            @else
+                            ${{$ultimaCalificacion->total_impuesto_mat}}
+                            @endif
+                        </td>
                       </tr>
                     </table>
     </td>
@@ -351,7 +387,7 @@
 
                       <tr>
                         <td align="center">{{$empresa->rubro}}</td>
-                        <td align="center">{{$empresa->id_act_economica}}</td>
+                        <td align="center">{{$empresa->codigo}}</td>
                         <td> </td>
                         <td>${{$ultimaCalificacion->pago_mensual}}</td>
                         <td>${{$ultimaCalificacion->pago_anual}}</td>
@@ -386,17 +422,22 @@
                         </tr>
                         <tr align="center">
                             <td>{{$empresa->rubro}}</td>
-                            <td>${{$ultimaCalificacion->multa_balance}}</td>
+                            <td>@if($detectorNull==1)
+                                ${{$ultimaCalificacion->multa_balance}}
+                                @else
+                                $0.0
+                                @endif
+                            </td>
                             <td>&nbsp;ART. 21, LEY DE IMPUESTOS MUNICIPALES&nbsp;</td>
                         </tr>
         </table>
         <br>
         <table id="tabla" align="center">
                       <tr>
-                        <th scope="col">
-                            <h4>Nombre de Calificador:<br>Lic. Rosa Lisseth Aldana</h4>
+                        <th scope="col" width='220px'>
+                            <h4 align="left">&nbsp;Nombre de Calificador:<br>&nbsp;Lic. Rosa Lisseth Aldana</h4>
                         </th>
-                        <td><p style="text-align: justify; font-size: 6;"><b>Base Legal para el recurso de apelación respecto a esta
+                        <td> <p style="text-align: justify; font-size: 6;" ><b>Base Legal para el recurso de apelación respecto a esta
                              NOTIFICACION DE CALIFICACION.</b> Ley General Tributaria Municipal, Art. 123. 
                              -De la calificación de contribuyentes, de la determinación de tributos, 
                              de la resolución del Alcalde en el procedimiento de repetición del pago 
@@ -406,11 +447,11 @@
                               ante el funcionario que haya hecho la calificación o pronunciada la 
                               resolución correspondiente, en el plazo de tres días después de su 
                               notificación.</p>
-                        </td>
-                        Fecha:&nbsp;{{$FechaDelDia}}&nbsp;       
+                        </td>        
                       </tr>
                     <tr>
-                        <td colspan="2" id="uno"><b>Fecha:</b>&nbsp;{{$FechaDelDia}}&nbsp; </td>
+                        <td><label style="float: left"><b > &nbsp;Fecha:</b>&nbsp;{{$FechaDelDia}}&nbsp;</label></td>
+                        <td> &nbsp; </td>
                     </tr>
 
     </table>
