@@ -1,15 +1,14 @@
 
-                       <table id="tabla" class="table table-bordered table-striped" style="border: 80px" data-toggle="table" width="80%">
+                       <table id="tabla" class="table table-bordered table-striped" style="border: 10px" data-toggle="table" width="100%">
 
                             <thead>
                                 <tr id="uno">
-                                <th style="width: 20%;">Tipo de Matricula</th>
+                                <th style="width: 25%;">Tipo de Matricula</th>
                                 <th style="width: 12%;">Estado</th>
-                                <th style="width: 15%;">Cantidad</th>
-                                <th style="width: 20%;">Inicio de Operaciones</th>
-                                <th style="width: 15%;">Total Matrículas</th>
-                                <th style="width: 15%;">Pago Mensual</th>
-                                <th style="width: 55%;">Opciones</th>
+                                <th style="width: 12%;">Cantidad</th>
+                                <th style="width: 20%;">Total Matrículas</th>
+                                <th style="width: 18%;">Pago Mensual</th>
+                                <th style="width: 45%;">Opciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -22,7 +21,6 @@
                                     <td align="center"> <span class="badge bg-warning">{{$dato->estado_moratorio}}</span></td>
                                     @endif
                                     <td>{{$dato->cantidad}}</td>
-                                    <td>{{$dato->inicio_operaciones}}</td>
                                     <td>${{$dato->monto}}</td>
                                     <td>${{$dato->pago_mensual}}</td>
                                     <td style="text-align: center;"> 
@@ -42,7 +40,7 @@
                                          <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
                                         <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarMatricula({{$dato->id_matriculas_detalle }})">
-                                       <i class="fas fa-trash" title="Eliminar"></i>&nbsp;
+                                       <i class="fas fa-trash" title="Eliminar"></i>&nbsp; 
                                         </button>
                                     </td>
                                 </tr>
@@ -54,11 +52,11 @@
     $(function () {
         $("#tabla").DataTable({
             "paging": false,
-            "lengthChange": true,
+            "lengthChange": false,
             "searching": false,
-            "ordering": true,
+            "ordering": false,
             "info": false,
-            "autoWidth": true,
+            "autoWidth": false,
 
             "language": {
 
@@ -98,10 +96,10 @@
 
 
         #uno{
-                font-size: 13px;
+                font-size: 14px;
         }
         #dos{
-                font-size: 13px;
+                font-size: 14px;
         }
 
 

@@ -1,22 +1,35 @@
+<style>
+        body{
+            font-family: 'Calibri';
+        }
 
+        #letra_pequeña{
+                font-size: 14px;
+        }
+
+        #Dos{
+                font-size: 14px;
+        }
+        
+</style>
 <div>
      <a class="btn btn-info float-left" onclick="imp_historial_cobros_aparatos()"  target="frameprincipal">
     <i class="fas fa-print"></i>&nbsp; Imprimir</a>
 </div>
 <table id="tab_historial_cobros_aparatos" class="table table-bordered table-hover" > 
               <thead>             
-                <tr id="uno">  
+                <tr id="letra_pequeña">  
                     <th style="width: 25%;">Fecha pago</th> 
                     <th style="width: 8%;">Meses</th>     
-                    <th style="width: 15%;">Multa por matrícula</th>
-                    <th style="width: 20%;">Multas</th>  
+                    <th style="width: 25%;">Multa por matrícula</th>
+                    <th style="width: 15%;">Multas</th>  
                     <th style="width: 20%;">Fondo fiestas</th>                          
                     <th style="width: 10%;">Total</th>                           
                 </tr>
                     </thead>
                     <tbody>     
                     @foreach($ListaCobrosMatriculas as $dato)
-                <tr>
+                <tr id="Dos">
                         <td>{{ $dato-> fecha_cobro }}</td>
                         <td>{{ $dato-> cantidad_meses_cobro }}</td>
                         <td>${{ $dato-> monto_multa_matricula }}</td>

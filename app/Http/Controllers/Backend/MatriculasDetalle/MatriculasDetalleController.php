@@ -41,14 +41,14 @@ class MatriculasDetalleController extends Controller
         ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
         ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
         ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-        ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+        
         
         ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
         'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
         'estado_empresa.estado',
         'giro_comercial.nombre_giro',
         'actividad_economica.rubro',
-        'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+         )
         ->find($id);   
         
         $matriculasRegistradas=MatriculasDetalle
@@ -83,7 +83,7 @@ class MatriculasDetalleController extends Controller
         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
         ->join('estado_moratorio','matriculas_detalle.id_estado_moratorio','=','estado_moratorio.id')
                         
-        ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion','matriculas_detalle.id_estado_moratorio','matriculas_detalle.inicio_operaciones',
+        ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion','matriculas_detalle.id_estado_moratorio',
                 'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones as inicio_operacionesEmp','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
                 'matriculas.nombre as tipo_matricula',
                 'estado_moratorio.id as id_estado_moratorio','estado_moratorio.estado as estado_moratorio')
@@ -129,7 +129,6 @@ class MatriculasDetalleController extends Controller
         $md->id_empresa = $request->id_empresa;
         $md->id_matriculas = $request->tipo_matricula;
         $md->id_estado_moratorio ='1';
-        $md->inicio_operaciones = $request->inicio_operaciones;
         $md->cantidad = $request->cantidad;
         $md->monto = $monto_total;
         $md->pago_mensual = $pago_mensual_total;
@@ -207,7 +206,7 @@ class MatriculasDetalleController extends Controller
     ->join('matriculas_detalle AS me', 'me.id', '=', 'm.id_matriculas_detalle')
           
     ->select('m.id','m.id_matriculas_detalle', 'm.cod_municipal','m.codigo','m.num_serie','m.direccion',
-             'me.cantidad','me.monto', 'me.inicio_operaciones',
+             'me.cantidad','me.monto',
             )
     ->where('m.id_matriculas_detalle', $request->id)     
     ->get();
@@ -325,8 +324,7 @@ class MatriculasDetalleController extends Controller
                                         {
                                             MatriculasDetalle::where('id', $request->id_editar)
                                             ->update([
-                                                        'cantidad' => $request->cantidad_editar,
-                                                        'inicio_operaciones'=>$request->inicio_operaciones_editar,
+                                                        'cantidad' => $request->cantidad_editar,               
                                                         'monto' => $monto_total,
                                                         'pago_mensual' =>$pago_mensual_total,               
                                                     ]);
@@ -369,81 +367,80 @@ class MatriculasDetalleController extends Controller
     
     }//Termina función editar matrícula y específica.
      
+    public function especificarMatriculas(Request $request){
 
-
-public function especificarMatriculas(Request $request){
-
-    log::info($request->all());
-    $id_matriculas_detalle=$request->id_matriculas_detalle;
-
-    $CantidadSeleccionada=db::table('matriculas_detalle AS m')
-
-    ->join('empresa AS e', 'e.id', '=', 'm.id_empresa')
-    ->join('matriculas AS ma', 'ma.id', '=', 'm.id_matriculas')
-          
-    ->select('m.id', 'm.cantidad','m.monto','m.pago_mensual',
-            'e.nombre AS empresa','e.id_contribuyente AS contribuyente','e.id AS empresa_id',
-            'ma.nombre as tipo_matricula')
-    ->where('m.id', "=", "$id_matriculas_detalle")     
-    ->first();
-
-    $matriculasEspecificas=db::table('matriculas_detalle_especifico AS m')
-
-    ->join('matriculas_detalle AS me', 'me.id', '=', 'm.id_matriculas_detalle')
-          
-    ->select('m.id','m.id_matriculas_detalle', 'm.cod_municipal','m.codigo','m.num_serie','m.direccion',
-             'me.cantidad','me.monto',
-            )
-    ->where('m.id_matriculas_detalle', "=", "$id_matriculas_detalle")     
-    ->first();
-
-
-
-
-    return  [
-                'success' => 1,
-                'cantidad' =>$CantidadSeleccionada->cantidad,
-                'id_matriculas_detalle' =>$request->id_matriculas_detalle,
-            
-                'matriculasEspecificas'=>$matriculasEspecificas,
-            ];
-}
-public function agregar_matriculas_detalle_especifico(Request $request){
-    log::info($request->all());
-    $especificada="especificada";
-
-    $rules = array(
-        'id_matriculas_detalle' => 'required',
-    );
-
-    $validator = Validator::make($request->all(), $rules);
-
-    if ( $validator->fails()){
-        return ['success' => 0];
-    }
-
+        log::info($request->all());
+        $id_matriculas_detalle=$request->id_matriculas_detalle;
     
-    if($request->cod_municipal != null) {
-      
-        for ($i = 0; $i < count($request->cod_municipal); $i++) {
-
-            $md = new MatriculasDetalleEspecifico();
-            $md->id_matriculas_detalle =$request->id_matriculas_detalle;
-            $md->cod_municipal =$request->cod_municipal[$i];
-            $md->codigo =$request->codigo[$i];
-            $md->num_serie=$request->num_serie[$i];
-            $md->direccion = $request->direccion[$i];
-            $md->save();
-        }
-        MatriculasDetalle::where('id', $request->id_matriculas_detalle)
-        ->update([
-                    'estado_especificacion' =>$especificada,               
-                ]);
+        $CantidadSeleccionada=db::table('matriculas_detalle AS m')
+    
+        ->join('empresa AS e', 'e.id', '=', 'm.id_empresa')
+        ->join('matriculas AS ma', 'ma.id', '=', 'm.id_matriculas')
+              
+        ->select('m.id', 'm.cantidad','m.monto','m.pago_mensual',
+                'e.nombre AS empresa','e.id_contribuyente AS contribuyente','e.id AS empresa_id',
+                'ma.nombre as tipo_matricula')
+        ->where('m.id', "=", "$id_matriculas_detalle")     
+        ->first();
+    
+        $matriculasEspecificas=db::table('matriculas_detalle_especifico AS m')
+    
+        ->join('matriculas_detalle AS me', 'me.id', '=', 'm.id_matriculas_detalle')
+              
+        ->select('m.id','m.id_matriculas_detalle', 'm.cod_municipal','m.codigo','m.num_serie','m.direccion',
+                 'me.cantidad','me.monto',
+                )
+        ->where('m.id_matriculas_detalle', "=", "$id_matriculas_detalle")     
+        ->first();
+    
+    
+    
+    
+        return  [
+                    'success' => 1,
+                    'cantidad' =>$CantidadSeleccionada->cantidad,
+                    'id_matriculas_detalle' =>$request->id_matriculas_detalle,
                 
-        return ['success' => 1];
+                    'matriculasEspecificas'=>$matriculasEspecificas,
+                ];
     }
+    public function agregar_matriculas_detalle_especifico(Request $request){
+        log::info($request->all());
+        $especificada="especificada";
+    
+        $rules = array(
+            'id_matriculas_detalle' => 'required',
+        );
+    
+        $validator = Validator::make($request->all(), $rules);
+    
+        if ( $validator->fails()){
+            return ['success' => 0];
+        }
+    
         
-}
+        if($request->cod_municipal != null) {
+          
+            for ($i = 0; $i < count($request->cod_municipal); $i++) {
+    
+                $md = new MatriculasDetalleEspecifico();
+                $md->id_matriculas_detalle =$request->id_matriculas_detalle;
+                $md->cod_municipal =$request->cod_municipal[$i];
+                $md->codigo =$request->codigo[$i];
+                $md->num_serie=$request->num_serie[$i];
+                $md->direccion = $request->direccion[$i];
+                $md->save();
+            }
+            MatriculasDetalle::where('id', $request->id_matriculas_detalle)
+            ->update([
+                        'estado_especificacion' =>$especificada,               
+                    ]);
+                    
+            return ['success' => 1];
+        }
+            
+    }
+
 public function VerHistorialCobros_Aparatos($id)
 {
 
@@ -451,6 +448,152 @@ public function VerHistorialCobros_Aparatos($id)
     ->get();
 
 return view('backend.admin.Empresas.Cobros.tablas.tabla_historico_cobros_aparatos', compact('ListaCobrosMatriculas'));
+}
+
+public function Registrar_calificacion_matriculas(Request $request){
+    log::info($request->all());
+
+    $regla = array(
+
+                        'id_matriculadetalle' => 'required',
+      
+                  );
+
+    $validar = Validator::make($request->all(), $regla);
+    if ($validar->fails()){ return ['success' => 0];} 
+
+    $matriculas=MatriculasDetalle
+    ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+    ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+    ->join('estado_moratorio','matriculas_detalle.id_estado_moratorio','=','estado_moratorio.id')
+                    
+    ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad',
+             'matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion',
+             'matriculas_detalle.id_estado_moratorio',
+             'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+             'matriculas.id as id_matricula','matriculas.nombre as tipo_matricula','matriculas.codigo as codigo_matricula',
+             'estado_moratorio.id as id_estado_moratorio','estado_moratorio.estado as estado_moratorio')
+    ->where('matriculas_detalle.id', $request->id_matriculadetalle)
+    ->first();
+ 
+ DB::beginTransaction();
+ try {
+
+            $dato = new CalificacionMatriculas();
+            $dato->id_matriculas_detalle = $request->id_matriculadetalle;
+            $dato->id_estado_matricula ='2';
+            $dato->nombre_matricula = $matriculas->tipo_matricula;
+            $dato->cantidad = $matriculas->cantidad;
+            $dato->fecha_calificacion = $request->fecha_pres_balance;
+            $dato->monto_matricula = $matriculas->monto;
+            $dato->pago_mensual = $matriculas->pago_mensual;
+            $dato->fondofp = $request->fondofp;
+            $dato->pago_anual = $request->pago_anual;
+            $dato->tarifa_colones = $request->tarifa_colones;
+            $dato->total_impuesto_mat = $request->total_impuesto_mat;
+            $dato->fondofp_impuesto_mat = $request->fondofp_impuesto_mat;
+            $dato->año_calificacion = $request->año_calificacion;
+            $dato->estado_calificacion = $request->estado_calificacion;
+            $dato->tipo_tarifa = 'Fija';
+            $dato->codigo_tarifa = $matriculas->codigo_matricula;
+            $dato->save();
+            if($dato->save())
+            {
+                DB::commit();
+                return ['success' => 1]; 
+            }
+
+     }catch(\Throwable $e){
+        DB::rollback();
+        return ['success' => 2];
+     }
+
+}//Termina función registrar calificacion matricula.
+
+public function Calculo_calificacion_matriculas(Request $request){
+   
+
+    $matriculas=MatriculasDetalle
+    ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+    ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+    ->join('estado_moratorio','matriculas_detalle.id_estado_moratorio','=','estado_moratorio.id')
+                    
+    ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual','matriculas_detalle.estado_especificacion','matriculas_detalle.id_estado_moratorio',
+            'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'matriculas.id as id_matricula','matriculas.nombre as tipo_matricula',
+            'estado_moratorio.id as id_estado_moratorio','estado_moratorio.estado as estado_moratorio')
+    ->where('id_empresa', $request->id_empresa)
+    ->first();
+
+    $id_matriculadetalle=$matriculas->id_matriculas_detalle;
+
+
+    $fondofp=0;
+    $Licencia=number_format((float)0, 2, '.', ',');
+    $LicenciaSigno='$'.$Licencia;
+    $Multa_balance=number_format((float)0, 2, '.', ',');
+    $tarifa_matricula_total=$matriculas->pago_mensual;
+    $fondofp_tarifaM=number_format((float)($tarifa_matricula_total*0.05), 2, '.', ',');
+    $total_impuesto_tarifaM=number_format((float)($tarifa_matricula_total+$fondofp_tarifaM), 2, '.', ',');
+    $total_impuesto_tarifaM_Colones= ceil(($tarifa_matricula_total*8.75));
+
+    $monto_permiso = LicenciaMatricula::select('monto')
+    ->where('id',$matriculas->id_matricula)
+    ->first();
+
+    $monto_matricula=$monto_permiso->monto;
+
+    if($matriculas== null)
+    {
+            $monto_total = 0;
+            $fondofp=0;
+
+    }
+    else
+        {
+
+               $monto_total = $matriculas->monto;
+               $fondofp=($monto_total*0.05);
+
+        }
+        $pago_anual=($monto_total+$fondofp);
+        
+        $pago_anualSingo='$'.$pago_anual;
+        $monto_matriculaSigno='$'.$monto_matricula;
+        $fondofpSigno='$'.$fondofp;
+        $total_impuesto_tarifaMSigno='$'.$total_impuesto_tarifaM;
+        $total_impuesto_tarifaM_ColonesSigno='¢'. $total_impuesto_tarifaM_Colones;
+        $tarifa_matricula_totalSigno='$'.$tarifa_matricula_total;
+        $monto_total = number_format((float)$monto_total, 2, '.', ',');
+        $monto_totalMatriculaSigno='$'. $monto_total;
+
+        return ['success' => 1,
+                
+                //** Datos sin signo */
+                'monto_total' => $monto_total, //monto total de matricula(permiso)
+                'fondofp' => $fondofp,
+                'monto_matricula'=> $monto_matricula,//monto matricula(permiso)
+                'pago_anual'=> $pago_anual,//De la sumatoria de monto total y fondofp
+                'Multa_balance'=>$Multa_balance,
+                'Licencia'=>$Licencia,
+                'id_matriculadetalle'=>$id_matriculadetalle,
+                'tarifa_matricula_total'=>$tarifa_matricula_total,
+                'fondofp_tarifaM'=>$fondofp_tarifaM,
+                'total_impuesto_tarifaM'=>$total_impuesto_tarifaM,
+                'total_impuesto_tarifaM_Colones'=>$total_impuesto_tarifaM_Colones,
+                
+                //** Datos ya con signo incluido */
+                'total_impuesto_tarifaMSigno'=>$total_impuesto_tarifaMSigno,
+                'total_impuesto_tarifaM_ColonesSigno'=>$total_impuesto_tarifaM_ColonesSigno,
+                'tarifa_matricula_totalSigno'=>$tarifa_matricula_totalSigno,
+                'pago_anualSingo'=> $pago_anualSingo,
+                'LicenciaSigno'=>$LicenciaSigno,
+                'monto_totalMatriculaSigno'=> $monto_totalMatriculaSigno,
+                'fondofpSigno'=> $fondofpSigno,
+                'monto_matriculaSigno'=> $monto_matriculaSigno,
+
+            ];
+
 }
 
 public function VerHistorialCobros_sinfonolas($id)
@@ -533,25 +676,32 @@ public function VerMatriculaEsp(Request $request)
 
 public function info_cobroMatriculas(Request $request){
     log::info($request->all());
+
+        $id_matriculaReg=MatriculasDetalle::where('id',$request->id_matriculadetalle)
+        ->pluck('id_matriculas')->first();
+
+        $inicio_operaciones=Empresas::where('id',$request->id_empresa)
+        ->pluck('inicio_operaciones')->first();
+
     //Inicia Información mátriculas mesas
-        $id_matriculadetalleMesas=$request->id_matriculadetalleMesas;
+        $id_matriculadetalle=$request->id_matriculadetalle;
         $ultimo_cobroMesas = CobrosMatriculas::whereNotNull('periodo_cobro_fin')
-        ->where('id_matriculas_detalle', $id_matriculadetalleMesas)->latest()->first();
+        ->where('id_matriculas_detalle', $id_matriculadetalle)->latest()->first();
 
     //Información mátricula máquinas eletrónicas
-        $id_matriculadetalleMaquinas=$request->id_matriculadetalleMaquinas;
+        $id_matriculadetalle=$request->id_matriculadetalle;
         $ultimo_cobroMaquinas = CobrosMatriculas::whereNotNull('periodo_cobro_fin')
-        ->where('id_matriculas_detalle',$id_matriculadetalleMaquinas)->latest()->first();
+        ->where('id_matriculas_detalle',$id_matriculadetalle)->latest()->first();
 
     //Información mátricula Sinfonolas
-        $id_matriculadetalleSinfonolas=$request->id_matriculadetalleSinfonolas;
+        $id_matriculadetalle=$request->id_matriculadetalle;
         $ultimo_cobroSinfonolas = CobrosMatriculas::whereNotNull('periodo_cobro_fin')
-        ->where('id_matriculas_detalle', $id_matriculadetalleSinfonolas)->latest()->first();
+        ->where('id_matriculas_detalle', $id_matriculadetalle)->latest()->first();
 
     //Información mátricula Aparatos
-        $id_matriculadetalleaparatos=$request->id_matriculadetalleAparatos;
+        $id_matriculadetalle=$request->id_matriculadetalle;
         $ultimo_cobroAparatos =  CobrosMatriculas::whereNotNull('periodo_cobro_fin')
-        ->where('id_matriculas_detalle', $id_matriculadetalleaparatos)->latest()->first();
+        ->where('id_matriculas_detalle', $id_matriculadetalle)->latest()->first();
 
 
 
@@ -561,7 +711,9 @@ public function info_cobroMatriculas(Request $request){
             'ultimo_cobroMaquinas' => $ultimo_cobroMaquinas,
             'ultimo_cobroSinfonolas' => $ultimo_cobroSinfonolas,
             'ultimo_cobroAparatos' => $ultimo_cobroAparatos,
-           ];
+            'id_matriculaReg' => $id_matriculaReg,
+            'inicio_operaciones' => $inicio_operaciones,
+            ];
 }
 
 //** ------------------ Cálculo para cobrar la matrícula de mesas de billar ----------------------------------- */
@@ -1322,13 +1474,13 @@ public function calculo_cobroMaquinas(Request $request){
             $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$impuestoTotal+$InteresTotal+$multa,2);
 
             //Le agregamos su signo de dollar para la vista al usuario
-            $fondoFP= "$". $fondoFPValor;     
-            $totalPagoMatriculasDollar="$".$totalPagoValor;
-            $impuestos_mora_Dollar="$".$impuestos_mora;
-            $impuesto_año_actual_Dollar="$".$impuesto_año_actual;
-            $InteresTotalDollar="$".$InteresTotal;
-            $monto_pago_PmatriculaDollar="$".$monto_pago_matricula;
-            $multaDolarMaquinas="$".$multa;
+            $fondoFP= "$". number_format($fondoFPValor, 2, '.', ',');    
+            $totalPagoMatriculasDollar="$".number_format($totalPagoValor, 2, '.', ','); 
+            $impuestos_mora_Dollar="$".number_format($impuestos_mora, 2, '.', ','); 
+            $impuesto_año_actual_Dollar="$".number_format($impuesto_año_actual, 2, '.', ','); 
+            $InteresTotalDollar="$".number_format($InteresTotal, 2, '.', ','); 
+            $monto_pago_PmatriculaDollar="$".number_format($monto_pago_matricula, 2, '.', ','); 
+            $multaDolarMaquinas="$".number_format($multa, 2, '.', ','); 
 
 
             //** Guardar cobro*/

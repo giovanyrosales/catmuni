@@ -90,10 +90,11 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/empresas/calificaciones/tablaCalificaciones/{empresa}', [EmpresaController::class,'tablaCalificaciones']);
     Route::post('/admin/empresas/calificaciones/eliminar', [EmpresaController::class, 'eliminar_calificacion']);
     Route::post('/admin/empresas/calificacion/asignar_anterior', [EmpresaController::class, 'asignar_anterior']);
+    Route::post('/admin/empresas/llenar_detalle_matriculas', [EmpresaController::class, 'llenar_detalle_matriculas']);
 
-    // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM EMPRESAS
-    Route::post('/admin/empresa/buscar', [EmpresaController::class,'buscarActividadEsp'] );
-    Route::post('/admin/empresa/buscarEditar', [EmpresaController::class,'buscarActividadEditar'] );
+    //OBLIGACIONES TRIBUTARIAS
+    Route::get('/admin/nuevo/empresa/vista_cobro_general', [EmpresaController::class,'vista_cobro_general'])->name('admin.cobrar.empresa.index');
+    Route::post('/admin/buscar/obligaciones_tributarias', [EmpresaController::class,'buscar_obligaciones_tributarias']);
 
     // --- TRASPASO Y CIERRE EMPRESA
     Route::post('/admin/empresas/show/traspaso', [EmpresaController::class,'nuevoTraspaso']);
@@ -192,12 +193,14 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/matriculas_detalle/ver_historial_cobros_sinfonolas/{id}', [MatriculasDetalleController::class, 'VerHistorialCobros_sinfonolas']);
     Route::get('/admin/matriculas_detalle/ver_historial_cobros_maquinas/{id}', [MatriculasDetalleController::class, 'VerHistorialCobros_maquinas']);
     Route::get('/admin/matriculas_detalle/ver_historial_cobros_mesas/{id}', [MatriculasDetalleController::class, 'VerHistorialCobros_mesas']);
-    
+    Route::post('/admin/empresas/calculo_calificacion_matricula', [MatriculasDetalleController::class,'Calculo_calificacion_matriculas']);
+    Route::post('/admin/empresas/calificacion/matricula/nueva', [MatriculasDetalleController::class,'Registrar_calificacion_matriculas']);
+
     // ---MATRICULAS DETALLE ESPECIFICO
+    Route::post('/admin/matriculas_detalle/ver_matriculas_especificas', [MatriculasDetalleController::class, 'VerMatriculaEsp']);
     Route::post('/admin/matriculas_detalle_especifico/agregar', [MatriculasDetalleController::class,'agregar_matriculas_detalle_especifico']);
     Route::post('/admin/matriculas_detalle/especificar', [MatriculasDetalleController::class, 'especificarMatriculas']);
-    Route::post('/admin/matriculas_detalle/ver_matriculas_especificas', [MatriculasDetalleController::class, 'VerMatriculaEsp']);
-    
+
     
     // --- RÓTULOS
     Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');   

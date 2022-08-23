@@ -1,17 +1,32 @@
+<style>
+        body{
+            font-family: 'Calibri';
+        }
+
+        #letra_pequeña{
+                font-size: 12px;
+        }
+
+        #Dos{
+                font-size: 13px;
+        }
+        
+</style>
+
 <div>
      <a class="btn btn-danger float-left" onclick="imp_historial_cobros_sinfonolas()"  target="frameprincipal">
      <i class="fas fa-print"></i>&nbsp; Imprimir</a>
 </div>
 <table id="tab_historial_cobros_sinfonolas" class="table table-bordered table-hover" > 
               <thead>             
-                <tr id="uno">  
-                    <th style="width: 25%;">Fecha pago</th> 
+                <tr id="letra_pequeña">  
+                    <th style="width: 20%;">Fecha pago</th> 
                     <th style="width: 8%;">Meses</th> 
-                    <th style="width: 20%;">Periodo inicio</th>                          
+                    <th style="width: 18%;">Periodo inicio</th>                          
                     <th style="width: 15%;">Periodo fin</th>      
                     <th style="width: 15%;">Multa por matrícula</th>
-                    <th style="width: 20%;">Multas</th>  
-                    <th style="width: 20%;">Fondo fiestas</th>                          
+                    <th style="width: 10%;">Multas</th>  
+                    <th style="width: 15%;">Fondo fiestas</th>                          
                     <th style="width: 10%;">Total</th>                         
                 </tr>
                     </thead>

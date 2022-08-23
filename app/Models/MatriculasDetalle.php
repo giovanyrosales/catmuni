@@ -17,9 +17,6 @@ class MatriculasDetalle extends Model
         'cantidad',
         'monto',
         'pago_mensual',
-        'inicio_operaciones',
         'estado_especificacion',
-
-
       ];
 }

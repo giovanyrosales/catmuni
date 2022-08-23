@@ -57,14 +57,16 @@ class reportesController extends Controller
         ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
         ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
         ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-        ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
         
-        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
+        'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta',
+        'empresa.telefono','empresa.excepciones_especificas',
         'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
         'estado_empresa.estado',
         'giro_comercial.nombre_giro',
         'actividad_economica.rubro','actividad_economica.id as id_act_economica',
-        'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+        )
         ->find($id);
 
         //** Inicia calculo de cobro impuesto empresas **/
@@ -151,29 +153,17 @@ class reportesController extends Controller
                 $AñoSumado=Carbon::createFromDate($AñoPago, 12, 31);
 
                 /**¨Para detectar los cobros especiales y darle su tarifa */
-                if($empresa->id_actividad_especifica==118)
+                if($empresa->excepciones_especificas==='SI')
                 {
                     $tarifa=$tf;
-                } else if($empresa->id_actividad_especifica==120)
-                        {
-                            $tarifa=$tf; 
-                        }else if($empresa->id_actividad_especifica==121)
-                                {
-                                    $tarifa=$tf;
-                                }else if($empresa->id_actividad_especifica==122)
-                                        {
-                                            $tarifa=$tf;
-                                        }else if($empresa->id_actividad_especifica==127)
-                                                {
-                                                    $tarifa=$tf;
-                                                }else{
+                }else{
                                                     
-                                                    $tarifa=calificacion::where('año_calificacion','=',$AñoPago)
-                                                    ->where('id_empresa','=',$id) 
-                                                    ->pluck('pago_mensual') 
-                                                        ->first();
+                         $tarifa=calificacion::where('año_calificacion','=',$AñoPago)
+                         ->where('id_empresa','=',$id) 
+                          ->pluck('pago_mensual') 
+                                ->first();
                
-                                                    }
+                        }
                 //**¨Fin detectar los cobros especiales */
          
                         if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
@@ -272,29 +262,17 @@ class reportesController extends Controller
                         Log::info($CantidaDiasMesMulta);
                         
                 /**¨Para detectar los cobros especiales y darle su tarifa */
-                if($empresa->id_actividad_especifica==118)
+                if($empresa->excepciones_especificas==='SI')
                 {
-                    $tarifaMulta=$tf;
-                } else if($empresa->id_actividad_especifica==120)
-                        {
-                            $tarifaMulta=$tf;
-                        }else if($empresa->id_actividad_especifica==121)
-                                {
-                                    $tarifaMulta=$tf;
-                                }else if($empresa->id_actividad_especifica==122)
-                                        {
-                                            $tarifaMulta=$tf;
-                                        }else if($empresa->id_actividad_especifica==127)
-                                                {
-                                                    $tarifaMulta=$tf;
-                                                }else{
+                    $tarifa=$tf;
+                }else{
                                                     
-                                                    $tarifaMulta=calificacion::where('año_calificacion','=',$TarifaAñoMulta)
-                                                    ->where('id_empresa','=',$id) 
-                                                       ->pluck('pago_mensual') 
-                                                           ->first();
+                        $tarifaMulta=calificacion::where('año_calificacion','=',$TarifaAñoMulta)
+                            ->where('id_empresa','=',$id) 
+                                ->pluck('pago_mensual') 
+                                    ->first();
                
-                                                    }
+                    }
 
                 //**¨Fin detectar los cobros especiales */
                     
@@ -428,14 +406,18 @@ public function aviso($id)
         ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
         ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
         ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-        ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
         
-        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+        
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+        'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+        'empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel',
+        'contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante',
+        'contribuyente.fax', 'contribuyente.direccion as direccionCont',
         'estado_empresa.estado',
         'giro_comercial.nombre_giro',
         'actividad_economica.rubro','actividad_economica.id as id_act_economica',
-        'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+        )
         ->find($id);
 
 
@@ -501,14 +483,14 @@ public function aviso($id)
             ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
             ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
             ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-            ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+           
             
             ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
             'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
             'estado_empresa.estado',
             'giro_comercial.nombre_giro',
             'actividad_economica.rubro','actividad_economica.id as id_act_economica',
-            'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+           )
             ->find($id);
 
             //** Inicia calculo de cobro impuesto empresas **/
@@ -1190,14 +1172,13 @@ public function estado_cuenta_licor($f1,$f2,$id){
                 ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
                 ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
                 ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-                ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
                 
                 ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
                 'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
                 'estado_empresa.estado',
                 'giro_comercial.nombre_giro',
                 'actividad_economica.rubro',
-                'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+                )
                 ->find($id); 
                 
         //** Finaliza calculo de cobro licencia licor **/
@@ -1562,14 +1543,14 @@ public function estado_cuenta_licor($f1,$f2,$id){
                 ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
                 ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
                 ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-                ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+                
                 
                 ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
                 'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
                 'estado_empresa.estado',
                 'giro_comercial.nombre_giro',
                 'actividad_economica.rubro',
-                'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+                 )
                 ->find($id); 
 
                 //** Agregando formato de número */
@@ -1919,14 +1900,13 @@ public function estado_cuenta_licor($f1,$f2,$id){
             ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
             ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
             ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-            ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
             
             ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
             'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
             'estado_empresa.estado',
             'giro_comercial.nombre_giro',
             'actividad_economica.rubro',
-            'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+             )
             ->find($id); 
 
             //** Agregando formato de número */
@@ -2310,14 +2290,13 @@ public function estado_cuenta_mesas($f1,$f2,$ime,$ti,$id){
             ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
             ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
             ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-            ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
-            
+           
             ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
             'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
             'estado_empresa.estado',
             'giro_comercial.nombre_giro',
             'actividad_economica.rubro',
-            'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+             )
             ->find($id); 
 
             //** Agregando formato de número */
@@ -2528,14 +2507,14 @@ public function traspaso_empresa_historico($id){
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+ 
     
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro',
-    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+     )
     ->find($id_empresa);
 
     /** Obtener la fecha y días en español y formato tradicional*/
@@ -2593,14 +2572,14 @@ public function cierre_empresa_historico($id){
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+   
     
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro',
-    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+     )
     ->find($id_empresa);
 
     /** Obtener la fecha y días en español y formato tradicional*/
@@ -2719,19 +2698,26 @@ public function reporte_calificacion($id){
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+  
 
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
-    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo'
+    )
     ->find($id);
 
     $ultimaCalificacion=calificacion::latest()
     ->where('id_empresa',$id)
     ->first();
+
+    if($ultimaCalificacion==null){
+        $ultimaCalificacion=CalificacionMatriculas::latest()
+        ->where('id_matriculas_detalle',$matriculasRegistradas->id)
+        ->first();
+    }
+    
     //log::info($ultimaCalificacion);
 
     $FechaDelDia = Carbon::now()->format('Y-m-d');
@@ -2765,14 +2751,14 @@ public function reporte_datos_empresa($id){
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+
 
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro','actividad_economica.id as id_act_economica',
-    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+     )
     ->find($id);
 
     $ultimaCalificacion=calificacion::latest()

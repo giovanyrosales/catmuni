@@ -52,7 +52,10 @@
       <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-            <h5 class="card-category-"><i class="fas fa-sitemap"></i> &nbsp;Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; </h5>
+            <h5 class="card-category-">
+              <i class="fas fa-laptop-house"></i> &nbsp;Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; 
+            
+            </h5>
           </div>
       <!--body-->
       <div class="card-body">
@@ -63,7 +66,7 @@
         <!-- Small boxes (Stat box) -->
         <div class="m-0 row justify-content-center" >
     
-          <div class="col-lg-3 col-8">
+          <div class="col-lg-4 col-8">
             <!-- small box -->
             <div class="small-box bg-default">
               <div class="inner">
@@ -77,7 +80,7 @@
             </div>
           </div>
            <!-- ./col -->
-           <div class="col-lg-3 col-8">
+           <div class="col-lg-4 col-8">
             <!-- small box -->
             <div class="small-box bg-default">
               <div class="inner">
@@ -90,21 +93,7 @@
               <a class="small-box-footer"><i class="icon ion-pie-graph"></i></a>
             </div>
           </div>
-  
-          <div class="col-lg-3 col-8">
-            <!-- small box -->
-            <div class="small-box bg-default">
-              <div class="inner">
-                <h3> </h3>
-                <p>Multas por balance: <span class="badge badge-pill badge-danger">{{$Cantidad_multas}}</span></p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-ios-paper"></i>
-              </div>
-              <a class="small-box-footer"><i class="icon ion-pie-graph"></i></a>
-            </div>
-          </div>
-        <!-- /.row -->
+
         <!-- /.content-wrapper -->
       </div>
     </section>
@@ -115,6 +104,19 @@
 
   
         <div class="col-md-4 col-sm-8">
+      @if($pase_recalificacion_mat=='1')
+      <a href="#" onclick="CrearRecalificacion({{$empresa->id}} )" >
+                      <div class="widget stats-widget">
+                          <div class="widget-body clearfix bg-info">
+                              <div class="pull-left">
+                                  <h3 class="widget-title text-white">Registrar Recalificación</h3>
+                              </div>
+                              <span class="pull-right big-icon watermark"><i class="fas fa-newspaper"></i>&nbsp;<i class="fas fa-chart-line"></i></span>
+                            
+                            </div>
+                      </div><!-- .widget -->
+                      </a>
+      @else <!-- Si no hay calificaición de matriculas. -->
           @if($CE==1)
                     <a href="#" onclick="NoCalificarCE()" >
                             <div class="widget stats-widget">
@@ -164,7 +166,8 @@
                       </a>
                       @endif
               @endif
-          @endif      
+          @endif 
+      @endif <!-- Cierre if de comprobar si hay que recalificar matricula.  -->   
         </div>
         <div class="col-md-4 col-sm-8">
         <a href="#" onclick="cierreytraspaso({{$empresa->id}})" >
@@ -180,16 +183,29 @@
         </div>
           <div class="col-md-4 col-sm-8">
           @if($CE==0)
-          <a href="#" onclick="matriculas()" >
-                  <div class="widget stats-widget">
-                      <div class="widget-body clearfix bg-warning">
-                          <div class="pull-left">
-                              <h3 class="widget-title text-black">Matrículas</h3>
-                          </div>
-                          <span class="pull-right big-icon watermark"><i class="fas fa-list-alt"></i>&nbsp; <i class="fas fa-file-signature"></i></span>
-                      </div>
-                  </div><!-- .widget -->
-              </a>
+                        @if($pase_matriculas==0) 
+                              <a href="#" onclick="NoMartriculas()" >
+                                      <div class="widget stats-widget">
+                                          <div class="widget-body clearfix bg-secondary">
+                                              <div class="pull-left">
+                                                  <h3 class="widget-title text-white">Matrículas</h3>
+                                              </div>
+                                              <span class="pull-right big-icon watermark"><i class="fas fa-list-alt"></i>&nbsp; <i class="fas fa-file-signature"></i></span>
+                                          </div>
+                                      </div><!-- .widget -->
+                                  </a>
+                                  @else
+                                  <a href="#" onclick="matriculas()" >
+                                      <div class="widget stats-widget">
+                                          <div class="widget-body clearfix bg-warning">
+                                              <div class="pull-left">
+                                                  <h3 class="widget-title text-black">Matrículas</h3>
+                                              </div>
+                                              <span class="pull-right big-icon watermark"><i class="fas fa-list-alt"></i>&nbsp; <i class="fas fa-file-signature"></i></span>
+                                          </div>
+                                      </div><!-- .widget -->
+                                  </a>
+                                  @endif
             @else
             <a href="#" onclick="NoMartriculas()" >
                   <div class="widget stats-widget">
@@ -204,7 +220,11 @@
               @endif
           </div>
         <div class="col-md-4 col-sm-8">
-          <a href="#" onclick="reporteAviso({{$empresa->id}})">
+            @if($NoNotificar==1)
+              <a href="#" onclick="Aldia()">
+            @else 
+              <a href="#" onclick="reporteAviso({{$empresa->id}})">
+            @endif
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
                     <div class="pull-left">
@@ -262,16 +282,29 @@
           </a>
     @else
                   @if($detectorNull== '0')
-                  <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
-                  <div class="widget stats-widget">
-                              <div class="widget-body clearfix bg-success">
-                                  <div class="pull-left">
-                                      <h3 class="widget-title text-white">Generar Cobro</h3>
-                                  </div>
-                                  <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
-                              </div>
-                          </div><!-- .widget -->
-                      </a>
+                      @if($pase_cobro_mat== '1')
+                            <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
+                                <div class="widget stats-widget">
+                                    <div class="widget-body clearfix bg-success">
+                                        <div class="pull-left">
+                                            <h3 class="widget-title text-white">Generar Cobro</h3>
+                                        </div>
+                                        <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                                    </div>
+                                </div><!-- .widget -->
+                            </a>
+                          @else
+                            <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+                            <div class="widget stats-widget">
+                                      <div class="widget-body clearfix bg-success">
+                                          <div class="pull-left">
+                                              <h3 class="widget-title text-white">Generar Cobro</h3>
+                                          </div>
+                                          <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                                      </div>
+                                  </div><!-- .widget -->
+                              </a>
+                          @endif
                   @else
                       <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
                           <div class="widget stats-widget">
@@ -318,15 +351,27 @@
                         </tr>
                         <tr>
                           <th>Matricula de comercio</th>
+                          @if($empresa->matricula_comercio=='')
+                          <td>Ninguna</td>
+                          @else
                           <td>{{$empresa->matricula_comercio}}</td>
+                          @endif
                         </tr>
                         <tr>
                           <th>NIT</th>
-                          <td> {{$empresa->nit}} </span></td>
+                          @if($empresa->nit=='')
+                          <td> ----- </td>
+                          @else
+                          <td> {{$empresa->nit}} </td>
+                          @endif
                         </tr>
                         <tr>
                           <th>Tipo de comerciante</th>
+                          @if($empresa->tipo_comerciante=='')
+                          <td>-----</td>
+                          @else
                           <td id="tipo_operaciones-ver">{{$empresa->tipo_comerciante}} </td>
+                          @endif
                         </tr>
                         <tr>
                           <th>Inicio de Operaciones</th>
@@ -349,10 +394,6 @@
                         <tr>
                           <th>Actividad Económica</th>
                           <td>{{$empresa->rubro}}</span></td>
-                        </tr>
-                        <tr>
-                          <th>Actividad Específica</th>
-                          <td>{{$empresa->nom_actividad_especifica}}</span></td>
                         </tr>
                         <tr>
                           <th>N° de tarjeta</th>

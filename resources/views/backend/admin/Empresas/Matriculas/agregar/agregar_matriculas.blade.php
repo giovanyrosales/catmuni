@@ -29,6 +29,9 @@ function f3(){
 function f4(){
     location.reload();        
 }
+function ocultarAdd(){
+    $('#tmatriculas').hide();
+}
 
 
 </script>
@@ -78,7 +81,6 @@ function f4(){
                            <tr>
                             <th style="width: 35%; text-align: center">Tipo de Matricula</th>
                             <th style="width: 13%; text-align: center">Cantidad</th>
-                            <th style="width: 25%; text-align: center">Inicio de Operaciones</th>
                             <th style="width: 22%; text-align: center">Total Matrículas</th>
                             <th style="width: 18%; text-align: center">Pago Mensual</th>
                             <th style="width: 15%; text-align: center">&nbsp;</th>
@@ -97,10 +99,6 @@ function f4(){
 
                         <td>
                         <input  id='cantidad' onchange='multiplicar(this)' class='form-control' min='1' style='max-width: 250px' type='number' value=''/>
-                        </td>
-
-                        <td>
-                          <input type="date" name="inicio_operaciones" id="inicio_operaciones" required class="form-control" >
                         </td>
 
                         <td>
@@ -155,7 +153,11 @@ function f4(){
                                     </div>
                                 </section>
                         @endif
-                       
+                       @if($detectorNull== '0')
+                       <script>
+                                    window.onload =ocultarAdd;
+                       </script>
+                       @endif
                        <!-- /.Inclución de tabla -->
                   
                             <div class="card-footer">
@@ -229,7 +231,6 @@ function f4(){
                                     <tr>
                                         <th style="width: 32%; text-align: center">Tipo de Matricula</th>
                                         <th style="width: 15%; text-align: center">Cantidad</th>
-                                        <th style="width: 20%; text-align: center">Inicio de operaciones</th>
                                         <th style="width: 25%; text-align: center">Total Matrículas</th>
                                         <th style="width: 20%; text-align: center">Pago Mensual</th>
                                         <th style="width: 25%; text-align: center">Opciones</th>
@@ -246,10 +247,7 @@ function f4(){
                                     <td>
                                     <input  id='cantidad-editar' disabled class='form-control' min='1' style='max-width: 250px' type='text' value=''/>
                                     </td>
-                                    <td>
-                                    <input type="date" name="inicio_operaciones-editar" id="inicio_operaciones-editar" required class="form-control" >
-                                    </td>
-                                    <td>
+                                     <td>
                                     <input  id='monto-editar' class='form-control' disabled min='1' style='max-width: 250px' type='text' value=''/>
                                     </td>
                                     <td>
@@ -284,7 +282,7 @@ function f4(){
                                 </tbody>
                                 </table>
                                 <br>
-                            <!--/.  <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEditar"><i class="far fa-plus-square"></i> &nbsp; Especificar nueva matrícula</button>   -->            
+                                     <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEditar"><i class="far fa-plus-square"></i> &nbsp; Especificar nueva matrícula</button>             
                                 <br>
                                 </div>
                                     
@@ -417,7 +415,7 @@ function f4(){
                                         </div>
                                         </section>
                                     <!--Tabla 1-->
-                                    <div class="card" >
+                                     <div class="card" >
                                         <div class="card-header">
                                             <b>Información General</b>
                                         </div>
@@ -662,7 +660,6 @@ function AgregarMatricula(){
     var id={{$id}};
     var tipo_matricula = document.getElementById("select_matriculas").value; 
     var cantidad = document.getElementById("cantidad").value; 
-    var inicio_operaciones = document.getElementById("inicio_operaciones").value; 
 
     if(tipo_matricula==0){
                             modalMensaje('Aviso', 'Debe selecionar una matrícula');
@@ -679,17 +676,12 @@ function AgregarMatricula(){
                             return;
                    }
 
-    if(inicio_operaciones==""){
-                            modalMensaje('Aviso', 'Debe ingresar la fecha de inicio de operaciones');
-                            return;
-                        }
 
   openLoading();
   var formData = new FormData();
   formData.append('id_empresa', id);
   formData.append('tipo_matricula', tipo_matricula);
   formData.append('cantidad', cantidad);
-  formData.append('inicio_operaciones', inicio_operaciones);
 
   axios.post('/admin/matriculas_detalle/agregar', formData, {
   })
@@ -724,7 +716,7 @@ function modalEliminarMatricula(id)
         $('#modalEliminarMatricula').modal('show');
     }
 
-    function eliminarM(){
+function eliminarM(){
     openLoading()
         
     // se envia el ID de la matrícula
@@ -741,15 +733,20 @@ function modalEliminarMatricula(id)
                     
                     if(response.data.success === 1){
                
-               Swal.fire({
-                         position: 'top-end',
-                         icon: 'success',
-                         title: '¡Matrícula eliminada correctamente!',
-                         showConfirmButton: false,
-                         timer: 3000
-                       })
-                 recargar();
-            
+                        Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: '¡Matrícula eliminada correctamente!',
+                                    showConfirmButton: true,
+                                    timer: 3000
+                                }).then((result) => {
+                                if (result.isConfirmed) {
+                                    openLoading();
+                                    location.reload();    
+                                }
+                            });
+                            
+                            
                                
                         
               }else if(response.data.success === 2)
@@ -912,7 +909,7 @@ function InformacionMatricula(id)
             var cantidad_editar = document.getElementById('cantidad-editar').value;
             var tipo_matricula_editar = document.getElementById('select_matriculas-editar').value;
             var id_editar = document.getElementById('id-editar').value; 
-            var inicio_operaciones_editar = document.getElementById('inicio_operaciones-editar').value;
+           
             
             //Datos matrícula específica
             var id_matricula_detalle_editar = document.getElementById('id_matriculas_detalle-editar').value;
@@ -990,7 +987,7 @@ function InformacionMatricula(id)
     formData.append('id_editar', id_editar);
     formData.append('cantidad_editar', cantidad_editar);
     formData.append('tipo_matricula_editar', tipo_matricula_editar); 
-    formData.append('inicio_operaciones_editar', inicio_operaciones_editar);
+
     console.log(hayregistro);
     openLoading() 
     // llenar array para enviar
@@ -1233,9 +1230,12 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                   
+                        openLoading();
+                        location.reload();
                         recargar();
                         f3()
+                          
+
                 }
             });
         }
@@ -1254,6 +1254,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                     $('#modalEspecificarMatricula').modal('hide');
                         recargar();
                         f3()
+                        location.reload();    
                 }
             });
         }

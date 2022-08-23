@@ -8,11 +8,11 @@
                             <thead>
                                 <tr>
                                 <th style="width: 20%;">Nombre</th>
-                                <th style="width: 25%;">Representante Legal</th>
                                 <th style="width: 15%;">N° Tarjeta</th>
+                                <th style="width: 12%;">Giro C.</th>
                                 <th style="width: 10%;">Estado</th>
                                 <th style="width: 20%;">Dirección</th>
-                                <th style="width: 12%;">Teléfono</th>
+                                <th style="width: 25%;">Representante Legal</th>
                                 <th style="width: 15%;">Acción</th>
                             </tr>
                             </thead>
@@ -20,25 +20,23 @@
                             @foreach($lista as $dato)
                                 <tr>
                                     <td>{{$dato->nombre}} </td>
-                                    <td>{{$dato->contribuyente}}&nbsp;{{$dato->apellido}}</td>
                                     <td>{{$dato->num_tarjeta}}</td>
+                                    <td>{{$dato->nombre_giro}}</td>
                                     @if($dato->estado == 'Activo')
                                     <td align="center"> <span class="badge bg-success">Activo</span></td>
                                     @elseif($dato->estado == 'Cerrado')
                                     <td align="center"> <span class="badge bg-danger">Cerrado</span></td>
                                     @endif
                                     <td>{{$dato->direccion}}</td>
-                                    <td>{{$dato->telefono}}</td>
+
+                                    <td>{{$dato->contribuyente}}&nbsp;{{$dato->apellido}}</td>
                                     <td style="text-align: center;">
-
-
                           
                                     <button type="button" onclick="VerEmpresa({{$dato->id}} )" class="btn btn-dark btn-xs" >
                                     <i class="fas fa-search"></i>
                                     Ver
                                     </button>
-                                   
-                                  
+                                                                
                                     <button type="button" class="btn btn-primary btn-xs" onclick="informacion({{$dato->id}})">
                                     <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                     </button>

@@ -18,7 +18,8 @@ class GiroComercial extends Model
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'nombre_giro'
+        'nombre_giro',
+        'matricula'
       ];
 
 

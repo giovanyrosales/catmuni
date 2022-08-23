@@ -1,3 +1,18 @@
+<style>
+        body{
+            font-family: 'Calibri';
+        }
+
+        #letra_pequeña{
+                font-size: 14px;
+        }
+
+        #Dos{
+                font-size: 14px;
+        }
+        
+</style>
+
 <div>
      <a class="btn btn-info float-left" onclick="imp_historial_cobros_mesas()"  target="frameprincipal">
      <i class="fas fa-print"></i>&nbsp; Imprimir</a>
@@ -5,7 +20,7 @@
 
 <table id="tab_historico_cobros_mesas" class="table table-bordered table-hover" > 
               <thead>             
-                <tr id="uno">  
+                <tr id="letra_pequeña">  
                 <th style="width: 25%;">Fecha pago</th> 
                     <th style="width: 8%;">Meses</th> 
                     <th style="width: 20%;">Periodo inicio</th>                          

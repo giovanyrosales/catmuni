@@ -243,7 +243,7 @@
         </tr>
         <tr align="center">
             <td colspan="2">
-            <img src="{{ asset('images/imgf1.png') }}" style="float: left" alt="" height="206px" width="600px">
+            <img src="{{ asset('images/imgf1.png') }}" style="float: left" alt="" height="200px" width="600px">
             </td>
         </tr>
     </table>
