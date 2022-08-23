@@ -1869,43 +1869,6 @@ public function nuevaEmpresa(Request $request){
                 return ['success' => 2];
             }
 
-<<<<<<< HEAD
- //Termina registrar empresa
-
-//Función para llenar el select Actividad Especifica
-    public function buscarActividadEsp(Request $request)
-    {
- 
-     $actividad_especifica = ActividadEspecifica::
-        where('id_actividad_economica',$request->id_select)
-        ->orderBy('nom_actividad_especifica', 'ASC')
-        ->get();
-
-        return ['success' => 1,
-        'actividad_especifica' => $actividad_especifica
-        
-
-        ];
-
-    }
-//Terminar llenar select
-
-//Función para llenar el select Actividad Especifica
-public function buscarActividadEditar(Request $request)
-{
-
-$actividad_especifica = ActividadEspecifica::
-   where('id_actividad_economica',$request->id_select)
-   ->orderBy('nom_actividad_especifica', 'ASC')
-   ->get();
-
-   return ['success' => 1,
-   'actividad_especifica' => $actividad_especifica,
-
-
-   ];
-=======
->>>>>>> 678f52c905daee565ad5a596b95c247b94ac7588
 
 }
  //Termina registrar empresa // return ['success' => 1]; 
