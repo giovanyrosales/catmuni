@@ -402,7 +402,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-           var id = {{$id}};
+            var id={{$id}};
             var ruta = "{{ url('/admin/buses/calificaciones/tablabus') }}/"+id;
             $('#tablaDatatable').load(ruta);
             

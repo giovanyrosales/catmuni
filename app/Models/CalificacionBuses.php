@@ -17,13 +17,14 @@ class CalificacionBuses extends Model
     public $timestamps = true;
     protected $fillable = [
           'id',
+          'id_contribuyente',
           'fecha_calificacion',         
           'cantidad',
           'monto',
           'pago_mensual',       
           'id_buses_detalle',
           'estado_calificacion',
-          'id_empresa'
+         
      
       ];
 

@@ -7,6 +7,7 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>    
+                                    <th style="width: 15%;">Ficha</th>
                                     <th style="width: 15%;">Cantidad</th>
                                     <th style="width: 18%;">Tarifa</th>
                                     <th style="width: 13%;">Total a pagar</th>
@@ -15,13 +16,13 @@
                             </thead>
                             <tbody>
 
-                            @foreach($calificacion as $bus) 
+                            @foreach($calificacionB as $bus) 
 
                                 <tr>
-                                   
-                                    <td>{{$calificacion->cantidad}}</td>
-                                    <td>${{$calificacion->tarifa}}</td>
-                                    <td>${{$calificacion->monto_pagar}}</td>                                   
+                                    <td>{{$bus->nFicha}}</td>
+                                    <td>{{$bus->cantidad}}</td>
+                                    <td>${{$bus->tarifa}}</td>
+                                    <td>${{$bus->monto_pagar}}</td>                                   
                                    
                                 </tr>
                             @endforeach

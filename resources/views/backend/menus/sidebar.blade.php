@@ -171,23 +171,7 @@
                             </li>
                         </ul>
                 <!-- Finaliza Grupo Rótulos -->
-                <!-- INICIA NUEVO MÓDULO BUSES -->
-                <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.crear.bus.crear') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-plus-circle nav-icon"></i>
-                                <p>Agregar Buses</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('admin.listarBus.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-list-ul nav-icon"></i>
-                                <p>Listar Buses</p>
-                                </a>
-                            </li>
-                        </ul>
-                <!-- Finaliza Grupo Rótulos -->
+             
                     </ul>
                 </li>
 
