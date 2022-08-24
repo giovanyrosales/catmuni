@@ -12,6 +12,7 @@ use App\Models\GiroComercial;
 use App\Models\ActividadEconomica;
 use App\Models\ActividadEspecifica;
 use App\Models\alertas_detalle;
+use App\Models\BusesDetalle;
 use App\Models\Cobros;
 use App\Models\calificacion;
 use App\Models\CalificacionMatriculas;
@@ -24,6 +25,7 @@ use App\Models\MatriculasDetalle;
 use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
 use App\Models\MatriculasDetalleEspecifico;
+use App\Models\Rotulos;
 use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
@@ -105,7 +107,33 @@ class EmpresaController extends Controller
     ->where('id_contribuyente',$request->id_contribuyente)
     ->get();
 
+    $buses_registrados=BusesDetalle
+    ::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+    ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+
+    ->select('buses_detalle.id','buses_detalle.nFicha','buses_detalle.cantidad','buses_detalle.nom_empresa',
+    'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+    'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+    'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+    'contribuyente.direccion as direccionCont',
+    'estado_buses.estado as estado_bus',
+    )
+    ->where('id_contribuyente',$request->id_contribuyente)
+    ->get();
+
     if(sizeof($empresas_registradas) == 0){
+        $empresas_reg=0;
+    }else{
+             $empresas_reg=1;
+         }
+
+    if(sizeof($buses_registrados) == 0){
+        $buses_reg=0;
+    }else{
+             $buses_reg=1;
+         }
+
+    if(sizeof($empresas_registradas) == 0 and sizeof($buses_registrados) == 0){
         return [
                     'success' => 2,
                ];
@@ -114,6 +142,9 @@ class EmpresaController extends Controller
     return [
                 'success' => 1,
                 'empresas_registradas'=>$empresas_registradas,
+                'buses_registrados'=>$buses_registrados,
+                'empresas_reg'=>$empresas_reg,
+                'buses_reg'=>$buses_reg,
            ];
 
     }
@@ -1871,9 +1902,7 @@ public function nuevaEmpresa(Request $request){
 
 
 }
- //Termina registrar empresa // return ['success' => 1]; 
-
-
+ //Termina registrar empresa //
 
 
 

@@ -98,6 +98,12 @@
                                 <p>Listar Contribuyentes</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.cobrar.empresa.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-coins nav-icon"></i>
+                                <p>Obligaciones tributarias</p>
+                                </a>
+                            </li>
                         </ul>
                 <!-- Finaliza Grupo Contribuyentes -->
 
