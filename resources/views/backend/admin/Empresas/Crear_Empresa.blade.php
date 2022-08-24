@@ -47,7 +47,7 @@
         <form class="form-horizontal" id="form1">
         @csrf
 
-        <div class="card card-green">
+        <div class="card card-info">
           <div class="card-header">
             <h3 class="card-title"><i class="far fa-plus-square"></i> &nbsp;Formulario de datos de la empresa.</h3>
 
@@ -59,7 +59,7 @@
           <!-- /.card-header -->
           <div class="card-body">
           <div class="card border-info mb-3"><!-- Panel Asignar empresa -->
-          <div class="card-header text-success"><label>DATOS GENERALES</label></div>
+          <div class="card-header text-info"><label>DATOS GENERALES</label></div>
             <div class="card-body"><!-- Card-body -->
         
             <div class="row">
@@ -314,7 +314,7 @@
                   <div class="card-footer"> 
                   <button type="button" onclick="location.href='{{ url('/panel')}}'" class="btn btn-default">
                   <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
-                  <button type="button" class="btn btn-success float-right" onclick="nuevo()">
+                  <button type="button" class="btn btn-info float-right" onclick="nuevo()">
                   <i class="fas fa-save"></i>&nbsp;Guardar</button>
           </div>
          <!-- /.card-footer -->

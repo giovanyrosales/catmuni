@@ -65,6 +65,14 @@
         #dos{
                 font-size: 13px;
         }
+        #especial{
+            background-color: #E9F1FF;
+            color: #1E1E1E;
+        }
+        #especial2{
+            background-color: #E2FFED;
+            color: #1E1E1E;
+        }
 </style>
 @stop    
 
@@ -115,28 +123,29 @@
  <!-- Finaliza Contenido card-project-->
 
 <!-- Inicia Contenido IMG-->
-    <div class="card" style="margin: 5 auto;width: 98%;height:90%;">
+    <div class="card" style="margin: 5 auto;width: 98%;">
       <div class="progress" style="margin: 0 auto;width: 100%;height:5px;">
-        <div class="progress-bar bg-success" role="progressbar" style="width:10%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar bg-secondary" role="progressbar" style="width:10%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         </div>
       </div>
         <div class="card-body"  >
         <!-- Inicia contenido-->  
-          <img src="{{ asset('/img/063.svg') }}" id="img_contribuyente" style="display: block;margin: 0px auto;width: 50%; height:50%;" >
-          <div class="card" id="tarjeta_empresas_registradas">
-                    <div class="card-header">
-                        <b>Empresas registradas</b>
+          <img src="{{ asset('/img/063.svg') }}" id="img_contribuyente" style="display: block;margin: 0px auto;width: 30%; height:30%;" >
+          <!--Tarjeta para empresas-->
+          <div class="card border-primary mb-3" id="tarjeta_empresas_registradas">
+                    <div class="card-header bg-transparent border-primary">
+                        <h5><span class="badge badge-pill badge-primary"><i class="fas fa-building"></i></span>&nbsp;<span class="badge badge-dark">Empresas registradas</span></h5>
                     </div>
                       <div class="card-body">
                           <!--Tabla 12-->
                           <table class="table" id="matriz_ver_empresas" style="border: 100px;" data-toggle="table">
                                     <thead>
-                                    <tr>                           
+                                    <tr>      
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">Ver empresa</th>                     
                                       <th style="width: 25%; text-align: center;font-weight: 700;">Nombre</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">N° Tarjeta</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Giro C.</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
-                                      <th style="width: 30%; text-align: center;font-weight: 700;">Ver empresa</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -145,7 +154,31 @@
                           </table>
                       </div>
             </div>
-          
+
+            <!--Tarjeta para Buses-->
+            <div class="card border-success mb-3" id="tarjeta_buses_registradas">
+                    <div class="card-header bg-transparent border-success">
+                        <h5><span class="badge badge-pill badge-success"><i class="fas fa-bus"></i>&nbsp;</span>&nbsp;<span class="badge badge-dark">Buses registrados</span></h5>
+                    </div>
+                      <div class="card-body">
+                          <!--Tabla 12-->
+                          <table class="table" id="matriz_ver_buses" style="border: 100px;" data-toggle="table">
+                                    <thead>
+                                    <tr>  
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">Ver</th>                         
+                                      <th style="width: 25%; text-align: center;font-weight: 700;">Empresa</th>
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">N° Tarjeta</th>
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">Cantidad</th>
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                
+                                    </tbody>
+                          </table>
+                      </div>
+            </div>
+
         <!-- Finaliza contenido-->
         </div>
       </div>
@@ -190,12 +223,14 @@ $(document).ready(function(){
   document.getElementById("divcontenedor").style.display = "block"; 
   
   $('#tarjeta_empresas_registradas').hide();
+  $('#tarjeta_buses_registradas').hide();
 
  });
 
 function buscar_obligaciones_tributarias(){
           openLoading();
          $("#matriz_ver_empresas tbody tr").remove();
+         $("#matriz_ver_buses tbody tr").remove();
 
           var id_contribuyente = document.getElementById('select-contribuyente').value;
           
@@ -216,41 +251,85 @@ function buscar_obligaciones_tributarias(){
                           showConfirmButton: false,                     
                         })
                         $('#img_contribuyente').hide();
-                        $('#tarjeta_empresas_registradas').show();
+                        
+                        if(response.data.buses_reg==0){
+                          $('#tarjeta_buses_registradas').hide();
+                        }else{
+                                $('#tarjeta_buses_registradas').show();
+                              }
+                        if(response.data.empresas_reg==0){
+                          $('#tarjeta_empresas_registradas').hide();
+                        }else{
+                                $('#tarjeta_empresas_registradas').show();
+                            }
+                        
 
-                //****  Cargar información empresas registradas ****//
-                var infodetalle = response.data.empresas_registradas;
-                
-                var id_empresa
-                for (var i = 0; i < infodetalle.length; i++) {
+                            //****  Cargar información empresas registradas ****//
+                            var infodetalle = response.data.empresas_registradas;
+                            
+                            for (var i = 0; i < infodetalle.length; i++) {
 
-                 var markup = "<tr id='"+infodetalle[i].id+"'>"+
+                            var markup = "<tr id='"+infodetalle[i].id+"'>"+
 
-                     "<td align='center'>"+
-                         infodetalle[i].nombre+
-                     "</td>"+
-                     
-                     "<td align='center'>"+
-                         infodetalle[i].num_tarjeta+
-                     "</td>"+
+                                 "<td align='center'>"+                
+                                      "<button type='button' class='btn btn-primary btn-xs'onclick=VerEmpresa('"+infodetalle[i].id+"')>&nbsp;&nbsp;<i class='fas fa-search'></i>&nbsp;&nbsp;</button>"+
+                                "</td>"+
 
-                     "<td align='center'>"+
-                         infodetalle[i].nombre_giro+
-                     "</td>"+
+                                "<td id='especial' align='center'>"+
+                                    infodetalle[i].nombre+
+                                "</td>"+
+                                
+                                "<td align='center'>"+
+                                    infodetalle[i].num_tarjeta+
+                                "</td>"+
 
-                     "<td align='center'>"+
-                          infodetalle[i].estado+
-                     "</td>"+
+                                "<td align='center'>"+
+                                    infodetalle[i].nombre_giro+
+                                "</td>"+
 
-                     "<td align='center'>"+                
-                          "<button type='button' class='btn btn-primary btn-xs'onclick=VerEmpresa('"+infodetalle[i].id+"')>&nbsp;&nbsp;<i class='fas fa-search'></i>&nbsp;&nbsp;</button>"+
-                     "</td>"+
+                                "<td align='center'>"+
+                                      infodetalle[i].estado+
+                                "</td>"+
 
-                     "</tr>";
+                                "</tr>";
 
-                 $("#matriz_ver_empresas tbody").append(markup);
-                 
-                 }//*Cierre de for
+                            $("#matriz_ver_empresas tbody").append(markup);
+                            
+                            }//*Cierre de for empresas
+
+                            //****  Cargar información buses registradas ****//
+                            var infodetalle_bus = response.data.buses_registrados;
+
+                            for (var i = 0; i < infodetalle_bus.length; i++) {
+
+                            var markup = "<tr id='"+infodetalle_bus[i].id+"'>"+
+
+                            
+                                "<td align='center'>"+                
+                                      "<button type='button' class='btn btn-success btn-xs'onclick=VerBuses('"+infodetalle_bus[i].id+"')>&nbsp;&nbsp;<i class='fas fa-search'></i>&nbsp;&nbsp;</button>"+
+                                "</td>"+
+
+                                "<td id='especial2' align='center'>"+
+                                  infodetalle_bus[i].nom_empresa+
+                                "</td>"+
+                                
+                                "<td align='center'>"+
+                                  infodetalle_bus[i].nFicha+
+                                "</td>"+
+
+                                "<td align='center'>"+
+                                  infodetalle_bus[i].cantidad+
+                                "</td>"+
+                                
+                                "<td align='center'>"+
+                                  infodetalle_bus[i].estado_bus+
+                                "</td>"+
+
+                                "</tr>";
+
+                            $("#matriz_ver_buses tbody").append(markup);
+                            
+                            }//*Cierre de for buses
 
 
 
@@ -264,6 +343,7 @@ function buscar_obligaciones_tributarias(){
                                 })
                                 $('#img_contribuyente').show();
                                 $('#tarjeta_empresas_registradas').hide();
+                                $('#tarjeta_buses_registradas').hide();
 
                     }
             })
@@ -276,6 +356,12 @@ function VerEmpresa(id){
         openLoading();
         window.location.href="{{ url('/admin/empresas/show') }}/"+id;
         }
+
+function VerBuses(id_bus)
+    {
+        openLoading();
+        window.location.href="{{ url('/admin/buses/vista/') }}/"+id_bus;
+    }id_bus
 
 function modalMensaje(titulo, mensaje)
 {

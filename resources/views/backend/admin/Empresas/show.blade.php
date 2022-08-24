@@ -50,7 +50,7 @@
         <br>
         </section>
       <div class="col-md-12">
-        <div class="card card-green">
+        <div class="card card-info">
           <div class="card-header card-header-success">
             <h5 class="card-category-">
               <i class="fas fa-laptop-house"></i> &nbsp;Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; 

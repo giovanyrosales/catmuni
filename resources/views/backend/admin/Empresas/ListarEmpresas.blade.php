@@ -33,7 +33,7 @@
                         </div>
         </div>
         <br>
-        <button type="button"onclick="location.href='{{ url('/admin/nuevo/empresa/index') }}'" class="btn btn-success btn-sm" >
+        <button type="button"onclick="location.href='{{ url('/admin/nuevo/empresa/index') }}'" class="btn btn-info btn-sm" >
                 <i class="fas fa-pencil-alt"></i>
                 Nueva empresa
             </button>
@@ -44,7 +44,7 @@
       <div class="container-fluid">
         <!-- CAJA -->
         <form class="form-horizontal" id="form1">
-        <div class="card card-green">
+        <div class="card card-info">
           <div class="card-header">
             <h3 class="card-title"><i class="fas fa-th-list"></i> &nbsp;Lista de empresas registradas.</h3>
 
