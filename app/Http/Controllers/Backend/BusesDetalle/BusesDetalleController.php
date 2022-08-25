@@ -41,34 +41,25 @@ class BusesDetalleController extends Controller
 
     public function index()
     {
-        $empresas = Empresas::ALL();
         $contribuyentes = Contribuyentes::ALL();
 
-        $bus = BusesDetalle::orderBy('fecha_apertura')->get();
+        $bus = BusesDetalle::orderBy('id')->get();
 
-        foreach($bus as $dato)
-        {
-            $nom_apellido = ' ';
-            $nom_empresa = ' ';
+        $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','contribuyente.id')
+        ->join('estado_buses','buses_detalle.id_estado_buses','buses_detalle.id')
 
-            if($info = Contribuyentes::where('id', $dato->id_contribuyente)->first())	
-            { 
-                $nom_apellido = $info->nombre . ' ' . $info->apellido;
-            }
-        
-            if($info = Empresas::where('id',$dato->id_empresa)->first())
-            {	
-                $nom_empresa = $info->nombre;
-            }
-            
-                $dato->cont = $nom_apellido;
-                $dato->empr = $nom_empresa;
-        
-        }
-            
+        ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+        'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+        'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+        'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+        'contribuyente.id','contribuyente.nombre','contribuyente.nombre',
+        'estado_buses.estado')
+
+        ->get();
+                
              
       
-        return view('backend.admin.Buses.CrearBuses', compact('empresas', 'contribuyentes', 'bus'));
+        return view('backend.admin.Buses.CrearBuses', compact('contribuyentes','bus','buses'));
     }
 
     //Función para llenar el select empresa
@@ -90,29 +81,20 @@ class BusesDetalleController extends Controller
 
     public function tablaBuses(BusesDetalle $buses)
     {
+      
+        $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+        ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
 
-        $buses = BusesDetalle::orderBy('fecha_apertura')->get();
+        ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+        'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+        'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+        'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
 
-        foreach($buses as $dato)
-        {
-            $nom_apellido = ' ';
-            $nom_empresa = ' ';
+        'contribuyente.nombre as contribuyente','contribuyente.apellido',
+        'estado_buses.estado')
 
-            if($info = Contribuyentes::where('id', $dato->id_contribuyente)->first())	
-            { 
-                $nom_apellido = $info->nombre . ' ' . $info->apellido;
-            }
-        
-            if($info = Empresas::where('id',$dato->id_empresa)->first())
-            {	
-                $nom_empresa = $info->nombre;
-            }
-            
-                $dato->cont = $nom_apellido;
-                $dato->empr = $nom_empresa;
-        
-        }
-            
+        ->get();
+         
            
         return view('backend.admin.Buses.tabla.tabla_buses', compact('buses'));
     }
@@ -120,10 +102,9 @@ class BusesDetalleController extends Controller
     public function listarBuses()
     {
    
-        $empresas = Empresas::All();
         $contribuyentes = Contribuyentes::ALL();
      
-        return view('backend.admin.Buses.ListarBuses', compact('empresas','contribuyentes'));
+        return view('backend.admin.Buses.ListarBuses', compact('contribuyentes'));
     }
 
     public function nuevoBus(Request $request)
@@ -509,15 +490,15 @@ class BusesDetalleController extends Controller
     public function showBuses($id)
     {
                
-        $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','contribuyente.id')
-        ->join('estado_buses','buses_detalle.id_estado_buses','estado_buses.id')
+        $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+        ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
 
         ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
         'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
         'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
         'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
         
-        'contribuyente.id', 'contribuyente.nombre AS contri', 'contribuyente.apellido AS apellido',
+        'contribuyente.nombre as contribuyente', 'contribuyente.apellido',
         'estado_buses.estado')
 
         ->find($id);
@@ -527,7 +508,7 @@ class BusesDetalleController extends Controller
         ::join('buses_detalle', 'buses_detalle.id', '=', 'buses_detalle_especifico.id_buses_detalle')
             
         ->select('buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
-                'buses_detalle.cantidad','buses_detalle.monto_pagar',)
+                'buses_detalle.cantidad','buses_detalle.monto_pagar')
       
         ->find($id);
         
@@ -567,7 +548,7 @@ class BusesDetalleController extends Controller
             $detectorNull=0;
             $detectorEsp=0;
 
-            return view('backend.admin.Buses.vistaBuses', compact('empresa','calificacion','buses','listado','detectorNull','detectorEsp',));        
+            return view('backend.admin.Buses.vistaBuses', compact('id','calificacion','buses','listado','detectorNull','detectorEsp',));        
         }
         else 
         {
@@ -575,7 +556,7 @@ class BusesDetalleController extends Controller
           $detectorEsp = 1;
 
         }
-          return view('backend.admin.Buses.vistaBuses', compact('empresa','calificacion','buses','listado','detectorNull','detectorEsp','ultimaEsp'));
+          return view('backend.admin.Buses.vistaBuses', compact('id','calificacion','buses','listado','detectorNull','detectorEsp','ultimaEsp'));
         }
           
 }
@@ -588,8 +569,7 @@ class BusesDetalleController extends Controller
             $buses = BusesDetalle::where ('id', $id)->first();
           
             $bus = BusesDetalle::ALL();
-            log::info($bus);
-            return;
+         
             $calificacionB=BusesDetalleEspecifico
             ::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
                                       
@@ -602,7 +582,7 @@ class BusesDetalleController extends Controller
         
         
 
-            $calificacion = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','contribuyente.id')
+            $calificacion = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
             ->join('estado_buses','buses_detalle.id_estado_buses','estado_buses.id')
     
             ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
@@ -610,10 +590,9 @@ class BusesDetalleController extends Controller
             'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
             'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
             
-            'contribuyente.id', 'contribuyente.nombre AS contri', 'contribuyente.apellido AS apellido',
+            'contribuyente.nombre as contribuyente', 'contribuyente.apellido',
             'estado_buses.estado')
 
-            
             ->get();
            
 
@@ -629,6 +608,10 @@ class BusesDetalleController extends Controller
             $fondoF = 0.05;
             $nombre = '';
             $nom_empresa = '';
+            $ficha = '';
+            $cantidad = '';
+            $tarifa = '';
+            $total = '';
     
             if ($buses = BusesDetalle::where('id', $id)->first())
             {
@@ -638,8 +621,11 @@ class BusesDetalleController extends Controller
                 $Tbus = $buses->tarifa;
                 $Mbus  = $buses->monto_pagar;
                 $nom_empresa = $buses->nom_empresa;
+                $ficha = $buses->nFicha;
+                $cantidad = $buses->cantidad;
+                $tarifa = $buses->tarifa;
+                $total = $buses->monto_pagar;
               
-
 
                 $Total = ($Tbus / $Cbus);
                 $Total = number_format((float)$Total, 2, '.', ',');
@@ -651,8 +637,13 @@ class BusesDetalleController extends Controller
                 
             }
 
-           
-            return view('backend.admin.Buses.CalificacionBuses', compact('id','nom_empresa','Total','nombre','Tbus','TotalF','fondoF','TotalT','TotalA','TotalAF','TotalT','fecha','busesE','Cbus','Mbus','buses','calificacionB','calificacion'));
+            if ($contribuyentes = Contribuyentes::where('id', $buses->id_contribuyente)->first())
+            {
+                $contribuyente = $contribuyentes->nombre;
+                $apellido = $contribuyentes->apellido;
+                
+            }
+            return view('backend.admin.Buses.CalificacionBuses', compact('id','ficha','cantidad','tarifa','total','apellido','contribuyentes','contribuyente','nom_empresa','Total','nombre','Tbus','TotalF','fondoF','TotalT','TotalA','TotalAF','TotalT','fecha','busesE','Cbus','Mbus','buses','calificacionB','calificacion'));
     }
 
 
@@ -661,7 +652,7 @@ class BusesDetalleController extends Controller
 
             $busesE = BusesDetalleEspecifico::where('id', $id)->first();
             $buses = BusesDetalle::where ('id', $id)->first();
-
+            $bus = BusesDetalle::ALL();
 
          
             $calificacionB=BusesDetalleEspecifico
@@ -677,7 +668,7 @@ class BusesDetalleController extends Controller
   
 
 
-            $calificacion = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','contribuyente.id')
+            $calificacion = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
             ->join('estado_buses','buses_detalle.id_estado_buses','estado_buses.id')
     
             ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
@@ -692,11 +683,56 @@ class BusesDetalleController extends Controller
             ->get();
 
 
-            
-         
+            $Cbus = ' ';
+            $Tbus = '';
+            $Mbus = '';
+            $fecha = '';
+            $TotalT = '';
+            $TotalF = '';
+            $Total = '';
+            $TotalA = '';
+            $TotalAF = '';
+            $fondoF = 0.05;
+            $nombre = '';
+            $nom_empresa = '';
+            $ficha = '';
+            $cantidad = '';
+            $tarifa = '';
+            $total = '';
 
+            if ($buses = BusesDetalle::where('id', $id)->first())
+            {
+
+                $fecha = $buses->fecha_apertura;
+                $Cbus = $buses->cantidad;
+                $Tbus = $buses->tarifa;
+                $Mbus  = $buses->monto_pagar;
+                $nom_empresa = $buses->nom_empresa;
+                $ficha = $buses->nFicha;
+                $cantidad = $buses->cantidad;
+                $tarifa = $buses->tarifa;
+                $total = $buses->monto_pagar;
+              
+
+                $Total = ($Tbus / $Cbus);
+                $Total = number_format((float)$Total, 2, '.', ',');
+                $TotalA = $Tbus *12;
+                $TotalAF = $Mbus * 12;
+                $TotalT = $Total * $Cbus;
+                $TotalF = $TotalT +($TotalT * $fondoF);
+                $TotalF = number_format((float)$TotalF, 2, '.', ',');
+                
+            }
+
+            if ($contribuyentes = Contribuyentes::where('id', $buses->id_contribuyente)->first())
+            {
+                $contribuyente = $contribuyentes->nombre;
+                $apellido = $contribuyentes->apellido;
+                
+            }
           
-            return view('backend.admin.Buses.tabla.tablaBus', compact('calificacionB','calificacion','buses'));
+            return view('backend.admin.Buses.tabla.tablaBus', compact('calificacionB','calificacion','buses','ficha','cantidad'
+        ,'tarifa','total'));
              
     }
         //Termica calculo de la calificación de buses
@@ -708,18 +744,20 @@ class BusesDetalleController extends Controller
         $fecha_calificacion = $request->fechacalificar;
         $estado_calificaion =  $request->estado_calificacion;     
         $id_buses_detalle = $request->id_buses_detalle;       
-        $id_empresa = $request->id_empresa;
+        $id_contribuyente = $request->id_contribuyente;
+        $ficha = $request->ficha;
 
         log::info('fecha calificacion '.$fecha_calificacion);
         log::info('estado calificacion '.$estado_calificaion);
         log::info('id buses detalle ' .$id_buses_detalle);
-        log::info('id empresa ' .$id_empresa);
+        log::info('id contribuyente ' .$id_contribuyente);
+        log::info('ficha ' .$ficha);
         
       
         
         $calificacionB=BusesDetalle::select('cantidad','tarifa','monto_pagar','estado_especificacion')
         ->where('id', $id_buses_detalle)
-        ->where('id_empresa', $id_empresa)
+      
         ->latest()->first();
         
        
@@ -727,8 +765,9 @@ class BusesDetalleController extends Controller
     
         $dt = new CalificacionBuses();
         $dt->id_buses_detalle = $request->id_buses_detalle;
-        $dt->id_empresa = $request->id_empresa;
-        $dt->fecha_calificacion = $request->fechacalificar;           
+        $dt->id_contribuyente = $request->id_contribuyente;
+        $dt->fecha_calificacion = $request->fechacalificar; 
+        $dt->nFicha = $request->ficha;          
         $dt->cantidad = $calificacionB->cantidad;   
         $dt->monto = $calificacionB->tarifa;
         $dt->pago_mensual = $calificacionB->monto_pagar;
@@ -753,32 +792,35 @@ class BusesDetalleController extends Controller
         
         $date=Carbon::now()->toDateString(); 
 
-        $empresa = BusesDetalle::where('id', $id)->first();
+        $buses = BusesDetalle::where('id', $id)->first();
 
-        $buses = BusesDetalleEspecifico::where('id', $id)->first();
-
-        $calificaciones=BusesDetalle        
-        ::join('empresa','buses_detalle.id_empresa','=','empresa.id')
-       
-                              
-        ->select('buses_detalle.id as id_buses_detalle', 'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.tarifa',
-        'buses_detalle.fecha_apertura','buses_detalle.estado_especificacion' ,      
-                'empresa.nombre as empresa','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
-                'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta',
-                'empresa.telefono')
-
+      
+        $calificaciones = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+            ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+    
+            ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+            'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+            'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+            'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+            
+            'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+            'estado_buses.estado')
                             
         ->find($id);
 
+        
+          
+
         $calificacionB=BusesDetalleEspecifico
-        ::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
-                            
-        //Consulta para mostrar los rótulos que pertenecen a una sola empresa
-                              
-        ->select('buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
-        'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.fecha_apertura','buses_detalle.tarifa')
-      
-        ->get();
+            ::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
+                                      
+            ->select('buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre',
+            'buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
+            'buses_detalle.id','buses_detalle.tarifa','buses_detalle.nFicha','buses_detalle.cantidad','buses_detalle.monto_pagar',
+            'buses_detalle.fecha_apertura','buses_detalle.nFicha')
+
+          			
+            ->get();
 
         $ultimo_cobro = CobrosBuses::latest()
         ->where('id_buses_detalle', $id)
@@ -798,7 +840,7 @@ class BusesDetalleController extends Controller
             {
                 $detectorNull=0;
                 $detectorCobro=0;
-                return view('backend.admin.Buses.Cobros.cobrosBus', compact('detectorNull','detectorCobro'));
+                return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','detectorNull','detectorCobro','calificaciones'));
             }
         }
         else
@@ -808,14 +850,14 @@ class BusesDetalleController extends Controller
             {
              $detectorNull=0;
              $detectorCobro=0;
-            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','empresa','tasasDeInteres','date','detectorNull','detectorCobro'));
+            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','tasasDeInteres','date','detectorNull','detectorCobro'));
             }
             else
             {
                 $detectorNull=1;
                 $detectorCobro=1;
                   
-            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','empresa','tasasDeInteres','date','detectorNull','detectorCobro','ultimo_cobro'));
+            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','tasasDeInteres','date','detectorNull','detectorCobro','ultimo_cobro'));
             }
           
         }    
@@ -825,7 +867,7 @@ class BusesDetalleController extends Controller
     public function calcularCobrosBus(Request $request)
     {
   
-        $id_empresa = $request->id_empresa;
+        $id_contribuyente = $request->id_contribuyente;
         $id=$request->id;
         $id_buses_detalle = $request->id_buses_detalle;
     
@@ -891,16 +933,16 @@ class BusesDetalleController extends Controller
             ->first();
         //** Finaliza - Para obtener la tasa de interes más reciente */
 
-        $calificacion=BusesDetalle        
-        ::join('empresa','buses_detalle.id_empresa','=','empresa.id')
-       
-                              
-        ->select('buses_detalle.id as id_buses_detalle', 'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.tarifa',
-               'buses_detalle.fecha_apertura','buses_detalle.estado_especificacion' ,      
-               'empresa.id as id_empresa', 'empresa.nombre as empresa','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
-               'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta',
-               'empresa.telefono')
-
+        $calificacion = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+            ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+    
+            ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+            'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+            'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+            'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+            
+            'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+            'estado_buses.estado')
                             
         ->find($id);
 
@@ -931,7 +973,7 @@ class BusesDetalleController extends Controller
 
            
                 $tarifas=CalificacionBuses::select('monto')
-                ->where('id_buses_detalle',$id_buses_detalle
+                ->where('id_buses_detalle',$id
                 )
                  ->get();
 
@@ -1092,8 +1134,9 @@ class BusesDetalleController extends Controller
                 {  
 
                 $cobro = new CobrosBuses();
-                $cobro->id_empresa = $request->id_empresa;
-                $cobro->id_buses_detalle = $request->id_buses_detalle;
+                $cobro->id_contribuyente = $request->id_contribuyente;
+                $cobro->id_buses_detalle = $request->id;
+                $cobro->nFicha = $request->nFicha;
                 $cobro->id_usuario = '1';
                 $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
                 $cobro->impuesto_mora = $impuestos_mora;

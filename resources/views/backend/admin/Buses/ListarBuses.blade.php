@@ -1163,7 +1163,7 @@
                 if (result.isConfirmed) {
                 
                         recargar();
-                        f3();
+                        
                     
                 }
             });

@@ -52,7 +52,7 @@
         <div class="card card-green">
           <div class="card-header card-header-success">
       @if($buses->nom_empresa == '')
-          <h5 class="card-category-">Buses del contribuyente <span class="badge badge-warning">&nbsp;{{$buses->contri}} &nbsp;{{$buses->apellido}}</span>&nbsp; </h5>
+          <h5 class="card-category-">Buses del contribuyente <span class="badge badge-warning">&nbsp;{{$buses->contribuyente}} &nbsp;{{$buses->apellido}}</span>&nbsp; </h5>
         @else
           <h5 class="card-category-">Buses de la empresa <span class="badge badge-warning">&nbsp;{{$buses->nom_empresa}} &nbsp;</span>&nbsp; </h5>
       @endif
@@ -123,7 +123,7 @@
         @else
 
     <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="CobrosB({{$buses->id_buses_detalle}} )" >
+        <a href="#" onclick="CobrosB({{$buses->id}} )" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-green">
                     <div class="pull-left">
