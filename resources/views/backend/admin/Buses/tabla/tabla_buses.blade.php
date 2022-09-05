@@ -16,7 +16,7 @@
                             @foreach($buses as $dato)
                                     <tr>
                                     <td>{{$dato->nFicha}}</td>
-                                    <td>{{$dato->cont}}</td>
+                                    <td>{{$dato->contribuyente}} {{$dato->apellido}}</td>
                                     <td>{{$dato->cantidad}}</td>                           
                                     <td>${{$dato->tarifa}}</td>
                                     <td>${{$dato->monto_pagar}}</td>
@@ -39,7 +39,7 @@
                                         </button>
 
                                     @else
-                                    <button type="button" class="btn btn-info btn-xs" onclick="Realizar({{$dato->id_buses_detalle}})">
+                                    <button type="button" class="btn btn-info btn-xs" onclick="Realizar({{$dato->id}})">
                                         <i class="fas fa-eye"></i>&nbsp; Ver
                                         </button>
                                     @endif
@@ -52,7 +52,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                @endforeach
+                            @endforeach
 
                             </tbody>
 

@@ -11,9 +11,10 @@ class CobrosBuses extends Model
     public $timestamps = true;
     protected $fillable = [
         'id',
-        'id_empresa',
+        'id_contribuyente',
         'id_usuario',
         'id_buses_detalle',
+        'nFicha',
         'cantidad_meses_cobro',
         'impuesto_mora',
         'impuesto',

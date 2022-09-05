@@ -33,9 +33,10 @@
   function calculo(id, valor)
 {
     /*Declaramos variables */
-    var id_empresa = (document.getElementById('id_empresa').value);
+    var id_contribuyente = (document.getElementById('id_contribuyente').value);
     var id_buses_detalle = (document.getElementById('id_buses_detalle').value);
     var fechaPagara=(document.getElementById('fecha_hasta_donde_pagara').value);
+    var nFicha = (document.getElementById('nFicha').value);
     var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
     var tasa_interes=(document.getElementById('select_interes').value);
     var fecha_interesMoratorio=(document.getElementById('fecha_interes_moratorio').value);
@@ -58,9 +59,10 @@
     var formData = new FormData();
 
     formData.append('id', id);
-    formData.append('id_empresa', id_empresa);
+    formData.append('id_contribuyente', id_contribuyente);
     formData.append('id_buses_detalle', id_buses_detalle);
     formData.append('cobrar', valor);
+    formData.append('nFicha', nFicha);
     formData.append('fechaPagara', fechaPagara);
     formData.append('ultimo_cobro', ultimo_cobro);
     formData.append('tasa_interes', tasa_interes);
@@ -142,7 +144,7 @@
 
         <div class="card card">
           <div class="card-header">
-          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de &nbsp;<span class="badge badge-warning">&nbsp;{{$calificaciones->empresa}} &nbsp;</span></h5>
+          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de &nbsp;<span class="badge badge-warning">&nbsp;{{$calificaciones->nom_empresa}} &nbsp;</span></h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -185,10 +187,11 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="input-group mb-3">
-                        <input type="number" hidden  value="{{$calificaciones->id_buses_detalle}}" name="" disabled id="id_buses_detalle" class="form-control" required >                     
+                        <input type="number" hidden  value="{{$calificacion->id}}" name="" disabled id="id_buses_detalle" class="form-control" required >                     
                         
                   </div>
-                  <input type="number" hidden value="{{$empresa->id_empresa}}" name="" disabled id="id_empresa" class="form-control" required >
+                  <input type="number" value="{{$buses->id_contribuyente}}" name="" disabled id="id_contribuyente" class="form-control" required >
+                  <input type="number" value="{{$buses->nFicha}}" name="" disabled id="nFicha" class="form-control" required >
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
@@ -221,7 +224,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" onchange ="calculo({{$calificaciones->id_buses_detalle}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
+                        <input  type="date" onchange ="calculo({{$calificaciones->id}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -315,7 +318,7 @@
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
             <button type="submit" class="btn btn-outline-success btn-sm float-right" 
-            onclick="estado_cuenta_buses({{$empresa->id_empresa}});" id="estado_de_cuentabuses" >
+            onclick="" id="estado_de_cuentabuses" >
               <i class="fas fa-print"></i> Estado cuenta
             </button>    
          </div>
@@ -462,7 +465,7 @@
             }).then((result) => {
                 if (result.isConfirmed) 
                 {
-                    calculo({{$calificaciones->id_buses_detalle}},1);
+                    calculo({{$calificaciones->id}},1);
                 }
             });
         }

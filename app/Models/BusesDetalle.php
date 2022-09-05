@@ -10,8 +10,7 @@ class BusesDetalle extends Model
     protected $table = 'buses_detalle';
     public $timestamps = true;
     protected $fillable = [
-        'id',
-        'id_empresa',
+        'id',       
         'id_contribuyente',
         'nFicha',
         'fecha_apertura',
