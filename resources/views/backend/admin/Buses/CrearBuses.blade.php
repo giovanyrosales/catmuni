@@ -332,28 +332,26 @@ function f4(){
                 formData.append('r_comerciante', r_comerciante);
            
 
-
                     axios.post('/admin/buses/agregar', formData, {
                     })
                         .then((response) => {
                             console.log(response)
                             closeLoading();
-                            if(response.data.success === 0)
-                            {
-                                toastr.error(response.data.message);
-                            }
-                            else if(response.data.success === 1)
-                            {
-                                agregado();
-                                resetbtn();
+                                if(response.data.success === 0)
+                                {
+                                    toastr.error(response.data.message);
+                                }
+                                else if(response.data.success === 1)
+                                {
+                                    agregado();
+                                    resetbtn();
+                                    
+                                }
                                 
-                            }
-                                
-                        })
-                        .catch((error) => {
-                            fallo('Error!', 'Error al agregar el bus');
-                        
-                        });              
+                                    })
+                                    .catch((error) => {
+                                        fallo('Error!', 'Error al agregar el bus');                                    
+                                    });              
 
         }
 

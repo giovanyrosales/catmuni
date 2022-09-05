@@ -352,8 +352,8 @@
                                             </select>
                                       </div>
                                     <!-- finaliza select estado-->  
-                                    </div><!-- /.col-md-3 -->
-                                  </div><!-- /.form-group -->
+                                  </div><!-- /.col-md-3 -->
+                              </div><!-- /.form-group -->
                                 <!-- /.form-group -->
                                     </div><!--  /.ROW2 -->
                                   <!-- /.form-group -->
@@ -420,11 +420,13 @@
 
     function recargar()
     {
-     var ruta = "{{ url('/admin/Rotulos/tabla') }}";
-     $('#tablaDatatable').load(ruta);
+
+        var ruta = "{{ url('/admin/Rotulos/tabla') }}";
+        $('#tablaDatatable').load(ruta);
+
     }
     
-    function cierreytraspasoBus(id_buses_detalle)
+    function cierreytraspasoBus(id)
     { 
 
         window.location.href="{{ url('/admin/buses/cierres_traspasosB') }}/"+id;
@@ -434,8 +436,10 @@
 
     function CrearCalificacion(id)
     {
+
       openLoading();
       window.location.href="{{ url('/admin/buses/calificacion') }}/"+id;
+      
     }
         
     function informacionCierre(id)
@@ -515,8 +519,7 @@
                 closeLoading();
 
                 if (response.data.success === 1) 
-                   
-                   {
+                {
                     Swal.fire({
                           position: 'top-end',
                           icon: 'success',
@@ -524,15 +527,15 @@
                           showConfirmButton: false,
                           timer: 3000
                         })
-                       $('#modalCierreRotulos').modal('hide');
-                       location.reload();
-                   }
-                   else 
-                   {
+                        $('#modalCierreRotulos').modal('hide');
+                        location.reload();
+                }
+                else 
+                    {
                        toastMensaje('Error al actualizar');
                        $('#modalCierreRotulos').modal('hide');
                               recargar();
-                   }
+                    }
              
             })
             .catch((error) => {
@@ -547,15 +550,16 @@
      
       var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
 
-      if(contribuyente === ''){
+      if(contribuyente === '')
+      {
             toastr.error('El dato contribuyente es requerido');
             return;
-        }
+      }
 
         openLoading();
             var formData = new FormData();
-            formData.append('id', id);
-            formData.append('contribuyente', contribuyente);
+                formData.append('id', id);
+                formData.append('contribuyente', contribuyente);
 
             axios.post('/admin/Rotulos/vista/traspaso', formData, {
             })
@@ -585,22 +589,24 @@
 
     function InspeccionRealizada()
     {
-      toast.success('La inspeccion ya fue realizada');
-      return;
+        toast.success('La inspeccion ya fue realizada');
+        return;
     }
 
     
     function CobrosB(id)
     {
-      openLoading();
+        openLoading();
 
-      window.location.href="{{ url('/admin/buses/cobros') }}/"+id;
+        window.location.href="{{ url('/admin/buses/cobros') }}/"+id;
     }
 
     function NoCobrar()
     {
-    toastr.warning('Debe registrar una calificación primero para poder generar un cobro.');
-    return;
+
+      toastr.warning('Debe registrar una calificación primero para poder generar un cobro.');
+      return;
+      
     }
 
     function VerCalificacion()

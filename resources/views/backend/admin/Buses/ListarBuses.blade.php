@@ -90,40 +90,40 @@
                 </div>
                 <!--Form del modal-->
 <!-----------------------------------Inicia Contenido ------------------------------------------->
-           <div class="modal-body">
+            <div class="modal-body">
 
-           <!-- LISTA DE MATRICULAS  -->
-           <div class="tab-pane" id="tab_2">
+            <!-- LISTA DE MATRICULAS  -->
+            <div class="tab-pane" id="tab_2">
 
-            <form>
-                    <div class="card-body">
-            <input  id='id_buses_detalle' type='hidden'/>
-            <table class="table" id="matrizBuses" style="border: 100px" data-toggle="table">
-                    <thead>
-                    <tr>                           
-                        <th style="width: 15%; text-align: center">Placa</th>
-                        <th style="width: 22%; text-align: center">Nombre</th>
-                        <th style="width: 15%; text-align: center">Ruta</th>
-                        <th style="width: 10%; text-align: center">Teléfono</th>
-                        <th style="width: 15%; text-align: center">Eliminar</th>
-                    </tr>
-                    </thead>
-                    <tbody id="myTbodyBuses">
-                    </tbody>
-                    </table>
-                    <br>
-                        <button type="button"  class="btn btn-block btn-success" id="btnAddbusEspecifico"><i class="far fa-plus-square"></i> &nbsp; Específicar nuevo bus</button>               
-                    <br>
-                    </div>
-                    </form>
-                    </div>
-                        <div class="card-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
-                            <button type="button" onclick="GuardarBusesEspecificos()" class="btn btn-success float-right">Guardar</button>
+                <form>
+                        <div class="card-body">
+                <input  id='id_buses_detalle' type='hidden'/>
+                <table class="table" id="matrizBuses" style="border: 100px" data-toggle="table">
+                        <thead>
+                        <tr>                           
+                            <th style="width: 15%; text-align: center">Placa</th>
+                            <th style="width: 22%; text-align: center">Nombre</th>
+                            <th style="width: 15%; text-align: center">Ruta</th>
+                            <th style="width: 10%; text-align: center">Teléfono</th>
+                            <th style="width: 15%; text-align: center">Eliminar</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTbodyBuses">
+                        </tbody>
+                        </table>
+                        <br>
+                            <button type="button"  class="btn btn-block btn-success" id="btnAddbusEspecifico"><i class="far fa-plus-square"></i> &nbsp; Específicar nuevo bus</button>               
+                        <br>
                         </div>
-                    </div>
-                    </div>
+                        </form>
+                        </div>
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
+                                <button type="button" onclick="GuardarBusesEspecificos()" class="btn btn-success float-right">Guardar</button>
+                            </div>
                 </div>
+           </div>
+        </div>
     </div>
          
 <!--Finaliza Modal Especificar Bus-->

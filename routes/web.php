@@ -253,7 +253,10 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
 
     Route::post('/admin/bus/buscar-traspasoBus', [BusesDetalleController::class,'buscarEmpresaBuses'] );
 
+    Route::post('/admin/buses_detalle/show/informacion', [BusesDetalleController::class,'infoTraspasoBuses']);
     Route::get('/admin/buses/cierres_traspasosB/{buses}', [BusesDetalleController::class,'cierres_traspasosBus']);
+    Route::post('/admin/buses/show/traspaso-buses', [BusesDetalleController::class,'nTraspasoBus']);
+    Route::get('/admin/buses/tabla-traspaso', [BusesDetalleController::class,'tablaTraspasos']);
 
     // NUEVO MÓDULO BUSES
     Route::get('/admin/nuevo/bus/Agregar', [BusesController::class,'crearBus'])->name('admin.crear.bus.crear');

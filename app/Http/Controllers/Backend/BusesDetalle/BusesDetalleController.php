@@ -12,6 +12,7 @@ use App\Models\LicenciaMatricula;
 use App\Models\MatriculasDetalle;
 use App\Models\Empresas;
 use App\Models\Contribuyentes;
+use App\Models\TraspasoBuses;
 use App\Models\CobrosBuses;
 use App\Models\EstadoBuses;
 use App\Models\Interes;
@@ -1179,42 +1180,69 @@ class BusesDetalleController extends Controller
 
     }
 
+    //Realizar traspaso
+    public function infoTraspasoBuses(Request $request)
+    {
+        $regla = array(
+             'id' => 'required',
+        );
+
+        $validar = Validator::make($request->all(), $regla);
+
+        if ($validar->fails()){ return ['success' => 0];}
+
+        if($lista = BusesDetalle::where('id', $request->id)->first()){
+            
+            $contribuyente = Contribuyentes::orderBy('nombre')->get();
+            $estado_buses = EstadoBuses::orderBy('estado')->get();
+          
+            return ['success' => 1,
+
+            'id_contri' => $lista->id_contribuyente,
+            'idesta' => $lista->id_estado_empresa,
+            'contribuyente' => $contribuyente,
+            'estado_buses' => $estado_buses,
+            
+            ];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
 
     /// CIERRE Y TRASPASO DE BUSES DETALLE
-    public function cierres_traspasosBus($id_buses_detalle){
+    public function cierres_traspasosBus($id){
             
         $idusuario = Auth::id();
         $infouser = Usuario::where('id', $idusuario)->first();
-        $estado_buses = EstadoBuses::All();
-        $ConsultaEmpresa = Empresas::All();
-        $empresas = Empresas::ALL();
-        $contribuyente = Contribuyentes::ALL();
+        $estado_buses = EstadoBuses::All();     
+        $contribuyentes = Contribuyentes::ALL();
 
-      
 
-        $bus=BusesDetalle        
-        ::join('empresa','buses_detalle.id_empresa','=','empresa.id')
-        ->join('estado_buses', 'buses_detalle.id_estado_buses', '=','estado_buses.id')
-                                     
-        ->select('buses_detalle.id as id_buses_detalle', 'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.tarifa',
-                'buses_detalle.fecha_apertura','buses_detalle.estado_especificacion' ,      
-                'empresa.id as id_empresa', 'empresa.nombre as empresa','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
-                'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta',
-                'empresa.telefono',
-                'estado_buses.estado')
-
-            ->where('buses_detalle.id',$id_buses_detalle)                
+        $bus = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+            ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+    
+            ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+            'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+            'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+            'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+            
+            'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+            'estado_buses.estado')
+                            
+        ->where('buses_detalle.id', $id)                
         ->first();
 
+        
         $calificacionB=BusesDetalleEspecifico
         ::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
                             
         //Consulta para mostrar los rótulos que pertenecen a una sola empresa
                               
-        ->select('buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
+        ->select('buses_detalle_especifico.id as id_buses_detalle_esp','buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
         'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.fecha_apertura','buses_detalle.tarifa')
       
-        ->where('id_buses_detalle',$id_buses_detalle)                
+        ->where('id_buses_detalle', $id)                
         ->get();
 
 
@@ -1223,15 +1251,128 @@ class BusesDetalleController extends Controller
                 compact(
                         'estado_buses',     
                         'bus',
-                        'ConsultaEmpresa',
-                        'contribuyente',
-                        'empresas',
-                        'calificacionB'
-                      
+                        'id',                     
+                        'contribuyentes',                        
+                        'calificacionB',                      
                     ));
     }
 
+    public function nTraspasoBus (Request $request)
+    {
 
+        $id = $request->id;
+        $id_contribuyente = $request->contribuyente;
+        $buses_array = $request->buses_array;
+        $id_buses_detalle_esp = $request->id_buses_detalle_esp;
+        
+    log::info("hola");
 
+    
+        for($i=0; $i<count($request->buses_array); $i++)
+        {
+            log::info($request->buses_array[$i]);
+        }
+
+    
+        return;
+
+        log::info($id);
+        log::info($id_contribuyente);
+        log::info($buses_array);
+        log::info($id_buses_detalle_esp);
+  
+
+        $bus = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+        ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+    
+        ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+        'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+        'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+        'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+            
+        'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+        'estado_buses.estado')
+      
+                
+        ->find($id);
+
+        $datos_contribuyente=Contribuyentes::select('nombre','apellido')
+        ->where('id', $id_contribuyente)
+        ->first();
+
+        $regla = array(  
+            'id' => 'required',
+            'contribuyente' => 'required',
+        );
+      
+        $validar = Validator::make($request->all(), $regla,
+      
+        );
+
+        if ($validar->fails())
+        { 
+                return ['success' => 0,
+                'message' => $validar->errors()->first()
+            ];
+        }
+
+        if(BusesDetalleEspecifico::where('id', $request->id_buses_detalle_esp)->first())
+        {
+            //** Guardar registro historio en tabla traspasos */
+
+        
+            if($id_contribuyente != $bus->id_contribuyente)
+            {
+                $traspaso = new TraspasoBuses();
+                $traspaso->id_buses_detalle = $id;
+                $traspaso->nombre_bus = $request->buses_array;        
+                $traspaso->propietario_anterior = $bus->contribuyente.' '.$bus->apellido;
+                $traspaso->propietario_nuevo =  $datos_contribuyente->nombre.' '.$datos_contribuyente->apellido;
+                $traspaso->fecha_a_partir_de = $request->Apartirdeldia;
+                $traspaso->save();
+                    //** FIN- Guardar registro historio en tabla traspasos */
+                    
+                    BusesDetalleEspecifico::where('id', $request->id_buses_detalle_esp)->update([
+            
+                            'id_buses_detalle' => $bus->id,
+                    
+                        ]);
+
+                        return ['success' => 1];
+                        
+            }else{ 
+
+                return ['success' => 3];
+
+            }
+        }else{
+
+                return ['success' => 2];
+
+                }
+ 
+
+    }
+
+    public function tablaTraspasos(BusesDetalleEspecifico $listado, $id)
+    {
+        $buses = BusesDetalle::ALL();
+        
+        $listado=BusesDetalleEspecifico
+        ::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
+                            
+                                    
+        ->select('buses_detalle_especifico.id as id_buses_detalle_esp','buses_detalle_especifico.id_buses_detalle as id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
+        'buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.fecha_apertura','buses_detalle.tarifa')
+      
+        ->where('id_buses_detalle', $buses->id)                
+        ->get();
+
+            return view('backend.admin.Buses.CierreTraspaso.tabla.tablaTraspasos',
+            compact('listado',
+                    'buses',
+                    'id'));
+        
+    }
 
 }   
