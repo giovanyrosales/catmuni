@@ -75,6 +75,20 @@
 
             <div class="col-md-3">
                 <div class="form-group">
+                    <label>NÚMERO DE FICHA:</label>
+                </div>
+            </div><!-- /.col-md-6 -->
+               <!-- Inicia Fecha de Inspección -->
+            <div class="col-md-3">
+                <div class="form-group">  
+                    <input type="text"  value="{{$ficha}} " disabled id="nFicha" class="form-control" required >                    
+                </div>
+            </div>
+              <!-- Finaliza Fecha de Inspección-->
+               <!-- /.form-group -->
+
+            <div class="col-md-3">
+                <div class="form-group">
                     <label>FECHA DE APERTURA:</label>
                 </div>
             </div><!-- /.col-md-6 -->
@@ -233,6 +247,19 @@
           <div class="card-body"><!-- Card-body -->
             <div class="row"><!-- /.ROW1 -->
             
+
+              <div class="col-md-6">
+                  <div class="form-group">
+                        <label>Número de ficha:</label>
+                  </div>
+              </div><!-- /.col-md-6 -->
+              <div class="col-md-6">
+                  <div class="form-group">
+                        <input  type="text" class="form-control text-success" disabled value="{{ $ficha }}"  id="nFicha" class="form-control" required >
+                  </div>
+              </div><!-- /.col-md-6 -->
+               <!-- /.form-group -->
+
              <!-- /.form-group -->
                <div class="col-md-6">
                   <div class="form-group">
@@ -242,9 +269,9 @@
                <div class="col-md-6">
                   <div class="form-group">
                         <input type="text"  value="{{$nom_empresa}}" name="nombre" disabled id="nom_empresa" class="form-control" required >
-                        <input type="" value="{{$contribuyentes->id}}"  disabled id="id_contribuyente" class="form-control" required >
-                        <input type="" value="{{$buses->id}}"  disabled id="id_buses_detalle" class="form-control" required >
-                        <input type="" value="{{$buses->nFicha}}"  disabled id="id_buses_detalle" class="form-control" required >
+                        <input type="text" hidden value="{{$contribuyentes->id}}"  disabled id="id_contribuyente" class="form-control" required >
+                        <input type="text" hidden value="{{$buses->id}}"  disabled id="id_buses_detalle" class="form-control" required >
+                        <input type="text" hidden value="{{$buses->nFicha}}"  disabled id="nFicha" class="form-control" required >
                         
                      
                   </div>
@@ -443,7 +470,7 @@
       {
       
           var id_contribuyente = document.getElementById('id_contribuyente').value;
-          var ficha = document.getAnimations('nFicha').value;
+          var ficha = document.getElementById('nFicha').value;
           var id_buses_detalle = document.getElementById('id_buses_detalle').value;       
           var estado_calificacion = document.getElementById('estado_calificacion').value;
           var fechacalificar = document.getElementById('fechacalificar').value;
