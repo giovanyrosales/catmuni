@@ -73,6 +73,7 @@
             background-color: #E2FFED;
             color: #1E1E1E;
         }
+        
 </style>
 @stop    
 
@@ -107,7 +108,7 @@
     <!-- Inicia Contenido-->
     <div class="col-md-6" style="width: 95%; height:50%; margin: 0 auto;">
         <div class="input-group mb-3">
-            <select required onchange="buscar_obligaciones_tributarias()" class="form-control selectpicker show-tick" data-style="btn btn-outline-success"  data-show-subtext="true" data-live-search="true" id="select-contribuyente" title="Seleccione un contribuyente.">
+            <select required onchange="buscar_obligaciones_tributarias()" class="form-control selectpicker show-tick" data-style="btn btn-outline-success"  data-show-subtext="false" data-live-search="true" id="select-contribuyente" title="Seleccione un contribuyente.">
                 @foreach($contribuyentes as $contribuyente)
                   <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
                 @endforeach 
@@ -133,19 +134,19 @@
           <img src="{{ asset('/img/063.svg') }}" id="img_contribuyente" style="display: block;margin: 0px auto;width: 30%; height:30%;" >
           <!--Tarjeta para empresas-->
           <div class="card border-primary mb-3" id="tarjeta_empresas_registradas">
-                    <div class="card-header bg-transparent border-primary">
-                        <h5><span class="badge badge-pill badge-primary"><i class="fas fa-building"></i></span>&nbsp;<span class="badge badge-dark">Empresas registradas</span></h5>
+                    <div class="card-header"  style="background-color:#14A3D9; color: #FFFFFF;">
+                        <h5><span class="badge badge-pill badge-light"><i class="fas fa-building"></i></span>&nbsp;<b>Empresas registradas</b></h5>
                     </div>
                       <div class="card-body">
                           <!--Tabla 12-->
                           <table class="table" id="matriz_ver_empresas" style="border: 100px;" data-toggle="table">
                                     <thead>
                                     <tr>      
-                                      <th style="width: 15%; text-align: center;font-weight: 700;">Ver empresa</th>                     
-                                      <th style="width: 25%; text-align: center;font-weight: 700;">Nombre</th>
-                                      <th style="width: 15%; text-align: center;font-weight: 700;">N° Tarjeta</th>
-                                      <th style="width: 15%; text-align: center;font-weight: 700;">Giro C.</th>
-                                      <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
+                                      <td style="width: 15%; text-align: center;font-weight: 700;">Ver</td>                     
+                                      <td style="width: 25%; text-align: center;font-weight: 700;">Nombre</td>
+                                      <td style="width: 15%; text-align: center;font-weight: 700;">Giro Comercial</td>
+                                      <td style="width: 15%; text-align: center;font-weight: 700;">Estado</td>
+                                      <td style="width: 15%; text-align: center;font-weight: 700;">N° Ficha</td>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -158,7 +159,7 @@
             <!--Tarjeta para Buses-->
             <div class="card border-success mb-3" id="tarjeta_buses_registradas">
                     <div class="card-header bg-transparent border-success">
-                        <h5><span class="badge badge-pill badge-success"><i class="fas fa-bus"></i>&nbsp;</span>&nbsp;<span class="badge badge-dark">Buses registrados</span></h5>
+                        <h5><span class="badge badge-pill badge-success"><i class="fas fa-bus"></i>&nbsp;</span>&nbsp;<b>Buses registrados</b></h5>
                     </div>
                       <div class="card-body">
                           <!--Tabla 12-->
@@ -167,9 +168,9 @@
                                     <tr>  
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Ver</th>                         
                                       <th style="width: 25%; text-align: center;font-weight: 700;">Empresa</th>
-                                      <th style="width: 15%; text-align: center;font-weight: 700;">N° Tarjeta</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Cantidad</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">N° Ficha</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -275,13 +276,9 @@ function buscar_obligaciones_tributarias(){
                                       "<button type='button' class='btn btn-primary btn-xs'onclick=VerEmpresa('"+infodetalle[i].id+"')>&nbsp;&nbsp;<i class='fas fa-search'></i>&nbsp;&nbsp;</button>"+
                                 "</td>"+
 
-                                "<td id='especial' align='center'>"+
-                                    infodetalle[i].nombre+
-                                "</td>"+
-                                
                                 "<td align='center'>"+
-                                    infodetalle[i].num_tarjeta+
-                                "</td>"+
+                                    infodetalle[i].nombre+
+                                "</td>"+                      
 
                                 "<td align='center'>"+
                                     infodetalle[i].nombre_giro+
@@ -289,6 +286,10 @@ function buscar_obligaciones_tributarias(){
 
                                 "<td align='center'>"+
                                       infodetalle[i].estado+
+                                "</td>"+
+
+                                "<td align='center'>"+
+                                "<span class='badge badge-pill badge-dark'> "+infodetalle[i].num_tarjeta+" </span>"+
                                 "</td>"+
 
                                 "</tr>";
@@ -303,26 +304,25 @@ function buscar_obligaciones_tributarias(){
                             for (var i = 0; i < infodetalle_bus.length; i++) {
 
                             var markup = "<tr id='"+infodetalle_bus[i].id+"'>"+
-
                             
                                 "<td align='center'>"+                
                                       "<button type='button' class='btn btn-success btn-xs'onclick=VerBuses('"+infodetalle_bus[i].id+"')>&nbsp;&nbsp;<i class='fas fa-search'></i>&nbsp;&nbsp;</button>"+
                                 "</td>"+
 
-                                "<td id='especial2' align='center'>"+
+                                "<td align='center'>"+
                                   infodetalle_bus[i].nom_empresa+
                                 "</td>"+
-                                
-                                "<td align='center'>"+
-                                  infodetalle_bus[i].nFicha+
-                                "</td>"+
-
+                            
                                 "<td align='center'>"+
                                   infodetalle_bus[i].cantidad+
                                 "</td>"+
                                 
                                 "<td align='center'>"+
                                   infodetalle_bus[i].estado_bus+
+                                "</td>"+
+
+                                "<td align='center'>"+
+                                "<span class='badge badge-pill badge-dark'> "+infodetalle_bus[i].nFicha+" </span>"+
                                 "</td>"+
 
                                 "</tr>";
@@ -339,7 +339,7 @@ function buscar_obligaciones_tributarias(){
                                   icon: 'error',
                                   title: 'Oops...',
                                   text: 'No se ha encontrado ningún registro!',
-                                  footer: '<a href="">Why do I have this issue?</a>'
+                                 // footer: '<a href="">Why do I have this issue?</a>'
                                 })
                                 $('#img_contribuyente').show();
                                 $('#tarjeta_empresas_registradas').hide();
@@ -361,7 +361,7 @@ function VerBuses(id_bus)
     {
         openLoading();
         window.location.href="{{ url('/admin/buses/vista/') }}/"+id_bus;
-    }id_bus
+    }
 
 function modalMensaje(titulo, mensaje)
 {

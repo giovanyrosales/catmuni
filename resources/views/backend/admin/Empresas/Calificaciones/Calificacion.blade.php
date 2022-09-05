@@ -18,6 +18,7 @@
 
 
 @stop
+
 <!-- Función para calcular la calificación --------------------------------------------------------->
 <script type="text/javascript">
     function deseleccionarCheck()
@@ -48,6 +49,7 @@
                 $('#tarifa').hide();
                 $('#checkCasoEspecial').hide();
                 $('#btn_imprimirCalificacion').hide();
+                $('#btn_Resolucion_Apertura').hide();
                 $('#cerrarModal2').hide();
                 $('#cerrarcalificacion2').hide();
 
@@ -62,7 +64,6 @@
 window.onload = f1;
 
 </script>
-
 <script>
 
 
@@ -684,7 +685,7 @@ function calculo_calificacion_matricula()
             <!-- /.card-body -->
                   <div class="card-footer">
                     @if($MatriculasReg== '0')
-                    <button type="button" class="btn btn-success float-right" onclick="GenerarCalificacion(), calculo({{$empresa->id_act_economica}});"><i class="fas fa-envelope-open-text"></i>
+                    <button type="button" class="btn btn-success float-right"  onclick="GenerarCalificacion(), calculo({{$empresa->id_act_economica}});"><i class="fas fa-envelope-open-text"></i>
                     &nbsp;Generar Calificación&nbsp;</button>
                     @else
                     <button type="button" class="btn btn-primary float-right" onclick="GenerarCalificacionMatricula()"><i class="fas fa-envelope-open-text"></i>
@@ -712,7 +713,12 @@ function calculo_calificacion_matricula()
           <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Registrar calificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+            @if($MatriculasReg==0)
             <button type="button" class="close" onclick="deseleccionarCheck()" data-dismiss="modal" aria-label="Close" id="cerrarModal1">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            @endif
+            <button type="button" class="close"  data-dismiss="modal" aria-label="Close" id="cerrarModal1">
               <span aria-hidden="true">&times;</span>
             </button>
             <button type="button" class="close bg-warning" onclick="listarEmpresas()" data-dismiss="modal" aria-label="Close" id="cerrarModal2">
@@ -992,7 +998,7 @@ function calculo_calificacion_matricula()
                   <div class="form-group">
                         
                     <table border="1" width:860px;>
-                      <tr>
+                      <tr align="center">
                         <th scope="col">EMPRESA</th>
                         <th scope="col">ACTIVO TOTAL</th>
                         <th scope="col">DEDUCCIONES</th>
@@ -1134,21 +1140,31 @@ function calculo_calificacion_matricula()
          <!-- /.card-body -->
           <div class="card-footer">
               <button type="button" class="btn btn-secondary" onclick="ImprimirCalificacion({{ $empresa->id }})" id="btn_imprimirCalificacion">
-                  <i class="fa fa-print"></i>&nbsp; Imprimir Calificación&nbsp;
+                  <i class="fa fa-print"></i>&nbsp;Calificación&nbsp;
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="Imprimir_Resolucion_Apertura({{ $empresa->id }})" id="btn_Resolucion_Apertura">
+                  <i class="fa fa-print"></i>&nbsp;Resolución de Apertura&nbsp;
               </button>
               @if($MatriculasReg=='0')
               <button type="button" class="btn btn-success float-right" onclick="nuevo()" id="guardarcali"><i class="fas fa-edit">
                   </i> &nbsp;Registrar Calificación&nbsp;
               </button>
+              <br>
+              <br>
+              <button type="button" class="btn btn-default" onclick="deseleccionarCheck()" id="cerrarcalificacion1" data-dismiss="modal">
+                  Cerrar
+              </button>
               @else
               <button type="button" class="btn btn-primary float-right" onclick="Registrar_Calificacion_matricula()" id="registrar_cali"><i class="fas fa-edit">
                   </i> &nbsp;Registrar Calificación&nbsp;
               </button>
-              @endif
-              <br><br>
-              <button type="button" class="btn btn-default" onclick="deseleccionarCheck()" id="cerrarcalificacion1" data-dismiss="modal">
+              <br>
+              <br>
+              <button type="button" class="btn btn-default" id="cerrarcalificacion1" data-dismiss="modal">
                   Cerrar
               </button>
+              @endif
+
               <button type="button" class="btn btn-warning" onclick="listarEmpresas()" id="cerrarcalificacion2" data-dismiss="modal">
                   Cerrar
               </button>
@@ -1192,7 +1208,7 @@ function calculo_calificacion_matricula()
 
 
     
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function(){
             
           document.getElementById("divcontenedor").style.display = "block";
@@ -1241,6 +1257,11 @@ function agregarTarifaFija(){
 function ImprimirCalificacion(id){
 
   window.open("{{ URL::to('/admin/reporte/calificacion/pdf') }}/" + id );
+
+}
+function Imprimir_Resolucion_Apertura(id){
+
+window.open("{{ URL::to('/admin/reporte/resolucion_apertura/pdf') }}/" + id );
 
 }
 
@@ -1343,12 +1364,13 @@ function Registrar_Calificacion_matricula(){
                      
                         }).then((result) => {
                         if (result.isConfirmed) {
-                            $('#guardarcali').hide();
+                            $('#registrar_cali').hide();
                             $('#btn_imprimirCalificacion').show();
+                            $('#btn_Resolucion_Apertura').show();
                             $('#cerrarModal1').hide();
                             $('#cerrarcalificacion1').hide();
                             $('#cerrarModal2').show();
-                            $('#cerrarcalificacion2').show();                      
+                            $('#cerrarcalificacion2').show();                  
                             }
                         });
                         
@@ -1470,6 +1492,7 @@ function nuevo(){
                         if (result.isConfirmed) {
                             $('#guardarcali').hide();
                             $('#btn_imprimirCalificacion').show();
+                            $('#btn_Resolucion_Apertura').show();
                             $('#cerrarModal1').hide();
                             $('#cerrarcalificacion1').hide();
                             $('#cerrarModal2').show();

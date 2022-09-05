@@ -724,19 +724,19 @@ function nuevo(){
                         }       
                 //**** Fin de validar */
 
-            formData.append('tipo_matricula', tipo_matricula);
-            formData.append('cantidad', cantidad);
+                    formData.append('tipo_matricula', tipo_matricula);
+                    formData.append('cantidad', cantidad);
 
-            // llenar array para enviar
-            for(var f = 0; f < num_serie.length; f++){
-            
-            formData.append('cod_municipal[]', cod_municipal[f]);
-            formData.append('codigo[]', codigo[f]);
-            formData.append('num_serie[]', num_serie[f]);
-            formData.append('direccionM[]', direccionM[f]);
-            console.log(cod_municipal[f],codigo[f],num_serie[f],direccionM[f]);
+                    // llenar array para enviar
+                    for(var f = 0; f < num_serie.length; f++){
+                    
+                    formData.append('cod_municipal[]', cod_municipal[f]);
+                    formData.append('codigo[]', codigo[f]);
+                    formData.append('num_serie[]', num_serie[f]);
+                    formData.append('direccionM[]', direccionM[f]);
+                    console.log(cod_municipal[f],codigo[f],num_serie[f],direccionM[f]);
 
-            }
+                    }
           }//**** Fin de si hay registro */
        
         openLoading();

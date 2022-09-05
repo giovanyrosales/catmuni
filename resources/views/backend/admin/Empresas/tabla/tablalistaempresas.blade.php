@@ -7,20 +7,20 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                <th style="width: 20%;">Nombre</th>
-                                <th style="width: 15%;">N° Tarjeta</th>
+                                <th style="width: 12%;">N° Ficha</th>
+                                <th style="width: 25%;">Nombre</th>
                                 <th style="width: 12%;">Giro C.</th>
                                 <th style="width: 10%;">Estado</th>
-                                <th style="width: 20%;">Dirección</th>
-                                <th style="width: 25%;">Representante Legal</th>
+                                <th style="width: 23%;">Dirección</th>
+                                <th style="width: 22%;">Representante</th>
                                 <th style="width: 15%;">Acción</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($lista as $dato)
                                 <tr>
+                                    <td align="center"><span class="badge badge-pill badge-dark">{{$dato->num_tarjeta}}</span></td>
                                     <td>{{$dato->nombre}} </td>
-                                    <td>{{$dato->num_tarjeta}}</td>
                                     <td>{{$dato->nombre_giro}}</td>
                                     @if($dato->estado == 'Activo')
                                     <td align="center"> <span class="badge bg-success">Activo</span></td>

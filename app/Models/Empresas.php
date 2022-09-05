@@ -18,16 +18,17 @@ class Empresas extends Model
         'matricula_comercio',
         'nit', 
         'tipo_comerciante',
+        'referencia_catastral',
         'inicio_operaciones',
         'direccion', 
         'num_tarjeta', 
         'telefono',
+        'num_resolucion',
         'excepciones_especificas',
         'id_contribuyente',
         'id_estado_empresa',
         'id_giro_comercial',
         'id_actividad_economica',
-        'id_actividad_especifica'
       ];
 
 

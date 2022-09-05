@@ -415,6 +415,7 @@ function calculo_calificacion_matricula()
         <div class="card card-info">
           <div class="card-header">
             <h5 class="modal-title">Registrar recalificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+            <input type="hidden" disabled id="id_matriculadetalle">
           </div>
           <!-- /.card-header -->
           
@@ -753,7 +754,7 @@ function calculo_calificacion_matricula()
             <!-- /.card-body -->
                   <div class="card-footer">
                     @if($MatriculasReg== '0')
-                    <button type="button" class="btn btn-info float-right" onclick="GenerarCalificacion(), calculo({{$empresa->id_act_economica}});"><i class="fas fa-envelope-open-text"></i>
+                    <button type="button" class="btn btn-info float-right"  onclick="GenerarCalificacion(), calculo({{$empresa->id_act_economica}});"><i class="fas fa-envelope-open-text"></i>
                     &nbsp;Generar Calificación&nbsp;</button>
                     @else
                     <button type="button" class="btn btn-primary float-right" onclick="GenerarCalificacionMatricula()"><i class="fas fa-envelope-open-text"></i>
@@ -781,7 +782,12 @@ function calculo_calificacion_matricula()
           <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Registrar calificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
+            @if($MatriculasReg==0)
             <button type="button" class="close" onclick="deseleccionarCheck()" data-dismiss="modal" aria-label="Close" id="cerrarModal1">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            @endif
+            <button type="button" class="close"  data-dismiss="modal" aria-label="Close" id="cerrarModal1">
               <span aria-hidden="true">&times;</span>
             </button>
             <button type="button" class="close bg-warning" onclick="listarEmpresas()" data-dismiss="modal" aria-label="Close" id="cerrarModal2">
@@ -911,7 +917,7 @@ function calculo_calificacion_matricula()
                <div class="col-md-6">
                   <div class="form-group">
                         <input type="text" disabled name="fechabalanceodjurada" id="fechabalanceodjurada" class="form-control" >
-                        <input type="hidden" name="estado_calificacion" id="estado_calificacion" class="form-control" value="Recalificado">
+                        <input type="hidden" name="estado_calificacion" id="estado_calificacion" class="form-control" value="recalificado">
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -1336,17 +1342,20 @@ function borrarCalificacion()
       
      // se envia el ID del rótulo
       var id = document.getElementById('idborrar').value;
+      var id_empresa=document.getElementById('id_empresa').value;
 
       var formData = new FormData();
       formData.append('id', id);
+      formData.append('id_empresa', id_empresa);
 
             axios.post('/admin/empresas/calificaciones/eliminar', formData, {
             })
               .then((response) => {
                 closeLoading()
                   $('#modalEliminarCalificacion').modal('hide');
-                    
+
                if(response.data.success === 1){
+                
                 Swal.fire({
                           position: 'top-end',
                           icon: 'success',
@@ -1354,7 +1363,14 @@ function borrarCalificacion()
                           showConfirmButton: false,
                           timer: 2000
                         })
-                  recargar();
+                  if(response.data.calificaciones_encontradas===0){
+
+                          VerEmpresa('{{$empresa->id}}');
+                  }else{
+
+                          recargar();
+                       }
+                  
                }else{
                   toastMensaje('error', 'Error al borrar');
            
@@ -1508,7 +1524,7 @@ function Registrar_Calificacion_matricula(){
                      
                         }).then((result) => {
                         if (result.isConfirmed) {
-                            $('#guardarcali').hide();
+                            $('#registrar_cali').hide();
                             $('#btn_imprimirCalificacion').show();
                             $('#cerrarModal1').hide();
                             $('#cerrarcalificacion1').hide();

@@ -121,6 +121,12 @@ class EmpresaController extends Controller
     ->where('id_contribuyente',$request->id_contribuyente)
     ->get();
 
+    foreach($buses_registrados as $dato){
+            if($dato->nom_empresa==null){
+                $dato->nom_empresa='';
+            }
+    }
+
     if(sizeof($empresas_registradas) == 0){
         $empresas_reg=0;
     }else{
@@ -534,9 +540,8 @@ public function Recalificacion($id)
             $cali_lista=CalificacionMatriculas::latest()
             ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
             ->first();
-        } 
+        }
 
-   
     return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('monto','montoMatriculaValor','detectorNull','empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','matriculas','cali_lista','anio_actual','MatriculasReg','act_especificas','matriculasRegistradas'));
     
 }
@@ -573,7 +578,7 @@ public function show($id)
                 }
 
         }
-  
+    log::info('pase recalificacion :'.$pase_cobro_mat);
     log::info($pase_cobro_mat);
     //** Inicia - Para obtener la tasa de interes más reciente */
     $Tasainteres=Interes::latest()
@@ -934,7 +939,7 @@ public function show($id)
                 $detectorCobro=1;
             }
               
-                
+                log::info('detectorNull :'.$detectorNull);
      return view('backend.admin.Empresas.show', compact(            
                                                         'empresa',                                                           
                                                         'giroscomerciales',                                                          
@@ -1195,29 +1200,16 @@ public function calculo_cobros_empresa(Request $request)
                         
 
              /**¨Para detectar los cobros especiales y darle su tarifa */
-                if($empresa->id_actividad_especifica==118)
-                {
-                    $tarifaMulta=$request->tarifaMes;
-                } else if($empresa->id_actividad_especifica==120)
+                        if($empresa->excepciones_especificas==='SI')
                         {
                             $tarifaMulta=$request->tarifaMes;
-                        }else if($empresa->id_actividad_especifica==121)
-                                {
-                                    $tarifaMulta=$request->tarifaMes;
-                                }else if($empresa->id_actividad_especifica==122)
-                                        {
-                                            $tarifaMulta=$request->tarifaMes;
-                                        }else if($empresa->id_actividad_especifica==127)
-                                                {
-                                                    $tarifaMulta=$request->tarifaMes;
-                                                }else{
-                                                    
-                                                    $tarifaMulta=calificacion::where('año_calificacion','=',$TarifaAñoMulta)
-                                                    ->where('id_empresa','=',$id) 
-                                                       ->pluck('pago_mensual') 
-                                                           ->first();
-               
-                                                    }
+                    
+                        }else{                        
+                                $tarifaMulta=calificacion::where('año_calificacion','=',$TarifaAñoMulta)
+                                ->where('id_empresa','=',$id) 
+                                    ->pluck('pago_mensual') 
+                                        ->first();
+                                }
 
                 //**¨Fin detectar los cobros especiales */
                     
@@ -1625,7 +1617,7 @@ public function cobros($id)
     $tasasDeInteres = Interes::select('monto_interes')
     ->orderby('id','desc')
     ->get();
-    //uk
+    
 
     $consulta_detalle_matricula=MatriculasDetalle::select('id')
     ->where('id_empresa', "=", $id) 
@@ -1829,6 +1821,11 @@ public function nuevaEmpresa(Request $request){
         $excepciones_especificas='SI';
     }
 
+    //Obtenemos la última resoluición y aumentamos su número.
+    $ultima_resolucion=Empresas::orderBy('id','desc')->pluck('num_resolucion')->first();
+    $nueva_resolucion=($ultima_resolucion + 1);
+
+
     DB::beginTransaction();
     try {
 
@@ -1847,6 +1844,7 @@ public function nuevaEmpresa(Request $request){
     $dato->num_tarjeta = $request->num_tarjeta;
     $dato->telefono = $request->telefono;
     $dato->excepciones_especificas = $excepciones_especificas;
+    $dato->num_resolucion = $nueva_resolucion;
     $dato->save();
     if($request->cantidad != null) {
         if($dato->save())
@@ -1909,6 +1907,7 @@ public function nuevaEmpresa(Request $request){
  //Editar empresa
  public function editarEmpresas(Request $request){
     log::info($request->all());
+
     $regla = array(  
         'num_tarjeta' => 'required|unique:empresa,num_tarjeta,'.$request->id,
     );
@@ -1925,6 +1924,15 @@ public function nuevaEmpresa(Request $request){
         'message' => $validar->errors()->first()
     ];
     }
+
+    $toggle=$request->toggle;
+
+    if($toggle==0){
+        $excepciones_especificas='NO';
+    }else if($toggle==1){
+        $excepciones_especificas='SI';
+    }
+
   
     if(Empresas::where('id', $request->id)->first()){
 
@@ -1940,7 +1948,8 @@ public function nuevaEmpresa(Request $request){
             'inicio_operaciones' => $request->inicio_operaciones,
             'direccion' => $request->direccion,
             'num_tarjeta' => $request->num_tarjeta,
-            'telefono' => $request->telefono
+            'telefono' => $request->telefono,
+            'excepciones_especificas' =>  $excepciones_especificas
         
         ]);
 
@@ -2319,7 +2328,7 @@ public function calculo_calificacion(Request $request)
        if( $estado_calificacion=='calificado')
        {
            $multabalance='0.00';
-           $DeterminacionDeMulta='No Aplica multas por ser Calificación';
+           $DeterminacionDeMulta='No aplica multas por ser Calificación';
        
        }
        else if ( $estado_calificacion=='recalificado')
@@ -2561,7 +2570,8 @@ public function nuevaCalificacion(Request $request){
   $pago_anual=round($request->pago_anualvariable,2);
   $fondo_mensualvariable=round($request->fondo_mensualvariable,2);
   $fondo_anual=round($request->fondo_anualvariable,2);
-  $total_impuesto_anual=round($request->total_impuesto_anualvariable,2);
+  $total_impuesto_anual=round($request->total_impuesto_anualvariable,1);
+
   $tarifa_colones=round($request->tarifa_colonesFijo,2);
   $total_mat_permisos=round($request->total_mat_permisos,2);
   $activoTotal=round($request->activo_total,2);
@@ -2583,20 +2593,9 @@ public function nuevaCalificacion(Request $request){
 
     $id_multas=1;
     $id_estado_multa=2;
-
-    $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
-         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
-                         
-         ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
-                 'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-                 'matriculas.nombre as tipo_matricula')
-         ->where('id_empresa', $request->id_empresa)     
-         ->get();
         
-       $NohayRegistro=0;
+    $NohayRegistro=0;
 
-        Log::info('matriculas: '.$matriculas);
-    
     $regla = array(
 
         'fecha_calificacion' => 'required',
@@ -2648,38 +2647,12 @@ public function nuevaCalificacion(Request $request){
                 $dato->multa_balance = $request->multaBalance;
                 $dato->codigo_tarifa = $request->codigo_tarifa;
                 $dato->save();
-
-                      //** Guardar calificaciones de matriculas detalle */
-                      if(sizeof($matriculas) != 0){
-                        log::info('entro a if 1');
-                         foreach($matriculas as $dato) {
-                              $rDetalle = new CalificacionMatriculas();
-                              $rDetalle->id_matriculas_detalle = $dato->id;
-                              $rDetalle->id_estado_matricula='2';
-                              $rDetalle->nombre_matricula = $dato->tipo_matricula;
-                              $rDetalle->cantidad = $dato->cantidad;
-                              $rDetalle->monto_matricula = $dato->monto;
-                              $rDetalle->pago_mensual = $dato->pago_mensual;
-                              $rDetalle->año_calificacion = $request->año_calificacion;
-                              $rDetalle->estado_calificacion = $request->estado_calificacion;
-                              $rDetalle->save();
-                              }
-                              
-                            if($dato->save() && $rDetalle->save())
-                            {
-                                return ['success' => 1];
-                            
-                            }
-                            
-                         } else
-                                {
-                                    log::info('entro al else');
-                                        if($dato->save())
-                                            {
-                                            return ['success' => 1];
-                                        
-                                            }
-                                }
+                if($dato->save())
+                        {
+                        return ['success' => 1];
+                    
+                        }
+            
                         
         }
 
@@ -2687,33 +2660,33 @@ public function nuevaCalificacion(Request $request){
 
 
 
-        //Realizar traspaso
-        public function infoTraspaso(Request $request)
-        {
-            $regla = array(
-                'id' => 'required',
-            );
+//Realizar traspaso
+public function infoTraspaso(Request $request)
+{
+    $regla = array(
+        'id' => 'required',
+    );
 
-            $validar = Validator::make($request->all(), $regla);
+    $validar = Validator::make($request->all(), $regla);
 
-            if ($validar->fails()){ return ['success' => 0];}
+    if ($validar->fails()){ return ['success' => 0];}
 
-            if($lista = Empresas::where('id', $request->id)->first()){
-               
-                $contribuyente = Contribuyentes::orderBy('nombre')->get();
-                $estado_empresa = EstadoEmpresas::orderBy('estado')->get();
-                return ['success' => 1,
+    if($lista = Empresas::where('id', $request->id)->first()){
+        
+        $contribuyente = Contribuyentes::orderBy('nombre')->get();
+        $estado_empresa = EstadoEmpresas::orderBy('estado')->get();
+        return ['success' => 1,
 
-                'idcont' => $lista->id_contribuyente,
-                'idesta' => $lista->id_estado_empresa,
-                'contribuyente' => $contribuyente,
-                'estado_empresa' => $estado_empresa,
-                
-            ];
-        }else{
-            return ['success' => 2];
-        }
-        }
+        'idcont' => $lista->id_contribuyente,
+        'idesta' => $lista->id_estado_empresa,
+        'contribuyente' => $contribuyente,
+        'estado_empresa' => $estado_empresa,
+        
+    ];
+}else{
+    return ['success' => 2];
+}
+}
 
         public function nuevoTraspaso(Request $request)
         {
@@ -2890,11 +2863,43 @@ public function nuevaCalificacion(Request $request){
 
         //Función para eliminar calificaciones
         public function eliminar_calificacion(Request $request)
-        {      
+        {    
+
+            $matriculas=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
+            ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
+                            
+            ->select('matriculas_detalle.id as id_matriculas_detalle', 'matriculas_detalle.cantidad','matriculas_detalle.monto',
+                    'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                    'matriculas.nombre as tipo_matricula')
+            ->where('id_empresa', $request->id_empresa)     
+            ->first();
+
             $cali = calificacion::find($request->id);
-            $cali->delete();
-                 
-                return ['success' => 1];
+            if($cali==null){
+                $cali = CalificacionMatriculas::find($request->id);
+                $cali->delete();  
+            }else{
+                  $cali->delete();
+                }
+            
+                if($matriculas==null){
+
+                    $buscando_calificaciones=calificacion::where('id_empresa',$request->id_empresa)
+                    ->first();
+                }else{
+                        $buscando_calificaciones=CalificacionMatriculas::where('id_matriculas_detalle',$matriculas->id_matriculas_detalle)
+                        ->first();
+                     } 
+                     if($buscando_calificaciones==null){
+                            $calificaciones_encontradas=0;
+                     }else{
+                            $calificaciones_encontradas=1;
+                          }
+
+                return [
+                            'success' => 1,
+                            'calificaciones_encontradas'=> $calificaciones_encontradas,
+                       ];
     
         }
         //Termina función para eliminar calificaciones
