@@ -182,16 +182,17 @@
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label hidden>NÚMERO DE TARJETA:</label>
+                        <label >NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="input-group mb-3">
+                        <input type="number" value="{{$buses->nFicha}}" name="" disabled id="nFicha" class="form-control" required >
                         <input type="number" hidden  value="{{$calificacion->id}}" name="" disabled id="id_buses_detalle" class="form-control" required >                     
                         
                   </div>
-                  <input type="number" value="{{$buses->id_contribuyente}}" name="" disabled id="id_contribuyente" class="form-control" required >
-                  <input type="number" value="{{$buses->nFicha}}" name="" disabled id="nFicha" class="form-control" required >
+                  <input type="number" hidden value="{{$buses->id_contribuyente}}" name="" disabled id="id_contribuyente" class="form-control" required >
+                
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
