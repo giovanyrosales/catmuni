@@ -107,7 +107,7 @@
 <section class="content">
     <div class="container-fluid" style="margin-left: 15px">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <div class="card card-green">
                     <div class="card-header">
                         <h3 class="card-title">Datos del Usuario</h3>
@@ -147,7 +147,7 @@
             <!-- /.col -->
             </div>
           <!-- /.row -->
-          </div>
+ 
            </div>
          <!-- /.card-body -->
         

@@ -270,29 +270,29 @@ function buscar_obligaciones_tributarias(){
                             
                             for (var i = 0; i < infodetalle.length; i++) {
 
-                            var markup = "<tr id='"+infodetalle[i].id+"'>"+
+                            var markup = `<tr id="${infodetalle[i].id}">
 
-                                 "<td align='center'>"+                
-                                      "<button type='button' class='btn btn-primary btn-xs'onclick=VerEmpresa('"+infodetalle[i].id+"')>&nbsp;&nbsp;<i class='fas fa-search'></i>&nbsp;&nbsp;</button>"+
-                                "</td>"+
+                            <td align="center">               
+                                <button type="button" class="btn btn-primary btn-xs" onclick="VerEmpresa(${infodetalle[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;</button>
+                            </td>
 
-                                "<td align='center'>"+
-                                    infodetalle[i].nombre+
-                                "</td>"+                      
+                            <td align="center">
+                                ${infodetalle[i].nombre}
+                            </td>                     
 
-                                "<td align='center'>"+
-                                    infodetalle[i].nombre_giro+
-                                "</td>"+
+                            <td align="center">
+                                ${infodetalle[i].nombre_giro}
+                            </td>
 
-                                "<td align='center'>"+
-                                      infodetalle[i].estado+
-                                "</td>"+
+                            <td align="center">
+                            ${infodetalle[i].id_estado_empresa!=1? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-danger">Cerrado</span>'}
+                            </td>
 
-                                "<td align='center'>"+
-                                "<span class='badge badge-pill badge-dark'> "+infodetalle[i].num_tarjeta+" </span>"+
-                                "</td>"+
+                            <td align="center">
+                                <span class="badge badge-pill badge-dark">${infodetalle[i].num_tarjeta}</span>
+                            </td>
 
-                                "</tr>";
+                           </tr>`;
 
                             $("#matriz_ver_empresas tbody").append(markup);
                             
@@ -303,29 +303,31 @@ function buscar_obligaciones_tributarias(){
 
                             for (var i = 0; i < infodetalle_bus.length; i++) {
 
-                            var markup = "<tr id='"+infodetalle_bus[i].id+"'>"+
+                             var markup = `<tr id="${infodetalle_bus[i].id}">
                             
-                                "<td align='center'>"+                
-                                      "<button type='button' class='btn btn-success btn-xs'onclick=VerBuses('"+infodetalle_bus[i].id+"')>&nbsp;&nbsp;<i class='fas fa-search'></i>&nbsp;&nbsp;</button>"+
-                                "</td>"+
+                                <td align="center">               
+                                      <button type="button" class="btn btn-success btn-xs" onclick="VerBuses(${infodetalle_bus[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;</button>
+                                </td>
 
-                                "<td align='center'>"+
-                                  infodetalle_bus[i].nom_empresa+
-                                "</td>"+
+                                <td align="center">
+                                ${infodetalle_bus[i].nom_empresa}
+                                </td>
                             
-                                "<td align='center'>"+
-                                  infodetalle_bus[i].cantidad+
-                                "</td>"+
+                                <td align="center">
+                                ${infodetalle_bus[i].cantidad}
+                                </td>
                                 
-                                "<td align='center'>"+
-                                  infodetalle_bus[i].estado_bus+
-                                "</td>"+
+                                <td align="center">
+                        
+                                ${infodetalle_bus[i].id_buses!=1? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-danger">Cerrado</span>'}
 
-                                "<td align='center'>"+
-                                "<span class='badge badge-pill badge-dark'> "+infodetalle_bus[i].nFicha+" </span>"+
-                                "</td>"+
+                                </td>
 
-                                "</tr>";
+                                <td align="center">
+                                <span class="badge badge-pill badge-dark"> ${infodetalle_bus[i].nFicha} </span>
+                                </td>
+
+                                </tr>`;
 
                             $("#matriz_ver_buses tbody").append(markup);
                             

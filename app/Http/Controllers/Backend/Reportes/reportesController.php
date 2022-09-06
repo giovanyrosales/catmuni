@@ -2790,7 +2790,6 @@ public function reporte_datos_empresa($id){
 
 public function resolucion_apertura($id){
 
-    $FechaDelDia = Carbon::now()->format('Y-m-d');
 
     $consul_matricula=MatriculasDetalle::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
     ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
@@ -2829,16 +2828,6 @@ public function resolucion_apertura($id){
         $califiquese=$empresa->nombre;
          }
 
-    /** Obtener la fecha y días en español y formato tradicional*/
-    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-    $fechaF = Carbon::parse(Carbon::now());
-    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
-    $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
-
-    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
-    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
-    /** FIN - Obtener la fecha y días en español y formato tradicional*/
-
     /** Obtener la fecha y días en español de inicio de operaciones*/
     $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
     $fechaF = Carbon::parse($empresa->inicio_operaciones);
@@ -2848,6 +2837,7 @@ public function resolucion_apertura($id){
     $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
     $dia_inicio_op = $dias[(date('N', strtotime($fechaF))) - 1];
     /** FIN - Obtener la fecha y días en español de inicio de operaciones*/
+
     
     //Configuracion de Reporte en MPDF
     $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
@@ -2864,6 +2854,16 @@ public function resolucion_apertura($id){
     {
         $calificacion_mat=CalificacionMatriculas::where('id_matriculas_detalle',$consul_matricula->id_detallematricula)
         ->first();
+
+        /** Obtener la fecha y días en español y formato tradicional*/
+        $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $fechaF = Carbon::parse($calificacion_mat->created_at);
+        $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+        $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+        $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+        $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+        /** FIN - Obtener la fecha y días en español y formato tradicional*/
 
         $total_anual_impuesto_matricula=number_format((float)($calificacion_mat->total_impuesto_mat*12), 2, '.', ',');
         
@@ -3020,7 +3020,17 @@ public function resolucion_apertura($id){
         {
             $calificacion_emp=calificacion::where('id_empresa',$id)
             ->first();
-            
+
+            /** Obtener la fecha y días en español y formato tradicional*/
+            $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+            $fechaF = Carbon::parse($calificacion_emp->created_at);
+            $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+            $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+            $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+            $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+            /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
             $tabla = "<div class='content'>
                             <img id='logo' src='$logoalcaldia'>
                             <img id='EscudoSV' src='$logoelsalvador'>

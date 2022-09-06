@@ -100,7 +100,7 @@ class EmpresaController extends Controller
     'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
     'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
     'contribuyente.direccion as direccionCont',
-    'estado_empresa.estado',
+    'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro','actividad_economica.id as id_act_economica',
     )
@@ -116,7 +116,7 @@ class EmpresaController extends Controller
     'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
     'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
     'contribuyente.direccion as direccionCont',
-    'estado_buses.estado as estado_bus',
+    'estado_buses.estado as estado_bus','estado_buses.id as id_buses',
     )
     ->where('id_contribuyente',$request->id_contribuyente)
     ->get();

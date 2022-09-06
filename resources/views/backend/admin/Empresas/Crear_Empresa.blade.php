@@ -219,7 +219,7 @@
             <div class="row"> 
                     <div class="col-md-6" id="Excepcion_especifica">
                           <div class="form-group">
-                              <label>¿Excepción especifica?</label>
+                              <label>¿Caso Especial?</label>
                                   <br>
                                       <label class="switch" style="margin-top:10px">
                                           <input type="checkbox" id="toggle-excepcion_especifica">
