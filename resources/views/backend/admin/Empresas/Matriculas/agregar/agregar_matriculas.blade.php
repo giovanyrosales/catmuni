@@ -127,8 +127,8 @@ function ocultarAdd(){
                        <!-- Inclución de tabla -->
                        <div class="m-0 row justify-content-center" id="DivMatriculas">
                             <div class="card">
-                                    <div class="card-header text-success">
-                                        <h5> Matrículas registradas para <span class="badge badge-secondary">{{$empresa->nombre}}</span></h5> 
+                                    <div class="card-header" style="background-color:#FFD219; color: #FFFFFF;">
+                                        <h5> Matrículas registradas para <span class="badge badge-pill badge-light">{{$empresa->nombre}}</span></h5> 
                                     </div>
                                     <div class="col-auto  p-5 text-center" id="tablaDatatable"></div>
                             </div>
@@ -385,38 +385,9 @@ function ocultarAdd(){
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-
-                                <!-- Cajitas para estadísticas inicia aquí -->
-                                <section class="content" id="seccionAlertas">
-                                     
-                                    <div class="container-fluid">
-                                        <!-- Small boxes (Stat box) -->
-                                        <div class="m-0 row justify-content-center" >
-                                             <div class="col-lg-8 col-2">
-                                                <center>
-                                                <h3 class="btn btn-primary"> Avisos: <span class="badge badge-pill badge-light">0</span></h3> &nbsp;
-                                                <h3 class="btn btn-primary"> Notificaciones: <span class="badge badge-pill badge-light">0</span></h3>
-                                                </center>
-                                            </div>
-                                        </div>
-                                        <!-- ./col -->
-                                    </div>
-                                   
-                                    <!-- Cajitas para estadísticas termina aquí -->
-
-                                    <div class="card" >
-                                        <div class="card-header">
-                                            <b>Avisos y notificaciones</b>
-                                        </div>
-                                        <div class="card-body">
-                                            <a href="#" class="btn btn-outline-info"><i class="fas fa-exclamation-circle"></i>&nbsp;Generar aviso</a>
-                                            <a href="#" class="btn btn-outline-warning"><i class="fas fa-envelope-open-text"></i>&nbsp;Generar notificación</a>
-                                        </div>
-                                        </div>
-                                        </section>
                                     <!--Tabla 1-->
                                      <div class="card" >
-                                        <div class="card-header">
+                                        <div class="card-header" style="background-color:#14A3D9; color: #FFFFFF;">
                                             <b>Información General</b>
                                         </div>
                                         <div class="card-body">

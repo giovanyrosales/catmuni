@@ -15,6 +15,9 @@
 
  <!-- Para vista detallada fin -->
 
+ <script src="https://kit.fontawesome.com/eb496ab1a0.js" crossorigin="anonymous"></script>
+
+
 @stop
 
 
@@ -29,6 +32,60 @@
         height: 50px;
         border-radius: 50%;
     }
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#btn-mas{
+    display: none;
+}
+#contenedor{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    float: left;
+}
+.redes a, .btn-mas label{
+    display: block;
+    text-decoration: none;
+    background: #08BE4D;
+    color: #fff;
+    width: 55px;
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0px 1px 10px rgba(0,0,0,0.4);
+    transition: all 500ms ease;
+}
+.redes a:hover{
+    background: #fff;
+    color: #C20E0E;
+}
+.redes a{
+    margin-bottom: -15px;
+    opacity: 0;
+    visibility: hidden;
+}
+#btn-mas:checked~ .redes a{
+    margin-bottom: 10px;
+    opacity: 1;
+    visibility: visible;
+}
+.btn-mas label{
+    cursor: pointer;
+    background: #118EE5; /** Color del botón */
+    font-size: 23px;
+}
+#btn-mas:checked ~ .btn-mas label{
+    transform: rotate(135deg);
+    font-size: 25px;
+}
+
+
+
 </style>
 
 <!-- Vista detallada inicia aquí-->
@@ -132,7 +189,7 @@
               @if($detectorNull== '0')
                         <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
                             <div class="widget stats-widget">
-                              <div class="widget-body clearfix bg-secondary">
+                              <div class="widget-body clearfix" style="background-color:#066287; color: #FFFFFF;">
                                   <div class="pull-left">
                                       <h3 class="widget-title text-white">Registrar Calificación</h3>
                                   </div>
@@ -141,18 +198,7 @@
                           </div><!-- .widget -->
                         </a>
                     @else 
-                      @if($calificaciones->estado_calificacion == '')
-                        <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
-                            <div class="widget stats-widget">
-                              <div class="widget-body clearfix bg-dark">
-                                  <div class="pull-left">
-                                      <h3 class="widget-title text-white">Registrar Calificación</h3>
-                                  </div>
-                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
-                              </div>
-                          </div><!-- .widget -->
-                          </a>
-                      @elseif($calificaciones->estado_calificacion == 'calificado')
+                      
                       <a href="#" onclick="CrearRecalificacion({{$empresa->id}} )" >
                       <div class="widget stats-widget">
                           <div class="widget-body clearfix bg-info">
@@ -164,7 +210,6 @@
                             </div>
                       </div><!-- .widget -->
                       </a>
-                      @endif
               @endif
           @endif 
       @endif <!-- Cierre if de comprobar si hay que recalificar matricula.  -->   
@@ -276,7 +321,7 @@
                       <div class="pull-left">
                           <h3 class="widget-title text-white">Generar Cobro</h3>
                       </div>
-                      <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                      <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
                   </div>
               </div><!-- .widget -->
           </a>
@@ -289,7 +334,7 @@
                                         <div class="pull-left">
                                             <h3 class="widget-title text-white">Generar Cobro</h3>
                                         </div>
-                                        <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                                        <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
                                     </div>
                                 </div><!-- .widget -->
                             </a>
@@ -300,7 +345,7 @@
                                           <div class="pull-left">
                                               <h3 class="widget-title text-white">Generar Cobro</h3>
                                           </div>
-                                          <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                                          <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
                                       </div>
                                   </div><!-- .widget -->
                               </a>
@@ -312,7 +357,7 @@
                                   <div class="pull-left">
                                       <h3 class="widget-title text-white">Generar Cobro</h3>
                                   </div>
-                                  <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i></span>
+                                  <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
                               </div>
                           </div><!-- .widget -->
                       </a>
@@ -415,8 +460,8 @@
 
           <!-- Termina sección cargar datos empresa -->
         
-          <div class="card-footer">
-            <button id="btnguardar" type="button"  class="btn btn-success float-right"  onclick="reporteEmpresaDatos({{$empresa->id}})"><i class="fa fa-print"></i>&nbsp;Imprimir</button>
+          <div class="card-footer">  
+           <!-- <button id="btnguardar" type="button"  class="btn btn-success float-left"  onclick="reporteEmpresaDatos({{$empresa->id}})"><i class="fa fa-print"></i>&nbsp;Imprimir</button> -->
           </div>
         </div>
       </form>
@@ -494,6 +539,21 @@
 <!-- seccion frame -->
 <!-- Cuadro para datos del contribuyente termina aquí ------------------------------------------>
 
+              <!-- seccion botón flotante -->
+              <div id="contenedor">
+                  <input type="checkbox" id="btn-mas">
+                          <div class="redes">
+                            @if($pase_recalificacion_mat==1 or $detectorNull==1)
+                              <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura('{{$empresa->id}}')"></a>
+                            @endif  
+                              <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Empresa" onclick="reporteEmpresaDatos('{{$empresa->id}}')"></a>
+                          </div>
+                  <div class="btn-mas">
+                      <label for="btn-mas" class="fa fa-plus"></label>
+                  </div>
+              </div>
+              <!--Fin seccion botón flotante -->
+
             </div>
           </div>
         </div>
@@ -521,7 +581,7 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
-
+            
 <script type="text/javascript">
 function cierreytraspaso(id){
  
@@ -538,8 +598,15 @@ function modalRecalificacion(){
 </script>
 
 <script type="text/javascript">
+
         $(document).ready(function(){
+           
             document.getElementById("divcontenedor").style.display = "block";
+
+            //** Tooltips de botón flotante */
+            $('[data-toggle="tooltip"]').tooltip();
+            
+
         });
 
     function recargar()
@@ -552,6 +619,11 @@ function modalRecalificacion(){
 
 </script>
 <script>
+function Imprimir_Resolucion_Apertura(id){
+
+window.open("{{ URL::to('/admin/reporte/resolucion_apertura/pdf') }}/" + id );
+
+}
 
 function ListarEmpresas(){
             openLoading();

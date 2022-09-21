@@ -192,11 +192,9 @@
                                 data-show-subtext="true" 
                                 data-live-search="true"   
                                 id="select-actividad_economica-editar" 
-                                onchange="llenarSelectE()"
+                                onchange="excepciones_especificas()"
                                  >
-                                  @foreach($actividadeseconomicas as $actEc)
-                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
-                                  @endforeach 
+
                                 </select> 
                            </div>
                         </div>
@@ -230,6 +228,24 @@
                         <input type="number" name="matricula_comercio" id="matricula_comercio-editar" class="form-control"  placeholder="Matricula de Comercio">
                       </div>
               <!-- /.form-group -->
+               <!-- /.form-group -->
+            <div class="row"> 
+                    <div class="col-md-6" id="Excepcion_especifica">
+                          <div class="form-group">
+                              <label>¿Excepción especifica?</label>
+                                  <br>
+                                      <label class="switch" style="margin-top:10px">
+                                          <input type="checkbox" id="toggle-excepcion_especifica-editar">
+                                            <div class="slider round">
+                                                <span class="on">SI</span>
+                                                <span class="off">NO</span>
+                                            </div>
+                                        </label>
+                          </div>
+                    </div>
+
+               </div>
+            <!-- /.form-group -->
         
       <!-- cierra div de row-->       
                   
@@ -289,12 +305,17 @@ function modalAgregar(){
 
  <!-- incluir tabla -->
  <script type="text/javascript">
-        $(document).ready(function(){
-            var ruta = "{{ url('/admin/empresas/tabla') }}";
-            $('#tablaDatatable').load(ruta);
-            document.getElementById("divcontenedor").style.display = "block";
-        });
+
+
+$(document).ready(function(){
+
+      var ruta = "{{ url('/admin/empresas/tabla') }}";
+      $('#tablaDatatable').load(ruta);
+      document.getElementById("divcontenedor").style.display = "block";
+});
+
 </script>
+
 
 
 
@@ -316,7 +337,23 @@ function VerEmpresa(id){
         
 // Para show empresa
 
+
 // Para informacion empresa
+
+function excepciones_especificas(){
+  var sel = document.getElementById("select-actividad_economica-editar");  
+  var selected = sel.options[sel.selectedIndex];
+  var Codigo_Act=selected.getAttribute('data-actividad');
+
+  if(Codigo_Act== 1)
+                {   
+                         $('#Excepcion_especifica').show();
+                }else{
+                        $('#Excepcion_especifica').hide();
+                     }
+
+}
+
 function informacion(id){
             openLoading();
             document.getElementById("formulario-editar").reset();
@@ -327,6 +364,7 @@ function informacion(id){
                 .then((response) => {
                     closeLoading();
                     if(response.data.success === 1){
+                   
                         $('#modalEditar').modal('show');
                         $('#id-editar').val(response.data.empresa.id);
                         $('#nombre-editar').val(response.data.empresa.nombre);
@@ -339,9 +377,11 @@ function informacion(id){
                         $('#direccion-editar').val(response.data.empresa.direccion);
                         $('#telefono-editar').val(response.data.empresa.telefono);
                         
+
                         document.getElementById("select-giro_comercial-editar").options.length = 0;
                         document.getElementById("select-actividad_economica-editar").options.length = 0;
-                       
+
+                        
 
                         $.each(response.data.giro_comercial, function( key, val ){
                             if(response.data.idgiro_co == val.id){
@@ -353,12 +393,21 @@ function informacion(id){
 
                         $.each(response.data.actividad_economica, function( key, val ){
                             if(response.data.idact_eco == val.id){
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
+                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'"data-actividad="' +val.codigo +'" selected="selected">'+val.rubro+'</option>');
                             }else{
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'">'+val.rubro+'</option>');
+                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'"data-actividad="' +val.codigo+'">'+val.rubro+'</option>');
                             }
                         });
+                     
 
+                        if(response.data.empresa.excepciones_especificas == 'NO'){
+                            $("#toggle-excepcion_especifica-editar").prop("checked", false);
+                        }else{
+                            $("#toggle-excepcion_especifica-editar").prop("checked", true);
+                        }
+                        excepciones_especificas();
+
+                            
                     }else{
                         toastr.error('Información no encontrada');
                     }
@@ -384,7 +433,8 @@ function editar(){
         var direccion = document.getElementById('direccion-editar').value;
         var num_tarjeta = document.getElementById('num_tarjeta-editar').value;
         var telefono = document.getElementById('telefono-editar').value;
-
+        var t = document.getElementById('toggle-excepcion_especifica-editar').checked;
+            var toggle = t ? 1 : 0;
 
         if(nombre === ''){
             toastr.error('El nombre de la empresa es requerido');
@@ -497,6 +547,7 @@ function editar(){
               formData.append('direccion', direccion);
               formData.append('num_tarjeta', num_tarjeta);
               formData.append('telefono', telefono);
+              formData.append('toggle', toggle);
 
             axios.post('/admin/empresas/editar', formData, {
             })

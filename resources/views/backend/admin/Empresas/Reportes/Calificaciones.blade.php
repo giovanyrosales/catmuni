@@ -254,7 +254,7 @@
                                         $0.0
                                         @endif
                                     </td>
-                                    <td>${{$dato->pago_mensual}}</td>
+                                    <td>${{$dato->monto}}</td>
                                     <td>${{$dato->monto}}</td>
 
                                     @endforeach

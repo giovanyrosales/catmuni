@@ -285,9 +285,10 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']);
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
+    Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
     
     //AVISOS Y NOTIFICACIONES DE MATRICULAS
-    
+
 
 
 

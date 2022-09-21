@@ -60,10 +60,10 @@
 <table id="tabla" class="table table-bordered table-striped"  data-toggle="table" width="100%">
             <thead>
                 <tr id="uno">
-                <th style="width: 10%;">Año</th>
-                <th style="width: 10%;">Tipo tarifa</th>
-                <th style="width: 10%;">Tarifa</th>
-                <th style="width: 10%;">Total matrículas</th>
+                <th style="width: 25%;">Año</th>
+                <th style="width: 25%;">Tipo tarifa</th>
+                <th style="width: 25%;">Tarifa</th>
+                <th style="width: 25%;">Total matrículas</th>
                 <th>&nbsp;</th>
             </tr>
             </thead>
@@ -74,7 +74,7 @@
                     <td>{{$dato->tipo_tarifa}}</td>
                     <td>${{$dato->pago_mensual}}</td>
                     <td>${{$dato->monto_matricula}}</td>
-                    <td>
+                    <td align="center">
                         <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarCalidicación({{$dato->id}})">
                         <i class="fas fa-trash" title="Eliminar"></i>&nbsp; 
                         </button>

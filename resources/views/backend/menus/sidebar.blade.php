@@ -196,6 +196,29 @@
                             </li>
                         </ul>
                 <!-- Finaliza Grupo Rótulos -->
+                <!-- Grupo Buses -->
+                <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                <i class="fas fa-file"></i>
+                                <p>Reportes <i class="right fas fa-angle-left"></i></p>
+                                
+                                </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.crear.buses.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>1</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.listarBuses.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-list-ul nav-icon"></i>
+                                <p>2</p>
+                                </a>
+                            </li>
+                        </ul>
+                <!-- Finaliza Grupo Rótulos -->
              
                     </ul>
                 </li>

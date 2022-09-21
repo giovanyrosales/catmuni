@@ -1075,7 +1075,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
-                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
                         </button> 
                   </div>
@@ -1179,7 +1179,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </div>
                </div><!-- /.col-md-6 -->
                @else
-               <input type="hidden"  id="tarifaMes" class="form-control" value="hidden">
+               <input type="hidden"  id="tarifaMes" class="form-control" value="0">
                 @endif
                <!-- /.form-group -->
                 <div class="col-md-6">
@@ -2576,7 +2576,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 <!-- Modal info cali -->
 <div class="modal fade" id="modal_info_cali">
       <div class="modal-dialog" >
-            <div class="modal-content card border-dark mb-3" style="border-radius: 60px;">
+            <div class="modal-content card border-dark mb-3" style="border-radius: 20px;">
                 
                 <!-- /.card-header -->
                 <div class="modal-header">

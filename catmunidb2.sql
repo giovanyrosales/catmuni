@@ -21,6 +21,7 @@ USE `catmunidb2`;
 CREATE TABLE IF NOT EXISTS `actividad_economica` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `rubro` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `codigo` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `codigo_atc_economica` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `mora` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
@@ -28,11 +29,11 @@ CREATE TABLE IF NOT EXISTS `actividad_economica` (
 
 -- Volcando datos para la tabla catmunidb2.actividad_economica: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `actividad_economica` DISABLE KEYS */;
-INSERT IGNORE INTO `actividad_economica` (`id`, `rubro`, `codigo_atc_economica`, `mora`) VALUES
-	(1, 'Comercio', '11801', '32201'),
-	(2, 'Industria', '11802', '32201'),
-	(3, 'Financiero', '11803', '32201'),
-	(4, 'Servicios', '11804', '32201');
+INSERT IGNORE INTO `actividad_economica` (`id`, `rubro`, `codigo`, `codigo_atc_economica`, `mora`) VALUES
+	(1, 'Comercio', '2', '11801', '32201'),
+	(2, 'Industria', '1', '11802', '32201'),
+	(3, 'Financiero', '4', '11803', '32201'),
+	(4, 'Servicios', '3', '11804', '32201');
 /*!40000 ALTER TABLE `actividad_economica` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.actividad_especifica
@@ -204,71 +205,63 @@ CREATE TABLE IF NOT EXISTS `alertas_detalle` (
   KEY `id_alerta` (`id_alerta`),
   CONSTRAINT `FK_alertas_detalle_alertas` FOREIGN KEY (`id_alerta`) REFERENCES `alertas` (`id`),
   CONSTRAINT `FK_alertas_detalle_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla catmunidb2.alertas_detalle: ~5 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.alertas_detalle: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `alertas_detalle` DISABLE KEYS */;
 INSERT IGNORE INTO `alertas_detalle` (`id`, `id_empresa`, `id_alerta`, `cantidad`) VALUES
 	(1, 68, 1, 1),
 	(2, 63, 2, 0),
-	(3, 67, 2, 2),
-	(4, 61, 2, 1),
-	(5, 63, 1, 1);
+	(3, 67, 2, 0),
+	(4, 61, 2, 0),
+	(5, 63, 1, 0),
+	(6, 96, 1, 0),
+	(7, 96, 2, 0),
+	(8, 67, 1, 0),
+	(9, 94, 1, 0),
+	(10, 94, 2, 0),
+	(11, 97, 1, 1),
+	(12, 97, 2, 1),
+	(13, 61, 1, 0),
+	(14, 100, 1, 1),
+	(15, 71, 2, 1);
 /*!40000 ALTER TABLE `alertas_detalle` ENABLE KEYS */;
-
--- Volcando estructura para tabla catmunidb2.buses
-CREATE TABLE IF NOT EXISTS `buses` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `id_empresa` bigint(20) unsigned NOT NULL,
-  `id_estado_buses` bigint(20) unsigned NOT NULL,
-  `nom_bus` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
-  `fecha_inicio` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
-  `placa` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
-  `ruta` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
-  `telefono` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`),
-  KEY `FK_buses_empresa` (`id_empresa`),
-  KEY `FK_buses_estado_buses` (`id_estado_buses`),
-  CONSTRAINT `FK_buses_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id`),
-  CONSTRAINT `FK_buses_estado_buses` FOREIGN KEY (`id_estado_buses`) REFERENCES `estado_buses` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
--- Volcando datos para la tabla catmunidb2.buses: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `buses` DISABLE KEYS */;
-INSERT IGNORE INTO `buses` (`id`, `id_empresa`, `id_estado_buses`, `nom_bus`, `fecha_inicio`, `placa`, `ruta`, `telefono`, `created_at`, `updated_at`) VALUES
-	(5, 61, 1, 'Unidad 4', '2022-07-04', 'DA4-987', '235', '72235422', '2022-07-04 21:08:18', '2022-07-15 16:56:05'),
-	(6, 67, 2, 'Unidad 6', '2022-07-07', 'DA4-900', '235', '72235420', '2022-07-07 18:00:00', '2022-07-07 18:00:00');
-/*!40000 ALTER TABLE `buses` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.buses_detalle
 CREATE TABLE IF NOT EXISTS `buses_detalle` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `id_empresa` bigint(20) unsigned NOT NULL,
+  `id_contribuyente` bigint(20) unsigned NOT NULL,
+  `id_estado_buses` bigint(20) unsigned NOT NULL,
   `fecha_apertura` date NOT NULL,
+  `nFicha` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `cantidad` int(50) NOT NULL,
   `tarifa` decimal(10,2) NOT NULL DEFAULT '0.00',
   `monto_pagar` decimal(10,2) NOT NULL DEFAULT '0.00',
   `estado_especificacion` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `nom_empresa` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `dir_empresa` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `nit_empresa` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `tel_empresa` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `email_empresa` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `r_comerciante` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`),
-  KEY `id_empresa` (`id_empresa`),
-  CONSTRAINT `FK__empresa` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  KEY `FK_buses_detalle_estado_buses` (`id_estado_buses`),
+  KEY `id_contribuyente` (`id_contribuyente`),
+  CONSTRAINT `FK_buses_detalle_contribuyente` FOREIGN KEY (`id_contribuyente`) REFERENCES `contribuyente` (`id`),
+  CONSTRAINT `FK_buses_detalle_estado_buses` FOREIGN KEY (`id_estado_buses`) REFERENCES `estado_buses` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- Volcando datos para la tabla catmunidb2.buses_detalle: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `buses_detalle` DISABLE KEYS */;
-INSERT IGNORE INTO `buses_detalle` (`id`, `id_empresa`, `fecha_apertura`, `cantidad`, `tarifa`, `monto_pagar`, `estado_especificacion`, `created_at`, `updated_at`) VALUES
-	(78, 62, '2022-05-12', 2, 34.28, 36.00, 'especificada', '2022-06-02 09:02:36', '2022-06-02 21:38:46'),
-	(79, 66, '2022-05-12', 1, 17.14, 18.00, 'especificada', '2022-06-02 09:02:39', '2022-06-02 09:02:41'),
-	(84, 67, '2022-01-10', 15, 257.10, 258.00, 'especificada', '2022-06-10 15:15:02', '2022-06-10 15:18:43'),
-	(87, 64, '2022-06-08', 1, 17.14, 18.00, NULL, '2022-06-14 15:13:45', '2022-06-14 15:13:45'),
-	(88, 61, '2022-06-16', 4, 68.56, 70.00, NULL, '2022-06-16 21:02:18', '2022-06-16 21:02:18'),
-	(89, 68, '2022-07-14', 2, 34.28, 36.00, NULL, '2022-07-15 16:54:43', '2022-07-15 16:54:43');
+INSERT IGNORE INTO `buses_detalle` (`id`, `id_contribuyente`, `id_estado_buses`, `fecha_apertura`, `nFicha`, `cantidad`, `tarifa`, `monto_pagar`, `estado_especificacion`, `nom_empresa`, `dir_empresa`, `nit_empresa`, `tel_empresa`, `email_empresa`, `r_comerciante`, `created_at`, `updated_at`) VALUES
+	(89, 1, 2, '2022-08-08', '100', 3, 51.42, 53.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-08-15 14:51:55', '2022-08-15 14:51:55'),
+	(90, 4, 2, '2022-08-15', '101', 1, 17.14, 18.00, 'especificada', NULL, NULL, NULL, NULL, NULL, NULL, '2022-08-15 16:29:54', '2022-08-17 16:11:12'),
+	(91, 9, 2, '2022-08-03', '102', 1, 17.14, 18.00, 'especificada', NULL, NULL, NULL, NULL, NULL, NULL, '2022-08-15 16:30:56', '2022-08-16 14:35:51'),
+	(92, 9, 2, '2022-08-08', '103', 1, 17.14, 18.00, 'especificada', NULL, NULL, NULL, NULL, NULL, NULL, '2022-08-15 21:22:03', '2022-08-18 21:28:14'),
+	(94, 1, 2, '2022-08-18', '200', 3, 51.42, 53.00, 'especificada', 'Sociedad Transportes Marin S.A de C.V.', 'Metapán', '1111-444444-666', '24659800', 'transportes_marin@gmail.com', NULL, '2022-08-19 17:58:11', '2022-08-19 20:27:52');
 /*!40000 ALTER TABLE `buses_detalle` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.buses_detalle_especifico
@@ -285,29 +278,17 @@ CREATE TABLE IF NOT EXISTS `buses_detalle_especifico` (
   KEY `id` (`id`),
   KEY `FK__buses_detalle` (`id_buses_detalle`),
   CONSTRAINT `FK__buses_detalle` FOREIGN KEY (`id_buses_detalle`) REFERENCES `buses_detalle` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla catmunidb2.buses_detalle_especifico: ~18 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.buses_detalle_especifico: ~6 rows (aproximadamente)
 /*!40000 ALTER TABLE `buses_detalle_especifico` DISABLE KEYS */;
 INSERT IGNORE INTO `buses_detalle_especifico` (`id`, `id_buses_detalle`, `placa`, `nombre`, `ruta`, `telefono`, `created_at`, `updated_at`) VALUES
-	(12, 78, 'AAC-0123', 'Unidad 1', '235', '24158765', '2022-06-14 09:54:30', '2022-06-02 21:38:46'),
-	(14, 79, 'AAC-0124', 'Unidad 1', '235', '24158765', '2022-06-14 09:54:29', '2022-06-14 09:54:31'),
-	(20, 78, 'VBC-0323', 'Unidad 6', '201', '24123421', '2022-06-02 21:38:46', '2022-06-02 21:38:46'),
-	(21, 84, 'AAC-0123', 'Unidad 1', '235', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(22, 84, 'AAC-0923', 'Unidad 2', '235', '24158760', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(23, 84, 'ADC-0123', 'Unidad 3', '235', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(24, 84, 'AAC-0124', 'Unidad 4', '201', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(25, 84, 'AcC-0122', 'Unidad 5', '201', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(26, 84, 'AAC-0324', 'Unidad 6', '201', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(27, 84, 'OAC-0123', 'Unidad 7', '201', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(28, 84, 'PAC-0123', 'Unidad 8', '235', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(29, 84, 'AAC-0198', 'Unidad 9', '235', '24158765', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(30, 84, 'AAC-0099', 'Unidad 10', '235', '24158760', '2022-06-10 15:18:42', '2022-06-10 15:18:42'),
-	(31, 84, 'AAC-0125', 'Unidad 11', '235', '24158765', '2022-06-10 15:18:43', '2022-06-10 15:18:43'),
-	(32, 84, 'AAC-0126', 'Unidad 12', '201', '24158765', '2022-06-10 15:18:43', '2022-06-10 15:18:43'),
-	(33, 84, 'AAC-0223', 'Unidad 13', '201', '24158765', '2022-06-10 15:18:43', '2022-06-10 15:18:43'),
-	(34, 84, 'AAC-0323', 'Unidad 14', '201', '24158765', '2022-06-10 15:18:43', '2022-06-10 15:18:43'),
-	(35, 84, 'AAC-0423', 'Unidad 15', '201', '24158765', '2022-06-10 15:18:43', '2022-06-10 15:18:43');
+	(36, 91, 'AAC-0124', 'Unidad 1', '235', '24158765', '2022-08-15 21:02:40', '2022-08-16 14:35:51'),
+	(37, 90, 'AAC-0198', 'Unidad 3', '201', '24158765', '2022-08-16 15:50:38', '2022-08-17 16:11:12'),
+	(38, 92, 'AAC-0120', 'Unidad 10', '201', '24098765', '2022-08-18 21:28:13', '2022-08-18 21:28:13'),
+	(39, 94, 'AAC-0126', 'Unidad 1', '235', '24158765', '2022-08-19 20:27:52', '2022-08-19 20:27:52'),
+	(40, 94, 'AAC-0120', 'Unidad 6', '235', '24158765', '2022-08-19 20:27:52', '2022-08-19 20:27:52'),
+	(41, 94, 'AAC-0123', 'Unidad 0', '235', '24158765', '2022-08-19 20:27:52', '2022-08-19 20:27:52');
 /*!40000 ALTER TABLE `buses_detalle_especifico` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.calificacion
@@ -350,9 +331,9 @@ CREATE TABLE IF NOT EXISTS `calificacion` (
   CONSTRAINT `FK_calificacion_estado_licencia_licor` FOREIGN KEY (`id_estado_licencia_licor`) REFERENCES `estado_licencia_licor` (`id`),
   CONSTRAINT `FK_calificacion_estado_multa` FOREIGN KEY (`id_estado_multa`) REFERENCES `estado_multa` (`id`),
   CONSTRAINT `FK_calificacion_multas` FOREIGN KEY (`id_multa`) REFERENCES `multas` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla catmunidb2.calificacion: ~16 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.calificacion: ~22 rows (aproximadamente)
 /*!40000 ALTER TABLE `calificacion` DISABLE KEYS */;
 INSERT IGNORE INTO `calificacion` (`id`, `id_empresa`, `id_estado_licencia_licor`, `id_multa`, `id_estado_multa`, `fecha_calificacion`, `tipo_tarifa`, `estado_calificacion`, `licencia`, `matricula`, `total_mat_permisos`, `fondofp_licencia_permisos`, `pago_anual_permisos`, `activo_total`, `deducciones`, `activo_imponible`, `año_calificacion`, `tarifa`, `tarifa_colones`, `pago_mensual`, `pago_anual`, `fondofp_mensual`, `fondofp_anual`, `total_impuesto`, `total_impuesto_anual`, `multa_balance`, `codigo_tarifa`, `created_at`, `updated_at`) VALUES
 	(1, 61, 1, 1, 1, '2021-12-01', 'Fija', 'calificado', 0.00, 0.00, NULL, NULL, 0.00, NULL, NULL, NULL, '2021', 12.00, 0.00, 11.00, 0.00, 0.00, 0.00, 12.00, 0.00, NULL, NULL, '2022-02-08 15:02:30', '2022-02-08 15:02:30'),
@@ -362,13 +343,22 @@ INSERT IGNORE INTO `calificacion` (`id`, `id_empresa`, `id_estado_licencia_licor
 	(52, 61, 1, 1, 1, '2022-04-05', 'Variable', 'recalificado', 0.00, 50.00, NULL, NULL, 52.50, NULL, NULL, NULL, '2022', 9.03, 0.00, 9.03, 0.00, 0.00, 0.00, 9.48, 0.00, 2.86, NULL, '2022-04-05 15:35:43', '2022-04-05 15:35:43'),
 	(57, 64, 2, 1, 2, '2022-05-03', 'Variable', 'calificado', 0.00, 12.00, NULL, NULL, 12.60, NULL, NULL, NULL, '2021', 7.45, 0.00, 7.45, 0.00, 0.00, 0.00, 7.82, 0.00, 0.00, NULL, '2022-05-03 15:05:57', '2022-05-03 15:05:57'),
 	(58, 64, 2, 1, 2, '2022-05-03', 'Variable', 'recalificado', 0.00, 12.00, NULL, NULL, 12.60, NULL, NULL, NULL, '2022', 7.47, 0.00, 7.47, 0.00, 0.00, 0.00, 7.85, 0.00, 2.86, NULL, '2022-05-03 15:07:05', '2022-05-03 15:07:05'),
-	(59, 65, 1, 1, 2, '2022-05-05', 'Variable', 'calificado', 365.00, 0.00, NULL, NULL, 383.25, NULL, NULL, NULL, '2021', 7.45, 0.00, 7.45, 0.00, 0.00, 0.00, 7.82, 0.00, 0.00, NULL, '2022-05-05 17:37:46', '2022-05-05 17:45:47'),
-	(60, 65, 1, 1, 2, '2022-05-05', 'Variable', 'recalificado', 365.00, 0.00, NULL, NULL, 383.25, NULL, NULL, NULL, '2022', 7.45, 0.00, 7.45, 0.00, 0.00, 0.00, 7.82, 0.00, 2.86, NULL, '2022-05-05 17:38:13', '2022-05-05 17:45:47'),
-	(62, 67, 1, 1, 2, '2022-05-18', 'Fija', 'calificado', 0.00, 0.00, NULL, NULL, 0.00, NULL, NULL, NULL, '2021', 5.71, 0.00, 5.71, 0.00, 0.00, 0.00, 6.00, 0.00, 0.00, NULL, '2022-05-18 20:57:28', '2022-06-10 21:33:14'),
+	(59, 65, 2, 1, 2, '2022-05-05', 'Variable', 'calificado', 365.00, 0.00, NULL, NULL, 383.25, NULL, NULL, NULL, '2021', 7.45, 0.00, 7.45, 0.00, 0.00, 0.00, 7.82, 0.00, 0.00, NULL, '2022-05-05 17:37:46', '2022-05-05 17:45:47'),
+	(60, 65, 2, 1, 2, '2022-05-05', 'Variable', 'recalificado', 365.00, 0.00, NULL, NULL, 383.25, NULL, NULL, NULL, '2022', 7.45, 0.00, 7.45, 0.00, 0.00, 0.00, 7.82, 0.00, 2.86, NULL, '2022-05-05 17:38:13', '2022-05-05 17:45:47'),
+	(62, 67, 1, 1, 1, '2022-05-18', 'Fija', 'calificado', 0.00, 0.00, NULL, NULL, 0.00, NULL, NULL, NULL, '2021', 5.71, 0.00, 5.71, 0.00, 0.00, 0.00, 6.00, 0.00, 0.00, NULL, '2022-05-18 20:57:28', '2022-08-17 17:14:39'),
 	(64, 62, 2, 1, 2, '2022-06-07', 'Variable', 'calificado', 0.00, 6.00, NULL, NULL, 6.30, NULL, NULL, NULL, '2022', 7.45, 0.00, 7.45, 0.00, 0.00, 0.00, 7.82, 0.00, 0.00, NULL, '2022-06-07 20:14:33', '2022-06-07 20:14:33'),
-	(79, 66, 2, 1, 2, '2022-06-10', 'Fija', 'calificado', 365.00, 121.00, 486.00, 24.30, 510.30, 2000.00, 0.00, 2000.00, '2021', 11.43, 100.00, 11.43, 137.16, 0.57, 6.86, 12.00, 144.02, 0.00, '13.6.20.1', '2022-06-10 21:13:32', '2022-06-10 21:13:32'),
 	(81, 66, 2, 1, 2, '2022-06-10', 'Fija', 'recalificado', 365.00, 121.00, 486.00, 24.30, 510.30, 2000.00, 0.00, 2000.00, '2022', 11.43, 100.00, 11.43, 137.16, 0.57, 6.86, 12.00, 144.02, 2.86, '13.6.20.1', '2022-06-10 21:14:44', '2022-06-10 21:14:44'),
-	(83, 67, 1, 1, 2, '2022-06-10', 'Variable', 'recalificado', 365.00, 12.00, 377.00, 18.85, 395.85, 15000.00, 0.00, 15000.00, '2022', 28.05, 245.44, 28.05, 336.60, 1.40, 16.83, 29.45, 353.43, 2.86, 'N/A', '2022-06-10 21:28:07', '2022-06-10 21:33:14');
+	(83, 67, 1, 1, 1, '2022-06-10', 'Variable', 'recalificado', 365.00, 12.00, 377.00, 18.85, 395.85, 15000.00, 0.00, 15000.00, '2022', 28.05, 245.44, 28.05, 336.60, 1.40, 16.83, 29.45, 353.43, 2.86, 'N/A', '2022-06-10 21:28:07', '2022-08-17 17:14:39'),
+	(88, 69, 2, 1, 2, '2022-08-12', 'Fija', 'calificado', 365.00, 0.00, 365.00, 18.25, 383.25, 2000.00, 0.00, 2000.00, '2022', 5.71, 50.00, 5.71, 68.52, 0.29, 3.43, 6.00, 71.95, 0.00, '13.5.7.2', '2022-08-12 19:48:36', '2022-08-12 19:48:36'),
+	(90, 71, 2, 1, 2, '2022-08-15', 'Variable', 'calificado', 0.00, 0.00, 0.00, 0.00, 0.00, 12000.00, 0.00, 12000.00, '2014', 26.97, 235.99, 26.97, 323.64, 1.35, 16.18, 28.32, 339.82, 0.00, '13.3.2.3', '2022-08-15 16:06:15', '2022-08-15 16:06:15'),
+	(100, 71, 2, 1, 2, '2022-08-15', 'Variable', 'recalificado', 0.00, 0.00, 0.00, 0.00, 0.00, 12000.00, 0.00, 12000.00, '2015', 26.97, 235.99, 26.97, 323.64, 1.35, 16.18, 28.32, 339.82, 48.01, '13.3.2.3', '2022-08-15 21:18:50', '2022-08-15 21:18:50'),
+	(105, 71, 2, 1, 2, '2022-08-16', 'Variable', 'recalificado', 0.00, 0.00, 0.00, 0.00, 0.00, 12000.00, 0.00, 12000.00, '2016', 26.97, 235.99, 26.97, 323.64, 1.35, 16.18, 28.32, 339.82, 41.53, '13.3.2.3', '2022-08-16 14:57:27', '2022-08-16 14:57:27'),
+	(106, 71, 2, 1, 2, '2022-08-16', 'Variable', 'recalificado', 0.00, 0.00, 0.00, 0.00, 0.00, 12000.00, 0.00, 12000.00, '2017', 26.97, 235.99, 26.97, 323.64, 1.35, 16.18, 28.32, 339.82, 35.06, '13.3.2.3', '2022-08-16 20:14:21', '2022-08-16 20:14:21'),
+	(107, 71, 2, 1, 2, '2022-08-16', 'Variable', 'recalificado', 0.00, 0.00, 0.00, 0.00, 0.00, 12000.00, 0.00, 12000.00, '2018', 26.97, 235.99, 26.97, 323.64, 1.35, 16.18, 28.32, 339.82, 28.59, '13.3.2.3', '2022-08-16 21:08:43', '2022-08-16 21:08:43'),
+	(108, 70, 2, 1, 2, '2022-08-29', 'Variable', 'calificado', 0.00, 0.00, 0.00, 0.00, 0.00, 12000.00, 0.00, 12000.00, '2022', 26.97, 235.99, 26.97, 323.64, 1.35, 16.18, 28.32, 339.82, 0.00, 'N/A', '2022-08-29 18:44:24', '2022-08-29 18:44:24'),
+	(119, 71, 2, 1, 2, '2022-09-01', 'Variable', 'recalificado', 0.00, 0.00, 0.00, 0.00, 0.00, 12000.00, 0.00, 12000.00, '2019', 26.97, 235.99, 26.97, 323.64, 1.35, 16.18, 28.32, 339.82, 22.65, '13.3.2.3', '2022-09-01 14:25:01', '2022-09-01 14:25:01'),
+	(140, 100, 2, 1, 2, '2022-09-01', 'Fija', 'calificado', 0.00, 0.00, 0.00, 0.00, 0.00, 2000.00, 0.00, 2000.00, '2021', 11.43, 100.00, 11.43, 137.16, 0.57, 6.86, 12.00, 144.00, 0.00, '13.6.20.1', '2022-09-01 17:37:52', '2022-09-01 17:37:52'),
+	(141, 100, 2, 1, 2, '2022-09-01', 'Fija', 'recalificado', 0.00, 0.00, 0.00, 0.00, 0.00, 2000.00, 0.00, 2000.00, '2022', 11.43, 100.00, 11.43, 137.16, 0.57, 6.86, 12.00, 144.00, 2.86, '13.6.20.1', '2022-09-01 17:38:25', '2022-09-01 17:38:25');
 /*!40000 ALTER TABLE `calificacion` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.calificacion_bus
@@ -414,13 +404,10 @@ CREATE TABLE IF NOT EXISTS `calificacion_buses` (
   KEY `FK_calificacion_buses_empresa` (`id_empresa`),
   CONSTRAINT `FK_calificacion_buses_buses_detalle` FOREIGN KEY (`id_buses_detalle`) REFERENCES `buses_detalle` (`id`),
   CONSTRAINT `FK_calificacion_buses_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla catmunidb2.calificacion_buses: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.calificacion_buses: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `calificacion_buses` DISABLE KEYS */;
-INSERT IGNORE INTO `calificacion_buses` (`id`, `id_buses_detalle`, `id_empresa`, `fecha_calificacion`, `cantidad`, `monto`, `pago_mensual`, `estado_calificacion`, `created_at`, `updated_at`) VALUES
-	(1, 78, 62, '2022-06-03', 2, 34.28, 36.00, 'calificado', '2022-06-03 20:41:24', '2022-06-03 20:41:24'),
-	(3, 79, 66, '2021-08-12', 1, 17.14, 18.00, 'calificado', '2022-06-09 01:18:36', '2022-06-09 01:18:36');
 /*!40000 ALTER TABLE `calificacion_buses` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.calificacion_matriculas
@@ -430,10 +417,18 @@ CREATE TABLE IF NOT EXISTS `calificacion_matriculas` (
   `id_estado_matricula` bigint(20) unsigned NOT NULL,
   `nombre_matricula` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `cantidad` int(11) NOT NULL DEFAULT '0',
+  `fecha_calificacion` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
   `monto_matricula` decimal(20,2) NOT NULL DEFAULT '0.00',
   `pago_mensual` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `fondofp` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `pago_anual` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `tarifa_colones` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `total_impuesto_mat` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `fondofp_impuesto_mat` decimal(20,2) NOT NULL DEFAULT '0.00',
   `año_calificacion` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
-  `estado_calificacion` varchar(50) COLLATE utf8_spanish_ci DEFAULT '0',
+  `estado_calificacion` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `tipo_tarifa` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `codigo_tarifa` varchar(50) COLLATE utf8_spanish_ci DEFAULT '0',
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
   PRIMARY KEY (`id`),
@@ -441,23 +436,29 @@ CREATE TABLE IF NOT EXISTS `calificacion_matriculas` (
   KEY `id_estado_matricula` (`id_estado_matricula`),
   CONSTRAINT `FK_calificacion_matriculas_estado_matricula` FOREIGN KEY (`id_estado_matricula`) REFERENCES `estado_matricula` (`id`),
   CONSTRAINT `FK_calificacion_matriculas_matriculas_detalle` FOREIGN KEY (`id_matriculas_detalle`) REFERENCES `matriculas_detalle` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla catmunidb2.calificacion_matriculas: ~12 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.calificacion_matriculas: ~17 rows (aproximadamente)
 /*!40000 ALTER TABLE `calificacion_matriculas` DISABLE KEYS */;
-INSERT IGNORE INTO `calificacion_matriculas` (`id`, `id_matriculas_detalle`, `id_estado_matricula`, `nombre_matricula`, `cantidad`, `monto_matricula`, `pago_mensual`, `año_calificacion`, `estado_calificacion`, `created_at`, `updated_at`) VALUES
-	(6, 86, 1, 'Aparatos parlantes', 1, 15.00, 0.00, '2022', 'recalificado', '2022-03-31 21:56:08', '2022-06-24 21:58:34'),
-	(7, 93, 1, 'Sinfonolas', 2, 100.00, 11.42, '2022', 'recalificado', '2022-03-31 21:56:08', '2022-05-23 20:39:53'),
-	(8, 99, 2, 'Maquinas electrónicas', 1, 50.00, 20.00, '2022', 'recalificado', '2022-03-31 21:56:08', '2022-05-30 21:01:27'),
-	(9, 102, 1, 'Mesa de billar', 2, 12.00, 11.42, '2022', 'recalificado', '2022-03-31 21:56:08', '2022-07-11 20:40:01'),
-	(10, 86, 1, 'Aparatos parlantes', 1, 15.00, 0.00, '2021', 'recalificado', '2022-04-01 14:59:26', '2022-05-23 20:11:37'),
-	(11, 93, 1, 'Sinfonolas', 2, 100.00, 11.42, '2021', 'recalificado', '2022-04-01 14:59:26', '2022-05-23 20:37:16'),
-	(12, 99, 2, 'Maquinas electrónicas', 1, 50.00, 20.00, '2021', 'recalificado', '2022-04-01 14:59:26', '2022-05-30 21:01:27'),
-	(13, 102, 2, 'Mesa de billar', 2, 12.00, 11.42, '2021', 'recalificado', '2022-04-01 14:59:26', '2022-05-23 20:42:05'),
-	(14, 99, 1, 'Maquinas electrónicas', 1, 50.00, 20.00, '2020', 'recalificado', '2022-03-31 21:56:08', '2022-05-23 19:19:51'),
-	(15, 104, 1, 'Sinfonolas', 1, 50.00, 5.71, '2021', 'recalificado', '2022-04-05 15:35:20', '2022-05-23 20:46:10'),
-	(16, 104, 2, 'Sinfonolas', 1, 50.00, 5.71, '2022', 'recalificado', '2022-04-05 15:35:43', '2022-04-05 15:35:43'),
-	(37, 109, 2, 'Mesa de billar', 2, 12.00, 11.42, '2022', 'recalificado', '2022-06-10 21:28:07', '2022-07-04 14:34:38');
+INSERT IGNORE INTO `calificacion_matriculas` (`id`, `id_matriculas_detalle`, `id_estado_matricula`, `nombre_matricula`, `cantidad`, `fecha_calificacion`, `monto_matricula`, `pago_mensual`, `fondofp`, `pago_anual`, `tarifa_colones`, `total_impuesto_mat`, `fondofp_impuesto_mat`, `año_calificacion`, `estado_calificacion`, `tipo_tarifa`, `codigo_tarifa`, `created_at`, `updated_at`) VALUES
+	(53, 136, 1, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2009', 'calificado', 'Fija', '02.03.02.01', '2022-08-16 17:37:39', '2022-08-17 17:31:15'),
+	(60, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2010', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:28:45', '2022-08-17 14:53:19'),
+	(61, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2011', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:28:51', '2022-08-17 14:53:19'),
+	(62, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2012', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:29:40', '2022-08-17 14:53:19'),
+	(63, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2013', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:29:43', '2022-08-17 14:53:19'),
+	(64, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2014', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:29:47', '2022-08-17 14:53:19'),
+	(65, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2015', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:29:53', '2022-08-17 14:53:19'),
+	(66, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2016', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:30:00', '2022-08-17 14:53:19'),
+	(67, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2017', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:30:04', '2022-08-17 14:53:19'),
+	(68, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2018', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:30:08', '2022-08-17 14:53:19'),
+	(69, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2019', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:30:12', '2022-08-17 14:53:19'),
+	(70, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2020', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:30:15', '2022-08-17 14:53:19'),
+	(71, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2021', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:30:18', '2022-08-17 14:53:19'),
+	(72, 136, 2, 'Maquinas electrónicas', 3, '2022-08-16', 150.00, 60.00, 7.50, 157.50, 525.00, 63.00, 3.00, '2022', 'Recalificado', 'Fija', '02.03.02.01', '2022-08-16 21:30:23', '2022-08-17 14:53:19'),
+	(75, 148, 2, 'Sinfonolas', 1, '2022-08-29', 50.00, 5.71, 2.50, 52.50, 50.00, 6.00, 0.29, '2022', 'calificado', 'Fija', '13.6.10.2', '2022-08-29 18:04:18', '2022-08-29 18:04:18'),
+	(76, 147, 2, 'Mesa de billar', 1, '2022-09-01', 6.00, 5.71, 0.30, 6.30, 50.00, 6.00, 0.29, '2021', 'calificado', 'Fija', '13.6.18.1', '2022-09-01 15:01:12', '2022-09-01 15:01:12'),
+	(83, 149, 2, 'Mesa de billar', 1, '2022-09-01', 6.00, 5.71, 0.30, 6.30, 50.00, 6.00, 0.29, '2020', 'calificado', 'Fija', '13.6.18.1', '2022-09-01 16:36:58', '2022-09-01 16:36:58'),
+	(84, 149, 2, 'Mesa de billar', 1, '2022-09-01', 6.00, 5.71, 0.30, 6.30, 50.00, 6.00, 0.29, '2021', 'recalificado', 'Fija', '13.6.18.1', '2022-09-01 17:02:31', '2022-09-01 17:02:31');
 /*!40000 ALTER TABLE `calificacion_matriculas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.calificacion_rotulo
@@ -558,46 +559,20 @@ CREATE TABLE IF NOT EXISTS `cobros` (
   KEY `cobros_id_usuario_foreign` (`id_usuario`),
   CONSTRAINT `cobros_id_empresa_foreign` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id`),
   CONSTRAINT `cobros_id_usuario_foreign` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla catmunidb2.cobros: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.cobros: ~6 rows (aproximadamente)
 /*!40000 ALTER TABLE `cobros` DISABLE KEYS */;
 INSERT IGNORE INTO `cobros` (`id`, `id_empresa`, `id_usuario`, `cantidad_meses_cobro`, `impuesto_mora`, `impuesto`, `intereses_moratorios`, `monto_multa_balance`, `monto_multaPE`, `fondo_fiestasP`, `pago_total`, `fecha_cobro`, `periodo_cobro_inicio`, `periodo_cobro_fin`, `tipo_cobro`, `created_at`, `updated_at`) VALUES
-	(2, 67, 2, 5, 0.00, 28.55, 0.10, 0.00, 2.86, 1.43, 32.94, '2022-05-19', '2022-01-01', '2022-01-31', 'impuesto', '2022-05-19 20:35:32', '2022-05-19 20:35:32'),
 	(3, 63, 2, 2, 28.61, 0.00, 3.46, 5.72, 2.86, 1.43, 42.08, '2022-06-23', '2020-12-01', '2021-01-31', 'impuesto', '2022-06-23 17:33:30', '2022-06-23 17:33:30'),
-	(4, 63, 2, 17, 147.18, 80.28, 10.80, 0.00, 16.75, 11.37, 266.38, '2022-06-23', '2021-02-01', '2022-06-30', 'impuesto', '2022-06-23 17:34:17', '2022-06-23 17:34:17');
+	(4, 63, 2, 17, 147.18, 80.28, 10.80, 0.00, 16.75, 11.37, 266.38, '2022-06-23', '2021-02-01', '2022-06-30', 'impuesto', '2022-06-23 17:34:17', '2022-06-23 17:34:17'),
+	(6, 63, 2, 1, 0.00, 13.38, 0.00, 0.00, 0.00, 0.67, 14.05, '2022-08-12', '2022-07-01', '2022-07-31', 'impuesto', '2022-08-12 15:49:01', '2022-08-12 15:49:01'),
+	(9, 69, 2, 8, 0.00, 45.68, 0.56, 0.00, 2.86, 2.28, 51.38, '2022-08-12', '2022-01-01', '2022-08-31', 'impuesto', '2022-08-12 19:49:38', '2022-08-12 19:49:38'),
+	(10, 63, 2, 1, 0.00, 13.38, 0.00, 0.00, 0.00, 0.67, 14.05, '2022-08-12', '2022-08-01', '2022-08-31', 'impuesto', '2022-08-12 19:52:10', '2022-08-12 19:52:10'),
+	(11, 67, 2, 8, 0.00, 224.40, 2.88, 2.86, 9.82, 11.22, 251.18, '2022-08-17', '2022-01-01', '2022-08-31', 'impuesto', '2022-08-17 17:14:39', '2022-08-17 17:14:39'),
+	(12, 61, 2, 18, 110.00, 72.24, 9.96, 0.00, 14.15, 9.11, 215.46, '2022-08-23', '2021-03-01', '2022-08-31', 'impuesto', '2022-08-23 20:22:37', '2022-08-23 20:22:37'),
+	(13, 68, 2, 8, 0.00, 112000.00, 1743.59, 0.00, 6300.00, 5600.00, 125643.59, '2022-09-02', '2022-01-01', '2022-08-31', 'impuesto', '2022-09-02 20:21:19', '2022-09-02 20:21:19');
 /*!40000 ALTER TABLE `cobros` ENABLE KEYS */;
-
--- Volcando estructura para tabla catmunidb2.cobros_bus
-CREATE TABLE IF NOT EXISTS `cobros_bus` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `id_buses` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `id_empresa` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `id_usuario` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `cantidad_meses_cobro` int(10) unsigned NOT NULL DEFAULT '0',
-  `impuesto_mora` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `impuesto` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `intereses_moratorios` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `fondo_fiestasP` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `pago_total` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `fecha_cobro` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
-  `periodo_cobro_inicio` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
-  `periodo_cobro_fin` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `FK_cobros_rotulo_empresa` (`id_empresa`) USING BTREE,
-  KEY `id_usuario` (`id_usuario`) USING BTREE,
-  KEY `id` (`id`) USING BTREE,
-  KEY `FK_cobros_bus_buses` (`id_buses`),
-  CONSTRAINT `FK_cobros_bus_buses` FOREIGN KEY (`id_buses`) REFERENCES `buses` (`id`),
-  CONSTRAINT `cobros_bus_ibfk_1` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id`),
-  CONSTRAINT `cobros_bus_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
-
--- Volcando datos para la tabla catmunidb2.cobros_bus: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `cobros_bus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cobros_bus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.cobros_buses
 CREATE TABLE IF NOT EXISTS `cobros_buses` (
@@ -687,23 +662,13 @@ CREATE TABLE IF NOT EXISTS `cobros_matriculas` (
   KEY `id_usuario` (`id_usuario`),
   CONSTRAINT `FK_cobros_matriculas_matriculas_detalle` FOREIGN KEY (`id_matriculas_detalle`) REFERENCES `matriculas_detalle` (`id`),
   CONSTRAINT `FK_cobros_matriculas_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla catmunidb2.cobros_matriculas: ~11 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.cobros_matriculas: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `cobros_matriculas` DISABLE KEYS */;
 INSERT IGNORE INTO `cobros_matriculas` (`id`, `id_matriculas_detalle`, `id_usuario`, `cantidad_meses_cobro`, `impuesto_mora`, `impuesto`, `intereses_moratorios`, `monto_multa_matricula`, `monto_multaPE`, `fondo_fiestasP`, `pago_total`, `fecha_cobro`, `periodo_cobro_inicio`, `periodo_cobro_fin`, `periodo_cobro_inicioMatricula`, `periodo_cobro_finMatricula`, `tipo_cobro`, `created_at`, `updated_at`) VALUES
-	(6, 99, 2, 0, 0.00, 0.00, 0.00, 50.00, 0.00, 2.50, 102.50, '2022-05-23 19:19:51', NULL, NULL, '2020-01-01', '2020-12-31', 'matricula', '2022-05-23 19:19:51', '2022-05-23 19:19:51'),
-	(7, 99, 2, 12, 240.00, 0.00, 40.42, 0.00, 0.00, 12.00, 292.42, '2022-05-23 19:21:57', '2020-01-01', '2020-12-31', NULL, NULL, 'matricula', '2022-05-23 19:21:57', '2022-05-23 19:21:57'),
-	(8, 86, 2, 12, 0.00, 0.00, 0.00, 15.00, 0.00, 0.75, 30.75, '2022-05-23 20:11:37', '2021-01-01', '2021-12-31', NULL, NULL, 'matricula', '2022-05-23 20:11:37', '2022-05-23 20:11:37'),
-	(9, 93, 2, 0, 0.00, 0.00, 0.00, 100.00, 0.00, 5.00, 205.00, '2022-05-23 20:37:16', NULL, NULL, '2021-01-01', '2021-12-31', 'matricula', '2022-05-23 20:37:16', '2022-05-23 20:37:16'),
-	(10, 93, 2, 12, 137.04, 0.00, 8.97, 0.00, 13.11, 6.85, 165.97, '2022-05-23 20:39:06', '2021-01-01', '2021-12-31', NULL, NULL, 'matricula', '2022-05-23 20:39:06', '2022-05-23 20:39:06'),
-	(11, 93, 2, 0, 0.00, 0.00, 0.00, 100.00, 0.00, 5.00, 205.00, '2022-05-23 20:39:53', NULL, NULL, '2022-01-01', '2022-12-31', 'matricula', '2022-05-23 20:39:53', '2022-05-23 20:39:53'),
-	(12, 93, 2, 5, 0.00, 57.10, 0.22, 0.00, 2.86, 2.86, 63.04, '2022-05-23 20:40:07', '2022-01-01', '2022-05-31', NULL, NULL, 'matricula', '2022-05-23 20:40:07', '2022-05-23 20:40:07'),
-	(17, 104, 2, 0, 0.00, 0.00, 0.00, 50.00, 0.00, 2.50, 102.50, '2022-05-23 20:46:10', NULL, NULL, '2021-01-01', '2021-12-31', 'matricula', '2022-05-23 20:46:10', '2022-05-23 20:46:10'),
-	(18, 104, 2, 12, 68.52, 0.00, 4.47, 0.00, 6.56, 3.43, 82.98, '2022-05-23 20:46:46', '2021-01-01', '2021-12-31', NULL, NULL, 'matricula', '2022-05-23 20:46:46', '2022-05-23 20:46:46'),
-	(22, 86, 2, 12, 0.00, 0.00, 0.00, 15.00, 0.00, 0.75, 30.75, '2022-06-24 21:58:34', '2022-01-01', '2022-12-31', NULL, NULL, 'matricula', '2022-06-24 21:58:34', '2022-06-24 21:58:34'),
-	(23, 93, 2, 1, 0.00, 11.42, 0.00, 0.00, 0.00, 0.57, 11.99, '2022-06-24 21:59:43', '2022-06-01', '2022-06-30', NULL, NULL, 'matricula', '2022-06-24 21:59:43', '2022-06-24 21:59:43'),
-	(24, 102, 2, 1, 0.00, 11.42, 0.00, 12.00, 0.00, 1.17, 36.59, '2022-07-11 20:40:01', '2022-07-01', '2022-07-31', NULL, NULL, 'matricula', '2022-07-11 20:40:01', '2022-07-11 20:40:01');
+	(27, 137, 2, 12, 0.00, 0.00, 0.00, 15.00, 0.00, 0.75, 30.75, '2022-08-16 15:29:58', '2022-01-01', '2022-12-31', NULL, NULL, 'matricula', '2022-08-16 15:29:58', '2022-08-16 15:29:58'),
+	(30, 136, 2, 0, 0.00, 0.00, 0.00, 150.00, 0.00, 7.50, 307.50, '2022-08-17 17:31:15', NULL, NULL, '2009-10-01', '2009-10-31', 'matricula', '2022-08-17 17:31:15', '2022-08-17 17:31:15');
 /*!40000 ALTER TABLE `cobros_matriculas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.cobros_rotulo
@@ -774,7 +739,6 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `id_estado_empresa` bigint(20) unsigned NOT NULL,
   `id_giro_comercial` bigint(20) unsigned NOT NULL,
   `id_actividad_economica` bigint(20) unsigned NOT NULL,
-  `id_actividad_especifica` bigint(20) unsigned NOT NULL,
   `nombre` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `matricula_comercio` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nit` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -784,31 +748,42 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `direccion` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
   `num_tarjeta` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `telefono` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `num_resolucion` int(20) DEFAULT NULL,
+  `excepciones_especificas` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'NO',
   PRIMARY KEY (`id`),
   KEY `empresa_id_contribuyente_foreign` (`id_contribuyente`),
   KEY `empresa_id_estado_empresa_foreign` (`id_estado_empresa`),
   KEY `empresa_id_giro_comercial_foreign` (`id_giro_comercial`),
   KEY `id_actividad_economica` (`id_actividad_economica`),
-  KEY `id_actividad_especifica` (`id_actividad_especifica`),
-  CONSTRAINT `FK_empresa_actividad_especifica` FOREIGN KEY (`id_actividad_especifica`) REFERENCES `actividad_especifica` (`id`),
   CONSTRAINT `empresa_actividad_economica` FOREIGN KEY (`id_actividad_economica`) REFERENCES `actividad_economica` (`id`),
   CONSTRAINT `empresa_id_contribuyente_foreign` FOREIGN KEY (`id_contribuyente`) REFERENCES `contribuyente` (`id`),
   CONSTRAINT `empresa_id_estado_empresa_foreign` FOREIGN KEY (`id_estado_empresa`) REFERENCES `estado_empresa` (`id`),
   CONSTRAINT `empresa_id_giro_comercial_foreign` FOREIGN KEY (`id_giro_comercial`) REFERENCES `giro_comercial` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla catmunidb2.empresa: ~8 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.empresa: ~20 rows (aproximadamente)
 /*!40000 ALTER TABLE `empresa` DISABLE KEYS */;
-INSERT IGNORE INTO `empresa` (`id`, `id_contribuyente`, `id_estado_empresa`, `id_giro_comercial`, `id_actividad_economica`, `id_actividad_especifica`, `nombre`, `matricula_comercio`, `nit`, `referencia_catastral`, `tipo_comerciante`, `inicio_operaciones`, `direccion`, `num_tarjeta`, `telefono`) VALUES
-	(61, 5, 2, 1, 1, 12, 'Almacén y librería la confianza', NULL, '00042434454365', NULL, NULL, '2021-02-17', 'Av. Benjamín Estrada Valiente 8, Metapán', '1911', '24022852'),
-	(62, 5, 1, 1, 4, 125, 'Constructora Flores', NULL, NULL, NULL, NULL, '2021-12-31', 'Col. San Luis, Avenida las Arboledas', '1912', '24021726'),
-	(63, 6, 2, 1, 1, 21, 'Allis Restaurant', NULL, NULL, NULL, NULL, '2020-11-30', '3a avenida norte, Plaza la Constitución, frente a parque central.', '1913', '72682279'),
-	(64, 4, 1, 1, 1, 22, 'Gasolinera Uno Metapán', NULL, NULL, NULL, NULL, '2019-12-16', 'CA 12N, Metapan', '1914', '24560212'),
-	(65, 5, 2, 1, 1, 21, 'La Toscana', NULL, NULL, NULL, NULL, '2021-11-10', 'Av. Benjamín Estrada Valiente, Metapán', '1915', '72805287'),
-	(66, 1, 2, 1, 1, 111, 'Digital Solutions', NULL, NULL, NULL, NULL, '2021-01-01', '3a avenida norte, Plaza la Constitución, frente a parque central.', '1919', '24021817'),
-	(67, 6, 2, 1, 2, 110, 'Abejitas S.A de C.V', NULL, NULL, NULL, NULL, '2022-01-01', 'Col. la esperanza Calle los juzgados.', '1918', '24022023'),
-	(68, 3, 2, 1, 2, 120, 'Holcim El Salvador, S.A de C.V', NULL, '06141710490010', NULL, NULL, '2021-12-31', 'Avenida El espino y Boulevard Sur, Urb. Madreselva, Antiguo Cuscatlán, La libertad', '2356', '24022224'),
-	(69, 8, 2, 1, 4, 92, 'River House', NULL, '12345678902345', NULL, NULL, '2020-01-01', '3a avenida norte, Plaza la Constitución, frente a parque central.', '1960', '24025253');
+INSERT IGNORE INTO `empresa` (`id`, `id_contribuyente`, `id_estado_empresa`, `id_giro_comercial`, `id_actividad_economica`, `nombre`, `matricula_comercio`, `nit`, `referencia_catastral`, `tipo_comerciante`, `inicio_operaciones`, `direccion`, `num_tarjeta`, `telefono`, `num_resolucion`, `excepciones_especificas`) VALUES
+	(61, 5, 2, 1, 1, 'Almacén y librería la confianza', NULL, '00042434454365', NULL, NULL, '2021-02-17', 'Av. Benjamín Estrada Valiente 8, Metapán', '1911', '24022852', NULL, 'NO'),
+	(62, 5, 1, 1, 4, 'Constructora Flores', NULL, NULL, NULL, NULL, '2021-12-31', 'Col. San Luis, Avenida las Arboledas', '1912', '24021726', NULL, 'NO'),
+	(63, 6, 2, 1, 1, 'Allis Restaurant', NULL, NULL, NULL, NULL, '2020-11-30', '3a avenida norte, Plaza la Constitución, frente a parque central.', '1913', '72682279', NULL, 'NO'),
+	(64, 4, 1, 1, 1, 'Gasolinera Uno Metapán', NULL, NULL, NULL, NULL, '2019-12-16', 'CA 12N, Metapan', '1914', '24560212', NULL, 'NO'),
+	(65, 5, 2, 1, 1, 'La Toscana', NULL, NULL, NULL, NULL, '2021-11-10', 'Av. Benjamín Estrada Valiente, Metapán', '1915', '72805287', NULL, 'NO'),
+	(66, 1, 2, 1, 1, 'Digital Solutions', NULL, NULL, NULL, NULL, '2021-01-01', '3a avenida norte, Plaza la Constitución, frente a parque central.', '1919', '24021817', NULL, 'NO'),
+	(67, 6, 2, 1, 2, 'Abejitas S.A de C.V', NULL, NULL, NULL, NULL, '2022-01-01', 'Col. la esperanza Calle los juzgados.', '1918', '24022043', NULL, 'NO'),
+	(68, 3, 2, 1, 2, 'Holcim El Salvador, S.A de C.V', NULL, '06141710490010', NULL, NULL, '2021-12-31', 'Avenida El espino y Boulevard Sur, Urb. Madreselva, Antiguo Cuscatlán, La libertad', '2356', '24022224', NULL, 'SI'),
+	(69, 8, 2, 1, 4, 'River House', NULL, '12345678902345', NULL, NULL, '2022-01-01', '3a avenida norte, Plaza la Constitución, frente a parque central.', '1960', '24025253', NULL, 'NO'),
+	(70, 3, 2, 1, 1, 'Lemus Company, S. A. de C. V. (Farmacia Central)', NULL, NULL, NULL, NULL, '2015-07-01', '8va. Avenida Sur y 2da. Calle Oriente, Barrio Santa cruz', '600', '24021212', NULL, 'NO'),
+	(71, 4, 2, 1, 4, 'Hostal Villa Blanca', NULL, NULL, NULL, NULL, '2014-08-01', 'Av. Isidro Menendez #4 entre calle 15 de sept. y 1ra Calle Ote. Barrio San Pedro.', '768', '24020214', NULL, 'NO'),
+	(94, 5, 2, 3, 4, 'Tienda Diana (Maquina electrónica)', NULL, NULL, NULL, NULL, '2009-09-30', 'Av. Doctor Ignacio Gómez', '2015', '25814785', NULL, 'NO'),
+	(96, 6, 2, 5, 4, 'Aparatos parlantes (Allis Restaurant)', NULL, NULL, NULL, NULL, '2022-01-01', '3a avenida norte, Plaza la Constitución, frente a parque central.', '2016', '72682279', NULL, 'NO'),
+	(97, 5, 2, 4, 4, 'Prueba eliminación de matricula', NULL, NULL, NULL, NULL, '2022-08-10', 'Av. Doctor Ignacio Gómez', '2050', '24145263', NULL, 'NO'),
+	(98, 1, 2, 2, 1, 'Prueba nada mas de toggle (Sinfonolas)', NULL, NULL, NULL, NULL, '2022-08-12', 'Av. Doctor Ignacio Gómez', '5856', '58749632', NULL, 'NO'),
+	(99, 6, 2, 1, 2, 'Prueba Toggle SI', NULL, NULL, NULL, NULL, '2022-08-10', 'Av. Doctor Ignacio Gómez', '3000', '58749632', NULL, 'SI'),
+	(100, 6, 2, 1, 1, 'Cells Shop', NULL, NULL, NULL, NULL, '2022-01-01', 'Av. Benjamín Estrada Valiente', '2040', '24026688', 344, 'NO'),
+	(101, 1, 2, 1, 4, 'probando recuperar ultima resolucion', NULL, NULL, NULL, NULL, '2022-08-30', 'Av. Doctor Ignacio Gómez', '2060', '24028565', 345, 'NO'),
+	(102, 6, 2, 4, 4, 'Allis Restaurant(Mesas de billar)', NULL, NULL, NULL, NULL, '2020-01-01', '3a avenida norte, Plaza la Constitución, frente a parque central.', '2041', '72682279', 346, 'NO'),
+	(103, 1, 2, 1, 1, 'prueba de empresa sin calificacion', NULL, NULL, NULL, NULL, '2022-09-02', 'Av. Doctor Ignacio Gómez', '2062', '25635412', 347, 'NO');
 /*!40000 ALTER TABLE `empresa` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.estado_buses
@@ -914,17 +889,19 @@ INSERT IGNORE INTO `estado_rotulo` (`id`, `estado`) VALUES
 CREATE TABLE IF NOT EXISTS `giro_comercial` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `nombre_giro` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `matricula` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'N/A',
+  `slug` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'N/A',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla catmunidb2.giro_comercial: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `giro_comercial` DISABLE KEYS */;
-INSERT IGNORE INTO `giro_comercial` (`id`, `nombre_giro`) VALUES
-	(1, 'Empresas'),
-	(2, 'Moto Taxis'),
-	(3, 'Maquinas Electrónicas'),
-	(4, 'Mesas de billar'),
-	(5, 'Buses');
+INSERT IGNORE INTO `giro_comercial` (`id`, `nombre_giro`, `matricula`, `slug`) VALUES
+	(1, 'Empresas', 'N/A', 'empresas'),
+	(2, 'Sinfonolas', 'SI', 'sinfonolas'),
+	(3, 'Maquinas Electrónicas', 'SI', 'maquinas_electronicas'),
+	(4, 'Mesas de billar', 'SI', 'mesa_de_billar'),
+	(5, 'Aparatos Parlantes', 'SI', 'aparatos_parlantes');
 /*!40000 ALTER TABLE `giro_comercial` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.interes
@@ -950,6 +927,7 @@ CREATE TABLE IF NOT EXISTS `matriculas` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tipo_permiso` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `codigo` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
   `monto` decimal(20,2) NOT NULL DEFAULT '0.00',
   `tarifa` decimal(20,2) NOT NULL DEFAULT '0.00',
   `slug` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0.00',
@@ -958,12 +936,12 @@ CREATE TABLE IF NOT EXISTS `matriculas` (
 
 -- Volcando datos para la tabla catmunidb2.matriculas: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `matriculas` DISABLE KEYS */;
-INSERT IGNORE INTO `matriculas` (`id`, `nombre`, `tipo_permiso`, `monto`, `tarifa`, `slug`) VALUES
-	(1, 'Mesa de billar', 'Matrícula', 6.00, 5.71, 'mesa_de_billar'),
-	(2, 'Aparatos parlantes', 'Matrícula', 15.00, 0.00, 'aparatos_parlantes'),
-	(3, 'Maquinas electrónicas', 'Matrícula', 50.00, 20.00, 'maquinas_electronicas'),
-	(4, 'Sinfonolas', 'Matrícula', 50.00, 5.71, 'sinfonolas'),
-	(5, 'Licencia licor', 'Licencia', 365.00, 6.00, 'licencia_licor');
+INSERT IGNORE INTO `matriculas` (`id`, `nombre`, `tipo_permiso`, `codigo`, `monto`, `tarifa`, `slug`) VALUES
+	(1, 'Mesa de billar', 'Matrícula', '13.6.18.1', 6.00, 5.71, 'mesa_de_billar'),
+	(2, 'Aparatos parlantes', 'Matrícula', NULL, 15.00, 0.00, 'aparatos_parlantes'),
+	(3, 'Maquinas electrónicas', 'Matrícula', '02.03.02.01', 50.00, 20.00, 'maquinas_electronicas'),
+	(4, 'Sinfonolas', 'Matrícula', '13.6.10.2', 50.00, 5.71, 'sinfonolas'),
+	(5, 'Licencia licor', 'Licencia', '02.03.02', 365.00, 6.00, 'licencia_licor');
 /*!40000 ALTER TABLE `matriculas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.matriculas_detalle
@@ -975,7 +953,6 @@ CREATE TABLE IF NOT EXISTS `matriculas_detalle` (
   `cantidad` int(20) NOT NULL,
   `monto` decimal(20,2) NOT NULL,
   `pago_mensual` decimal(20,2) NOT NULL,
-  `inicio_operaciones` varchar(50) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `estado_especificacion` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_empresa` (`id_empresa`),
@@ -984,25 +961,16 @@ CREATE TABLE IF NOT EXISTS `matriculas_detalle` (
   CONSTRAINT `FK_matriculas_detalle_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id`),
   CONSTRAINT `FK_matriculas_detalle_estado_moratorio` FOREIGN KEY (`id_estado_moratorio`) REFERENCES `estado_moratorio` (`id`),
   CONSTRAINT `FK_matriculas_detalle_matriculas` FOREIGN KEY (`id_matriculas`) REFERENCES `matriculas` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla catmunidb2.matriculas_detalle: ~14 rows (aproximadamente)
+-- Volcando datos para la tabla catmunidb2.matriculas_detalle: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `matriculas_detalle` DISABLE KEYS */;
-INSERT IGNORE INTO `matriculas_detalle` (`id`, `id_empresa`, `id_matriculas`, `id_estado_moratorio`, `cantidad`, `monto`, `pago_mensual`, `inicio_operaciones`, `estado_especificacion`) VALUES
-	(86, 63, 2, 1, 1, 15.00, 0.00, '2021-01-01', 'especificada'),
-	(93, 63, 4, 1, 2, 100.00, 11.42, '2021-01-01', 'especificada'),
-	(99, 63, 3, 2, 1, 50.00, 20.00, '2020-01-01', 'especificada'),
-	(102, 63, 1, 1, 2, 12.00, 11.42, '2021-01-01', NULL),
-	(104, 61, 4, 2, 1, 50.00, 5.71, '2021-01-01', 'especificada'),
-	(105, 66, 1, 2, 1, 6.00, 5.71, '2022-01-01', NULL),
-	(106, 66, 2, 2, 1, 15.00, 0.00, '2022-01-01', NULL),
-	(107, 66, 3, 2, 1, 50.00, 20.00, '2022-01-01', NULL),
-	(108, 66, 4, 2, 1, 50.00, 5.71, '2022-01-01', NULL),
-	(109, 67, 1, 2, 2, 12.00, 11.42, '2022-01-01', NULL),
-	(110, 65, 1, 1, 2, 12.00, 11.42, '2022-07-01', NULL),
-	(111, 63, 1, 1, 1, 6.00, 5.71, '2022-08-02', 'especificada'),
-	(112, 69, 1, 2, 1, 6.00, 5.71, '2022-01-01', NULL),
-	(113, 69, 3, 2, 1, 50.00, 20.00, '2022-01-01', NULL);
+INSERT IGNORE INTO `matriculas_detalle` (`id`, `id_empresa`, `id_matriculas`, `id_estado_moratorio`, `cantidad`, `monto`, `pago_mensual`, `estado_especificacion`) VALUES
+	(136, 94, 3, 2, 3, 150.00, 60.00, 'especificada'),
+	(137, 96, 2, 1, 1, 15.00, 0.00, 'especificada'),
+	(147, 97, 1, 1, 1, 6.00, 5.71, NULL),
+	(148, 98, 4, 1, 1, 50.00, 5.71, 'especificada'),
+	(149, 102, 1, 2, 1, 6.00, 5.71, 'especificada');
 /*!40000 ALTER TABLE `matriculas_detalle` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.matriculas_detalle_especifico
@@ -1016,17 +984,17 @@ CREATE TABLE IF NOT EXISTS `matriculas_detalle_especifico` (
   PRIMARY KEY (`id`),
   KEY `FK_matriculas_detalle_especifico_matriculas_detalle` (`id_matriculas_detalle`),
   CONSTRAINT `FK_matriculas_detalle_especifico_matriculas_detalle` FOREIGN KEY (`id_matriculas_detalle`) REFERENCES `matriculas_detalle` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- Volcando datos para la tabla catmunidb2.matriculas_detalle_especifico: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `matriculas_detalle_especifico` DISABLE KEYS */;
 INSERT IGNORE INTO `matriculas_detalle_especifico` (`id`, `id_matriculas_detalle`, `cod_municipal`, `codigo`, `num_serie`, `direccion`) VALUES
-	(6, 86, 'N/A', 12210, 'AyG Publicidad y Producciones', 'Col. Las Americas I Pol. D6 Casa #10'),
-	(43, 93, 'N/A', 11899, '2014_02_0094', '2a calle pte. y 3a Av. Sur, Bo las Flores (La Botanita)'),
-	(44, 93, 'N/A', 11899, '2016_04_0095', '2a calle pte. y 3a Av. Sur, Bo las Flores (La Botanita)'),
-	(49, 99, '1', 1, '1', 'Col. La esperanza'),
-	(50, 104, 'N/A', 11899, '2015  _03_019', '2a calle pte. Y 3a Av. Sur, Bo las Flores'),
-	(51, 111, 'N/A', 1223, '2015  _03_055', 'Col. La esperanza');
+	(51, 136, 'N/A', 1212, '2015  _03_019', 'Av. Doctor Ignacio Gómez, el calvario'),
+	(52, 136, 'N/A', 1213, '2015  _03_020', 'Av. Doctor Ignacio Gómez, barrio el calvario'),
+	(54, 136, 'N/A', 1214, '2015  _03_021', 'Av. Doctor Ignacio Gómez, barrio el calvario'),
+	(55, 137, 'N/A', 12210, 'Perifoneo Allis Restaurant', '3a avenida norte, Plaza la Constitución, frente a parque central.'),
+	(56, 148, 'N/A', 11899, 'N/A', 'Av Benjamin E. Valiente entre 2a y 4a Calle Poniente Barrio Las Flores'),
+	(57, 149, 'N/A', 11899, 'N/A', '3a avenida norte, Plaza la Constitución, frente a parque central.');
 /*!40000 ALTER TABLE `matriculas_detalle_especifico` ENABLE KEYS */;
 
 -- Volcando estructura para tabla catmunidb2.migrations
