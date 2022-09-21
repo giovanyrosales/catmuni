@@ -371,11 +371,7 @@
 
 <script type="text/javascript">
 
-    function recargar()
-    {
-        var ruta = "{{ url('/admin/buses/tabla') }}";
-            $('#tablaDatatable').load(ruta);
-    }
+    
 
  
 </script>
@@ -383,7 +379,6 @@
 <script>
     function buses_especificos(e)
     {
-
 
         var table = e.parentNode.parentNode; // fila de la tabla
 
@@ -402,12 +397,14 @@
           //agrega las filas dinamicamente
           
           
-          if(cantidadBus==0){
+            if(cantidadBus == 0)
+            {
               modalMensaje('¡Limite de Buses!', 'La cantidad de buses detallados llegó a su limite');
-              }//cierra if
-          while(cantidadBus>0){
+            }//cierra if
+          
+            while(cantidadBus > 0){
               
-          var markup = "<tr>"+
+            var markup = "<tr>"+
 
               "<td>"+
               "<input name='placa[]'  onchange='buses_especificos(this)' class='form-control' min='1' style='max-width: 250px' type='Text' value=''/>"+
@@ -818,7 +815,7 @@
         let formData = new FormData();
 
         // llenar array para enviar
-        for(var f = 0; f < placa.length; f++)
+        for(var f = 0; f < nombre.length; f++)
         {
 
             formData.append('placa[]', placa[f]);
@@ -1034,6 +1031,7 @@
 //* Inicia función multiplicar
         function multiplicar()
         {
+
             var fondoF = 0.05;
             var monto_matricula=0;
             var pago_mensual=0;
@@ -1226,6 +1224,7 @@
 
         function modalMensaje(titulo, mensaje)
         {
+            
             Swal.fire({
                 title: titulo,
                 text: mensaje,

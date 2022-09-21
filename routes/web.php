@@ -18,6 +18,7 @@ use App\Http\Controllers\Backend\TarifaVariable\TarifaVariableController;
 use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaController;
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
+use App\Http\Controllers\Backend\RotulosDetalle\RotulosDetalleController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 use App\Http\Controllers\Backend\Buses\BusesController;
 use App\Http\Controllers\Backend\Reportes\reportesBusesController;
@@ -259,6 +260,12 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/buses/tabla-traspaso', [BusesDetalleController::class,'tablaTraspasos']);
 
     //NUEVO MÓDULO RÓTULOS
+    Route::get('/admin/nuevo/rotulo-detalle/Crear', [RotulosDetalleController::class,'index'])->name('admin.crear.rotulos.index');
+    Route::post('/admin/rotulo-detalle/agregar', [RotulosDetalleController::class,'agregarRotulos']);
+    Route::get('/admin/rotulo-detalle/tabla', [RotulosDetalleController::class,'tablaRotulos']);
+    Route::get('/admin/rotulo-detalle/Listar', [RotulosDetalleController::class,'listarRotulos'])->name('admin.listarRotulosDetalle.index');
+    Route::post('/admin/rotulo_detalle/especifico', [RotulosDetalleController::class, 'especificarRotulos']);
+    Route::post('/admin/rotulos_detalle_especifico/agregar', [RotulosDetalleController::class,'agregar_rotulos_detalle_especifico']);
 
 
     //TERMINA NUEVO MÓDULO RÓTULOS

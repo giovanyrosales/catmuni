@@ -153,7 +153,26 @@
                                 </a>
                             </li>
                         </ul>
-                <!-- Finaliza Grupo Rótulos -->
+                    <!-- Finaliza Grupo Rótulos -->
+
+                    <!-- NUEVO MÓDULO DE RÓTULOS DETALLE -->
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.crear.rotulos.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-plus-circle nav-icon"></i>
+                                <p>Agregar Rótulo</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.listarRotulosDetalle.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-list-ol nav-icon"></i>
+                                <p>Listar Rótulos</p>
+                                </a>
+                            </li>
+                        </ul>
+                    <!-- TERMINA NUEVO MÓDULO DE RÓTULOS DETALLE -->
+               
                 <!-- Grupo Buses -->
                                 <li class="nav-item">
                                 <a href="#" class="nav-link">
