@@ -42,6 +42,7 @@ class BusesDetalleController extends Controller
 
     public function index()
     {
+        
         $contribuyentes = Contribuyentes::ALL();
 
         $bus = BusesDetalle::orderBy('id')->get();
@@ -194,7 +195,8 @@ class BusesDetalleController extends Controller
         
         if($request->placa != null) {
           
-            for ($i = 0; $i < count($request->placa); $i++) {
+            for ($i = 0; $i < count($request->placa); $i++) 
+            {
     
                 $Bd = new BusesDetalleEspecifico();
                 $Bd->id_buses_detalle =$request->id_buses_detalle;               
@@ -366,14 +368,16 @@ class BusesDetalleController extends Controller
                         }else
                             {  // borrar registros detalle
                                 // solo si viene vacio el array
-                                if($request->idarray == null){
-                                BusesDetalleEspecifico::where('id_buses_detalle', $request->id_buses_detalle_editar)
-                                ->delete();
-                                if($request->cantidad_editar==0)
+                                if($request->idarray == null)
                                 {
-                                    $tasa = BusesDetalle::find($request->id_editar);
-                                    $tasa->delete();                                    
-                                }
+                                    BusesDetalleEspecifico::where('id_buses_detalle', $request->id_buses_detalle_editar)
+                                    ->delete();
+                                    
+                                    if($request->cantidad_editar==0)
+                                    {
+                                        $tasa = BusesDetalle::find($request->id_editar);
+                                        $tasa->delete();                                    
+                                    }
 
                            
                                 }

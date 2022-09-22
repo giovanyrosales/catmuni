@@ -713,7 +713,8 @@ foreach ($calificacion as $dato)
                 }           
             
         }  
-     
+    
+        
         else if($dato->total_medidas > 8)
         {
             $tarifa_mensual = $dato->total_medidas;

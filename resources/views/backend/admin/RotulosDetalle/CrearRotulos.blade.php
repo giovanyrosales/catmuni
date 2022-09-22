@@ -8,14 +8,10 @@
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
 
-    
-
-
-
 @stop
+
 <script type="text/javascript">
-function f1()
-{
+function f1(){
     
     $('#tmatriculas').hide();
     $('#DivMatriculas').hide();
@@ -41,28 +37,25 @@ function f4(){
         table-layout:fixed;
     }
 </style>
-<!-----------------------------------Inicia Contenido ------------------------------------------->
-
-
 
 
 <div class="content-wrapper" style="display: none" id="divcontenedor">
 
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h4><i class="far fa-plus-square"></i>&nbsp;Agregar Buses</h4>
-                </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Buses</li>
-                            </ol>
-                        </div>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h4><i class="far fa-plus-square"></i>&nbsp;Agregar Rótulos</h4>
             </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                        <li class="breadcrumb-item active">Rótulos</li>
+                        </ol>
+                    </div>
         </div>
-    </section>
+    </div>
+</section>
 
 
  <!-- Main content -->
@@ -70,11 +63,9 @@ function f4(){
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">                    
-                <div class="card">
-
-               
+                <div class="card">               
                 <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
-                <div class="card-header text-info"><label>I. DATOS BUSES</label></div>
+                <div class="card-header text-info"><label>I. DATOS RÓTULOS</label></div>
                 <div class="card-body"><!-- Card-body -->
           <!-- /.card-header -->
                
@@ -84,24 +75,24 @@ function f4(){
             <div class="tab-pane" id="tab_2">
             <div class="row">
                <!-- /.form-group -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                    <div class="form-group">
                           <label>N° de Ficha:</label>
-                          <input type="number"  id="nFicha" class="form-control"  placeholder="0000" >
-                          <input type="number"  id="estado_buses" value="2" class="form-control" hidden placeholder="0000" >
+                          <input type="number"  id="num_ficha" class="form-control"  placeholder="0000" >
+                          <input type="number"  id="estado_rotulo" value="2" class="form-control" hidden placeholder="0000" >
                     </div>
                 </div>
            
-            <div class="col-md-4">
+            <div class="col-md-3">
                     <div class="form-group">
                           <label>Fecha de Apertura:</label>
                           <input type="date"  id="fecha_apertura" class="form-control"  placeholder="" >
                     </div>  
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label>Contribuyente</label>
-                    <select class='form-control seleccion' onchange='multiplicar(this)'  style='max-width: 300px' id='select_contribuyente'>
+                    <select class='form-control seleccion'  style='max-width: 300px' id='select_contribuyente'>
                             <option  value='0'> --Seleccione el contribuyente -- </option>
                             
                             @foreach($contribuyentes as $data)
@@ -111,37 +102,19 @@ function f4(){
                     </select>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                     <div class="form-group">
                           <label>Cantidad de Buses:</label>
-                          <input  id='cantidad' onchange='multiplicar(this)' class='form-control' min='1' style='max-width: 400px' type='number' value=''/>                        
+                          <input  id='cantidad_rotulos' class='form-control' min='1' style='max-width: 400px' type='number' value=''/>                        
 
                     </div>  
             </div>
-          
-            <div class="col-md-4">
-                    <div class="form-group">
-                          <label>Total Tarifa:</label>
-                          <input  id='monto_matricula' class='form-control' disabled min='1' style='max-width: 400px' type='text' value=''/>                        
-
-                    </div>  
-            </div>
-
-            <div class="col-md-4">
-                    <div class="form-group">
-                          <label>Pago Mensual:</label>
-                          <input  id='pago_mensual' class='form-control' disabled min='1' style='max-width: 300px' type='text' value=''/>                       
-
-                    </div>  
-            </div>
-
             </div>
             <form>
             </div>
                 </div>                        
                 </div>
              
-                
                     <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
                     <div class="card-header text-info"><label>II. INFORMACIÓN DEL PROPIETARIO</label></div>
                     <div class="card-body"><!-- Card-body -->
@@ -158,7 +131,7 @@ function f4(){
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Dirección:</label>
-                                <input type="text" name="nit" id="dir_empresa" class="form-control"  placeholder="" >
+                                <input type="text" name="nit" id="dire_empresa" class="form-control"  placeholder="" >
                             </div>
                         </div>
 
@@ -188,7 +161,7 @@ function f4(){
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Registro de comerciante:</label>
-                                <input type="text" name="r_comerciante" id="r_comerciante" class="form-control"  placeholder="" >
+                                <input type="text" name="reg_comerciante" id="reg_comerciante" class="form-control"  placeholder="" >
                             </div>
                         </div>
                     </div>
@@ -197,18 +170,15 @@ function f4(){
             <div class="card-footer"> 
                   <button type="button" onclick="location.href='{{ url('/panel') }}'" class="btn btn-default">
                   <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
-                  <button type="button" class="btn btn-success float-right" onclick="agregarBus()">
+                  <button type="button" class="btn btn-success float-right" onclick="agregarRotulo()">
                   <i class="fas fa-save"></i>&nbsp;Guardar</button>
           </div>
                         </form>
-                           
-         
-  
+                         
         </section>
         
-    
 
-
+</div>
 
 
 @extends('backend.menus.footerjs')
@@ -232,58 +202,31 @@ function f4(){
 
     <script type="text/javascript">
         $(document).ready(function()
-        {           
-            var ruta = "{{ url('/admin/buses/tabla') }}/";
+        {     
+            var ruta = "{{ url('/admin/rotulo-detalle/tabla') }}/";
             $('#tablaDatatable').load(ruta);
             document.getElementById("divcontenedor").style.display = "block";
 
-            $('#empresaDIV').hide();
         });
+
     </script>
 
-<script>
-        //* Inicia función multiplicar
-        function multiplicar()
-        {
-                var fondoF = 0.05;
-                var monto_matricula=0;
-                var pago_mensual=0;
-               
-                       
-                var sel = document.getElementById("select_contribuyente");  
-                var selected = sel.options[sel.selectedIndex];         
-                var tarifa=selected.getAttribute('data-pagoM');              
-                var cantidad = document.getElementById("cantidad").value; 
+    <script>
 
-                //Operación                               
-                var Total_pago_mensual=  tarifa*cantidad;           
-                var monto_total = Math.ceil(tarifa*fondoF + (tarifa*cantidad));
-           
-
-                //Imprimiendo resultado
-                document.getElementById('monto_matricula').value = Total_pago_mensual;
-                document.getElementById('pago_mensual').value= monto_total;
-               
-
-
-        } //* Termina función multiplicar
-
-        function agregarBus()
+        function  agregarRotulo()
         {
             
             var contribuyente = document.getElementById("select_contribuyente").value;            
             var fecha_apertura = document.getElementById("fecha_apertura").value;
-            var cantidad = document.getElementById("cantidad").value;
-            var nFicha = document.getElementById("nFicha").value;
-            var monto_pagar = document.getElementById("pago_mensual").value;
-            var tarifa = document.getElementById("monto_matricula").value;
-            var estado_buses = document.getElementById("estado_buses").value;
+            var cantidad_rotulos = document.getElementById("cantidad_rotulos").value;
+            var num_ficha = document.getElementById("num_ficha").value;          
+            var estado_rotulo = document.getElementById("estado_rotulo").value;
             var nom_empresa = document.getElementById("nom_empresa").value;
-            var dir_empresa = document.getElementById("dir_empresa").value;
+            var dire_empresa = document.getElementById("dire_empresa").value;
             var nit_empresa = document.getElementById("nit_empresa").value;
             var tel_empresa = document.getElementById("tel_empresa").value;
             var email_empresa = document.getElementById("email_empresa").value;
-            var r_comerciante = document.getElementById("r_comerciante").value;
+            var reg_comerciante = document.getElementById("reg_comerciante").value;
             
 
                 if(fecha_apertura == "")
@@ -292,7 +235,7 @@ function f4(){
                     return;
                 }
 
-                if(nFicha == "")
+                if(num_ficha == "")
                 {
                     modalMensaje('Aviso', 'Debe ingresar un número de ficha');
                     return;
@@ -304,13 +247,13 @@ function f4(){
                     return;
                 }
                                     
-                if(cantidad == "")
+                if(cantidad_rotulos == "")
                 {
                     modalMensaje('Aviso', 'Debe ingresar una cantidad');
                     return;
                 }
 
-                if(cantidad == 0)
+                if(cantidad_rotulos == 0)
                 {
                     modalMensaje('Aviso', 'Debe ingresar una cantidad mayor a 0');
                     return;
@@ -320,22 +263,20 @@ function f4(){
             var formData = new FormData();             
                 formData.append('contribuyente', contribuyente);                
                 formData.append('fecha_apertura', fecha_apertura);
-                formData.append('cantidad', cantidad);
-                formData.append('nFicha', nFicha);
-                formData.append('tarifa', tarifa);
-                formData.append('monto_pagar', monto_pagar);
-                formData.append('estado_buses', estado_buses);
+                formData.append('cantidad_rotulos', cantidad_rotulos);
+                formData.append('num_ficha', num_ficha);              
+                formData.append('estado_rotulo', estado_rotulo);
                 formData.append('nom_empresa', nom_empresa);
-                formData.append('dir_empresa', dir_empresa);
+                formData.append('dire_empresa', dire_empresa);
                 formData.append('nit_empresa', nit_empresa);
                 formData.append('tel_empresa', tel_empresa);
                 formData.append('email_empresa', email_empresa);
-                formData.append('r_comerciante', r_comerciante);
+                formData.append('reg_comerciante', reg_comerciante);
            
 
-                    axios.post('/admin/buses/agregar', formData, {
+                    axios.post('/admin/rotulo-detalle/agregar', formData, {
                     })
-                        .then((response) => {
+                    .then((response) => {
                             console.log(response)
                             closeLoading();
                                 if(response.data.success === 0)
@@ -348,39 +289,40 @@ function f4(){
                                     resetbtn();
                                     
                                 }
-                                
                                     })
                                     .catch((error) => {
-                                        fallo('Error!', 'Error al agregar el bus');                                    
+                                        fallo('Error!', 'Error al agregar el rótulo');                                    
                                     });              
+   
 
         }
 
         function recargar()
         {   
                   
-            var ruta = "{{ url('/admin/buses/tabla') }}/";
+            var ruta = "{{ url('/admin/rotulo-detalle/tabla') }}/";
                 $('#tablaDatatable').load(ruta);
+
         }
 
-  
+
     </script>
 
     <script>
 
         function resetbtn()
         {
-            document.getElementById('monto_matricula').value=""; 
-            document.getElementById('cantidad').value=""; 
-            document.getElementById('pago_mensual').value=""; 
-            document.getElementById('select_contribuyente').value=0; 
-        } 
-    
         
+            document.getElementById('cantidad_rotulos').value="";          
+            document.getElementById('select_contribuyente').value=0; 
+
+        } 
+
         function agregado()
         {
+
                 Swal.fire({
-                    title: 'Bus Agregado',
+                    title: 'Rótulo Agregado',
                     text: "Puede modificarla en la opción [Editar]",
                     icon: 'success',
                     showCancelButton: false,
@@ -391,16 +333,16 @@ function f4(){
                 }).then((result) => {
                     if (result.isConfirmed) {
                     
-                            recargar();
                             f3();
-                            ListarBuses();
                         
                     }
                 });
+
         }
 
         function fallo(titulo, mensaje)
         {
+
                 Swal.fire({
                     title: titulo,
                     text: mensaje,
@@ -420,7 +362,7 @@ function f4(){
         function verificar()
         {
                 Swal.fire({
-                    title: '¿Guardar Buses?',
+                    title: '¿Guardar Rótulos?',
                     text: "",
                     icon: 'question',
                     showCancelButton: true,
@@ -430,15 +372,17 @@ function f4(){
                     confirmButtonText: 'Guardar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        agregarBus();
+                        agregarRotulo();
                     }
                 });
+
         }
+
 
         function agregado_buses_especifico()
         {
                 Swal.fire({
-                    title: 'Bus específico agregado',
+                    title: 'Rótulo  específico agregado',
                     text: "Puede modificarla en la opción [Editar]",
                     icon: 'success',
                     showCancelButton: false,
@@ -453,10 +397,12 @@ function f4(){
                             f3()
                     }
                 });
+
         }
 
         function modalMensaje(titulo, mensaje)
         {
+
             Swal.fire({
                 title: titulo,
                 text: mensaje,
@@ -484,7 +430,6 @@ function f4(){
             openLoading();
             window.location.href="{{ url('/admin/buses/Listar') }}/";
         }
-
 
 
     </script>
