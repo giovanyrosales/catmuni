@@ -17,7 +17,7 @@ class TarifaFija extends Model
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'id_actividad_economica',
+        'id_giro_empresarial',
         'id_actividad_especifica',
         'codigo',
         'limite_inferior',

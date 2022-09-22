@@ -171,16 +171,20 @@
         </tr>
         <tr>
             <td colspan="2">
-                <p>Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
-                Dirección:&nbsp;{{$empresa->direccionCont}}<br>
+                <p style="font-size:11">Señor (a):&nbsp;{{$empresa->contribuyente}}&nbsp;{{$empresa->apellido}}<br>
+                Dirección:&nbsp;{{$empresa->direccion}}<br>
                 Cuenta Corriente N°:&nbsp;{{$empresa->num_tarjeta}}<br>
                 Empresa o Negocio:&nbsp;{{$empresa->nombre}}<br><br>
 
                 Estimado(a) señor (a):</p>
-                <p style="text-indent:20">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                <p style="text-indent:20;font-size:11">En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                     motivo de la presente es para manifestarle que su estado de cuenta en esta
-                    Municipalidad es el siguiente:<br>
-            <strong>Impuestos Municipales</strong></p>
+                    Municipalidad es el siguiente:<br><br>
+                    <strong>Impuestos Municipales</strong><br>
+                    
+                    <strong>{{$act_especifica}}</strong>
+                    
+                </p>
             <p style="font-size:10">*Intereses cálculados con base a tabla proporcionados por el banco nacional de reserva.</p>
             </td>
         <tr>
@@ -225,13 +229,13 @@
         <tr>
             <td colspan="2">
             Validez: <strong><u>{{$FechaDelDia}}</u></strong>
-                <p  style="text-indent:20">Agradeciendo su comprension y atención a este estado de cuenta me suscribo de
+                <p  style="text-indent:20;font-size:11">Agradeciendo su comprension y atención a este estado de cuenta me suscribo de
                                             usted, muy cordialmente</p>
             </td>
         </tr>
         <tr align="center">
             <td colspan="2">
-                <p>Lic. Rosa Lisseth Aldana <br>
+                <p style="font-size:11">Lic. Rosa Lisseth Aldana <br>
                 Unidad de Administración Tributaria Municipal</p>
             </td>
         </tr>

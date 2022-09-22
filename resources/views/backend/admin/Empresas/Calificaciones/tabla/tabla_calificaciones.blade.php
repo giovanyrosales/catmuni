@@ -64,7 +64,7 @@
                 <th style="width: 25%;">Tipo tarifa</th>
                 <th style="width: 25%;">Tarifa</th>
                 <th style="width: 25%;">Total matrículas</th>
-                <th>&nbsp;</th>
+                <th align="center"></th>
             </tr>
             </thead>
             <tbody>
@@ -76,7 +76,7 @@
                     <td>${{$dato->monto_matricula}}</td>
                     <td align="center">
                         <button type="button" class="btn btn-danger btn-xs" onclick="modalEliminarCalidicación({{$dato->id}})">
-                        <i class="fas fa-trash" title="Eliminar"></i>&nbsp; 
+                        <i class="fas fa-trash" title="Eliminar"></i> &nbsp;Borrar 
                         </button>
                     </td>
                 </tr>

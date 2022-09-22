@@ -18,6 +18,7 @@
  <script src="https://kit.fontawesome.com/eb496ab1a0.js" crossorigin="anonymous"></script>
 
 
+
 @stop
 
 
@@ -123,12 +124,17 @@
         <!-- Small boxes (Stat box) -->
         <div class="m-0 row justify-content-center" >
     
-          <div class="col-lg-4 col-8">
+          <div class="col-lg-3 col-8">
             <!-- small box -->
             <div class="small-box bg-default">
-              <div class="inner">
-                <h3> </h3>
-                <p> Avisos: <span class="badge badge-pill badge-primary">{{$alerta_aviso}}</span></p>
+              <div class="inner" style="text-align: center;">
+                <div class="col-auto">
+                  <i class="fas fa-exclamation-circle " style="color:EBEBEB;float:right;font-size: 7vh;"></i>
+                </div>
+                <p class="font-weight text-primary">
+                  Avisos: &nbsp;<span class="badge badge-pill badge-primary">{{$alerta_aviso}}</span>
+                </p>
+                 
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -137,12 +143,17 @@
             </div>
           </div>
            <!-- ./col -->
-           <div class="col-lg-4 col-8">
+           <div class="col-lg-3 col-8">
             <!-- small box -->
-            <div class="small-box bg-default">
-              <div class="inner">
-                <h3> </h3>
-                <p>Notificaciones: <span class="badge badge-pill badge-warning">{{$alerta_notificacion}}</span></p>
+            <div class="small-box bg-default" >
+              
+              <div class="inner " style="text-align: center;">
+                <div class="col-auto">
+                  <i class="fas fa-bell" style="color:EBEBEB;float:right;font-size: 7vh;"></i>
+                </div>
+                <p class="font-weight text-primary">
+                  Notificaciones: <span class="badge badge-pill badge-primary">{{$alerta_notificacion}}</span>
+                </p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -152,6 +163,7 @@
           </div>
 
         <!-- /.content-wrapper -->
+       
       </div>
     </section>
     <!-- Cajitas para estadísticas termina aquí -->
@@ -295,7 +307,7 @@
                      <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
                         <input type="hidden" id="f1" value="{{$ultimoCobroEmpresa}}" class="form-control" >
                     </div>
-                    <span class="pull-right big-icon watermark"><i class="fas fa-envelope-open-text"></i></span>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
                 </div>
               @else
                 <a href="#" onclick="NoNotificar()">          
@@ -581,7 +593,6 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
 
-            
 <script type="text/javascript">
 function cierreytraspaso(id){
  

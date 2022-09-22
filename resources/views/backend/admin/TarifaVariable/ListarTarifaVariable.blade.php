@@ -44,7 +44,7 @@
         <form class="form-horizontal" id="form1">
         <div class="card card-green">
           <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-table"></i>&nbsp;Tabla variable según su actividad económica</h3>
+            <h3 class="card-title"><i class="fas fa-table"></i>&nbsp;Tabla variable según su giro empresarial</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -147,7 +147,7 @@
                  <div class="row"> 
                 <div class="col-md-6">
                      <div class="form-group">
-                          <label>Actividad económica:</label>
+                          <label>Giro empresarial:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
                                 <select 
@@ -157,10 +157,10 @@
                                 data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-actividad_economica-ver" 
+                                id="select-actividad_giroempresarial-ver" 
                                  >
-                                  @foreach($tarifavariable as $actEc)
-                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
+                                  @foreach($giro_empresariales as $dato)
+                                  <option value="{{ $dato->id }}"> {{ $dato->nombre_giro_empresarial }}</option>
                                   @endforeach 
                                 </select>  
                            </div>
@@ -251,7 +251,7 @@
                 <div class="row"> 
                 <div class="col-md-6">
                      <div class="form-group">
-                          <label>Actividad económica:</label>
+                          <label>Giro empresarial:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-6">
                                 <select 
@@ -260,11 +260,11 @@
                                 data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-actividad_economica" 
+                                id="select-giro_empresarial" 
                                 title="-- Selecione la actividad --"
                                  >
-                                  @foreach($tarifavariable as $actE)
-                                  <option value="{{ $actE->id }}"> {{ $actE->rubro }}</option>
+                                  @foreach($giro_empresariales as $dato)
+                                  <option value="{{ $dato->id }}"> {{ $dato->nombre_giro_empresarial }}</option>
                                   @endforeach 
                                 </select> 
                            </div>
@@ -307,7 +307,7 @@
         <div class="modal-dialog" style="width:1300px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"><i class="far fa-edit"></i>&nbsp;Atualizar tarifa variable</h4>
+                    <h4 class="modal-title"><i class="far fa-edit"></i>&nbsp;Actualizar tarifa variable</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -371,7 +371,7 @@
                 <div class="row">
                 <div class="col-md-6">
                      <div class="form-group">
-                          <label>Actividad económica:</label>
+                          <label>Giro empresarial:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
                                 <select 
@@ -380,10 +380,10 @@
                                 data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-actividad_economica-editar" 
+                                id="select-giro_empresarial-editar" 
                                  >
-                                  @foreach($tarifavariable as $actEc)
-                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
+                                  @foreach($giro_empresariales as $dato)
+                                  <option value="{{ $dato->id }}"> {{ $dato->nombre_giro_empresarial}}</option>
                                   @endforeach 
                                 </select>  
                            </div>
@@ -519,12 +519,12 @@
                         $('#millar-editar').val(response.data.tarifa_variable.millar);
                         //$('#actividad_economica-ver').val(response.data.actividad_economica.actividad_economica);
                      
-                        document.getElementById("select-actividad_economica-editar").options.length = 0;
-                        $.each(response.data.actividad_economica, function( key, val ){
-                            if(response.data.idact_eco == val.id){
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
+                        document.getElementById("select-giro_empresarial-editar").options.length = 0;
+                        $.each(response.data.giro_empresariales, function( key, val ){
+                            if(response.data.idact_gico == val.id){
+                                $('#select-giro_empresarial-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre_giro_empresarial+'</option>');
                             }else{
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'">'+val.rubro+'</option>');
+                                $('#select-giro_empresarial-editar').append('<option value="' +val.id +'">'+val.nombre_giro_empresarial+'</option>');
                             }
                         });
                      
@@ -543,7 +543,7 @@
     function actualizarTarifaV()        
     {
         var id = document.getElementById('id-editar').value;
-        var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
+        var giro_empresarial = document.getElementById('select-giro_empresarial-editar').value;
         var limite_inferior = document.getElementById('limite_inferior-editar').value;
         var limite_superior = document.getElementById('limite_superior-editar').value;
         var fijo = document.getElementById('fijo-editar').value;
@@ -554,7 +554,7 @@
         openLoading();
             var formData = new FormData();
             formData.append('id', id);
-            formData.append('actividad_economica', actividad_economica);
+            formData.append('giro_empresarial', giro_empresarial);
             formData.append('limite_inferior', limite_inferior);
             formData.append('limite_superior', limite_superior);
             formData.append('fijo',fijo);
@@ -614,14 +614,14 @@
                         $('#millar-ver').val(response.data.tarifa_variable.millar);
                         //$('#actividad_economica-ver').val(response.data.actividad_economica.actividad_economica);
              
-                        document.getElementById("select-actividad_economica-ver").selectedIndex;
+                        document.getElementById("select-actividad_giroempresarial-ver").selectedIndex;
 
 
                         $.each(response.data.actividad_economica, function( key, val ){
                             if(response.data.idact_eco == val.id){
-                                $('#select-actividad_economica-ver').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
+                                $('#select-actividad_giroempresarial-ver').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
                             }else{
-                                $('#select-actividad_economica-ver').append('<option value="' +val.id +'">'+val.rubro+'</option>');
+                                $('#select-actividad_giroempresarial-ver').append('<option value="' +val.id +'">'+val.rubro+'</option>');
                             }
                         });
                      
@@ -678,7 +678,7 @@
         function nuevaTarifaV(id)
       {
         
-        var actividad_economica = document.getElementById('select-actividad_economica').value;
+        var giro_empresarial = document.getElementById('select-giro_empresarial').value;
         var limite_inferior = document.getElementById('limite_inferior').value;
         var limite_superior = document.getElementById('limite_superior').value;
         var fijo = document.getElementById('fijo').value;
@@ -716,14 +716,14 @@
             return;
         }
 
-        if(actividad_economica === ''){
-            toastr.error('Actividad económica es requerida');
+        if(giro_empresarial === ''){
+            toastr.error('El Giro empresarial es requerido');
             return;
         }
 
         openLoading();
       var formData = new FormData();
-      formData.append('actividad_economica', actividad_economica);
+      formData.append('giro_empresarial', giro_empresarial);
       formData.append('limite_inferior', limite_inferior);
       formData.append('limite_superior', limite_superior);
       formData.append('fijo', fijo);

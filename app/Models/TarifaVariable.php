@@ -11,7 +11,7 @@ class TarifaVariable extends Model
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'id_actividad_economica',
+        'id_giro_empresarial',
         'limite_inferior',
         'limite_superior',
         'fijo',

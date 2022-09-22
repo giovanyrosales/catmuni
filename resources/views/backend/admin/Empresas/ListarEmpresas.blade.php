@@ -393,9 +393,9 @@ function informacion(id){
 
                         $.each(response.data.actividad_economica, function( key, val ){
                             if(response.data.idact_eco == val.id){
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'"data-actividad="' +val.codigo +'" selected="selected">'+val.rubro+'</option>');
+                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'"data-actividad="' +val.codigo +'" selected="selected">'+val.rubro+'&nbsp;'+'('+val.codigo_atc_economica+')'+'</option>');
                             }else{
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'"data-actividad="' +val.codigo+'">'+val.rubro+'</option>');
+                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'"data-actividad="' +val.codigo+'">'+val.rubro+'&nbsp;'+'('+val.codigo_atc_economica+')'+'</option>');
                             }
                         });
                      

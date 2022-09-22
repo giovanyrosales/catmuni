@@ -91,7 +91,8 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::post('/admin/empresas/calificaciones/eliminar', [EmpresaController::class, 'eliminar_calificacion']);
     Route::post('/admin/empresas/calificacion/asignar_anterior', [EmpresaController::class, 'asignar_anterior']);
     Route::post('/admin/empresas/llenar_detalle_matriculas', [EmpresaController::class, 'llenar_detalle_matriculas']);
-
+    Route::post('/admin/empresa/buscar/act_especifica', [EmpresaController::class, 'buscarActividadEsp']);
+    
     //OBLIGACIONES TRIBUTARIAS
     Route::get('/admin/nuevo/empresa/vista_cobro_general', [EmpresaController::class,'vista_cobro_general'])->name('admin.cobrar.empresa.index');
     Route::post('/admin/buscar/obligaciones_tributarias', [EmpresaController::class,'buscar_obligaciones_tributarias']);
@@ -280,6 +281,10 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
     Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
     
+    //REPORTES CONTRIBUYENTES
+    Route::get('/admin/generar/solvencia/pdf/{id}', [reportesController::class, 'generar_solvencia']);
+
+
     //AVISOS Y NOTIFICACIONES DE MATRICULAS
 
 

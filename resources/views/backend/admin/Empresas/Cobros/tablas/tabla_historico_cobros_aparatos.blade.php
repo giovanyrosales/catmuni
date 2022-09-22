@@ -20,7 +20,8 @@
               <thead>             
                 <tr id="letra_pequeña">  
                     <th style="width: 25%;">Fecha pago</th> 
-                    <th style="width: 8%;">Meses</th>     
+                    <th style="width: 8%;">Meses</th> 
+                    <th style="width: 15%;">Matrícula</th>    
                     <th style="width: 25%;">Multa por matrícula</th>
                     <th style="width: 15%;">Multas</th>  
                     <th style="width: 20%;">Fondo fiestas</th>                          
@@ -32,9 +33,10 @@
                 <tr id="Dos">
                         <td>{{ $dato-> fecha_cobro }}</td>
                         <td>{{ $dato-> cantidad_meses_cobro }}</td>
-                        <td>${{ $dato-> monto_multa_matricula }}</td>
-                        <td>${{ $dato-> monto_multaPE }}</td>
-                        <td>${{ $dato-> fondo_fiestasP }}</td>
+                        <td>${{ $dato-> matricula_12210 }}</td>
+                        <td>${{ $dato-> multa_matricula_15313 }}</td>
+                        <td>${{ $dato-> monto_multaPE_15313 }}</td>
+                        <td>${{ $dato-> fondo_fiestasP_12114 }}</td>
                         <td>${{ $dato-> pago_total }}</td>                   
                     </tr>
                         @endforeach  

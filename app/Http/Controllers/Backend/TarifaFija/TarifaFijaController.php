@@ -16,6 +16,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 use function PHPUnit\Framework\isEmpty;
 use App\Models\ActividadEconomica;
 use App\Models\ActividadEspecifica;
+use App\Models\GiroEmpresarial;
 use App\Models\TarifaFija;
 
 class TarifaFijaController extends Controller
@@ -37,12 +38,12 @@ class TarifaFijaController extends Controller
     {
       
         $tarifa_fija = 
-        TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+        TarifaFija::join('giro_empresarial','tarifa_fija.id_giro_empresarial','=','giro_empresarial.id')
         ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
                                 
             
         ->select('tarifa_fija.id','tarifa_fija.codigo','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
-        'actividad_economica.rubro as nombre_rubro',
+        'giro_empresarial.nombre_giro_empresarial',
         'actividad_especifica.nom_actividad_especifica as nombre_actividad')
          ->get();
           //  orderBy('id', 'ASC')->get();  
@@ -64,13 +65,13 @@ class TarifaFijaController extends Controller
 
     public function listarTarifaFija()
     {
-        $actividadeconomica = ActividadEconomica::All();
+        $giroempresarial = GiroEmpresarial::All();
         $actividadespecifica = ActividadEspecifica::ALL();
 
       //  $tarifa_fija = TarifaFija::All();
         //$infTarifa = TarifaFija::where('id', $tarifa_fija)->first();
 
-        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('actividadeconomica','actividadespecifica'));
+        return view('backend.admin.TarifaFija.ListarTarifaFija', compact('giroempresarial','actividadespecifica'));
     }
 
     //función para agregar nueva tarifa fija
@@ -122,14 +123,14 @@ class TarifaFijaController extends Controller
 
      if($lista = TarifaFija::where('id', $request->id)->first()){
 
-        $actividad_economica = ActividadEconomica::orderby('rubro')->get();
+        $giro_empresarial = GiroEmpresarial::orderby('nombre_giro_empresarial')->get();
         $actividad_especifica = ActividadEspecifica::orderby('nom_actividad_especifica')->get();
      
         return ['success' => 1,
 
          'tarifa_fija' => $lista,
-         'idact_eco' => $lista->id_actividad_economica,
-         'actividad_economica' => $actividad_economica,
+         'idact_giem' => $lista->id_giro_empresarial,
+         'giro_empresarial' => $giro_empresarial,
          'idact_esp' =>$lista->id_actividad_especifica,
          'actividad_especifica' => $actividad_especifica,
         ];
@@ -147,7 +148,7 @@ class TarifaFijaController extends Controller
            'id' => 'required',
            'codigo' => 'required',
            'impuesto_mensual' => 'required',
-           'actividad_economica' => 'required',
+           'giro_empresarial' => 'required',
            'actividad_especifica' => 'required',
                     
         );
@@ -166,7 +167,7 @@ class TarifaFijaController extends Controller
           'limite_inferior' => $request->limite_inferior,
           'limite_superior' => $request->limite_superior,
           'impuesto_mensual' => $request->impuesto_mensual,
-          'id_actividad_economica' => $request->actividad_economica,
+          'id_giro_empresarial' => $request->giro_empresarial,
     
             ]);
 

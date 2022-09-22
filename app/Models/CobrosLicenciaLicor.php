@@ -13,11 +13,13 @@ class CobrosLicenciaLicor extends Model
         'id',
         'id_empresa',
         'id_usuario',
-        'monto_multa_licencia',
+        'monto_multa_licencia_15313',
+        'monto_licencia_12207',
         'pago_total',
         'fecha_cobro',
         'periodo_cobro_inicio',
         'periodo_cobro_fin',
         'tipo_cobro',
+        'cod_act_economica'
         ];
 }

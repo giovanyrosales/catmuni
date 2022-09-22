@@ -14,6 +14,7 @@ use Illuminate\Validation\Rules\Unique;
 use Symfony\Contracts\Service\Attribute\Required;
 use function PHPUnit\Framework\isEmpty;
 use App\Models\ActividadEconomica;
+use App\Models\GiroEmpresarial;
 use App\Models\TarifaVariable;
 
 
@@ -37,9 +38,9 @@ class TarifaVariableController extends Controller
 
     public function nuevaTarifaV(Request $request)
         {
-           
+
         $regla = array(
-            'actividad_economica'=>'required',
+            'giro_empresarial'=>'required',
             'limite_inferior' => 'required|unique:tarifa_variable,limite_inferior',
             'limite_superior' => 'required|unique:tarifa_variable,limite_superior',
             'fijo' => 'required|unique:tarifa_variable,fijo',
@@ -70,7 +71,7 @@ class TarifaVariableController extends Controller
         $dato->excedente = $request->excedente;
         $dato->categoria = $request->categoria;
         $dato->millar = $request->millar;
-        $dato->id_actividad_economica = $request->actividad_economica;
+        $dato->id_giro_empresarial = $request->giro_empresarial;
 
     if($dato->save())
     {
@@ -85,9 +86,9 @@ class TarifaVariableController extends Controller
     public function listarTarifaV()
       {
        //nombre del modelo de la llave foranea
-    $tarifavariable = ActividadEconomica::All();
+    $giro_empresariales = GiroEmpresarial::All();
 
-    return view('backend.admin.TarifaVariable.ListarTarifaVariable', compact('tarifavariable'));
+    return view('backend.admin.TarifaVariable.ListarTarifaVariable', compact('giro_empresariales'));
       }
 
 //Tabla detalless
@@ -95,10 +96,10 @@ class TarifaVariableController extends Controller
          {
 
          
-    $lista=TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')
+    $lista=TarifaVariable::join('giro_empresarial','tarifa_variable.id_giro_empresarial','=','giro_empresarial.id')
            
     ->select('tarifa_variable.id','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
-    'actividad_economica.rubro as actividad_economica' )
+    'giro_empresarial.nombre_giro_empresarial' )
      ->get();
           
             
@@ -129,12 +130,12 @@ class TarifaVariableController extends Controller
         if ($lista = TarifaVariable::where('id', $request->id)->first())
            {
           
-            $actividad_economica = ActividadEconomica::orderby('rubro')->get();
+            $giro_empresariales = GiroEmpresarial::orderby('nombre_giro_empresarial')->get();
                 
                 return['success' => 1,
-                'idact_eco' => $lista->id_actividad_economica,
+                'idact_gico' => $lista->id_giro_empresarial,
                 'tarifa_variable' => $lista,
-                'actividad_economica' => $actividad_economica,
+                'giro_empresariales' => $giro_empresariales,
             ];
             }
             else
@@ -153,7 +154,7 @@ class TarifaVariableController extends Controller
             'fijo' => 'required',
             'categoria' => 'required',
             'millar' => 'required',
-            'actividad_economica' => 'required',
+            'giro_empresarial' => 'required',
      );
    
         $validar = Validator::make($request->all(), $regla);
@@ -164,7 +165,7 @@ class TarifaVariableController extends Controller
   
        TarifaVariable::where('id', $request->id)->update([
 
-            'id_actividad_economica' => $request->actividad_economica,
+            'id_giro_empresarial' => $request->giro_empresarial,
             'limite_inferior' => $request->limite_inferior,
             'limite_superior' => $request->limite_superior,
             'fijo' => $request->fijo,

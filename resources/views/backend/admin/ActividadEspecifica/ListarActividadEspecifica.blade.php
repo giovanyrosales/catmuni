@@ -107,7 +107,7 @@
                 <!-- /.form-group -->
                   <div class="col-md-10">
                      <div class="form-group">
-                          <label>Actividad económica:</label>
+                          <label>Giro empresarial:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-10">
                                 <select 
@@ -116,11 +116,11 @@
                               
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-actividad_economica" 
-                                title="-- Selecione la actividad --"
+                                id="select-giro_empresarial" 
+                                title="-- Selecione un giro --"
                                  >
-                                  @foreach($actividadeconomica as $actE)
-                                  <option value="{{ $actE->id }}"> {{ $actE->rubro }}</option>
+                                  @foreach($giros_empresariales as $dato)
+                                  <option value="{{ $dato->id }}"> {{ $dato->nombre_giro_empresarial }}</option>
                                   @endforeach 
                                 </select> 
                            </div>
@@ -183,7 +183,7 @@
                <div class="row">
                 <div class="col-md-10">
                      <div class="form-group">
-                          <label>Rubro:</label>
+                          <label>Giro empresarial:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
                                 <select 
@@ -192,10 +192,10 @@
                                 data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-actividad_economica-editar" 
+                                id="select-giro_empresarial-editar" 
                                  >
-                                  @foreach($actividadeconomica as $actEc)
-                                  <option value="{{ $actEc->id }}"> {{ $actEc->rubro }}</option>
+                                 @foreach($giros_empresariales as $dato)
+                                  <option value="{{ $dato->id }}"> {{ $dato->nombre_giro_empresarial }}</option>
                                   @endforeach 
                                 </select>  
                            </div>
@@ -317,7 +317,7 @@
     function nuevaActividadE(id)
       {
         
-        var actividad_economica = document.getElementById('select-actividad_economica').value;
+        var giro_empresarial = document.getElementById('select-giro_empresarial').value;
         var nom_actividad_especifica = document.getElementById('nom_actividad_especifica').value;
             
         if(nom_actividad_especifica === ''){
@@ -325,14 +325,14 @@
             return;
         }
 
-        if(actividad_economica === ''){
-            toastr.error('Actividad económica es requerida');
+        if(giro_empresarial === ''){
+            toastr.error('El giro_empresarial es requerido');
             return;
         }
 
         openLoading();
       var formData = new FormData();
-      formData.append('actividad_economica', actividad_economica);
+      formData.append('giro_empresarial', giro_empresarial);
       formData.append('nom_actividad_especifica', nom_actividad_especifica);
    
 
@@ -368,7 +368,7 @@
 
          }
 
-         function infoActividadE(id)
+function infoActividadE(id)
     {
       openLoading();
             document.getElementById("formulario-EditarActividadEspecifica").reset();
@@ -385,12 +385,12 @@
                         $('#id-editar').val(response.data.actividad_especifica.id);
                         $('#nom_actividad_especifica-editar').val(response.data.actividad_especifica.nom_actividad_especifica);
                        
-                        document.getElementById("select-actividad_economica-editar").options.length = 0;
-                        $.each(response.data.actividad_economica, function( key, val ){
-                            if(response.data.idact_eco == val.id){
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
+                        document.getElementById("select-giro_empresarial-editar").options.length = 0;
+                        $.each(response.data.giro_empresarial, function( key, val ){
+                            if(response.data.idact_giec == val.id){
+                                $('#select-giro_empresarial-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre_giro_empresarial+'</option>');
                             }else{
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'">'+val.rubro+'</option>');
+                                $('#select-giro_empresarial-editar').append('<option value="' +val.id +'">'+val.nombre_giro_empresarial+'</option>');
                             }
                         });
                        
@@ -410,14 +410,14 @@
     {
             var id = document.getElementById('id-editar').value;
             var nom_actividad_especifica = document.getElementById('nom_actividad_especifica-editar').value;
-            var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
+            var giro_empresarial = document.getElementById('select-giro_empresarial-editar').value;
       
             openLoading()
 
            var formData = new FormData();
               formData.append('id', id);
               formData.append('nom_actividad_especifica', nom_actividad_especifica);
-              formData.append('actividad_economica', actividad_economica);
+              formData.append('giro_empresarial', giro_empresarial);
              
             axios.post('/admin/ActividadEspecifica/editar', formData, {
             })

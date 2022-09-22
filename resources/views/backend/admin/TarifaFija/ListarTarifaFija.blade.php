@@ -125,7 +125,7 @@
             
                   <div class="col-md-4">
                      <div class="form-group">
-                          <label>Rubro:</label>
+                          <label>Giro empresarial:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-6">
                                 <select 
@@ -247,7 +247,7 @@
                                 data-style="btn-success"
                                 data-show-subtext="true" 
                                 data-live-search="true"   
-                                id="select-actividad_economica-editar" 
+                                id="select-giro_empresarial-editar" 
                                 onchange="llenarSelectEditar()"
                                  >
                                   @foreach($actividadeconomica as $actEc)
@@ -487,14 +487,14 @@
                         $('#limite_superior-editar').val(response.data.tarifa_fija.limite_superior);
                         $('#impuesto_mensual-editar').val(response.data.tarifa_fija.impuesto_mensual);
 
-                        document.getElementById("select-actividad_economica-editar").options.length = 0;
+                        document.getElementById("select-giro_empresarial-editar").options.length = 0;
                         document.getElementById("select-actividad_especifica-editar").options.length = 0;
 
-                        $.each(response.data.actividad_economica, function( key, val ){
-                            if(response.data.idact_eco == val.id){
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'" selected="selected">'+val.rubro+'</option>');
+                        $.each(response.data.giro_empresarial, function( key, val ){
+                            if(response.data.idact_giem == val.id){
+                                $('#select-giro_empresarial-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre_giro_empresarial+'</option>');
                             }else{
-                                $('#select-actividad_economica-editar').append('<option value="' +val.id +'">'+val.rubro+'</option>');
+                                $('#select-giro_empresarial-editar').append('<option value="' +val.id +'">'+val.nombre_giro_empresarial+'</option>');
                             }
                         });
 
@@ -522,7 +522,7 @@
     {
             var id = document.getElementById('id-editar').value;
             var codigo = document.getElementById('codigo-editar').value;
-            var actividad_economica = document.getElementById('select-actividad_economica-editar').value;
+            var giro_empresarial = document.getElementById('select-giro_empresarial-editar').value;
             var actividad_especifica = document.getElementById('select-actividad_especifica-editar').value;
             var limite_inferior = document.getElementById('limite_inferior-editar').value;
             var limite_superior = document.getElementById('limite_superior-editar').value;
@@ -533,7 +533,7 @@
           var formData = new FormData();
               formData.append('id', id);
               formData.append('codigo', codigo);
-              formData.append('actividad_economica', actividad_economica);
+              formData.append('giro_empresarial', giro_empresarial);
               formData.append('actividad_especifica', actividad_especifica);
               formData.append('limite_inferior', limite_inferior);
               formData.append('limite_superior', limite_superior);
@@ -651,7 +651,7 @@
 
 function llenarSelectEditar()
     {
-            var id_select = document.getElementById('select-actividad_economica-editar').value;
+            var id_select = document.getElementById('select-giro_empresarial-editar').value;
                      
             var formData = new FormData();
                 formData.append('id_select', id_select);

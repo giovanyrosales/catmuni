@@ -19,6 +19,7 @@ use App\Models\CalificacionMatriculas;
 use App\Models\CierresReaperturas;
 use App\Models\CobrosLicenciaLicor;
 use App\Models\CobrosMatriculas;
+use App\Models\GiroEmpresarial;
 use App\Models\Interes;
 use App\Models\LicenciaMatricula;
 use App\Models\MatriculasDetalle;
@@ -75,7 +76,7 @@ class EmpresaController extends Controller
         ->orderby('id','desc')
         ->get();
 
-        return view('backend.admin.Empresas.cobros_buscador',  compact('contribuyentes',
+        return view('backend.admin.Empresas.Cobros_buscador',  compact('contribuyentes',
                                                                         'estadoempresas',
                                                                         'giroscomerciales',
                                                                         'actividadeseconomicas',
@@ -86,7 +87,13 @@ class EmpresaController extends Controller
     }
 
     public function buscar_obligaciones_tributarias(Request $request){
+    
+   
+    
+    $Mes_anterior = Carbon::now()->subMonth()->day(1);
 
+
+    log::info('Mes anterior al que solicita la Solvencia: '.$Mes_anterior);
     $empresas_registradas= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -103,7 +110,7 @@ class EmpresaController extends Controller
     'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro','actividad_economica.id as id_act_economica',
-    )
+     )
     ->where('id_contribuyente',$request->id_contribuyente)
     ->get();
 
@@ -127,18 +134,97 @@ class EmpresaController extends Controller
             }
     }
 
-    if(sizeof($empresas_registradas) == 0){
-        $empresas_reg=0;
+    //** Buscando Empresas resgistradas del contribuyente */
+    if(sizeof($empresas_registradas) == 0)
+    {
+            $empresas_reg=0;
     }else{
-             $empresas_reg=1;
-         }
+            $empresas_reg=1;
+            $Solvencia=1;
 
-    if(sizeof($buses_registrados) == 0){
-        $buses_reg=0;
+            log::info(':::::Nombres de las empresas:____________');
+            foreach($empresas_registradas as $dato)
+            {
+                    $ultima_fecha_pago=Cobros::latest()
+                    ->where('id_empresa',$dato->id)
+                    ->pluck('periodo_cobro_fin')
+                    ->first();
+                    
+
+                    if($ultima_fecha_pago==null)
+                    {
+                        $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id)
+                        ->pluck('id')
+                        ->first();
+
+                                if($id_matriculadetalle==null){
+                                        $ultima_fecha_pago=$dato->inicio_operaciones; 
+                                                                     
+                                }else{
+                                        
+                                            $ultima_fecha_pago=CobrosMatriculas::latest()
+                                                ->where('id_matriculas_detalle',$id_matriculadetalle)
+                                                ->pluck('periodo_cobro_fin')
+                                                ->first();
+
+                                            //Nos aseguramos que si la última fecha de pago es nula se obtenga el inicio de operaciones
+                                            if($ultima_fecha_pago==null)
+                                            {
+                                                $ultima_fecha_pago=$dato->inicio_operaciones;
+                                                
+                                            }
+                                                
+                                       }
+                    }
+                    $ultima_fecha_pago=Carbon::parse($ultima_fecha_pago);
+                    
+                if($ultima_fecha_pago->gt($Mes_anterior))
+                { 
+                        $estado_moratorio='Solvente';
+
+                }else{
+                        //** Nos aseguramos que la empresa que va estar en mora, no se una que ya esta cerrada **/
+                        //** ---- Si una empresa esta cerrada auntomaticamente esta solvente ---- */
+                        
+                        if($dato->id_estado_empresa===1)
+                        {
+                                $estado_moratorio='Solvente';
+                        }else{
+                                $estado_moratorio='Mora';
+                             }
+
+                     }
+                
+                     log::info('ID: '.$dato->id.' '.'Nombre de la empresa: '.$dato->nombre.' Fecha de último pago: '.$ultima_fecha_pago.' Estado: '.$estado_moratorio);
+                
+                //** ---- Si se encuentra al menos un estado moratorio igual a Mora, no se emite solvencia ---- */
+                if($estado_moratorio=='Mora')
+                {
+                    $Solvencia=0;
+
+                }
+
+               $dato->estado_moratorio_empresas=$estado_moratorio;
+                
+            }// Fin foreach
+            log::info('Solvencia: '.$Solvencia);
+         }//Fin IF
+
+    //** Buscando Buses resgistrados del contribuyente */
+    if(sizeof($buses_registrados) == 0)
+    {
+            $buses_reg=0;
     }else{
-             $buses_reg=1;
+            $buses_reg=1;
          }
+    
+    //** Buscando Rótulos resgistrados del contribuyente */
 
+
+
+
+
+    //** Verificando si todas las busquedas realizadas son vacias */
     if(sizeof($empresas_registradas) == 0 and sizeof($buses_registrados) == 0){
         return [
                     'success' => 2,
@@ -151,6 +237,8 @@ class EmpresaController extends Controller
                 'buses_registrados'=>$buses_registrados,
                 'empresas_reg'=>$empresas_reg,
                 'buses_reg'=>$buses_reg,
+                'Solvencia'=>$Solvencia,
+
            ];
 
     }
@@ -327,15 +415,16 @@ public function calificacion($id)
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
+    $girosempresariales = GiroEmpresarial::All();
     $calificaciones = calificacion::All();
 
-    $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+    $tarifa_fijas= TarifaFija::join('giro_empresarial','tarifa_fija.id_giro_empresarial','=','giro_empresarial.id')
     ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
 
     ->select('tarifa_fija.id','tarifa_fija.id_actividad_especifica','tarifa_fija.codigo','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
     'tarifa_fija.codigo',
-    'actividad_economica.rubro as nombre_rubro',
-    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica',
+    'giro_empresarial.nombre_giro_empresarial',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica',
      )
      ->get();
 
@@ -358,13 +447,10 @@ public function calificacion($id)
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo as codigo_act',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
     )
     ->where('empresa.id',$id)
     ->first();
-
-    $act_especificas = ActividadEspecifica::where('id_actividad_economica',$empresa->id_act_economica)
-    ->get();
 
     $matriculasRegistradas=MatriculasDetalle
     ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
@@ -415,7 +501,7 @@ public function calificacion($id)
         $montoMatriculaValor='$'. $monto;
         
     return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('id','empresa','giroscomerciales', 'monto', 'contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','MatriculasReg','matriculas','montoMatriculaValor',
-        'matriculasRegistradas','act_especificas',));
+        'matriculasRegistradas','girosempresariales'));
     
 }
 
@@ -425,6 +511,7 @@ public function calificacion($id)
 
 public function Recalificacion($id)
 {
+
     $contribuyentes = Contribuyentes::All();
     $licencia = LicenciaMatricula::All()->where('tipo_permiso', "=", "Licencia");
     $matricula = LicenciaMatricula::All()->where('tipo_permiso', "=", "Matrícula");
@@ -432,6 +519,9 @@ public function Recalificacion($id)
     $giroscomerciales = GiroComercial::All();
     $actividadeseconomicas = ActividadEconomica::All();
     $calificaciones = calificacion::All();
+    $girosempresariales = GiroEmpresarial::All();
+
+
     $consulta_detalle_matricula=MatriculasDetalle::select('id')
     ->where('id_empresa', "=", $id) 
     ->first();
@@ -442,13 +532,16 @@ public function Recalificacion($id)
 
     $anio_actual=carbon::now()->format('Y');
 
-    $tarifa_fijas= TarifaFija::join('actividad_economica','tarifa_fija.id_actividad_economica','=','actividad_economica.id')
+    
+    $tarifa_fijas= TarifaFija::join('giro_empresarial','tarifa_fija.id_giro_empresarial','=','giro_empresarial.id')
     ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
 
     ->select('tarifa_fija.id','tarifa_fija.id_actividad_especifica','tarifa_fija.codigo','tarifa_fija.limite_inferior','tarifa_fija.limite_superior','tarifa_fija.impuesto_mensual',
-    'actividad_economica.rubro as nombre_rubro',
-    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica' )
-     ->get();
+    'tarifa_fija.codigo',
+    'giro_empresarial.nombre_giro_empresarial',
+    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica',
+     )
+    ->get();
 
     foreach($tarifa_fijas as $ll)
     {
@@ -473,8 +566,6 @@ public function Recalificacion($id)
     )
     ->find($id);
 
-    $act_especificas = ActividadEspecifica::where('id_actividad_economica',$empresa->id_act_economica)
-    ->get();
     
     $matriculasRegistradas=MatriculasDetalle
     ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
@@ -542,7 +633,7 @@ public function Recalificacion($id)
             ->first();
         }
 
-    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('monto','montoMatriculaValor','detectorNull','empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','matriculas','cali_lista','anio_actual','MatriculasReg','act_especificas','matriculasRegistradas'));
+    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('monto','montoMatriculaValor','detectorNull','empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','matriculas','cali_lista','anio_actual','MatriculasReg','matriculasRegistradas','girosempresariales'));
     
 }
 
@@ -560,7 +651,7 @@ public function show($id)
     $consulta_detalle_matricula=MatriculasDetalle::select('id')
     ->where('id_empresa', "=", $id) 
     ->first();
-    //anclaaa
+   
     if($consulta_detalle_matricula==null){
             $pase_cobro_mat=0;
             $pase_recalificacion_mat=0;
@@ -1059,10 +1150,10 @@ public function calculo_cobros_empresa(Request $request)
         'empresa.excepciones_especificas',
         'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui',
         'contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax',
-         'contribuyente.direccion as direccionCont',
+        'contribuyente.direccion as direccionCont',
         'estado_empresa.estado',
         'giro_comercial.nombre_giro',
-        'actividad_economica.rubro',
+        'actividad_economica.rubro','actividad_economica.codigo_atc_economica'
         )
         ->find($id); 
         $nombre_empresa= $empresa->nombre;
@@ -1310,16 +1401,17 @@ public function calculo_cobros_empresa(Request $request)
             $cobro->id_empresa = $request->id;
             $cobro->id_usuario =$idusuario;
             $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
-            $cobro->impuesto_mora = $impuestos_mora;
-            $cobro->impuesto = $impuesto_año_actual;
-            $cobro->intereses_moratorios = $InteresTotal;
-            $cobro->monto_multa_balance = $monto_pago_multaBalance;
-            $cobro->monto_multaPE = $totalMultaPagoExtemporaneo;
-            $cobro->fondo_fiestasP = $fondoFPValor;
+            $cobro->impuesto_mora_32201 = $impuestos_mora;
+            $cobro->impuestos_11801 = $impuesto_año_actual;
+            $cobro->intereses_moratorios_15302 = $InteresTotal;
+            $cobro->monto_multa_balance_15313 = $monto_pago_multaBalance;
+            $cobro->monto_multaPE_15313 = $totalMultaPagoExtemporaneo;
+            $cobro->fondo_fiestasP_12114 = $fondoFPValor;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro = $request->fecha_interesMoratorio;
             $cobro->periodo_cobro_inicio = $InicioPeriodo;
             $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
             $cobro->tipo_cobro = 'impuesto';
             $cobro->save();
 
@@ -1432,7 +1524,7 @@ public function calculo_cobroLicor(Request $request)
         'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
         'estado_empresa.estado',
         'giro_comercial.nombre_giro',
-        'actividad_economica.rubro',
+        'actividad_economica.rubro', 'actividad_economica.codigo_atc_economica',
          )
         ->find($id); 
         $nombre_empresa= $empresa->nombre;
@@ -1574,11 +1666,13 @@ public function calculo_cobroLicor(Request $request)
             $cobro = new CobrosLicenciaLicor();
             $cobro->id_empresa = $request->id;
             $cobro->id_usuario = $idusuario;
-            $cobro->monto_multa_licencia = $multaTotalLicorDecimal;
+            $cobro->monto_multa_licencia_15313 = $multaTotalLicorDecimal;
+            $cobro->monto_licencia_12207 = $monto_pago_licencia;
             $cobro->pago_total = $totalPagoValorDecimal;
             $cobro->fecha_cobro = $fechahoy;
             $cobro->periodo_cobro_inicio = $InicioPeriodo;
             $cobro->periodo_cobro_fin =$FechaPagara;
+            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
             $cobro->tipo_cobro = 'licencia';
             $cobro->save();
         
@@ -1605,7 +1699,7 @@ public function calculo_cobroLicor(Request $request)
 // ---------COBROS ------------------------------------------>
 
 
-//** Vista Cobros */
+//** Vista_Cobros */
 public function cobros($id)
 {
     
@@ -1681,7 +1775,8 @@ public function cobros($id)
     $ultimo_cobro = Cobros::latest()
     ->where('id_empresa', "=", "$id")
     ->first();
-
+    
+    
     $ultimo_cobro_licor = CobrosLicenciaLicor::latest()
     ->where('id_empresa', "=", "$id")
     ->first();
@@ -1691,6 +1786,13 @@ public function cobros($id)
 
     $ListaCobroslicor = CobrosLicenciaLicor::where('id_empresa', $id)
     ->get();
+
+    foreach($ListaCobroslicor as $dato){
+        $dato->pago_total=number_format((float)$dato->pago_total, 2, '.', ',');
+        $dato->monto_multa_licencia_15313=number_format((float)$dato->monto_multa_licencia_15313, 2, '.', ',');
+        $dato->monto_licencia_12207=number_format((float)$dato->monto_licencia_12207, 2, '.', ',');
+        //ukll
+    }
 
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -1711,7 +1813,12 @@ public function cobros($id)
      )
     ->find($id);   
   
-
+    if($ultimo_cobro!=null){
+        $ultimo_cobro_empresa=Carbon::parse($ultimo_cobro->periodo_cobro_fin)->format('d-m-Y');
+    }else{
+            
+            $ultimo_cobro_empresa=Carbon::parse($empresa->inicio_operaciones)->format('d-m-Y');
+         }
 
     //**¨Para detectar los cobros especiales */
     if($empresa->excepciones_especificas==='SI')
@@ -1736,14 +1843,14 @@ log::info($tipo_matricula); //ancla
             'contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones',
             'detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas','MatriculasNull',
             'licencia','ultimo_cobro_licor','CE','ListaCobros','ListaCobroslicor','tipo_matricula',
-            'id_detalleM','cali_lista'));
+            'id_detalleM','cali_lista','ultimo_cobro_empresa'));
         }else{
                 $detectorCobro=1;
                 return view('backend.admin.Empresas.Cobros.Cobros', compact('empresa','giroscomerciales',
                 'contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones',
                 'detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas',
                 'MatriculasNull','licencia','ultimo_cobro_licor','CE','ListaCobros','ListaCobroslicor',
-                'tipo_matricula','id_detalleM','cali_lista'));
+                'tipo_matricula','id_detalleM','cali_lista','ultimo_cobro_empresa'));
              }
             
            
@@ -1759,7 +1866,7 @@ log::info($tipo_matricula); //ancla
         'contribuyentes', 'estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones',
         'detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas',
         'MatriculasNull','licencia','ultimo_cobro_licor','CE','ListaCobros','ListaCobroslicor',
-        'tipo_matricula','id_detalleM','cali_lista'));
+        'tipo_matricula','id_detalleM','cali_lista','ultimo_cobro_empresa'));
         }
         else
         {
@@ -1769,7 +1876,7 @@ log::info($tipo_matricula); //ancla
             'contribuyentes','estadoempresas','actividadeseconomicas','ultimo_cobro','calificaciones',
             'detectorNull','date','detectorCobro','tasasDeInteres','matriculasRegistradas',
             'MatriculasNull','licencia','ultimo_cobro_licor','CE','ListaCobros','ListaCobroslicor',
-            'tipo_matricula','id_detalleM','cali_lista'));
+            'tipo_matricula','id_detalleM','cali_lista','ultimo_cobro_empresa'));
         }
     }
       
@@ -2053,7 +2160,7 @@ public function calculo_calificacion(Request $request)
         // $activo_imponibleColones=$signoC.$activo_imponibleColones;
 
         //*** Recuperamos el id de la actividad economica de la empresa..........]
-        $id_act_economica=$request->id_act_economica;
+        $id_giro_empresarial=$request->id_giro_empresarial;
 
 
         $PagoAnualLicenciasValor=round($licenciaMatricula+$fondoFLM,2);
@@ -2075,14 +2182,14 @@ public function calculo_calificacion(Request $request)
 
     //*** Comparamos la actividad economica de la empresa para saber.........]
         //*** que consulta le toca y poder sacar los datos de tarifas variables..]
-        if($id_act_economica==1)
+        if($id_giro_empresarial==1)
         {
 
                 //Cargamos todos los registros de la tabla tarifa varibales.
-                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
-                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
-                    'actividad_economica.rubro as actividad_economica' )
-                ->where('id_actividad_economica','=',"$id_act_economica")
+                $ConsultaTarifasVariables = TarifaVariable::join('giro_empresarial','tarifa_variable.id_giro_empresarial','=','giro_empresarial.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_giro_empresarial','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'giro_empresarial.nombre_giro_empresarial' )
+                ->where('id_giro_empresarial','=',"$id_giro_empresarial")
                 ->where(function ($query)use ($activo_imponibleColones)
                 {
                    $query->where('limite_superior','>',$activo_imponibleColones)
@@ -2090,13 +2197,13 @@ public function calculo_calificacion(Request $request)
                 })
                 ->first();
         }
-        else if($id_act_economica==2)
+        else if($id_giro_empresarial==2)
         {
                 //Cargamos todos los registros de la tabla tarifa varibales.
-                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
-                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
-                    'actividad_economica.rubro as actividad_economica' )
-                ->where('id_actividad_economica','=',"$id_act_economica")
+                $ConsultaTarifasVariables = TarifaVariable::join('giro_empresarial','tarifa_variable.id_giro_empresarial','=','giro_empresarial.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_giro_empresarial','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'giro_empresarial.nombre_giro_empresarial' )
+                ->where('id_giro_empresarial','=',"$id_giro_empresarial")
                 ->where(function ($query)use ($activo_imponibleColones)
                 {
                    $query->where('limite_superior','>',$activo_imponibleColones)
@@ -2104,13 +2211,13 @@ public function calculo_calificacion(Request $request)
                 })
                 ->first();
         }
-        else if($id_act_economica==3)
+        else if($id_giro_empresarial==4)
         {
                 //Cargamos todos los registros de la tabla tarifa varibales.
-                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
-                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
-                    'actividad_economica.rubro as actividad_economica' )
-                ->where('id_actividad_economica','=',"$id_act_economica")
+                $ConsultaTarifasVariables = TarifaVariable::join('giro_empresarial','tarifa_variable.id_giro_empresarial','=','giro_empresarial.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_giro_empresarial','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'giro_empresarial.nombre_giro_empresarial' )
+                ->where('id_giro_empresarial','=',"$id_giro_empresarial")
                 ->where(function ($query)use ($activo_imponibleColones)
                 {
                    $query->where('limite_superior','>',$activo_imponibleColones)
@@ -2118,14 +2225,14 @@ public function calculo_calificacion(Request $request)
                 })
                 ->first();
         }       
-        else if($id_act_economica==4)
+        else if($id_giro_empresarial==3)
         {
             
                 //Cargamos todos los registros de la tabla tarifa varibales.
-                $ConsultaTarifasVariables = TarifaVariable::join('actividad_economica','tarifa_variable.id_actividad_economica','=','actividad_economica.id')  
-                ->select('tarifa_variable.id','tarifa_variable.id_actividad_economica','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
-                    'actividad_economica.rubro as actividad_economica' )
-                ->where('id_actividad_economica','=',$id_act_economica)
+                $ConsultaTarifasVariables = TarifaVariable::join('giro_empresarial','tarifa_variable.id_giro_empresarial','=','giro_empresarial.id')  
+                ->select('tarifa_variable.id','tarifa_variable.id_giro_empresarial','tarifa_variable.limite_inferior','tarifa_variable.limite_superior','tarifa_variable.fijo','tarifa_variable.excedente','tarifa_variable.categoria','tarifa_variable.millar',
+                    'giro_empresarial.nombre_giro_empresarial' )
+                ->where('id_giro_empresarial','=',"$id_giro_empresarial")
                 ->where(function ($query)use ($activo_imponibleColones)
                 {
                    $query->where('limite_superior','>',$activo_imponibleColones)
@@ -2252,7 +2359,7 @@ public function calculo_calificacion(Request $request)
                         'millar'=> $millar,
                         'excedente'=>$excedente,
                         'id_actividad_economica'=>$id_actividad_economica,
-                        'id_act_economica'=>$id_act_economica,
+                        '$id_giro_empresarial'=>$id_giro_empresarial,
                         'actividad_economica'=>$actividad_economica,
                         'ImpuestoAnualVariableColones'=>$ImpuestoAnualVariableColones,
                         'ImpuestoMensualVariableColones'=>$ImpuestoMensualVariableColones,
@@ -2274,7 +2381,7 @@ public function calculo_calificacion(Request $request)
             $tarifa='Fija';  
 
                 //Cargamos todos los registros de la tarifas fijas.
-                $ConsultaTarifasFijas = TarifaFija:: where('id_actividad_economica','=',$id_act_economica)
+                $ConsultaTarifasFijas = TarifaFija:: where('id_giro_empresarial','=',$id_giro_empresarial)
                 ->where('id_actividad_especifica','=',"$id_actividad_especifica")
                 ->where(function ($query)use ($activo_imponibleColones)
 
@@ -2460,6 +2567,7 @@ if($calificacion_anterior==null and $consulta_detalle_matricula!=null)
     $dato->estado_calificacion = 'Recalificado';
     $dato->tipo_tarifa = $calificacionesM->tipo_tarifa;
     $dato->codigo_tarifa = $calificacionesM->codigo_tarifa;
+    $dato->giro_empresarial = $calificacionesM->giro_empresarial;
     $dato->save();
 
     return ['success' => 1];
@@ -2554,6 +2662,7 @@ if($calificacion_anterior==null and $consulta_detalle_matricula!=null)
             $dato->total_impuesto_anual = $calificacion_anterior->total_impuesto_anual;
             $dato->multa_balance = $multabalance;
             $dato->codigo_tarifa = $calificacion_anterior->codigo_tarifa;
+            $dato->giro_empresarial = $calificacion_anterior->giro_empresarial;
             $dato->save();
 
             return ['success' => 1];
@@ -2646,6 +2755,7 @@ public function nuevaCalificacion(Request $request){
                 $dato->total_impuesto_anual = $total_impuesto_anual;
                 $dato->multa_balance = $request->multaBalance;
                 $dato->codigo_tarifa = $request->codigo_tarifa;
+                $dato->giro_empresarial = $request->nombre_giro;
                 $dato->save();
                 if($dato->save())
                         {
@@ -2710,6 +2820,11 @@ public function infoTraspaso(Request $request)
             $datos_contribuyente=Contribuyentes::select('nombre','apellido')
             ->where('id',$id_contribuyente)
             ->first();
+
+            //Obtenemos la última resoluición y aumentamos su número.
+            $ultima_resolucion=Traspasos::orderBy('id','desc')->pluck('num_resolucion')->first();
+            $nueva_resolucion=($ultima_resolucion + 1);
+
      
 
             $regla = array(  
@@ -2735,6 +2850,7 @@ public function infoTraspaso(Request $request)
                 $traspaso->propietario_anterior = $empresa->contribuyente.' '.$empresa->apellido;
                 $traspaso->propietario_nuevo =  $datos_contribuyente->nombre.' '.$datos_contribuyente->apellido;
                 $traspaso->fecha_a_partir_de = $request->Apartirdeldia;
+                $traspaso->num_resolucion = $nueva_resolucion;
                 $traspaso->save();
                 //** FIN- Guardar registro historio en tabla traspasos */
                 Empresas::where('id', $request->id)->update([
@@ -2761,10 +2877,28 @@ public function infoTraspaso(Request $request)
            if($estado_empresa==1)
            {
                 $Tipo_operacion='Cierre';
+
+                $datos_traspaso=CierresReaperturas::select('num_resolucion')
+                ->where('tipo_operacion','Cierre')
+                ->latest()
+                ->first();
+
+                $nueva_resolucion=$datos_traspaso->num_resolucion+1;
+
            }else{
                     $Tipo_operacion='Reapertura';
+                    
+                    $datos_traspaso=CierresReaperturas::select('num_resolucion')
+                    ->where('tipo_operacion','Reapertura')
+                    ->latest()
+                    ->first();
+
+                    $nueva_resolucion=$datos_traspaso->num_resolucion+1;
+
                 }
-            
+
+
+ 
             $empresa= Empresas
                 ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
                 ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -2802,6 +2936,7 @@ public function infoTraspaso(Request $request)
                 $cierre->id_empresa = $request->id;
                 $cierre->fecha_a_partir_de = $request->cierre_apartirdeldia;
                 $cierre->tipo_operacion =$Tipo_operacion;
+                $cierre->num_resolucion =$nueva_resolucion;
                 $cierre->save();
                 //** FIN- Guardar registro historico en tabla traspasos */
 
@@ -2903,5 +3038,23 @@ public function infoTraspaso(Request $request)
     
         }
         //Termina función para eliminar calificaciones
+
+
+        //Función para llenar el select Actividad Especifica
+    public function buscarActividadEsp(Request $request)
+    {
+
+    $actividad_especifica = ActividadEspecifica::
+       where('id_giro_empresarial',$request->id_select)
+       ->orderBy('nom_actividad_especifica', 'ASC')
+       ->get();
+
+       return [
+                'success' => 1,
+                'actividad_especifica' => $actividad_especifica
+             ];
+
+   }
+//Terminar llenar select
 
 } //* Cierre final

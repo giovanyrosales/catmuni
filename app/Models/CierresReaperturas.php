@@ -14,5 +14,6 @@ class CierresReaperturas extends Model
         'id_empresa',
         'fecha_a_partir_de',
         'tipo_operacion',
+        'num_resolucion',
         ];
 }

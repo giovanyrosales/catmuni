@@ -7,7 +7,7 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                <th style="width: 20%;">Actividad económica</th>
+                                <th style="width: 20%;">Giro Empresarial</th>
                                 <th style="width: 50%;">Actividad específica</th>
                                 <th style="width: 25%;">Acción</th>
                             </tr>
@@ -15,7 +15,7 @@
                             <tbody>
                             @foreach($lista as $dato)
                                 <tr>
-                                    <td>{{$dato->actividad_economica}}</td>
+                                    <td>{{$dato->nombre_giro_empresarial}}</td>
                                     <td>{{$dato->nom_actividad_especifica}} </td>
                                                                  
                                     <td style="text-align: center;">

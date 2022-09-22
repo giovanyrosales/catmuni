@@ -12,7 +12,7 @@
                                 <th style="width: 10%;">Fijo</th>
                                 <th style="width: 15%;">Excedente</th>
                                 <th style="width: 10%;">Millar</th>
-                                <th style="width: 20%;">Actividad económica</th>
+                                <th style="width: 20%;">Giro Empresarial</th>
                                 <th style="width: 30%;">Acción</th>
                             </tr>
                             </thead>
@@ -24,7 +24,7 @@
                                     <td>¢{{$dato->fijo}} </td>
                                     <td>¢{{$dato->excedente}} </td>
                                     <td>¢{{$dato->millar}} </td>
-                                    <td>{{$dato->actividad_economica}}</td>
+                                    <td>{{$dato->nombre_giro_empresarial}}</td>
                                   
                                     
 

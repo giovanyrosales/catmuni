@@ -16,7 +16,7 @@ use function PHPUnit\Framework\isEmpty;
 use App\Models\ActividadEconomica;
 use App\Models\TarifaVariable;
 use App\Models\ActividadEspecifica;
-
+use App\Models\GiroEmpresarial;
 
 class ActividadEspecificaController extends Controller
 {
@@ -27,17 +27,17 @@ class ActividadEspecificaController extends Controller
 
     public function index()
     {
-        $actividadeconomica = ActividadEconomica::All();
+        $giros_empresariales = GiroEmpresarial::All();
        
-        return view('backend.admin.ActividadEspecifica.ListarActividadEspecifica', compact('actividadeconomica'));
+        return view('backend.admin.ActividadEspecifica.ListarActividadEspecifica', compact('giros_empresariales'));
     }
 
     public function tablaActividadEspecifica(ActividadEspecifica $lista)
     {
-        $lista=ActividadEspecifica::join('actividad_economica','actividad_especifica.id_actividad_economica','=','actividad_economica.id')
+        $lista=ActividadEspecifica::join('giro_empresarial','actividad_especifica.id_giro_empresarial','=','giro_empresarial.id')
            
         ->select('actividad_especifica.id','actividad_especifica.nom_actividad_especifica',
-        'actividad_economica.rubro as actividad_economica' )
+        'giro_empresarial.nombre_giro_empresarial' )
          ->get();
               
          return view('backend.admin.ActividadEspecifica.tabla.tablaactividadespecifica', compact('lista'));
@@ -46,18 +46,19 @@ class ActividadEspecificaController extends Controller
 
     public function listarActividadEspecifica()
     {
-        $actividadeconomica = ActividadEconomica::All();
+        $giro_empresarial_lista = GiroEmpresarial::All();
         
-        return view('backend.admin.ActividadEspecifica.tabla', compact('actividadeconomica'));
+        return view('backend.admin.ActividadEspecifica.tabla', compact('giro_empresarial_lista'));
     }
 
     //Función para agregar nueva actividad específica
 
     public function agregarActividadE(Request $request)
         {
-           
+            
+       
         $regla = array(
-            'actividad_economica'=>'required',
+            'giro_empresarial'=>'required',
             'nom_actividad_especifica' => 'required',
           
         );
@@ -77,7 +78,7 @@ class ActividadEspecificaController extends Controller
 
         $dato = new ActividadEspecifica();
         $dato->nom_actividad_especifica = $request->nom_actividad_especifica;
-        $dato->id_actividad_economica = $request->actividad_economica;
+        $dato->id_giro_empresarial = $request->giro_empresarial;
 
     if($dato->save())
     {
@@ -100,13 +101,13 @@ class ActividadEspecificaController extends Controller
 
     if($lista = ActividadEspecifica::where('id', $request->id)->first()){
 
-        $actividad_economica = ActividadEconomica::orderby('rubro')->get();
+        $giro_empresarial = GiroEmpresarial::orderby('nombre_giro_empresarial')->get();
     
     return ['success' => 1,
 
         'actividad_especifica' => $lista,
-        'idact_eco' => $lista->id_actividad_economica,
-        'actividad_economica' => $actividad_economica,
+        'idact_giec' => $lista->id_giro_empresarial,
+        'giro_empresarial' => $giro_empresarial,
 
         ];
     }else{
@@ -120,7 +121,7 @@ class ActividadEspecificaController extends Controller
     $regla = array(
         'id' => 'required',
         'nom_actividad_especifica' => 'required',
-        'actividad_economica' => 'required',
+        'giro_empresarial' => 'required',
                     
         );
 
@@ -134,7 +135,7 @@ class ActividadEspecificaController extends Controller
         ActividadEspecifica::where('id', $request->id)->update([
        
         'nom_actividad_especifica' => $request->nom_actividad_especifica,
-        'id_actividad_economica' => $request->actividad_economica,
+        'id_giro_empresarial' => $request->giro_empresarial,
 
             ]);
 

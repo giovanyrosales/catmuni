@@ -37,5 +37,6 @@ class Calificacion extends Model
         'total_impuesto_anual',
         'multa_balance',
         'codigo_tarifa',
+        'giro_empresarial'
       ];
 }

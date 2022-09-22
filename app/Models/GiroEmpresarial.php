@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ActividadEspecifica extends Model
+class GiroEmpresarial extends Model
 {
-    protected $table = 'actividad_especifica';
+    protected $table = 'giro_empresarial';
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'nom_actividad_especifica',
-
+        'nombre_giro_empresarial',
       ];
 }

@@ -15,5 +15,6 @@ class Traspasos extends Model
         'propietario_anterior',
         'propietario_nuevo',
         'fecha_a_partir_de',
+        'num_resolucion'
       ];
 }

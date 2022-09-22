@@ -95,11 +95,14 @@ function resetea()
  document.getElementById('tarifaenColonesValor_imp').value=vacio; 
 }
 
-function calculo(id_act_economica)
-{   //** Bloqueamos el input de la tarifa */
+function calculo()
+{   
+    //** Bloqueamos el input de la tarifa */
     document.getElementById('tarifaAplicada').disabled=true;
 
+    var id_giro_empresarial = document.getElementById("rubro").value;
     var id_actividad_especifica=(document.getElementById('select-actividad_especifica').value);
+    
     /*Declaramos variables */
     var  licencia=(document.getElementById('selectLicencia').value);
     var  matricula=(document.getElementById('matriculaValorTotal').value);
@@ -117,13 +120,22 @@ function calculo(id_act_economica)
     var año_calificacion=(document.getElementById('año_calificacion').value);
 
         
-    if(id_actividad_especifica === ''){
+
+
+    if(id_giro_empresarial === ''){
+        toastr.error('El giro empresarial es requerido.');
+        document.getElementById('activo_total').value='';
+        document.getElementById('deducciones').value='';
+        return;
+    }
+
+    if(id_actividad_especifica ==='0'){
                     toastr.error('La actividad especifica es requerida.');
                     document.getElementById('activo_total').value='';
                     document.getElementById('deducciones').value='';
                     return;
                 } 
-              
+
     if(document.getElementById('gridCheck').checked)
           {
             CasoEspecial=1;
@@ -141,7 +153,7 @@ formData.append('activo_total', activo_total);
 formData.append('ValortarifaAplicada', ValortarifaAplicada);
 formData.append('licencia', licencia);
 formData.append('matricula', matricula);
-formData.append('id_act_economica', id_act_economica);
+formData.append('id_giro_empresarial', id_giro_empresarial);
 formData.append('id_actividad_especifica', id_actividad_especifica);
 formData.append('estado_calificacion', estado_calificacion);
 formData.append('fecha_pres_balance', fecha_pres_balance);
@@ -475,16 +487,29 @@ function calculo_calificacion_matricula()
                <!-- /.form-group -->
                            
 
-                <!-- /.form-group -->
-                <div class="col-md-3">
-                  <div class="form-group">
-                        <label>ACTIVIDAD ECONOMICA:</label>
+                  <!-- /.form-group -->
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Giro Empresarial:</label>
                   </div>
                </div><!-- /.col-md-6 -->
-               <!-- Inicia Select actividad_economica -->
+               <!-- Inicia Select Rubro -->
                <div class="col-md-3">
                       <div class="form-group">
-                        <input type="text"  value="{{ $empresa->rubro }}" name="rubro" disabled id="rubro" class="form-control" required >
+                          <select 
+                            required
+                            class="selectpicker"
+                            data-show-subtext="true" 
+                            data-live-search="true"
+                            data-style="btn-info"   
+                            id="rubro" 
+                            title="-- Selecione un rubro --"
+                            onchange="llenarSelect()"
+                            >
+                            @foreach($girosempresariales as $dato)
+                              <option value="{{$dato->id}}" data-actividad="{{$dato->nombre_giro_empresarial}}" > {{$dato->nombre_giro_empresarial}}</option>
+                            @endforeach
+                          </select>                       
                       </div>
                 </div>
               <!-- /.form-group -->
@@ -517,31 +542,28 @@ function calculo_calificacion_matricula()
 
 <!-------------------------------------------- ASIGNAR A UNA EMPRESA ------------------------------------------- -->
 @if($MatriculasReg== '0')
-        <div class="card border-info mb-3"><!-- Panel Asignar empresa -->
+        <div class="card border-info mb-3" id="actividad-especificaDIV"><!-- Panel Asignar empresa -->
         <div class="card-header text-info"><label>ACTIVIDAD ESPECIFICA</label></div>
         <div class="card-body"><!-- Card-body -->
         <div class="row"><!-- /.ROW1 -->
 
-            <!-- /.form-group -->
-            <div class="col-md-12">
+             <!-- /.form-group -->
+             <div class="col-md-12">
             <div class="form-group">
 
               <select id="select-actividad_especifica" 
-              class="selectpicker"
-              data-style="btn-info"
+              class="form-control"
+              data-style="btn-success"
               data-width="auto"
               data-show-subtext="true" 
               data-live-search="true" 
-              title="-- Seleccione Actividad Especifica --"
+
               >   
-              @foreach($act_especificas as $dato)
-                  <option value="{{$dato->id}}">{{ $dato->nom_actividad_especifica}}</option>                                  
-              @endforeach     
-              </select>
+ 
+              </select> 
 
               </div>
                </div><!-- /.col-md-6 -->
-
             <!-- Finaliza Empresa-->
          </div>
         </div>
@@ -659,7 +681,7 @@ function calculo_calificacion_matricula()
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input type="number" onchange="calculo({{$empresa->id_act_economica}}),resetea();" placeholder="$00,000.00"  name="activo_total" id="activo_total" class="form-control" required >
+                        <input type="number" onchange="calculo(),resetea();" placeholder="$00,000.00"  name="activo_total" id="activo_total" class="form-control" required >
                        
                   </div>
                </div><!-- /.col-md-6 -->
@@ -673,7 +695,7 @@ function calculo_calificacion_matricula()
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="form-group">
-                        <input type="number" onchange="calculo({{$empresa->id_act_economica}}),resetea();" placeholder="$00,000.00"  name="deducciones" id="deducciones" class="form-control" required >
+                        <input type="number" onchange="calculo(),resetea();" placeholder="$00,000.00"  name="deducciones" id="deducciones" class="form-control" required >
                        
                   </div>
                </div><!-- /.col-md-6 -->
@@ -754,7 +776,7 @@ function calculo_calificacion_matricula()
             <!-- /.card-body -->
                   <div class="card-footer">
                     @if($MatriculasReg== '0')
-                    <button type="button" class="btn btn-info float-right"  onclick="GenerarCalificacion(), calculo({{$empresa->id_act_economica}});"><i class="fas fa-envelope-open-text"></i>
+                    <button type="button" class="btn btn-info float-right"  onclick="GenerarCalificacion(), calculo();"><i class="fas fa-envelope-open-text"></i>
                     &nbsp;Generar Calificación&nbsp;</button>
                     @else
                     <button type="button" class="btn btn-primary float-right" onclick="GenerarCalificacionMatricula()"><i class="fas fa-envelope-open-text"></i>
@@ -783,16 +805,18 @@ function calculo_calificacion_matricula()
           <div class="modal-header">
             <h5 class="modal-title">Registrar calificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
             @if($MatriculasReg==0)
-            <button type="button" class="close" onclick="deseleccionarCheck()" data-dismiss="modal" aria-label="Close" id="cerrarModal1">
+            <button type="button" class="close bg-success" onclick="deseleccionarCheck()" data-dismiss="modal" aria-label="Close" id="cerrarModal1">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            @else
+            <button type="button" class="close bg-danger"  data-dismiss="modal" aria-label="Close" id="cerrarModal1">
               <span aria-hidden="true">&times;</span>
             </button>
             @endif
-            <button type="button" class="close"  data-dismiss="modal" aria-label="Close" id="cerrarModal1">
-              <span aria-hidden="true">&times;</span>
-            </button>
             <button type="button" class="close bg-warning" onclick="listarEmpresas()" data-dismiss="modal" aria-label="Close" id="cerrarModal2">
               <span aria-hidden="true">&times;</span>
             </button>
+        
           </div>
           <div class="modal-body">
             <form id="formulario-Calificacion1">
@@ -868,7 +892,7 @@ function calculo_calificacion_matricula()
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text"  value="{{ $empresa->rubro}}"  disabled id="nombre_giro" class="form-control" required >
+                        <input type="text"  value=""  disabled id="nombre_giro" class="form-control" required >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -1191,7 +1215,7 @@ function calculo_calificacion_matricula()
                         <th scope="col">&nbsp;BASE LEGAL&nbsp;</th>
                       </tr>
                       <tr align="center">
-                        <td>{{$empresa->rubro}}</td>
+                        <td><h6 id="nombre_giro_multas"></h6></td>
                         <td><label>$<label id="multaBalance_imp"></label></label></td>
                         <td>&nbsp;ART. 21, LEY DE IMPUESTOS MUNICIPALES&nbsp;</td>
                       </tr>
@@ -1301,7 +1325,8 @@ function calculo_calificacion_matricula()
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
     
     <script type="text/javascript">
@@ -1320,6 +1345,7 @@ function calculo_calificacion_matricula()
                 $("#Div_Rotulos").hide();
 
           }
+          $('#actividad-especificaDIV').hide();
 
         });
 
@@ -1388,7 +1414,19 @@ function GenerarCalificacionMatricula(){
 
   var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
   var año_calificacion=(document.getElementById('año_calificacion').value);
+  var giro_empresarial = document.getElementById("rubro").value; 
+
+  var sel = document.getElementById("rubro");  
+  var selected = sel.options[sel.selectedIndex];
+  var rubro=selected.getAttribute('data-actividad');
+
   //Validación
+
+  if(giro_empresarial == ""){
+                  modalMensaje('Aviso', 'El giro empresarial es requerido');
+                  return;
+              }
+
   if(fecha_pres_balance == ""){
                             modalMensaje('Aviso', 'Debe seleccionar la fecha en que presenta el balance o declaración jurada');
                             return;
@@ -1401,6 +1439,9 @@ function GenerarCalificacionMatricula(){
  
 
   document.getElementById('fechabalanceodjurada').value=fecha_pres_balance;
+  document.getElementById('nombre_giro').value=rubro;
+  document.getElementById('nombre_giro_multas').innerHTML=rubro;  
+
   $('#modalCalificacion').modal({backdrop: 'static', keyboard: false})
   calculo_calificacion_matricula();
 }
@@ -1426,11 +1467,16 @@ function recargar()
     }
 
 function GenerarCalificacion(){
+
+         
             /*Declaramos variables */
+            var sel = document.getElementById("rubro");  
+            var selected = sel.options[sel.selectedIndex];
+            var rubro=selected.getAttribute('data-actividad');
+
             var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
             var activo_total=(document.getElementById('activo_total').value);
             var deducciones=(document.getElementById('deducciones').value);
-            var rubro=(document.getElementById('rubro').value);
             var tarifaAplicada_imp=(document.getElementById('tarifaAplicada').value);
             var año_calificacion=(document.getElementById('año_calificacion').value);
           
@@ -1470,6 +1516,9 @@ function GenerarCalificacion(){
  
             document.getElementById('fechabalanceodjurada').value=fecha_pres_balance;
             document.getElementById('actividad_economica').innerHTML=rubro; 
+            document.getElementById('nombre_giro').value=rubro;
+            document.getElementById('nombre_giro_multas').innerHTML=rubro;   
+            
             $('#modalCalificacion').modal({backdrop: 'static', keyboard: false})
             //$('#modalCalificacion').modal('show');
         }
@@ -1486,6 +1535,7 @@ function Registrar_Calificacion_matricula(){
   var estado_calificacion = document.getElementById('estado_calificacion').value;
   var año_calificacion=(document.getElementById('año_calificacion').value);
   var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
+  var nombre_giro = document.getElementById('nombre_giro').value;
 //ancla1
               
   var fondofp = document.getElementById('fondoFMValor_imp').value;
@@ -1493,6 +1543,7 @@ function Registrar_Calificacion_matricula(){
   var tarifa_colones = document.getElementById('tarifaenColonesValor_imp').value;
   var total_impuesto_mat=(document.getElementById('Total_ImpuestoValor_imp').value);
   var fondofp_impuesto_mat=(document.getElementById('FondoF_imp').innerHTML);
+  
 
   openLoading();
   var formData = new FormData();
@@ -1500,6 +1551,7 @@ function Registrar_Calificacion_matricula(){
   formData.append('estado_calificacion', estado_calificacion);
   formData.append('año_calificacion', año_calificacion);
   formData.append('fecha_pres_balance', fecha_pres_balance)
+  formData.append('nombre_giro', nombre_giro);
 
   formData.append('fondofp', fondofp);
   formData.append('pago_anual', pago_anual);
@@ -1560,6 +1612,7 @@ function nuevo(){
   var deducciones = document.getElementById('deducciones').value;
   var activo_imponible = document.getElementById('act_imponibleValor_imp').value;
   var fondofp_licencia_permisos = document.getElementById('fondoFMValor_imp').value;
+  var nombre_giro = document.getElementById('nombre_giro').value;
 
   var tipo_tarifa = document.getElementById('tipo_tarifa').value;
   var id_empresa = document.getElementById('id_empresa').value;
@@ -1620,6 +1673,7 @@ function nuevo(){
   formData.append('pago_anual_permisos', pago_anual_permisos);
   formData.append('multaBalance', multaBalance);
   formData.append('codigo_tarifa', codigo_tarifa);
+  formData.append('nombre_giro', nombre_giro);
 
   formData.append('pago_anualvariable', pago_anualvariable);
   formData.append('fondo_mensualvariable', fondo_mensualvariable);
@@ -1770,6 +1824,40 @@ function recargarTabla(){
       window.location.href="{{ url('/admin/empresas/recalificacion') }}/"+id;
       $('#tabla_Calificaciones').load(ruta);
 }
+
+
+// Función para llenar select
+
+function llenarSelect()
+          {
+             var id_select = document.getElementById('rubro').value;
+          
+           
+             var formData = new FormData();
+             formData.append('id_select', id_select);
+             
+             axios.post('/admin/empresa/buscar/act_especifica', formData, {
+              })
+            .then((response) => {
+            
+               document.getElementById("select-actividad_especifica").options.length = 0;
+               $('#actividad-especificaDIV').show();
+          
+                $('#select-actividad_especifica').append('<option value="' + 0 +'" selected>' + "-- Seleccione Actividad Especifica --"+'</option>').select2();
+                $.each(response.data.actividad_especifica, function( key, val ){    
+                       $('#select-actividad_especifica').append('<option value="' +val.id +'">'+val.nom_actividad_especifica+'</option>').select2();   
+                    });
+              
+               })
+            .catch((error) => {
+               // toastr.error('Error al registrar empresa');
+               
+            });
+            
+             
+          }
+
+// Termina función
 
 </script> 
 

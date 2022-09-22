@@ -112,7 +112,7 @@
                                   onchange="excepciones_especificas()"
                                   >
                                     @foreach($actividadeseconomicas as $actEc)
-                                    <option value="{{ $actEc->id }}" data-actividad="{{ $actEc->codigo }}"> {{ $actEc->rubro }}</option>
+                                    <option value="{{ $actEc->id }}" data-actividad="{{ $actEc->codigo_atc_economica }}"> {{ $actEc->rubro }} ({{ $actEc->codigo_atc_economica }})</option>
                                     @endforeach 
                                   </select> 
                             </div>
@@ -535,7 +535,7 @@ function excepciones_especificas(){
   var selected = sel.options[sel.selectedIndex];
   var Codigo_Act=selected.getAttribute('data-actividad');
 
-  if(Codigo_Act== 1)
+  if(Codigo_Act==='11802')
                 {   
                      $('#Excepcion_especifica').show();
                 }else{

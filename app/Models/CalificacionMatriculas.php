@@ -26,7 +26,8 @@ class CalificacionMatriculas extends Model
           'año_calificacion',
           'estado_calificacion',
           'tipo_tarifa',
-          'codigo_tarifa'
+          'codigo_tarifa',
+          'giro_empresarial'
           
       ];
 }

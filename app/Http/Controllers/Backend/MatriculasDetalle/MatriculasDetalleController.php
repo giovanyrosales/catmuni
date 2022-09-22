@@ -496,6 +496,7 @@ public function Registrar_calificacion_matriculas(Request $request){
             $dato->estado_calificacion = $request->estado_calificacion;
             $dato->tipo_tarifa = 'Fija';
             $dato->codigo_tarifa = $matriculas->codigo_matricula;
+            $dato->giro_empresarial = $request->nombre_giro;
             $dato->save();
             if($dato->save())
             {
@@ -722,6 +723,20 @@ public function calculo_cobroMesas(Request $request){
 
     $idusuario = Auth::id();
     $id_empresa=$request->id;
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro', 'actividad_economica.codigo_atc_economica',
+     )
+    ->find($id_empresa);
+
     $id_matriculadetalleMesas=$request->id_matriculadetalleMesas;
     $tasa_interes=$request->tasa_interesMesas;
     
@@ -1089,12 +1104,13 @@ public function calculo_cobroMesas(Request $request){
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleMesas;
             $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
-            $cobro->monto_multa_matricula = $multa;
-            $cobro->fondo_fiestasP = $fondoFPValor;
-            $cobro->impuesto_mora =$impuestos_mora;
-            $cobro->impuesto =$impuesto_año_actual;
-            $cobro->intereses_moratorios =$InteresTotal;
-            $cobro->monto_multaPE =$totalMultaPagoExtemporaneo;
+            $cobro->multa_matricula_15313 = $multa;
+            $cobro->fondo_fiestasP_12114 = $fondoFPValor;
+            $cobro->tasas_servicio_mora_32201 =$impuestos_mora;
+            $cobro->tasas_servicio_12299 =$impuesto_año_actual;
+            $cobro->intereses_moratorios_15302 =$InteresTotal;
+            $cobro->matricula_12210 =$monto_pago_matricula;
+            $cobro->monto_multaPE_15313 =$totalMultaPagoExtemporaneo;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro =  $fechahoy;
             if($request->estado=='On')
@@ -1108,6 +1124,7 @@ public function calculo_cobroMesas(Request $request){
                
                  }
             $cobro->tipo_cobro ='matricula';
+            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
             $cobro->save();
         
             if($multa>0)
@@ -1162,6 +1179,20 @@ public function calculo_cobroMaquinas(Request $request){
 
     $idusuario = Auth::id();
     $id_empresa=$request->id;
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro', 'actividad_economica.codigo_atc_economica',
+     )
+    ->find($id_empresa);
+
     $fechaPagaraMaquinas=$request->fechaPagaraMaquinas;
     $id_matriculadetalleMaquinas=$request->id_matriculadetalleMaquinas;
     $tasa_interes=$request->tasa_interesMaquinas;
@@ -1491,11 +1522,12 @@ public function calculo_cobroMaquinas(Request $request){
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleMaquinas;
             $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
-            $cobro->monto_multa_matricula = $multa;
-            $cobro->fondo_fiestasP = $fondoFPValor;
-            $cobro->impuesto_mora =$impuestos_mora;
-            $cobro->impuesto =$impuesto_año_actual;
-            $cobro->intereses_moratorios =$InteresTotal;
+            $cobro->tasas_servicio_mora_32201 =$impuestos_mora;
+            $cobro->tasas_servicio_12299 =$impuesto_año_actual;
+            $cobro->intereses_moratorios_15302 =$InteresTotal;
+            $cobro->matricula_12210 =$monto_pago_matricula;
+            $cobro->fondo_fiestasP_12114 = $fondoFPValor;
+            $cobro->multa_matricula_15313 = $multa;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro =  $fechahoy;
             if($request->estado=='On')
@@ -1509,8 +1541,10 @@ public function calculo_cobroMaquinas(Request $request){
                 
                   }
             $cobro->tipo_cobro ='matricula';
+            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
             $cobro->save();
 
+       
             if($multa>0)
             {
                 foreach ($periodo as $dt) {
@@ -1565,6 +1599,20 @@ public function calculo_cobroSinfonolas(Request $request){
     $idusuario = Auth::id();
     $MesNumero=Carbon::createFromDate($request->ultimo_cobroSinfonolas)->format('d');
     $id_empresa=$request->id;
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro', 'actividad_economica.codigo_atc_economica',
+     )
+    ->find($id_empresa);
+
     $fechaPagaraSinfonolas=$request->fechaPagaraSinfonolas;
     $id_matriculadetalleSinfonolas=$request->id_matriculadetalleSinfonolas;
     $tasa_interes=$request->tasa_interesSinfonolas;
@@ -1925,12 +1973,13 @@ public function calculo_cobroSinfonolas(Request $request){
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleSinfonolas;
             $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
-            $cobro->monto_multa_matricula = $multa;
-            $cobro->fondo_fiestasP = $fondoFPValor;
-            $cobro->impuesto_mora =$impuestos_mora;
-            $cobro->impuesto =$impuesto_año_actual;
-            $cobro->intereses_moratorios =$InteresTotal;
-            $cobro->monto_multaPE =$totalMultaPagoExtemporaneo;
+            $cobro->multa_matricula_15313 = $multa;
+            $cobro->fondo_fiestasP_12114 = $fondoFPValor;
+            $cobro->tasas_servicio_mora_32201 =$impuestos_mora;
+            $cobro->tasas_servicio_12299 =$impuesto_año_actual;
+            $cobro->intereses_moratorios_15302 =$InteresTotal;
+            $cobro->monto_multaPE_15313 =$totalMultaPagoExtemporaneo;
+            $cobro->matricula_12210 =$monto_pago_matricula;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro =  $fechahoy;
             if($request->estado=='On')
@@ -1944,6 +1993,7 @@ public function calculo_cobroSinfonolas(Request $request){
                
                  }
             $cobro->tipo_cobro ='matricula';
+            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
             $cobro->save();
 
             if($multa>0)
@@ -1999,6 +2049,20 @@ public function calculo_cobroAparatos(Request $request){
 
     $idusuario = Auth::id();
     $id_empresa=$request->id;
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro', 'actividad_economica.codigo_atc_economica',
+     )
+    ->find($id_empresa); 
+
     $fechaPagaraAparatos=carbon::parse($request->fecha_pagaraAparatos)->format('Y-12-31');
     $id_matriculadetalleAparatos=$request->id_matriculadetalleAparatos;
     $tasa_interes=$request->tasa_interesAparatos;
@@ -2154,13 +2218,15 @@ public function calculo_cobroAparatos(Request $request){
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleAparatos;
             $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro = '12';
-            $cobro->monto_multa_matricula = $multa;
-            $cobro->fondo_fiestasP = $fondoFPValor;
+            $cobro->multa_matricula_15313 = $multa;
+            $cobro->matricula_12210 = $monto_pago_matricula;
+            $cobro->fondo_fiestasP_12114 = $fondoFPValor;
             $cobro->pago_total = $totalPagoValor;
             $cobro->fecha_cobro =  $fechahoy;
             $cobro->periodo_cobro_inicio = $InicioPeriodo;
             $cobro->periodo_cobro_fin =$fechaPagaraAparatos;
             $cobro->tipo_cobro ='matricula';
+            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
             $cobro->save();
         
             return ['success' => 2];

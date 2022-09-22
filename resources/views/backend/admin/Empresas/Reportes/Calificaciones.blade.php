@@ -118,8 +118,8 @@
         }
 
         #tabla th {
-            padding-top: 2px;
-            padding-bottom: 2px;
+            padding-top: 5px;
+            padding-bottom: 5px;
             background-color: #f2f2f2;
             color: #1E1E1E;
             text-align: center;
@@ -174,7 +174,7 @@
 </footer>
 
 <div id="content">
-<table border="0" align="center" style="width: 600px;">
+<table border="0" align="center" style="width: 650px;">
         <tr>
             <td align="left" colspan="2"><strong><p style="font-size:9">I. UBICACIÓN DEL NEGOCIO</strong></td></td>
         </tr>
@@ -191,7 +191,7 @@
         </tr>
         <tr>
             <td id="uno"> GIRO ECONOMICO</td>
-            <td id="dos">{{$empresa->rubro}}</td>
+            <td id="dos">{{$ultimaCalificacion->giro_empresarial}}</td>
         </tr>
         <tr>
             <td id="uno">FECHA INICIO DE OPERACIONES</td>
@@ -386,7 +386,7 @@
                       </tr>
 
                       <tr>
-                        <td align="center">{{$empresa->rubro}}</td>
+                        <td align="center">{{$ultimaCalificacion->giro_empresarial}}</td>
                         <td align="center">{{$empresa->codigo}}</td>
                         <td> </td>
                         <td>${{$ultimaCalificacion->pago_mensual}}</td>
@@ -421,7 +421,7 @@
                             <th scope="col">&nbsp;BASE LEGAL&nbsp;</th>
                         </tr>
                         <tr align="center">
-                            <td>{{$empresa->rubro}}</td>
+                            <td>{{$ultimaCalificacion->giro_empresarial}}</td>
                             <td>@if($detectorNull==1)
                                 ${{$ultimaCalificacion->multa_balance}}
                                 @else

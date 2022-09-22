@@ -42,9 +42,9 @@
                         <td>{{ $dato-> periodo_cobro_inicio }}</td>
                         <td>{{ $dato-> periodo_cobro_fin }}</td>
                         @endif
-                        <td>${{ $dato-> monto_multa_matricula }}</td>
-                        <td>${{ $dato-> monto_multaPE }}</td>
-                        <td>${{ $dato-> fondo_fiestasP }}</td>
+                        <td>${{ $dato-> multa_matricula_15313 }}</td>
+                        <td>${{ $dato-> monto_multaPE_15313 }}</td>
+                        <td>${{ $dato-> fondo_fiestasP_12114 }}</td>
                         <td>${{ $dato-> pago_total }}</td>                        
                     </tr>
                         @endforeach  

@@ -1,13 +1,15 @@
 @extends('backend.menus.superior')
 
 @section('content-admin-css')
+  <!-- Para el select live search -->
+  <link href="{{ asset('css/bootstrap-select.min.css') }}" type="text/css" rel="stylesheet">
+  <!--Finaliza el select live search -->
 
-
-    <!-- Finaliza el select live search -->
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
-
+    <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 
 
 @stop
@@ -156,12 +158,12 @@ function OcultarhistorialCierres(){
                                             <div class="input-group mb-9">
                                                     <select 
                                                     required
-                                                    class="form-control"
-                                                    data-style="btn-success"
-                                                    data-show-subtext="true" 
-                                                    data-live-search="true"   
+                                                    class="form-control" 
+                                                    data-style="btn btn-outline-success"  
+                                                    data-show-subtext="false" 
+                                                    data-live-search="true" 
                                                     id="select-contribuyente-traspaso" 
-                                                    title="-- Seleccione un registro --"
+                                                    
                                                     >
                                                     @foreach($contribuyentes as $contribuyente)
                                                     <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
@@ -388,23 +390,23 @@ function OcultarhistorialCierres(){
 
 @extends('backend.menus.footerjs')
 @section('archivos-js')
-  <!-- Para el select live search -->
-    <script src="{{ asset('js/bootstrap-select.min.js') }}" type="text/javascript"></script>
-  <!-- Finaliza el select live search -->
+<!-- Para el select live search -->
+<script src="{{ asset('js/bootstrap-select.min.js') }}" type="text/javascript"></script>
+<!-- Finaliza el select live search -->
 
     <script src="{{ asset('js/jquery.dataTables.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.js') }}" type="text/javascript"></script>
-
     <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
+    <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
 
     <script type="text/javascript">
 
         $(document).ready(function(){   
-            var id = {{$empresa->id}};
+            var id = "{{$empresa->id}}";
 
             //**Para tabla cierres */
             var ruta = "{{ url('/admin/empresas/cierres/tabla') }}/"+id;

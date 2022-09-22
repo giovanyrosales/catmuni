@@ -44,6 +44,14 @@
             color: #1E1E1E;
         }
 
+        #tbempresa{
+            border: 0px solid #ddd;
+            padding: 3px;
+            text-align: left;
+            background-color: #F2F2F2;
+            color: #1E1E1E;
+        }
+
         #tabla th {
             padding-top: 5px;
             padding-bottom: 5px;
@@ -73,7 +81,70 @@
             background-color: #E2FFED;
             color: #1E1E1E;
         }
-        
+
+        .badge-inverse {
+        background-color: #0FC2EE;
+        color: #ffffff;
+
+        }
+
+        .badge-inverse:hover {
+        background-color: #108F27;
+        color: #ffffff;
+        }
+
+/** CSS para btn flotante */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#btn-mas{
+    display: none;
+}
+#contenedor{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    float: left;
+}
+.redes a, .btn-mas label{
+    display: block;
+    text-decoration: none;
+    background: #08BE4D;
+    color: #fff;
+    width: 55px;
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0px 1px 10px rgba(0,0,0,0.4);
+    transition: all 500ms ease;
+}
+.redes a:hover{
+    background: #fff;
+    color: #C20E0E;
+}
+.redes a{
+    margin-bottom: -15px;
+    opacity: 0;
+    visibility: hidden;
+}
+#btn-mas:checked~ .redes a{
+    margin-bottom: 10px;
+    opacity: 1;
+    visibility: visible;
+}
+.btn-mas label{
+    cursor: pointer;
+    background: #118EE5; /** Color del botón */
+    font-size: 23px;
+}
+#btn-mas:checked ~ .btn-mas label{
+    transform: rotate(135deg);
+    font-size: 25px;
+}
+       
 </style>
 @stop    
 
@@ -108,7 +179,16 @@
     <!-- Inicia Contenido-->
     <div class="col-md-6" style="width: 95%; height:50%; margin: 0 auto;">
         <div class="input-group mb-3">
-            <select required onchange="buscar_obligaciones_tributarias()" class="form-control selectpicker show-tick" data-style="btn btn-outline-success"  data-show-subtext="false" data-live-search="true" id="select-contribuyente" title="Seleccione un contribuyente.">
+            <select 
+            required 
+            onchange="buscar_obligaciones_tributarias()" 
+            class="form-control selectpicker show-tick" 
+            data-style="btn btn-outline-success"  
+            data-show-subtext="false" 
+            data-live-search="true" 
+            id="select-contribuyente" 
+            title="Seleccione un contribuyente."
+            >
                 @foreach($contribuyentes as $contribuyente)
                   <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
                 @endforeach 
@@ -141,11 +221,12 @@
                           <!--Tabla 12-->
                           <table class="table" id="matriz_ver_empresas" style="border: 100px;" data-toggle="table">
                                     <thead>
-                                    <tr>      
-                                      <td style="width: 15%; text-align: center;font-weight: 700;">Ver</td>                     
+                                    <tr id="tbempresa">      
+                                      <td style="width: 15%; text-align: center;font-weight: 700;">Opciones</td>                     
                                       <td style="width: 25%; text-align: center;font-weight: 700;">Nombre</td>
                                       <td style="width: 15%; text-align: center;font-weight: 700;">Giro Comercial</td>
                                       <td style="width: 15%; text-align: center;font-weight: 700;">Estado</td>
+                                      <td style="width: 15%; text-align: center;font-weight: 700;">Estado Moratorio</td>
                                       <td style="width: 15%; text-align: center;font-weight: 700;">N° Ficha</td>
                                       </tr>
                                     </thead>
@@ -166,7 +247,7 @@
                           <table class="table" id="matriz_ver_buses" style="border: 100px;" data-toggle="table">
                                     <thead>
                                     <tr>  
-                                      <th style="width: 15%; text-align: center;font-weight: 700;">Ver</th>                         
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">Opciones</th>                         
                                       <th style="width: 25%; text-align: center;font-weight: 700;">Empresa</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Cantidad</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
@@ -185,6 +266,22 @@
       </div>
     </div>
 <!-- Finaliza Contenido IMG-->
+
+
+<!-- seccion botón flotante -->
+<div id="contenedor">
+                  <input type="checkbox" id="btn-mas">
+                          <div class="redes">
+                           
+                              <a class="fas fa-file-signature"  data-toggle="tooltip" data-placement="left" title="Generar solvencia" onclick="Generar_solvencia()"></a>
+                            
+                              
+                          </div>
+                  <div class="btn-mas">
+                      <label for="btn-mas" class="fa fa-plus"></label>
+                  </div>
+              </div>
+<!--Fin seccion botón flotante -->
 
 <!-- Cerrando el content-wrapper-->
       </div>
@@ -225,6 +322,10 @@ $(document).ready(function(){
   
   $('#tarjeta_empresas_registradas').hide();
   $('#tarjeta_buses_registradas').hide();
+  $('#contenedor').hide();
+  
+  //** Tooltips de botón flotante */
+  $('[data-toggle="tooltip"]').tooltip();
 
  });
 
@@ -244,7 +345,7 @@ function buscar_obligaciones_tributarias(){
 
           if(response.data.success === 1)
                 {
-                    //document.getElementById('pago_mensual_hidden').value=response.data.matricula_Seleccionada.tarifa;
+                    
                     Swal.fire({
                           position:'top-end',
                           icon: 'success',
@@ -264,24 +365,31 @@ function buscar_obligaciones_tributarias(){
                                 $('#tarjeta_empresas_registradas').show();
                             }
                         
+                        if(response.data.Solvencia===1){
+                            $('#contenedor').show();
+                        }else{
+                            $('#contenedor').hide();
+                             }
+                        
 
-                            //****  Cargar información empresas registradas ****//
+                            //**** Cargar información empresas registradas ****//
                             var infodetalle = response.data.empresas_registradas;
+                            
                             
                             for (var i = 0; i < infodetalle.length; i++) {
 
                             var markup = `<tr id="${infodetalle[i].id}">
 
                             <td align="center">               
-                                <button type="button" class="btn btn-primary btn-xs" onclick="VerEmpresa(${infodetalle[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-primary btn-xs" onclick="VerEmpresa(${infodetalle[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;<b>VER</b>&nbsp;&nbsp;</button>
                             </td>
 
                             <td align="center">
-                                ${infodetalle[i].nombre}
+                            <b>${infodetalle[i].nombre}</b>
                             </td>                     
 
                             <td align="center">
-                                ${infodetalle[i].nombre_giro}
+                            ${infodetalle[i].nombre_giro}
                             </td>
 
                             <td align="center">
@@ -289,7 +397,11 @@ function buscar_obligaciones_tributarias(){
                             </td>
 
                             <td align="center">
-                                <span class="badge badge-pill badge-dark">${infodetalle[i].num_tarjeta}</span>
+                            ${infodetalle[i].estado_moratorio_empresas!='Mora'? '<span class="badge badge-inverse"><i class="fas fa-check-circle"></i></span>' : '<span class="badge badge-warning"><i class="fas fa-times-circle"></i> Mora</span>'}
+                            </td>
+
+                            <td align="center">
+                            <span class="badge badge-pill badge-dark">${infodetalle[i].num_tarjeta}</span>
                             </td>
 
                            </tr>`;
@@ -306,7 +418,7 @@ function buscar_obligaciones_tributarias(){
                              var markup = `<tr id="${infodetalle_bus[i].id}">
                             
                                 <td align="center">               
-                                      <button type="button" class="btn btn-success btn-xs" onclick="VerBuses(${infodetalle_bus[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;</button>
+                                      <button type="button" class="btn btn-success btn-xs" onclick="VerBuses(${infodetalle_bus[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;<b>VER</b>&nbsp;&nbsp;</button>
                                 </td>
 
                                 <td align="center">
@@ -352,6 +464,10 @@ function buscar_obligaciones_tributarias(){
          .catch((error) =>{
                             toastr.error('Error al buscar la obligación triburaria');
                            });                 
+}
+function Generar_solvencia(){
+    var id = document.getElementById('select-contribuyente').value;
+    window.open("{{ URL::to('/admin/generar/solvencia/pdf') }}/" + id );
 }
 
 function VerEmpresa(id){

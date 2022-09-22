@@ -52,8 +52,12 @@ class reportesController extends Controller
     { 
         log::info([$f1,$f2,$ti,$f3,$id,$tf]);
 
+        $calificacion=calificacion::latest()
+        ->where('id_empresa',$id)
+        ->first();
 
         $f1_original=$f1;
+
         $empresa= Empresas
         ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
         ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -70,6 +74,20 @@ class reportesController extends Controller
         'actividad_economica.rubro','actividad_economica.id as id_act_economica',
         )
         ->find($id);
+
+        if($calificacion->tipo_tarifa=='Fija'){
+
+            $Tarifa_fija=TarifaFija::join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
+            ->select('actividad_especifica.nom_actividad_especifica')
+            ->where('codigo',$calificacion->codigo_tarifa)
+            ->first();
+            $act_especifica=$Tarifa_fija->nom_actividad_especifica;
+            log::info($act_especifica);
+        }else{
+                 $act_especifica=$empresa->rubro;
+                 log::info($act_especifica);
+             }
+
 
         //** Inicia calculo de cobro impuesto empresas **/
 
@@ -379,7 +397,7 @@ class reportesController extends Controller
     $view = View::make('backend.admin.Empresas.EstadoCuenta.Estado_cuenta', compact(['FechaDelDia',
     'empresa','impuestos_mora','fondoFPValor','totalPagoValor','impuesto_año_actual',
     'monto_pago_multaBalance','InteresTotal','totalMultaPagoExtemporaneo','PagoUltimoDiaMes',
-    'InicioPeriodo','Cantidad_multas',
+    'InicioPeriodo','Cantidad_multas','act_especifica'
     
     ]))->render();
     $pdf = App::make('dompdf.wrapper');
@@ -2345,12 +2363,11 @@ public function estado_cuenta_mesas($f1,$f2,$ime,$ti,$id){
             }
 public function traspaso_empresa($id){
 
-            $datos_traspaso=Traspasos::select('propietario_nuevo','propietario_anterior','fecha_a_partir_de')
+            $datos_traspaso=Traspasos::select('propietario_nuevo','propietario_anterior','fecha_a_partir_de','num_resolucion')
             ->where('id_empresa',$id)
             ->latest()->first();
 
-            $cant_resolucion=Traspasos::all()
-            ->count();
+            $cant_resolucion=$datos_traspaso->num_resolucion;
 
             $empresa= Empresas
             ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -2420,14 +2437,14 @@ public function cierre_empresa($id){
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
     ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
     ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    ->join('actividad_especifica','empresa.id_actividad_especifica','=','actividad_especifica.id')
+   
     
     ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
     'actividad_economica.rubro',
-    'actividad_especifica.id as id_actividad_especifica', 'actividad_especifica.nom_actividad_especifica','actividad_especifica.id_actividad_economica')
+    )
     ->find($id);
 
     /** Obtener la fecha y días en español y formato tradicional*/
@@ -2454,8 +2471,9 @@ public function cierre_empresa($id){
 
     //** Detectar tipo de operación [Cierre][Reapertura] */
     if($datos_cierres->tipo_operacion==='Cierre'){
-        $cant_resolucion=CierresReaperturas::where('tipo_operacion','Cierre')
-        ->count();
+        $cant_resolucion=CierresReaperturas::where('num_resolucion')
+        ->where('tipo_operacion','Cierre')
+        ->latest()->first();
 
             $view = View::make('backend.admin.Empresas.Reportes.Cierres_empresas', compact([
 
@@ -2469,8 +2487,9 @@ public function cierre_empresa($id){
 
             ]))->render();
     }else{
-        $cant_resolucion=CierresReaperturas::where('tipo_operacion','Reapertura')
-        ->count();
+        $cant_resolucion=CierresReaperturas::where('num_resolucion')
+        ->where('tipo_operacion','Reapertura')
+        ->latest()->first();
         
             $view = View::make('backend.admin.Empresas.Reportes.Reaperturas_empresas', compact([
 
@@ -2496,13 +2515,14 @@ public function cierre_empresa($id){
 
 public function traspaso_empresa_historico($id){
 
-    $datos_traspaso=Traspasos::select('propietario_nuevo','propietario_anterior','fecha_a_partir_de','id_empresa')
+    $datos_traspaso=Traspasos::select('propietario_nuevo','propietario_anterior','fecha_a_partir_de','id_empresa','num_resolucion')
     ->where('id',$id)
     ->latest()->first();
 
+    $cant_resolucion=$datos_traspaso->num_resolucion;
+
     $id_empresa=$datos_traspaso->id_empresa;
-    $cant_resolucion=Traspasos::all()
-    ->count();
+
 
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -2706,7 +2726,7 @@ public function reporte_calificacion($id){
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo'
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
     )
     ->find($id);
 
@@ -2877,7 +2897,7 @@ public function resolucion_apertura($id){
                         <hr>
                 </div>";
 
-        $tabla .= "<table border='0' align='center' style='width: 680px;font-size:12px;'>
+        $tabla .= "<table border='0' align='center' style='width: 650px;font-size:12px;'>
             <tr>
                 <td  align='left'> </td>
             
@@ -2915,7 +2935,7 @@ public function resolucion_apertura($id){
             </tr>
             <tr>
                 <td id='uno'>GIRO ECONÓMICO:</td>
-                <td id='dos'>$empresa->rubro</td>
+                <td id='dos'>$calificacion_mat->giro_empresarial</td>
             </tr>           
             <tr>
                 <td id='uno'>FECHA DE INICIO DE OPERACIONES:</td>
@@ -2925,7 +2945,7 @@ public function resolucion_apertura($id){
                 <td colspan='2'  style='text-align: justify'>
                     <hr>
 
-                            <table border='0' align='center' style='width: 680px;'>
+                            <table border='0' align='center' style='width: 650px;'>
                                 <tr>
                                     <th scope='col' align='left'>DESCRIPCIÓN</th>
                                     <th scope='col'>&nbsp;</th>
@@ -3041,7 +3061,7 @@ public function resolucion_apertura($id){
                             <hr>
                     </div>";
     
-            $tabla .= "<table border='0' align='center' style='width: 680px;font-size:11px;'>
+            $tabla .= "<table border='0' align='center' style='width: 650px;font-size:11px;'>
                 <tr>
                     <td  align='left'> </td>
                 
@@ -3079,7 +3099,7 @@ public function resolucion_apertura($id){
                 </tr>
                 <tr>
                     <td id='uno'>GIRO ECONÓMICO:</td>
-                    <td id='dos'>$empresa->rubro</td>
+                    <td id='dos'>$calificacion_emp->giro_empresarial</td>
                 </tr>           
                 <tr>
                     <td id='uno'>FECHA DE INICIO DE OPERACIONES:</td>
@@ -3089,7 +3109,7 @@ public function resolucion_apertura($id){
                     <td colspan='2'  style='text-align: justify'>
                         <hr>
     
-                                <table border='0' align='center' style='width: 680px;'>
+                                <table border='0' align='center' style='width: 650px;'>
                                     <tr>
                                         <th scope='col' align='left'>DESCRIPCIÓN</th>
                                         <th scope='col'>&nbsp;</th>
@@ -3177,6 +3197,137 @@ public function resolucion_apertura($id){
 
 
 }
+
+public function generar_solvencia($id){
+
+
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Solvencia');
+
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+    $LeyT = 'images/LeyT.png';
+    
+    $contribuyente=Contribuyentes::where('id',$id)
+    ->first();
+
+        
+    $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
+                            UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL<br>
+                            SOLVENCIA
+                        </h4>
+                        <hr>
+                </div>";
+
+        $tabla .= "<table border='0' align='center' style='width: 650px;font-size:12px;'>
+            <tr>
+                <td  align='left'> </td>
+            
+                <td align='right'>
+                    RESOLUCIÓN N°:&nbsp;<strong></strong><br><br>
+                </td>
+            </tr>
+            <tr>
+                <td id='uno'>FECHA DE RESOLUCIÓN:</td>
+                <td id='dos'></td>
+            </tr>
+            <tr>
+                <td id='uno'>CONTRIBUYENTE:</td>
+                <td id='dos'>$contribuyente->nombre&nbsp;$contribuyente->apellido</td>
+            </tr>
+            <tr>
+                <td id='uno'> CALIFIQUESE: </td>
+                <td id='dos'></td>
+            </tr>
+            <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td id='uno'>DIRECCIÓN:</td>
+                <td id='dos'></td>
+            </tr>
+            <tr>
+                <td id='uno'>PROPIEDAD DE:</td>
+                <td id='dos'></td>
+            </tr>
+            <tr>
+                <td id='uno'>REPRESENTADO POR:</td>
+                <td id='dos'></td>
+            </tr>
+            <tr>
+                <td id='uno'>GIRO ECONÓMICO:</td>
+                <td id='dos'></td>
+            </tr>           
+            <tr>
+                <td id='uno'>FECHA DE INICIO DE OPERACIONES:</td>
+                <td id='dos'></td>
+            </tr>                      
+            <tr>
+                <td colspan='2'  style='text-align: justify'>
+                    <hr>
+
+                    <p style='font-size:10px;'>
+                        <br>
+                        <br>
+                        LICDA. ROSA LISSETH ALDANA MERLOS<br>
+                        JEFE DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL
+                        
+                    </p>
+                    <hr>
+                    <p style='font-size:6;text-align: justify'>
+                        <b>Ley General Tributaria Municipal:</b><br>
+                        <b>Art. 123.</b> -De la calificación de contribuyentes, de la determinación de tributos, de la resolución del Alcalde en el procedimiento de repetición del pago de lo no 
+                            debido, y de la aplicación de sanciones hecha por la administración tributaria municipal, se admitirá recurso de apelación para ante el Concejo Municipal 
+                            respectivo, el cual deberá interponerse ante el funcionario que haya hecho la calificación o pronunciada la resolución correspondiente, en el plazo de tres días después de su notificación.
+                            <br>
+                            <br>
+                            
+                        <b>Art. 90.</b>-Los contribuyentes, responsables y terceros, estarán obligados al cumplimiento de los deberes formales que se establezcan en esta Ley, en leyes u ordenanzas de creación de tributos municipales, sus reglamentos y otras disposiciones normativas que dicten las administraciones tributarias municipales, y particularmente están obligados a: 
+                            <br>1º Inscribirse en los registros tributarios que establezcan dichas administraciones; proporcionarles los datos pertinentes y comunicarles oportunamente cualquier modificación al respecto; 
+                            <br>2º Solicitar, por escrito, a la Municipalidad respectiva, las licencias o permisos previos que se requieran para instalar establecimientos y locales comerciales e informar a la autoridad tributaria la fecha de inicio de las actividades, dentro de los treinta días siguientes a dicha fecha; 
+                            <br>3º Informar sobre los cambios de residencia y sobre cualquier otra circunstancia que modifique o pueda hacer desaparecer las obligaciones tributarias, dentro de los treinta días siguientes a la fecha de tales cambios; 
+                            <br>4º Permitir y facilitar las inspecciones, exámenes, comprobaciones o investigaciones ordenadas por la administración tributaria municipal y que realizará por medio de sus funcionarios delegados a tal efecto; (4) 
+                            <br>5º Presentar las declaraciones para la determinación de los tributos, con los anexos respectivos, cuando así se encuentre establecido, en los plazos y de acuerdo con las formalidades correspondientes; 
+                            <br>6º Concurrir a las oficinas municipales cuando fuere citado por autoridad tributaria; 
+                            <br>7º El contribuyente que ponga fin a su negocio o actividad, por cualquier causa, lo informará por escrito, a la autoridad tributaria municipal, dentro de los treinta días siguientes a la fecha de finalización de su negocio o actividad; presentará, al mismo tiempo, las declaraciones pertinentes, el balance o inventario final y efectuará el pago de los tributos adeudados sin perjuicio de que la autoridad tributaria pueda comprobar de oficio, en forma fehaciente, el cierre definitivo de cualquier establecimiento; 
+                            <br>8º Las personas jurídicas no domiciliadas en el país y que desarrollen actividades económicas en determinadas comprensiones municipales, deberán acreditar un representante ante la administración tributaria, municipal correspondiente y comunicarlo oportunamente. Si no lo comunicaren, se tendrá como tal a los gerentes o administradores de los establecimientos propiedad de tales personas jurídicas; 
+                            <br>9º A presentar o exhibir las declaraciones, balances, inventarios físicos, tanto los valuados como los registrados contablemente con los ajustes correspondientes si los hubiere, informes, documentos, activos, registros y demás informes relacionados con hechos generadores de los impuestos; (4) 
+                            <br> 10º A permitir que se examine la contabilidad, registros y documentos, determinar la base imponible, liquidar el impuesto que le corresponda, cerciorarse de que no existe de acuerdo a la ley la obligación de pago del impuesto, o verificar el adecuado cumplimiento de las obligaciones establecidas en esta Ley General o en las leyes tributarias respectivas; (4) 
+                            <br>11º En general, a dar las aclaraciones que le fueren solicitadas por aquélla, como también presentar o exhibir a requerimiento de la Administración Municipal dentro del plazo que para tal efecto le conceda, los libros o registros contables exigidos en esta Ley y a los demás que resulten obligados a llevar de conformidad a otras leyes especiales. (4)
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                <br>
+                        <img id='LeyT' src='$LeyT'> 
+                </td>
+            </tr>
+        </table>";
+    
+    $stylesheet = file_get_contents('css/cssconsolidado.css');
+    $mpdf->WriteHTML($stylesheet,1);
+    $mpdf->SetMargins(0, 0, 10);
+
+
+    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+    $mpdf->WriteHTML($tabla,2);
+    $mpdf->Output();
+
+
+
+}
+
+
 
 //** Fin de reportes controller */    
 }

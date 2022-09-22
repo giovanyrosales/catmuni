@@ -12,9 +12,8 @@ class ActividadEconomica extends Model
     protected $fillable = [
         'id',
         'rubro',
-        'codigo',
         'codigo_atc_economica',
         'mora',
-        
+        'categoria' 
       ];
 }

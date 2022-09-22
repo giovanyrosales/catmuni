@@ -767,14 +767,14 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </thead>
                     <tbody>     
                     @foreach($ListaCobros as $dato)
-              <tr id="dos">
+                <tr id="dos">
                     <td>{{ $dato-> fecha_cobro }}</td>
                     <td>{{ $dato-> cantidad_meses_cobro }}</td>
-                    <td>${{ $dato-> impuesto_mora }}</td>
-                    <td>${{ $dato-> impuesto }}</td>
-                    <td>${{ $dato-> intereses_moratorios }}</td>
-                    <td>${{ $dato-> monto_multa_balance }}</td>
-                    <td>${{ $dato-> monto_multaPE }}</td>
+                    <td>${{ $dato-> impuesto_mora_32201 }}</td>
+                    <td>${{ $dato-> impuestos_11801 }}</td>
+                    <td>${{ $dato-> intereses_moratorios_15302 }}</td>
+                    <td>${{ $dato-> monto_multa_balance_15313 }}</td>
+                    <td>${{ $dato-> monto_multaPE_15313 }}</td>
                     <td>${{ $dato-> pago_total }}</td>                    
                 </tr>
                     @endforeach  
@@ -852,7 +852,8 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <tr id="uno">  
                     <th style="width: 25%;">Fecha pago</th> 
                     <th style="width: 20%;">Periodo inicio</th>                          
-                    <th style="width: 15%;">Periodo fin</th>                            
+                    <th style="width: 15%;">Periodo fin</th>
+                    <th style="width: 15%;">Licencia</th>                             
                     <th style="width: 15%;">Multa licencia</th>                       
                     <th style="width: 10%;">Total</th>                           
                 </tr>
@@ -863,7 +864,8 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <td>{{ $dato-> fecha_cobro }}</td>
                     <td>{{ $dato-> periodo_cobro_inicio }}</td>
                     <td>{{ $dato-> periodo_cobro_fin }}</td>
-                    <td>${{ $dato-> monto_multa_licencia }}</td>
+                    <td>${{ $dato-> monto_licencia_12207 }}</td>
+                    <td>${{ $dato-> monto_multa_licencia_15313 }}</td>
                     <td>${{ $dato-> pago_total }}</td>                    
                 </tr>
                     @endforeach  
@@ -1089,18 +1091,10 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                   <div class="input-group mb-3">
-                    @if($detectorCobro=='0')
-                                <input  type="text" value="{{ $empresa->inicio_operaciones }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+                                <input  type="text" value="{{$ultimo_cobro_empresa}}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                                   </div>
-                                @else
-                                <input  type="text" value="{{ $ultimo_cobro->periodo_cobro_fin }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
-                                  <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                                  </div>
-                    @endif
-
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -1276,37 +1270,37 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                           <tr>
                             <td class="table-light">IMPUESTO MORA</td>
                             <td class="table-light">{{$empresa->mora}}</td>
-                            <td class="table-light"><p id="impuestos_mora_imp"></p></td>
+                            <td class="table-light" align="right"><p id="impuestos_mora_imp"></p></td>
                           </tr>
 
                           <tr>
                             <td>IMPUESTO</td>
                             <td>{{$empresa->codigo_atc_economica}}</td>
-                            <td><h6 id="impuesto_año_actual_imp"></h6></td>
+                            <td align="right"><h6 id="impuesto_año_actual_imp"></h6></td>
                           </tr>
 
                           <tr>
                             <td>INTERESES MORATORIOS</td>
                             <td>15302</td>
-                            <td><h6 id="InteresTotal_imp"></h6></td>
+                            <td align="right"><h6 id="InteresTotal_imp"></h6></td>
                           </tr>
 
                           <tr>
                             <td>MULTAS POR BALANCE</td>
                             <td>15313</td>
-                            <td><h6 id="multa_balanceImp"></h6></td>
+                            <td align="right"><h6 id="multa_balanceImp"></h6></td>
                           </tr>
 
                           <tr>
                             <td>MULTAS P. EXTEMPORANEOS</td>
                             <td>15313</td>
-                            <td><h6 id="multaPagoExtemporaneo_imp"></h6></td>
+                            <td align="right"><h6 id="multaPagoExtemporaneo_imp"></h6></td>
                           </tr>
 
                           <tr>
                             <td>FONDO F. PATRONALES 5%</td>
                             <td>12114</td>
-                            <td><h6 name="fondoFP_imp" id="fondoFP_imp"></h6></td>
+                            <td align="right"><h6 name="fondoFP_imp" id="fondoFP_imp"></h6></td>
                           </tr>
 
                           <tr>
@@ -1560,7 +1554,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
-                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
                         </button> 
                   </div>
@@ -1835,7 +1829,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
-                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
                         </button> 
                   </div>
@@ -2122,7 +2116,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
-                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
                         </button> 
                   </div>
@@ -2312,7 +2306,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
-                          <button type="button" class="btn btn-info float-right" onmouseover="abrir_modal()">
+                          <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
                         </button> 
                   </div>
