@@ -304,7 +304,7 @@
             var tarifa = $("textarea[name='tarifa[]']").map(function(){return $(this).val();}).get();
             var total_tarifa = $("textarea[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
             var coordenadas_geo = $("textarea[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
-            var foto_rotulo = $("input[name='foto_rotulo[]']").map(function(){return $(this).val();}).get();
+            var foto_rotulo = (document.getElementById('foto_rotulo'));
          
           
             //**** Validar */
@@ -433,7 +433,10 @@
                 formData.append('tarifa[]', tarifa[j]);
                 formData.append('total_tarifa[]', total_tarifa[j]);
                 formData.append('coordenadas_geo[]', coordenadas_geo[j]);
-                formData.append('foto_rotulo[]', foto_rotulo.files[j]);
+                
+               
+                formData.append('foto_rotulo', foto_rotulo[j]);
+
 
 
                 console.log(nombre[j],medidas[j],total_medidas[j],foto_rotulo[j]);

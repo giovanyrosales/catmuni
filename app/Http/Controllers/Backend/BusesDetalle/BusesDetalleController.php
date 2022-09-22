@@ -195,7 +195,7 @@ class BusesDetalleController extends Controller
         
         if($request->placa != null) {
           
-            for ($i = 0; $i < count($request->placa); $i++) 
+            for ($i = 0; $i < count($request->placa); $i++)  
             {
     
                 $Bd = new BusesDetalleEspecifico();

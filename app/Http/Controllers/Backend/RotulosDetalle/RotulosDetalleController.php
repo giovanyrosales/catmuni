@@ -197,11 +197,12 @@ class RotulosDetalleController extends Controller
                 $avatar = $request->file('foto_rotulo');
                 $estado = Storage::disk('archivos')->put($nomImagen, \File::get($avatar));
 
+
             if($estado)
             {
 
         
-        if($request->nombre != null) {
+     
           
             for ($i = 0; $i < count($request->nombre); $i++) 
             {
@@ -220,7 +221,8 @@ class RotulosDetalleController extends Controller
                 $Bd->save();
               
             }
-        }
+
+      
             RotulosDetalle::where('id', $request->id_rotulos_detalle)
             ->update([
                         'estado_especificacion' =>$especificada,               
