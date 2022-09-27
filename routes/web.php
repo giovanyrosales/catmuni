@@ -115,7 +115,9 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::post('/admin/Contribuyentes/informacion', [ContribuyentesController::class, 'informacionContribuyentes']);
     Route::post('/admin/Contribuyentes/editar', [ContribuyentesController::class, 'editarContribuyente']);
     Route::post('/admin/Contribuyentes/eliminar_contribuyentes', [ContribuyentesController::class, 'eliminarContribuyentes']);
-
+    Route::get('/admin/contribuyentes/historico/solvencias', [ContribuyentesController::class,'historico_solvencias'])->name('admin.historico.solvencias.index');
+    Route::get('/admin/contribuyentes/tabla/historicocs', [ContribuyentesController::class,'tablahistoricocs']);
+    Route::get('/admin/contribuyentes/tabla/historicocg', [ContribuyentesController::class,'tablahistoricocg']);
 
     // --- SIN PERMISOS VISTA 403 ---
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
@@ -290,6 +292,11 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     
     //REPORTES CONTRIBUYENTES
     Route::get('/admin/generar/solvencia/pdf/{id}', [reportesController::class, 'generar_solvencia']);
+    Route::get('/admin/generar/constancia/simple/pdf/{id}', [reportesController::class, 'generar_constancia_simple']);
+
+    //REPORTE EMPRESAS
+    Route::get('/admin/generar/solvencia/empresa/pdf/{id}', [reportesController::class, 'generar_solvencia_empresa']);
+
 
 
     //AVISOS Y NOTIFICACIONES DE MATRICULAS

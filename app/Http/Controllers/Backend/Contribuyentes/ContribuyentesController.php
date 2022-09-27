@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend\Contribuyentes;
 use App\Models\Contribuyentes;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ConstanciasHistorico;
+use Carbon\Carbon;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -46,27 +48,88 @@ class ContribuyentesController extends Controller
     
     }
 
+    public function tablahistoricocs(){
+
+        
+
+        $constancias_cs= ConstanciasHistorico::join('contribuyente','constancias_historico.id_contribuyente','=','contribuyente.id')
+
+        ->select('constancias_historico.id','constancias_historico.tipo_constancia',
+        'constancias_historico.num_resolucion','constancias_historico.created_at',
+        'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+        'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+        'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+        'contribuyente.direccion as direccionCont',
+         )
+        ->where('tipo_constancia','Simple')
+        ->get();
+
+        foreach($constancias_cs as $dato){
+            $dato->año=carbon::parse($dato->created_at)->format('y');
+            log::info($dato->año);
+        }
+ 
+        return view('backend.admin.Contribuyentes.tabla.tablahistoricocs', compact('constancias_cs'));
+    
+    }
+
+    public function tablahistoricocg(){
+
+        
+
+        $constancias_cg= ConstanciasHistorico::join('contribuyente','constancias_historico.id_contribuyente','=','contribuyente.id')
+
+        ->select('constancias_historico.id','constancias_historico.tipo_constancia',
+        'constancias_historico.num_resolucion','constancias_historico.created_at',
+        'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+        'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+        'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+        'contribuyente.direccion as direccionCont',
+         )
+        ->where('tipo_constancia','Global')
+        ->get();
+
+        foreach($constancias_cg as $dato){
+            $dato->año=carbon::parse($dato->created_at)->format('y');
+            log::info($dato->año);
+        }
+ 
+        return view('backend.admin.Contribuyentes.tabla.tablahistoricocg', compact('constancias_cg'));
+    
+    }
+
 //Agregar nuevo contribuyente
 
     public function nuevoContribuyente (Request $request){
-    
+    log::info($request->all());
         $regla = array(
             'nombre' => 'Required',
             'apellido' => 'Required',
             'direccion' => 'Required',
             'dui' => 'Required|unique:contribuyente,dui',
             'nit' => 'Required|unique:contribuyente,nit',
-            'registro_comerciante' => 'Required|unique:contribuyente,registro_comerciante',
+           // 'registro_comerciante' => 'unique:contribuyente,registro_comerciante',
             'telefono' => 'Required',
             'email' => 'Required',
             'fax' => 'nullable'
           
           );
+          $message=[
+    
   
-          $validar = Validator::make($request->all(), $regla);
+            'dui.unique'=>'EL número de DUI ingresado ya esta registrado',
+        ];
+
+        $validar = Validator::make($request->all(), $regla, 
+        $message
+    
+        );
   
           
-          if ($validar->fails()){ return ['success' => 0];}
+          if ($validar->fails()){ return [
+            'success' => 0,
+            'message' => $validar->errors()->first()       
+        ];}
           
               $dato = new Contribuyentes();
               $dato->nombre = $request->nombre;
@@ -198,7 +261,15 @@ class ContribuyentesController extends Controller
             }
         }
 
+        public function historico_solvencias()
+        {
+            $contribuyentes = Contribuyentes::All();
+            
+            return view('backend.admin.Contribuyentes.HistoricoSolvencias', compact('contribuyentes'));
         }
+
+
+}
            
     
       

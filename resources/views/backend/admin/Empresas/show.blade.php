@@ -555,11 +555,14 @@
               <div id="contenedor">
                   <input type="checkbox" id="btn-mas">
                           <div class="redes">
+                            @if($NoNotificar==1)
+                              <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa('{{$empresa->id}}')"></a>
+                            @endif 
                             @if($pase_recalificacion_mat==1 or $detectorNull==1)
                               <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura('{{$empresa->id}}')"></a>
                             @endif  
                               <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Empresa" onclick="reporteEmpresaDatos('{{$empresa->id}}')"></a>
-                          </div>
+                            </div>
                   <div class="btn-mas">
                       <label for="btn-mas" class="fa fa-plus"></label>
                   </div>
@@ -630,6 +633,13 @@ function modalRecalificacion(){
 
 </script>
 <script>
+  
+function Solvencia_empresa(id){
+
+window.open("{{ URL::to('/admin/generar/solvencia/empresa/pdf') }}/" + id );
+
+}
+
 function Imprimir_Resolucion_Apertura(id){
 
 window.open("{{ URL::to('/admin/reporte/resolucion_apertura/pdf') }}/" + id );

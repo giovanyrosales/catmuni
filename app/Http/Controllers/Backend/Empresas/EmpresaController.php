@@ -138,6 +138,7 @@ class EmpresaController extends Controller
     if(sizeof($empresas_registradas) == 0)
     {
             $empresas_reg=0;
+            $Solvencia=0;
     }else{
             $empresas_reg=1;
             $Solvencia=1;
@@ -778,7 +779,7 @@ public function show($id)
     //** Comprobando si la empresa esta al dia con sus pagos de impuestos de empresa */
     if($ComprobandoPagoAlDia>=$fechahoy)
     {   
-        //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/
+        //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
         $NoNotificar=1;
         log::info('NoNotificar:' .$NoNotificar);
     }else
