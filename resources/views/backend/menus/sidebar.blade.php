@@ -95,13 +95,19 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.listarContribuyentes.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-id-badge nav-icon"></i>
-                                <p>Listar Contribuyentes</p>
+                                <p>Listar contribuyentes</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.cobrar.empresa.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-coins nav-icon"></i>
                                 <p>Obligaciones tributarias</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.historico.solvencias.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-history nav-icon"></i>
+                                <p>Historico Solvencias</p>
                                 </a>
                             </li>
                         </ul>

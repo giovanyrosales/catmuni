@@ -190,7 +190,7 @@
             title="Seleccione un contribuyente."
             >
                 @foreach($contribuyentes as $contribuyente)
-                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
+                  <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}&nbsp;(&nbsp;DUI:&nbsp;{{ $contribuyente->dui }}&nbsp;)</option>
                 @endforeach 
             </select> 
           <div class="input-group-append">
@@ -270,18 +270,17 @@
 
 <!-- seccion botón flotante -->
 <div id="contenedor">
-                  <input type="checkbox" id="btn-mas">
-                          <div class="redes">
-                           
-                              <a class="fas fa-file-signature"  data-toggle="tooltip" data-placement="left" title="Generar solvencia" onclick="Generar_solvencia()"></a>
-                            
-                              
-                          </div>
-                  <div class="btn-mas">
-                      <label for="btn-mas" class="fa fa-plus"></label>
-                  </div>
-              </div>
+    <input type="checkbox" id="btn-mas">
+    <div class="redes">
+        <a class="fas fa-file-signature" id="solvencia"  data-toggle="tooltip" data-placement="left" title="Generar solvencia" onclick="Generar_solvencia()"></a>
+        <a class="fas fa-file-invoice" id="constancia_simple" data-toggle="tooltip" data-placement="left" title="Generar constancia simple" onclick="Generar_constancia_simple()"></a>
+    </div>
+    <div class="btn-mas">
+        <label for="btn-mas" class="fa fa-plus"></label>
+    </div>
+</div>
 <!--Fin seccion botón flotante -->
+
 
 <!-- Cerrando el content-wrapper-->
       </div>
@@ -323,7 +322,8 @@ $(document).ready(function(){
   $('#tarjeta_empresas_registradas').hide();
   $('#tarjeta_buses_registradas').hide();
   $('#contenedor').hide();
-  
+  $('#constancia_simple').hide();
+
   //** Tooltips de botón flotante */
   $('[data-toggle="tooltip"]').tooltip();
 
@@ -342,8 +342,15 @@ function buscar_obligaciones_tributarias(){
           axios.post('/admin/buscar/obligaciones_tributarias', formData, {
            })
          .then((response) => {
+        
+        if(response.data.success === 2)
+        {
+            $('#constancia_simple').show();
+            $('#contenedor').show();
+            $('#solvencia').hide();
+        }
 
-          if(response.data.success === 1)
+        if(response.data.success === 1)
                 {
                     
                     Swal.fire({
@@ -353,7 +360,8 @@ function buscar_obligaciones_tributarias(){
                           showConfirmButton: false,                     
                         })
                         $('#img_contribuyente').hide();
-                        
+                        $('#constancia_simple').hide();
+
                         if(response.data.buses_reg==0){
                           $('#tarjeta_buses_registradas').hide();
                         }else{
@@ -365,8 +373,10 @@ function buscar_obligaciones_tributarias(){
                                 $('#tarjeta_empresas_registradas').show();
                             }
                         
+
                         if(response.data.Solvencia===1){
                             $('#contenedor').show();
+                            $('#solvencia').show();
                         }else{
                             $('#contenedor').hide();
                              }
@@ -468,6 +478,11 @@ function buscar_obligaciones_tributarias(){
 function Generar_solvencia(){
     var id = document.getElementById('select-contribuyente').value;
     window.open("{{ URL::to('/admin/generar/solvencia/pdf') }}/" + id );
+}
+
+function Generar_constancia_simple(){
+    var id = document.getElementById('select-contribuyente').value;
+    window.open("{{ URL::to('/admin/generar/constancia/simple/pdf') }}/" + id );
 }
 
 function VerEmpresa(id){

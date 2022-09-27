@@ -16,6 +16,10 @@
 				 font-size:7;
 				 text-align:justify;
 				}
+        #interlineado{
+
+            line-height:5px;
+        }
 
 		body{
             font-family: Arial;

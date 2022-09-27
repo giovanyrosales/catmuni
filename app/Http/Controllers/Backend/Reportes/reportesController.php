@@ -40,6 +40,7 @@ use App\Models\MatriculasDetalleEspecifico;
 use App\Models\alertas;
 use App\Models\alertas_detalle;
 use App\Models\CierresReaperturas;
+use App\Models\ConstanciasHistorico;
 use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
@@ -3211,118 +3212,340 @@ public function generar_solvencia($id){
     $logoalcaldia = 'images/logo.png';
     $logoelsalvador = 'images/EscudoSV.png';
     $LeyT = 'images/LeyT.png';
-    
+
+    $fechahoy=carbon::now()->format('d-m-Y');
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse($fechahoy);
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' días del mes de ' . $mes . ' de ' . $fechaF->format('Y');
+
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+    $año=carbon::now()->format('y');
+ 
     $contribuyente=Contribuyentes::where('id',$id)
     ->first();
 
+    $num_resolucion=ConstanciasHistorico::latest()
+    ->where('id_contribuyente',$id)
+    ->where('tipo_constancia','Global')
+    ->pluck('num_resolucion')
+    ->first();
+    log::info('consulta num resolucion: '.$num_resolucion);
+    if($num_resolucion==null){
+        $num_resolucion=0; 
+    }
+    $num_resolucion_nueva=$num_resolucion+1;
+    log::info('consulta constancias historico: '.$num_resolucion);
+    log::info('consulta constancias historico: '.$num_resolucion_nueva);
+
+    //** Guardando en el historico la resolución */
+        $dato = new ConstanciasHistorico();
+        $dato->id_contribuyente = $id;
+        $dato->tipo_constancia = 'Global';
+        $dato->num_resolucion =$num_resolucion_nueva; 
+        $dato->save();
+    if($dato->save())
+    { 
         
-    $tabla = "<div class='content'>
-                        <img id='logo' src='$logoalcaldia'>
-                        <img id='EscudoSV' src='$logoelsalvador'>
-                        <h4>ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
-                            UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL<br>
-                            SOLVENCIA
-                        </h4>
-                        <hr>
-                </div>";
+            //** Terminando de guardar en el historico la resolución */
 
-        $tabla .= "<table border='0' align='center' style='width: 650px;font-size:12px;'>
-            <tr>
-                <td  align='left'> </td>
-            
-                <td align='right'>
-                    RESOLUCIÓN N°:&nbsp;<strong></strong><br><br>
-                </td>
-            </tr>
-            <tr>
-                <td id='uno'>FECHA DE RESOLUCIÓN:</td>
-                <td id='dos'></td>
-            </tr>
-            <tr>
-                <td id='uno'>CONTRIBUYENTE:</td>
-                <td id='dos'>$contribuyente->nombre&nbsp;$contribuyente->apellido</td>
-            </tr>
-            <tr>
-                <td id='uno'> CALIFIQUESE: </td>
-                <td id='dos'></td>
-            </tr>
-            <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            </tr>
-            <tr>
-                <td id='uno'>DIRECCIÓN:</td>
-                <td id='dos'></td>
-            </tr>
-            <tr>
-                <td id='uno'>PROPIEDAD DE:</td>
-                <td id='dos'></td>
-            </tr>
-            <tr>
-                <td id='uno'>REPRESENTADO POR:</td>
-                <td id='dos'></td>
-            </tr>
-            <tr>
-                <td id='uno'>GIRO ECONÓMICO:</td>
-                <td id='dos'></td>
-            </tr>           
-            <tr>
-                <td id='uno'>FECHA DE INICIO DE OPERACIONES:</td>
-                <td id='dos'></td>
-            </tr>                      
-            <tr>
-                <td colspan='2'  style='text-align: justify'>
-                    <hr>
-
-                    <p style='font-size:10px;'>
-                        <br>
-                        <br>
-                        LICDA. ROSA LISSETH ALDANA MERLOS<br>
-                        JEFE DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL
+            $tabla = "<table border='0' align='center' style='width: 650px;font-size:12px;'>
+                <tr>
+                    <td  align='left'> </td>
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <td align='right'>
+                        <h4 style='border:1px solid black;border-radius:50px;'><strong>&nbsp;&nbsp; CS-$dato->num_resolucion-$año &nbsp;&nbsp;</strong></h4><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan='2'  style='font-size:14;text-align: justify;line-height:40px;'> 
+                        <b>CONSTANCIA NO DEFINIDA AUN</b>
+                            <br>
+                            <br>
+                        <p >
                         
-                    </p>
-                    <hr>
-                    <p style='font-size:6;text-align: justify'>
-                        <b>Ley General Tributaria Municipal:</b><br>
-                        <b>Art. 123.</b> -De la calificación de contribuyentes, de la determinación de tributos, de la resolución del Alcalde en el procedimiento de repetición del pago de lo no 
-                            debido, y de la aplicación de sanciones hecha por la administración tributaria municipal, se admitirá recurso de apelación para ante el Concejo Municipal 
-                            respectivo, el cual deberá interponerse ante el funcionario que haya hecho la calificación o pronunciada la resolución correspondiente, en el plazo de tres días después de su notificación.
-                            <br>
-                            <br>
+                        Por medio de la presente la Alcaldia Municipal de Metapán a través de la Unidad de Administración
+                        Tributaria Municipal HACE CONSTAR QUE:&nbsp;<b>$contribuyente->nombre&nbsp;$contribuyente->apellido</b>,
+                        con Documento Único de identidad: <b>$contribuyente->dui </b> no posee inmuebles o negocios
+                        inscritos en nuestros registros de cuentas corrientes, por lo cual se encuentra solvente
+                        en el pago de tasas e impuestos Municipales.
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        Se extiende la presente para usos del interesado, a los $FechaDelDia
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                <td colspan='2' align='center' style='text-align: justify'>
+                        <p style='font-size:14;'>
+                            <br><br><br><br><br><br><br><br><br><br><br><br><br>
                             
-                        <b>Art. 90.</b>-Los contribuyentes, responsables y terceros, estarán obligados al cumplimiento de los deberes formales que se establezcan en esta Ley, en leyes u ordenanzas de creación de tributos municipales, sus reglamentos y otras disposiciones normativas que dicten las administraciones tributarias municipales, y particularmente están obligados a: 
-                            <br>1º Inscribirse en los registros tributarios que establezcan dichas administraciones; proporcionarles los datos pertinentes y comunicarles oportunamente cualquier modificación al respecto; 
-                            <br>2º Solicitar, por escrito, a la Municipalidad respectiva, las licencias o permisos previos que se requieran para instalar establecimientos y locales comerciales e informar a la autoridad tributaria la fecha de inicio de las actividades, dentro de los treinta días siguientes a dicha fecha; 
-                            <br>3º Informar sobre los cambios de residencia y sobre cualquier otra circunstancia que modifique o pueda hacer desaparecer las obligaciones tributarias, dentro de los treinta días siguientes a la fecha de tales cambios; 
-                            <br>4º Permitir y facilitar las inspecciones, exámenes, comprobaciones o investigaciones ordenadas por la administración tributaria municipal y que realizará por medio de sus funcionarios delegados a tal efecto; (4) 
-                            <br>5º Presentar las declaraciones para la determinación de los tributos, con los anexos respectivos, cuando así se encuentre establecido, en los plazos y de acuerdo con las formalidades correspondientes; 
-                            <br>6º Concurrir a las oficinas municipales cuando fuere citado por autoridad tributaria; 
-                            <br>7º El contribuyente que ponga fin a su negocio o actividad, por cualquier causa, lo informará por escrito, a la autoridad tributaria municipal, dentro de los treinta días siguientes a la fecha de finalización de su negocio o actividad; presentará, al mismo tiempo, las declaraciones pertinentes, el balance o inventario final y efectuará el pago de los tributos adeudados sin perjuicio de que la autoridad tributaria pueda comprobar de oficio, en forma fehaciente, el cierre definitivo de cualquier establecimiento; 
-                            <br>8º Las personas jurídicas no domiciliadas en el país y que desarrollen actividades económicas en determinadas comprensiones municipales, deberán acreditar un representante ante la administración tributaria, municipal correspondiente y comunicarlo oportunamente. Si no lo comunicaren, se tendrá como tal a los gerentes o administradores de los establecimientos propiedad de tales personas jurídicas; 
-                            <br>9º A presentar o exhibir las declaraciones, balances, inventarios físicos, tanto los valuados como los registrados contablemente con los ajustes correspondientes si los hubiere, informes, documentos, activos, registros y demás informes relacionados con hechos generadores de los impuestos; (4) 
-                            <br> 10º A permitir que se examine la contabilidad, registros y documentos, determinar la base imponible, liquidar el impuesto que le corresponda, cerciorarse de que no existe de acuerdo a la ley la obligación de pago del impuesto, o verificar el adecuado cumplimiento de las obligaciones establecidas en esta Ley General o en las leyes tributarias respectivas; (4) 
-                            <br>11º En general, a dar las aclaraciones que le fueren solicitadas por aquélla, como también presentar o exhibir a requerimiento de la Administración Municipal dentro del plazo que para tal efecto le conceda, los libros o registros contables exigidos en esta Ley y a los demás que resulten obligados a llevar de conformidad a otras leyes especiales. (4)
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                <br>
-                        <img id='LeyT' src='$LeyT'> 
-                </td>
-            </tr>
-        </table>";
-    
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 10);
+                            LICDA. Rosa Lisseth Aldana Merlos<br>
+                            Jefatura Unidad de Administración Tributaria Municipal
+                        </p>
+                    </td>
+                </tr>
+            </table>";
+        
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 10);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
 
+    }//Fin de if si se guardo...
+
+
+}
+
+public function generar_constancia_simple($id){
+
+
+
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Constancia simple');
+
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+
+    $fechahoy=carbon::now()->format('d-m-Y');
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse($fechahoy);
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' días del mes de ' . $mes . ' de ' . $fechaF->format('Y');
+
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+    $año=carbon::now()->format('y');
+ 
+    $contribuyente=Contribuyentes::where('id',$id)
+    ->first();
+
+    $num_resolucion=ConstanciasHistorico::latest()
+    ->where('id_contribuyente',$id)
+    ->pluck('num_resolucion')
+    ->first();
+
+    if($num_resolucion==null){
+        $num_resolucion=0; 
+    }
+    $num_resolucion_nueva=$num_resolucion+1;
+    log::info('consulta constancias historico: '.$num_resolucion);
+    log::info('consulta constancias historico: '.$num_resolucion_nueva);
+
+    //** Guardando en el historico la resolución */
+        $dato = new ConstanciasHistorico();
+        $dato->id_contribuyente = $id;
+        $dato->tipo_constancia = 'Simple';
+        $dato->num_resolucion =$num_resolucion_nueva; 
+        $dato->save();
+
+        if($dato->save())
+        { 
+            //** Terminando de guardar en el historico la resolución */
+
+            $tabla = "<table border='0' align='center' style='width: 650px;font-size:12px;'>
+                <tr>
+                    <td  align='left'> </td>
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <td align='right'>
+                        <h4 style='border:1px solid black;border-radius:50px;'><strong>&nbsp;&nbsp; CS-$dato->num_resolucion-$año &nbsp;&nbsp;</strong></h4><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan='2'  style='font-size:14;text-align: justify;line-height:40px;'> 
+                        <b> A QUIEN CORRESPONDA</b>
+                            <br>
+                            <br>
+                        <p >
+                        Por medio de la presente la Alcaldia Municipal de Metapán a través de la Unidad de Administración
+                        Tributaria Municipal HACE CONSTAR QUE:&nbsp;<b>$contribuyente->nombre&nbsp;$contribuyente->apellido</b>,
+                        con Documento Único de identidad: <b>$contribuyente->dui </b> no posee inmuebles o negocios
+                        inscritos en nuestros registros de cuentas corrientes, por lo cual se encuentra solvente
+                        en el pago de tasas e impuestos Municipales.
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        Se extiende la presente para usos del interesado, a los $FechaDelDia
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                <td colspan='2' align='center' style='text-align: justify'>
+                        <p style='font-size:14;'>
+                            <br><br><br><br><br><br><br><br><br><br><br><br><br>
+                            
+                            LICDA. Rosa Lisseth Aldana Merlos<br>
+                            Jefatura Unidad de Administración Tributaria Municipal
+                        </p>
+                    </td>
+                </tr>
+            </table>";
+        
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 10);
+
+
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+
+    }//Fin de if si se guardo...
+
+}
+
+public function generar_solvencia_empresa($id){
+
+
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Solvencia');
+
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+    $LeyT = 'images/LeyT.png';
+
+    $fechahoy=carbon::now()->format('d-m-Y');
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse($fechahoy);
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+    $año=carbon::now()->format('y');
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+           
+            
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.num_resolucion',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'contribuyente.id as id_contribuyente',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro',
+                )
+    ->find($id);
+ 
+    $contribuyente=Contribuyentes::where('id',$empresa->id_contribuyente)
+    ->first();
+    log::info('Contribuyente: '.$contribuyente);
+
+    $num_resolucion=ConstanciasHistorico::latest()
+    ->where('id_contribuyente',$empresa->id_contribuyente)
+    ->where('tipo_constancia','Solvencia_empresa')
+    ->pluck('num_resolucion')
+    ->first();
+
+    log::info('consulta num resolucion: '.$num_resolucion);
+    if($num_resolucion==null){
+        $num_resolucion=0; 
+    }
+    $num_resolucion_nueva=$num_resolucion+1;
+    log::info('consulta constancias historico: '.$num_resolucion);
+    log::info('consulta constancias historico: '.$num_resolucion_nueva);
+
+ 
+
+    //** Guardando en el historico la resolución */
+        $dato = new ConstanciasHistorico();
+        $dato->id_contribuyente = $empresa->id_contribuyente;
+        $dato->tipo_constancia = 'Solvencia_empresa';
+        $dato->num_resolucion =$num_resolucion_nueva; 
+        $dato->save();
+    if($dato->save())
+    { 
+        
+            //** Terminando de guardar en el historico la resolución */
+
+            $tabla = "<table border='0' align='center' style='width: 650px;font-size:12px;'>
+                <tr>
+                    <td  align='left'> </td>
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <td align='right'>
+                        <h4 style='border:1px solid black;border-radius:50px;'><strong>&nbsp;&nbsp; N° $dato->num_resolucion-S-$año &nbsp;&nbsp;</strong></h4><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan='2'  style='font-size:14;text-align: justify;line-height:40px;'> 
+                        <br>
+                        <br>
+                        <p style='text-transform: uppercase;'>
+                        $empresa->contribuyente&nbsp;$empresa->apellido, con obligación tributaria correspondiente a, 
+                        $empresa->nombre, y con dirección, $empresa->direccion, el cual se encuentra inscrito/a en nuestros
+                        registros de cuenta corriente bajo el/los codigos/s $empresa->num_tarjeta,
+                        <br>
+                        <br>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan='2' style='font-size:14;text-align: center;'>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <b>ESTA SOLVENTE DE PAGO DE IMPUESTOS CON ESTA MUNICIPALIDAD<b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan='2' style='font-size:12;text-align: right;'>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <p>
+                            $FechaDelDia
+                        </p>
+                    </td>
+                </tr>
+            </table>";
+        
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 10);
+
+
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+
+    }//Fin de if si se guardo...
 
 
 }

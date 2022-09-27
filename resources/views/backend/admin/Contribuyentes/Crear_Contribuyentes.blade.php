@@ -52,8 +52,8 @@
             <div class="row">
               <div class="col-md-6">
               <div class="form-group">
-                        <label>Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Nombre del propietario">
+                        <label>Nombre o razón social:</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Nombre del propietario o razón social">
                         <input type="hidden" name="id" id="id" class="form-control" >
                       </div>
                 <!-- /.form-group -->
@@ -187,23 +187,23 @@
           return;
        }
 
-       if (apellido === '')
-       {
-        toastr.error('Apellido es requerido');
-           return;
-       }
-       if(apellido.length > 20)
-       {
-        toastr.error('máximo 20 caracteres para apellido');
-          return;
-       }
+    //  if (apellido === ''){
+    //    toastr.error('Apellido es requerido');
+    //    return;
+    //  }
+
+    //  if(apellido.length > 20)
+    //  {
+    //   toastr.error('máximo 20 caracteres para apellido');
+    //   return;
+    //  }
 
        if (direccion === '')
        {
         toastr.error('Dirección es requerido');
           return;
        }
-       if(direccion.length > 50)
+       if(direccion.length > 100)
        {
         toastr.error('máximo 50 caracteres para direccion');
           return;
@@ -239,20 +239,16 @@
          return;
        }
 
-       if (registro_comerciante === '')
-       {
-        toastr.error('Registro Comerciante es requerido');
-          return;
-       }
-       if(registro_comerciante.length < 7)
-       {
-        toastr.error('Registro de Comerciante no puede tener menos de 7 caracteres');
-         return;
-       }  else if (registro_comerciante.length > 7){
-        toastr.error('Registro de Comerciante no puede tener más de 7 caracteres')
-         return;
-       }
-
+       if(registro_comerciante!=''){
+          if(registro_comerciante.length < 7)
+          {
+            toastr.error('Registro de Comerciante no puede tener menos de 7 caracteres');
+            return;
+          }  else if (registro_comerciante.length > 7){
+            toastr.error('Registro de Comerciante no puede tener más de 7 caracteres')
+            return;
+          }
+      }
        if (telefono === '')
        {
         toastr.error('Teléfono es requerido');
@@ -284,6 +280,10 @@
 
         .then((response) => {
           closeLoading();
+          if(response.data.success === 0){
+                    toastr.error(response.data.message);
+          
+                }
           if (response.data.success === 1)
           {
           
