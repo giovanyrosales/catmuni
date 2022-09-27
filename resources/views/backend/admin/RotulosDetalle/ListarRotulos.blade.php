@@ -103,13 +103,13 @@
                         <thead>
                         <tr>                           
                             <th style="width: 15%; text-align: center">Nombre</th>                           
-                            <th style="width: 19%; text-align: center">Medidas</th>
-                            <th style="width: 14%; text-align: center">Total Medidas</th>
+                            <th style="width: 17%; text-align: center">Medidas</th>
+                            <th style="width: 15%; text-align: center">Total Medidas</th>
                             <th style="width: 10%; text-align: center">Caras</th>
-                            <th style="width: 10%; text-align: center">Tarifa</th>
-                            <th style="width: 13%; text-align: center">Pago Mensual</th>
-                            <th style="width: 20%; text-align: center">Coordenadas</th>
-                            <th style="width: 24%; text-align: center">Foto</th>
+                            <th style="width: 11%; text-align: center">Tarifa</th>
+                            <th style="width: 15%; text-align: center">Pago Mensual</th>
+                            <th style="width: 19%; text-align: center">Coordenadas</th>
+                            <th style="width: 23%; text-align: center">Foto</th>
                         </tr>                        
                         </thead>
                             <tbody id="myTbodyRotulos">
@@ -275,7 +275,7 @@
                     "</td>"+
 
                     "<td>"+
-                    "<input type='file' name = 'foto_rotulo[]' id = 'foto_rotulo[]' class='form-control' accept='image/jpeg, image/jpg, image/png '>"+
+                    "<input type='file' name ='foto_rotulo[]'  class='form-control' accept='image/jpeg, image/jpg, image/png'/>"+
                     "</td>"+
                   
                     "</tr>";
@@ -304,8 +304,7 @@
             var tarifa = $("textarea[name='tarifa[]']").map(function(){return $(this).val();}).get();
             var total_tarifa = $("textarea[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
             var coordenadas_geo = $("textarea[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
-            var foto_rotulo = (document.getElementById('foto_rotulo'));
-         
+            var foto_rotulo = $("input[name='foto_rotulo[]']").get();
           
             //**** Validar */
 
@@ -318,105 +317,7 @@
                         return;
             }
 
-            for(var a = 0; a < nombre.length; a++)
-            {
-
-                var DatoNombre = nombre[a];
-
-
-                if(DatoNombre == "")
-                {
-                    modalMensaje('Código Municipal', 'Debe digitar un código municipal');
-                    return;
-                }
-
-            }
-
-            for(var b = 0; b < medidas.length; b++)
-            {
-
-                var DatoMedidas = nombre[b];
-
-
-                if(DatoMedidas == "")
-                {
-                    modalMensaje('Nombre', 'Debe digitar un nombre de la unidad');
-                    return;
-                }
-
-            }            
-
-
-            for(var c = 0; c < total_medidas.length; c++)
-            {
-
-                var DatoTotalMedidas = total_medidas[c];
-
-
-                if(DatoTotalMedidas == "")
-                {
-                    modalMensaje('Ruta', 'Debe digitar una ruta');
-                    return;
-                }
-
-            }
-
-            
-            for(var e = 0; e < caras.length; e++)
-            {
-
-                var DatoCaras = caras[e];
-
-
-                if(DatoCaras == "")
-                {
-                    modalMensaje('Teléfono', 'Debe digitar un número de teléfono');
-                    return;
-                }
-
-            }
-
-            for(var f = 0; f < tarifa.length; f++)
-            {
-
-                var DatoTarifa = tarifa[f];
-
-
-                if(DatoTarifa == "")
-                {
-                    modalMensaje('Teléfono', 'Debe digitar un número de teléfono');
-                    return;
-                }
-
-            }
-
-            for(var g = 0; g < total_tarifa.length; g++)
-            {
-
-                var DatoTotalTarifa = total_tarifa[g];
-
-
-                if(DatoTotalMedidas == "")
-                {
-                    modalMensaje('Teléfono', 'Debe digitar un número de teléfono');
-                    return;
-                }
-
-            }
-
-            for(var h = 0; h < coordenadas_geo.length; h++)
-            {
-
-                var DatoCoordenadasGeo = coordenadas_geo[h];
-
-
-                if(DatoCoordenadasGeo == "")
-                {
-                    modalMensaje('Teléfono', 'Debe digitar un número de teléfono');
-                    return;
-                }
-
-            }
+           
 
             //**** Fin de validar */
 
@@ -425,40 +326,36 @@
             // llenar array para enviar
             for(var j = 0; j < nombre.length; j++)
             {
-               
-                formData.append('nombre[]', nombre[j]);
-                formData.append('medidas[]', medidas[j]);
-                formData.append('total_medidas[]', total_medidas[j]);
-                formData.append('caras[]', caras[j]);
-                formData.append('tarifa[]', tarifa[j]);
-                formData.append('total_tarifa[]', total_tarifa[j]);
-                formData.append('coordenadas_geo[]', coordenadas_geo[j]);
+                if(foto_rotulo[j].files[0] && foto_rotulo[j].files[0])
+                { // si trae doc
+                    if (!foto_rotulo[j].files[0].type.match('image/jpeg|image/jpeg|image/png'))
+                    {
+                        toastr.error('formato de documento permitido: .png .jpg .jpeg');
+                        return;
+                    }
+                }
+
                 
-               
-                formData.append('foto_rotulo', foto_rotulo[j]);
-
-
-
-                console.log(nombre[j],medidas[j],total_medidas[j],foto_rotulo[j]);
-             
-
+                formData.append('nombre[]', nombre[j]);
+                formData.append('foto_rotulo[]',foto_rotulo[j]);
             }
 
-                    formData.append('id_rotulos_detalle', id_rotulos_detalle);
 
+               formData.append('id_rotulos_detalle', id_rotulos_detalle);
+         
                     axios.post('/admin/rotulos_detalle_especifico/agregar', formData, {
                     })
                     .then((response) => {
-
+                       
                 if(response.data.success === 1)
-                {
-                // Matrícula específica agregada
+                {                             
+                // Rótulo agregado
                     agregado_rotulos_especifico();
                 }  
 
                 else{
                 // error al crear
-                        toastr.error('Error al agregar matrícula específica');
+                        toastr.error('Error al agregar rótulo');
                     }
 
                 })
@@ -510,6 +407,23 @@
             }).then((result) => {
                 if (result.isConfirmed) {
 
+                }
+            });
+
+        }
+
+        function fallo(titulo, mensaje)
+        {
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                location.reload;
                 }
             });
 

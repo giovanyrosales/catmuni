@@ -4,9 +4,9 @@
                                 <tr>
                                 <th style="width: 8%;">N° Ficha</th>
                                 <th style="width: 27%;">Representante</th>
-                                <th style="width: 12%;">Cantidad</th>
+                                <th style="width: 10%;">Cantidad</th>
                                 <th style="width: 15%;">Fecha Apertura</th>                           
-                                <th style="width: 30%;">Opciones</th>
+                                <th style="width: 34%;">Opciones</th>
                                
                             </tr>
                             </thead>

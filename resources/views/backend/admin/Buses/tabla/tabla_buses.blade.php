@@ -3,11 +3,11 @@
                             <thead>
                                 <tr>
                                 <th style="width: 8%;">N° Ficha</th>
-                                <th style="width: 27%;">Representante</th>
-                                <th style="width: 10%;">Cantidad</th>
-                                <th style="width: 10%;">Tarifa</th>
-                                <th style="width: 12%;">Pago Mensual</th>
-                                <th style="width: 30%;">Opciones</th>
+                                <th style="width: 25%;">Representante</th>
+                                <th style="width: 9%;">Cantidad</th>
+                                <th style="width: 9%;">Tarifa</th>
+                                <th style="width: 14%;">Pago Mensual</th>
+                                <th style="width: 34%;">Opciones</th>
                                
                             </tr>
                             </thead>
