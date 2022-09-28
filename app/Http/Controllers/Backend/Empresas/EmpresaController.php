@@ -645,6 +645,26 @@ public function show($id)
 {
     $fechahoy=carbon::now()->format('Y-m-d');
 
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+    
+    
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+    'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+    'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.excepciones_especificas',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel',
+    'contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont',
+    'contribuyente.registro_comerciante',
+    'contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro','giro_comercial.id as id_giro',
+    'actividad_economica.rubro',
+    )
+    ->find($id);    
+
     $contribuyentes = Contribuyentes::All();
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
@@ -722,7 +742,9 @@ public function show($id)
                 ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
                 ->pluck('periodo_cobro_fin')
                     ->first();
-        }
+        }else{
+                    $ComprobandoPagoAlDia=$empresa->inicio_operaciones;
+             }
 
     }//** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
 
@@ -775,7 +797,40 @@ public function show($id)
                  }
          }
 
+        //ukll
+        log::info('|°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°|');
+        $f3=carbon::now()->format('Y-m-d');
+        $f1=Carbon::parse($ComprobandoPagoAlDia);
+        Log::info('f1 es el ultimo pago: '.$f1);
+        Log::info('f3 fecha actual: '.$f3);
 
+        //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+        Log::info('UltimoDiaMes: '.$UltimoDiaMes);
+        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+        
+
+        $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+        //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+        Log::info('inicio Moratorio aqui: '.$FechaDeInicioMoratorio);
+
+        if($FechaDeInicioMoratorio->lt($f3)){
+                $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+                Log::info('Cantidad de dias de insteres moratorio: '.$DiasinteresMoratorio);
+                Log::info('No entro al else');
+        }else{
+                $DiasinteresMoratorio=0;
+                Log::info('Cantidad de dias de interes moratorio: '.$DiasinteresMoratorio);
+                Log::info('Entro al else');
+             }
+
+    if($DiasinteresMoratorio>0)
+    {
+            $estado_de_solvencia=1;//Si es 1 esta en Mora
+            
+    }else{
+            $estado_de_solvencia=0;//Si es 0 esta Solvente
+         } 
     //** Comprobando si la empresa esta al dia con sus pagos de impuestos de empresa */
     if($ComprobandoPagoAlDia>=$fechahoy)
     {   
@@ -801,25 +856,7 @@ public function show($id)
         {$Consul_traspasos=1;
         }   
    
-    $empresa= Empresas
-    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
-    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
-    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
-    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-    
-    
-    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit',
-    'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
-    'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.excepciones_especificas',
-    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel',
-    'contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont',
-    'contribuyente.registro_comerciante',
-    'contribuyente.fax', 'contribuyente.direccion as direccionCont',
-    'estado_empresa.estado',
-    'giro_comercial.nombre_giro','giro_comercial.id as id_giro',
-    'actividad_economica.rubro',
-    )
-    ->find($id);    
+   
     
     $giro=$empresa->id_giro;
     log::info('id del giro: '.$giro);
@@ -938,70 +975,48 @@ public function show($id)
             //*Si es Mesas de billar o  Sinfonolas
             }else if($dato->id_matricula==1 or $dato->id_matricula==4)
             {
-                if($ComprobandoPagoAlDiaMatriculas>$fechaLimite)
-                {
-                    if($estado_moratorioM!=1){
-                        MatriculasDetalle::where('id',$id_detalle)
-                        ->update([
-                                    'id_estado_moratorio' =>'1',              
-                                ]);
-                                log::info('estado: solvente');
-                            }else{log::info('estado: Ya estaba en Solvente');}  
-
-                }else
-                    {
-                        if( $CantidadDias<90)  
-                            {
-                                if($estado_moratorioM!=1){
-                                MatriculasDetalle::where('id',$id_detalle)
-                                ->update([
-                                            'id_estado_moratorio' =>'1',              
-                                        ]);
-                                        log::info('estado: solvente');
-                                    }else{log::info('estado: Ya estaba en Solvente');}                   
-                            }else{
-                                    if($estado_moratorioM!=2){
-                                            MatriculasDetalle::where('id',$id_detalle)
-                                            ->update([
-                                                        'id_estado_moratorio' =>'2',              
-                                                    ]);
-                                                    log::info('estado: en mora');
-                                            }else{log::info('estado: Ya estaba en mora');}
-                                }
-                    }
+            
+                    if( $CantidadDias<90)  
+                        {
+                            if($estado_moratorioM!=1){
+                            MatriculasDetalle::where('id',$id_detalle)
+                            ->update([
+                                        'id_estado_moratorio' =>'1',              
+                                    ]);
+                                    log::info('estado: solvente');
+                                }else{log::info('estado: Ya estaba en Solvente');}                   
+                        }else{
+                                if($estado_moratorioM!=2){
+                                        MatriculasDetalle::where('id',$id_detalle)
+                                        ->update([
+                                                    'id_estado_moratorio' =>'2',              
+                                                ]);
+                                                log::info('estado: en mora');
+                                        }else{log::info('estado: Ya estaba en mora');}
+                            }
+                    
             //*Si es Maquinas eletrónicas
             }else if($dato->id_matricula==3)
             {
-                if($ComprobandoPagoAlDiaMatriculas>$fechaLimite)
-                {
-                    if($estado_moratorioM!=1){
+                    if( $CantidadDias<60)  
+                    {
+                        if($estado_moratorioM!=1){
                         MatriculasDetalle::where('id',$id_detalle)
                         ->update([
                                     'id_estado_moratorio' =>'1',              
                                 ]);
                                 log::info('estado: solvente');
-                            }else{log::info('estado: Ya estaba en Solvente');}  
-                            
-                }else{
-                            if( $CantidadDias<60)  
-                            {
-                                if($estado_moratorioM!=1){
-                                MatriculasDetalle::where('id',$id_detalle)
-                                ->update([
-                                            'id_estado_moratorio' =>'1',              
-                                        ]);
-                                        log::info('estado: solvente');
-                                    }else{log::info('estado: Ya estaba en Solvente');}
-                            }else{
-                                    if($estado_moratorioM!=2){
-                                            MatriculasDetalle::where('id',$id_detalle)
-                                            ->update([
-                                                        'id_estado_moratorio' =>'2',              
-                                                    ]);
-                                                    log::info('estado: en mora');
-                                            }else{log::info('estado: Ya estaba en mora');}
-                                }
+                            }else{log::info('estado: Ya estaba en Solvente');}
+                    }else{
+                            if($estado_moratorioM!=2){
+                                    MatriculasDetalle::where('id',$id_detalle)
+                                    ->update([
+                                                'id_estado_moratorio' =>'2',              
+                                            ]);
+                                            log::info('estado: en mora');
+                                    }else{log::info('estado: Ya estaba en mora');}
                         }
+                
             }
         log::info($dato->id_matriculas_detalle);
         //*Fin si es Aparatos Parlantes
@@ -1056,6 +1071,7 @@ public function show($id)
                                                         'pase_cobro_mat',
                                                         'pase_matriculas',
                                                         'pase_recalificacion_mat',
+                                                        'estado_de_solvencia',
                                                  
 
                                                 ));
@@ -1394,65 +1410,65 @@ public function calculo_cobros_empresa(Request $request)
             $multaPagoExtemporaneoDollar="$".number_format($totalMultaPagoExtemporaneo, 2, '.', ',');
             $InteresTotalDollar="$".number_format($InteresTotal, 2, '.', ',');
            
-        //** Guardar cobro*/
-        if ($request->cobrar=='1')
-        {   
-            
-            $cobro = new cobros();
-            $cobro->id_empresa = $request->id;
-            $cobro->id_usuario =$idusuario;
-            $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
-            $cobro->impuesto_mora_32201 = $impuestos_mora;
-            $cobro->impuestos_11801 = $impuesto_año_actual;
-            $cobro->intereses_moratorios_15302 = $InteresTotal;
-            $cobro->monto_multa_balance_15313 = $monto_pago_multaBalance;
-            $cobro->monto_multaPE_15313 = $totalMultaPagoExtemporaneo;
-            $cobro->fondo_fiestasP_12114 = $fondoFPValor;
-            $cobro->pago_total = $totalPagoValor;
-            $cobro->fecha_cobro = $request->fecha_interesMoratorio;
-            $cobro->periodo_cobro_inicio = $InicioPeriodo;
-            $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
-            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
-            $cobro->tipo_cobro = 'impuesto';
-            $cobro->save();
+            //** Guardar cobro*/
+            if ($request->cobrar=='1')
+            {   
+                
+                $cobro = new cobros();
+                $cobro->id_empresa = $request->id;
+                $cobro->id_usuario =$idusuario;
+                $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
+                $cobro->impuesto_mora_32201 = $impuestos_mora;
+                $cobro->impuestos_11801 = $impuesto_año_actual;
+                $cobro->intereses_moratorios_15302 = $InteresTotal;
+                $cobro->monto_multa_balance_15313 = $monto_pago_multaBalance;
+                $cobro->monto_multaPE_15313 = $totalMultaPagoExtemporaneo;
+                $cobro->fondo_fiestasP_12114 = $fondoFPValor;
+                $cobro->pago_total = $totalPagoValor;
+                $cobro->fecha_cobro = $request->fecha_interesMoratorio;
+                $cobro->periodo_cobro_inicio = $InicioPeriodo;
+                $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
+                $cobro->cod_act_economica = $empresa->codigo_atc_economica;
+                $cobro->tipo_cobro = 'impuesto';
+                $cobro->save();
 
-                    if($monto_pago_multaBalance>0)
-                    {
-                        foreach($multasBalance as $dato){
-                            calificacion::where('id_empresa',$id)
-                            ->where('id_estado_multa','2')
-                            ->update([
-                                        'id_estado_multa' =>"1",              
-                                    ]);
+                        if($monto_pago_multaBalance>0)
+                        {
+                            foreach($multasBalance as $dato){
+                                calificacion::where('id_empresa',$id)
+                                ->where('id_estado_multa','2')
+                                ->update([
+                                            'id_estado_multa' =>"1",              
+                                        ]);
+
+                            }
 
                         }
 
-                    }
-
-            return ['success' => 2];
+                return ['success' => 2];
             
 
-        }else{
-                 return ['success' => 1,
-                    'InteresTotalDollar'=>$InteresTotalDollar,
-                    'impuestoTotal'=>$impuestoTotal,
-                    'impuestos_mora_Dollar'=>$impuestos_mora_Dollar,
-                    'impuesto_año_actual_Dollar'=>$impuesto_año_actual_Dollar,
-                    'Cantidad_MesesTotal'=>$Cantidad_MesesTotal,
-                    'nombre_empresa'=>$nombre_empresa,              
-                    'tarifa'=>$tarifa,
-                    'fondoFP'=>$fondoFP,
-                    'totalPago'=>$totalPago,
-                    'DiasinteresMoratorio'=>$DiasinteresMoratorio,
-                    'multas_balance'=>$monto_pago_multaDollar,
-                    'interes'=>$Tasainteres,
-                    'InicioPeriodo'=>$InicioPeriodo,
-                    'PagoUltimoDiaMes'=>$PagoUltimoDiaMes,
-                    'FechaDeInicioMoratorio'=> $FechaDeInicioMoratorio,
-                    'multaPagoExtemporaneoDollar'=> $multaPagoExtemporaneoDollar,
-                    'totalMultaPagoExtemporaneo'=>$totalMultaPagoExtemporaneo,
-                    ];
-            }
+                }else{
+                        return ['success' => 1,
+                            'InteresTotalDollar'=>$InteresTotalDollar,
+                            'impuestoTotal'=>$impuestoTotal,
+                            'impuestos_mora_Dollar'=>$impuestos_mora_Dollar,
+                            'impuesto_año_actual_Dollar'=>$impuesto_año_actual_Dollar,
+                            'Cantidad_MesesTotal'=>$Cantidad_MesesTotal,
+                            'nombre_empresa'=>$nombre_empresa,              
+                            'tarifa'=>$tarifa,
+                            'fondoFP'=>$fondoFP,
+                            'totalPago'=>$totalPago,
+                            'DiasinteresMoratorio'=>$DiasinteresMoratorio,
+                            'multas_balance'=>$monto_pago_multaDollar,
+                            'interes'=>$Tasainteres,
+                            'InicioPeriodo'=>$InicioPeriodo,
+                            'PagoUltimoDiaMes'=>$PagoUltimoDiaMes,
+                            'FechaDeInicioMoratorio'=> $FechaDeInicioMoratorio,
+                            'multaPagoExtemporaneoDollar'=> $multaPagoExtemporaneoDollar,
+                            'totalMultaPagoExtemporaneo'=>$totalMultaPagoExtemporaneo,
+                            ];
+                    }
         } //if principal
           else
                 {
@@ -1792,7 +1808,7 @@ public function cobros($id)
         $dato->pago_total=number_format((float)$dato->pago_total, 2, '.', ',');
         $dato->monto_multa_licencia_15313=number_format((float)$dato->monto_multa_licencia_15313, 2, '.', ',');
         $dato->monto_licencia_12207=number_format((float)$dato->monto_licencia_12207, 2, '.', ',');
-        //ukll
+       
     }
 
     $empresa= Empresas

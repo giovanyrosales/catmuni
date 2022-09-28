@@ -112,7 +112,11 @@
           <div class="card-header card-header-success">
             <h5 class="card-category-">
               <i class="fas fa-laptop-house"></i> &nbsp;Vista detallada de la empresa <span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span>&nbsp; 
-            
+              @if($estado_de_solvencia==0)
+              <img src="{{ asset('/images/solvente3.svg') }}"class="avatar">
+              @elseif($estado_de_solvencia==1)
+              <img src="{{ asset('/images/mora.svg') }}" class="avatar">
+              @endif
             </h5>
           </div>
       <!--body-->
@@ -401,7 +405,10 @@
                     <table class="table table-hover table-striped">
                     <form id="formulario-show">
                       <tbody>
-                      
+                      <a href="#">
+                          <img src="{{ asset('/img/empresa.png') }}" alt="Avatar" class="avatar">
+                          <h5 class="title mt-3"></h5>
+                        </a>
                         <tr>
                           <th>Nombre</th>
                           <td >{{$empresa->nombre}}</td>
@@ -498,7 +505,7 @@
 
           
                         <a href="#">
-                          <img src="{{ asset('/img/avatar4.png') }}" alt="Avatar" class="avatar">
+                          <img src="{{ asset('/img/inversor.png') }}" alt="Avatar" class="avatar">
                           <h5 class="title mt-3"></h5>
                         </a>
                         <p class="description">
@@ -555,7 +562,7 @@
               <div id="contenedor">
                   <input type="checkbox" id="btn-mas">
                           <div class="redes">
-                            @if($NoNotificar==1)
+                            @if($estado_de_solvencia==0)
                               <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa('{{$empresa->id}}')"></a>
                             @endif 
                             @if($pase_recalificacion_mat==1 or $detectorNull==1)
