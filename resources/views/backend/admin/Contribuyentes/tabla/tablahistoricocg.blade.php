@@ -8,9 +8,8 @@
                             <thead>
                                 <tr>    
                                     <th style="width: 15%;">N° resolución</th>
-                                    <th style="width: 20%;">Nombre</th>
-                                    <th style="width: 15%;">Fecha</th>
-                                    <th style="width: 15%;text-align: center;">Opciones</th>
+                                    <th style="width: 50%;">Nombre</th>
+                                    <th style="width: 25%;">Fecha</th>    
                             </tr>
                             </thead>
                             <tbody>
@@ -19,12 +18,7 @@
                                 <tr>
                                     <td>CS-{{$dato->num_resolucion}}-{{$dato->año}}</td>
                                     <td>{{$dato->contribuyente}}&nbsp;{{$dato->apellido}}</td>
-                                    <td>{{$dato->created_at}}</td>
-                                    <td style="text-align: center;">
-                                        <button type="button" class="btn btn-dark btn-xs" onclick="verContribuyentes( )" data-toggle="modal" >
-                                        <i class="fas fa-search" title="Ver Registro"></i>&nbsp; Ver 
-                                        </button>     
-                                    </td>
+                                    <td>{{$dato->fecha_registro}}</td>
                                 </tr>
 
                             @endforeach

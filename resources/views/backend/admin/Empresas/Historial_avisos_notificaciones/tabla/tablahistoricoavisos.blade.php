@@ -4,21 +4,25 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <table id="tablacs" class="table table-bordered table-striped">
+                    <h4>
+                        <img src="{{ asset('/img/historial_aviso.png') }}" style="width: 3%; height:3%;" >
+                        Historial de avisos generados
+                    </h4>
+                        <table id="tabla_avisos" class="table table-bordered table-striped">
                             <thead>
-                                <tr>    
-                                    <th style="width: 15%;">N° resolución</th>
-                                    <th style="width: 50%;">Nombre</th>
-                                    <th style="width: 25%;">Fecha</th>
+                                <tr>   
+                                    <th style="width: 10%;">N° tarjeta</th>
+                                    <th style="width: 50%;">Empresa</th>
+                                    <th style="width: 15%;">Fecha</th>
                             </tr>
                             </thead>
                             <tbody>
 
-                            @foreach($constancias_cs as $dato)
-                                <tr>
-                                    <td>CS-{{$dato->num_resolucion}}-{{$dato->año}}</td>
-                                    <td>{{$dato->contribuyente}}&nbsp;{{$dato->apellido}}</td>
-                                    <td>{{$dato->fecha_registro}}</td>        
+                            @foreach($historico_avisos as $dato)
+                                <tr> 
+                                    <td><span class="badge badge-dark">{{$dato->num_tarjeta}}</span></td>
+                                    <td>{{$dato->nombre}}</td>
+                                    <td>{{$dato->fecha_registro}}</td>                                  
                                 </tr>
 
                             @endforeach
@@ -36,7 +40,7 @@
 
 <script>
     $(function () {
-        $("#tablacs").DataTable({
+        $("#tabla_avisos").DataTable({
             "paging": true,
             "lengthChange": true,
             "searching": true,

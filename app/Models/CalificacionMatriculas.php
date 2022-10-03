@@ -13,6 +13,7 @@ class CalificacionMatriculas extends Model
           'id',
           'id_matriculas_detalle',
           'id_estado_matricula',
+          'id_giro_empresarial',
           'nombre_matricula',
           'cantidad',
           'fecha_calificacion',
@@ -27,7 +28,7 @@ class CalificacionMatriculas extends Model
           'estado_calificacion',
           'tipo_tarifa',
           'codigo_tarifa',
-          'giro_empresarial'
+
           
       ];
 }

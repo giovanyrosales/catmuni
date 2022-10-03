@@ -482,6 +482,7 @@ public function Registrar_calificacion_matriculas(Request $request){
             $dato = new CalificacionMatriculas();
             $dato->id_matriculas_detalle = $request->id_matriculadetalle;
             $dato->id_estado_matricula ='2';
+            $dato->id_giro_empresarial = $request->id_giro_empresarial;
             $dato->nombre_matricula = $matriculas->tipo_matricula;
             $dato->cantidad = $matriculas->cantidad;
             $dato->fecha_calificacion = $request->fecha_pres_balance;
@@ -496,7 +497,6 @@ public function Registrar_calificacion_matriculas(Request $request){
             $dato->estado_calificacion = $request->estado_calificacion;
             $dato->tipo_tarifa = 'Fija';
             $dato->codigo_tarifa = $matriculas->codigo_matricula;
-            $dato->giro_empresarial = $request->nombre_giro;
             $dato->save();
             if($dato->save())
             {
@@ -1189,7 +1189,7 @@ public function calculo_cobroMaquinas(Request $request){
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro', 'actividad_economica.codigo_atc_economica',
+    'actividad_economica.rubro',
      )
     ->find($id_empresa);
 

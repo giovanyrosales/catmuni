@@ -107,7 +107,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.historico.solvencias.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-history nav-icon"></i>
-                                <p>Historico Solvencias</p>
+                                <p>Histórico Solvencias</p>
                                 </a>
                             </li>
                         </ul>
@@ -134,6 +134,12 @@
                                     <p>Listar empresas</p>
                                 </a>
                                 </li>
+                                <li class="nav-item">
+                                <a href="{{ route('admin.historico.avisos.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-history nav-icon"></i>
+                                <p>Historial notificaciones</p>
+                                </a>
+                            </li>
                             </ul>
                 <!-- Finaliza Grupo Empresas -->
 

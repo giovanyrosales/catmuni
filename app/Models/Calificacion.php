@@ -15,6 +15,7 @@ class Calificacion extends Model
         'id_estado_licencia_licor',
         'id_multa',
         'id_estado_multa',
+        'id_giro_empresarial',
         'fecha_calificacion',
         'tipo_tarifa',    
         'estado_calificacion',
@@ -37,6 +38,6 @@ class Calificacion extends Model
         'total_impuesto_anual',
         'multa_balance',
         'codigo_tarifa',
-        'giro_empresarial'
+       
       ];
 }

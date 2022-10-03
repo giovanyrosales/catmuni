@@ -66,7 +66,8 @@ class ContribuyentesController extends Controller
 
         foreach($constancias_cs as $dato){
             $dato->año=carbon::parse($dato->created_at)->format('y');
-            log::info($dato->año);
+            $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));  
+    
         }
  
         return view('backend.admin.Contribuyentes.tabla.tablahistoricocs', compact('constancias_cs'));
@@ -91,7 +92,7 @@ class ContribuyentesController extends Controller
 
         foreach($constancias_cg as $dato){
             $dato->año=carbon::parse($dato->created_at)->format('y');
-            log::info($dato->año);
+            $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));
         }
  
         return view('backend.admin.Contribuyentes.tabla.tablahistoricocg', compact('constancias_cg'));

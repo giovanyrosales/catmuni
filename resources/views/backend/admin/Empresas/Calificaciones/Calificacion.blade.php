@@ -907,7 +907,7 @@ function calculo_calificacion_matricula()
                           <tr>
                           @if($MatriculasReg==0)
                             <td></td>
-                            <td></td>
+                            <td align="center">1</td>
                             <td><h6  id="licencia_imp"> </h6> <input type="hidden" class="form-control" required disabled  id="monto_pagar_licenciaValor_imp" > </td>
                             <td><h6  id="monto_pagar_matricula_imp"> </h6><input type="hidden"  disabled id="monto_pagar_matriculaValor_imp"></td>
                             <td><h6  id="pagolicenciaMatricula_imp"> </h6></h6><input type="hidden"  disabled id="pagolicenciaMatriculaValor_imp"></td>
@@ -1052,7 +1052,7 @@ function calculo_calificacion_matricula()
 
                       <tr>
                         <td align="center"><h6 name="actividad_economica" id="actividad_economica"> </h6></td>
-                        <td align="center">{{$empresa->codigo_act}}</td>
+                        <td align="center"><h6 id="giro_empresarial_codigo"></h6></td>
                         <td> </td>
                         <td><label>$<label name="ImpuestoMensualVariableDolar_imp" id="ImpuestoMensualVariableDolar_imp"></label></label></td>
                         <td><label>$<label name="ImpuestoAnualVariableDolar_imp" id="ImpuestoAnualVariableDolar_imp"></label></label></td>
@@ -1319,6 +1319,7 @@ function GenerarCalificacion(){
             var sel = document.getElementById("rubro");  
             var selected = sel.options[sel.selectedIndex];
             var rubro=selected.getAttribute('data-actividad');
+            var codigo_giro_empresarial=(document.getElementById('rubro').value);
 
             var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
             var activo_total=(document.getElementById('activo_total').value);
@@ -1365,7 +1366,8 @@ function GenerarCalificacion(){
             document.getElementById('actividad_economica').innerHTML=rubro; 
             document.getElementById('nombre_giro').value=rubro; 
             document.getElementById('nombre_giro_multas').innerHTML=rubro; 
-
+            document.getElementById('giro_empresarial_codigo').innerHTML=codigo_giro_empresarial;
+            
             $('#modalCalificacion').modal({backdrop: 'static', keyboard: false})
             //$('#modalCalificacion').modal('show');
         }
@@ -1382,7 +1384,7 @@ function Registrar_Calificacion_matricula(){
   var estado_calificacion = document.getElementById('estado_calificacion').value;
   var año_calificacion=(document.getElementById('año_calificacion').value);
   var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
-  var nombre_giro = document.getElementById('nombre_giro').value;
+  var id_giro_empresarial =document.getElementById('rubro').value;
 //ancla1
               
   var fondofp = document.getElementById('fondoFMValor_imp').value;
@@ -1397,7 +1399,7 @@ function Registrar_Calificacion_matricula(){
   formData.append('estado_calificacion', estado_calificacion);
   formData.append('año_calificacion', año_calificacion);
   formData.append('fecha_pres_balance', fecha_pres_balance)
-  formData.append('nombre_giro', nombre_giro);
+  formData.append('id_giro_empresarial', id_giro_empresarial);
 
   formData.append('fondofp', fondofp);
   formData.append('pago_anual', pago_anual);
@@ -1459,7 +1461,6 @@ function nuevo(){
   var deducciones = document.getElementById('deducciones').value;
   var activo_imponible = document.getElementById('act_imponibleValor_imp').value;
   var fondofp_licencia_permisos = document.getElementById('fondoFMValor_imp').value;
-  var nombre_giro = document.getElementById('nombre_giro').value;
 
   var tipo_tarifa = document.getElementById('tipo_tarifa').value;
   var id_empresa = document.getElementById('id_empresa').value;
@@ -1473,7 +1474,8 @@ function nuevo(){
   var total_impuesto = document.getElementById('Total_ImpuestoValor_imp').value;
   var pago_anual_permisos = document.getElementById('PagoAnualPermisos_imp').value;
   var multaBalance = document.getElementById('multaBalance_imp').innerHTML;
-
+  var id_giro_empresarial =document.getElementById('rubro').value;
+ 
   var codigo_tarifa = document.getElementById('codigoTarifa_imp').innerHTML;
   if(codigo_tarifa===''){
     codigo_tarifa='N/A'
@@ -1520,7 +1522,7 @@ function nuevo(){
   formData.append('pago_anual_permisos', pago_anual_permisos);
   formData.append('multaBalance', multaBalance);
   formData.append('codigo_tarifa', codigo_tarifa);
-  formData.append('nombre_giro', nombre_giro);
+  formData.append('id_giro_empresarial', id_giro_empresarial);
 
   formData.append('pago_anualvariable', pago_anualvariable);
   formData.append('fondo_mensualvariable', fondo_mensualvariable);

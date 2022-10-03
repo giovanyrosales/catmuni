@@ -115,7 +115,7 @@
               @if($estado_de_solvencia==0)
               <img src="{{ asset('/images/solvente3.svg') }}"class="avatar">
               @elseif($estado_de_solvencia==1)
-              <img src="{{ asset('/images/mora.svg') }}" class="avatar">
+              <img src="{{ asset('/images/mora2.svg') }}" class="avatar">
               @endif
             </h5>
           </div>
@@ -405,10 +405,22 @@
                     <table class="table table-hover table-striped">
                     <form id="formulario-show">
                       <tbody>
-                      <a href="#">
-                          <img src="{{ asset('/img/empresa.png') }}" alt="Avatar" class="avatar">
-                          <h5 class="title mt-3"></h5>
-                        </a>
+                      <tr>
+                          <th>
+                              <img src="{{ asset('/img/edificio.gif') }}" alt="Avatar" class="avatar">
+                          </th>
+                          <td >
+                              <a href="#">
+                                <h6>
+                                  @if($estado_de_solvencia==0)
+                                  <img src="{{ asset('/images/solvente3.svg') }}"class="avatar">Solvente
+                                  @elseif($estado_de_solvencia==1)
+                                  <img src="{{ asset('/images/mora2.svg') }}" class="avatar">En mora
+                                  @endif
+                                </h6>
+                              </a>
+                          </td>
+                        </tr>
                         <tr>
                           <th>Nombre</th>
                           <td >{{$empresa->nombre}}</td>
@@ -715,22 +727,73 @@ function matriculas(){
 
 
 function reporteAviso(id){
-  location.reload();
-  window.open("{{ URL::to('/admin/generar_aviso/pdf') }}/" + id );
- 
+  Swal.fire({
+                title: '¿Realmente desea generar un aviso para esta empresa?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Confirmar',
+           
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  location.reload();
+                  window.open("{{ URL::to('/admin/generar_aviso/pdf') }}/" + id );
+                  Swal.fire('Aviso generado con exito!', '', 'success')
+                }
+            });
+
+
 }
 
 function reporte_notificacion(id){
-    
-    var f1=(document.getElementById('f1').value);
+  Swal.fire({
+                title: '¿Realmente desea generar una notificación para esta empresa?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Confirmar',
+           
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  //location.reload();
+                  var f1=(document.getElementById('f1').value);
 
-    var f2=(document.getElementById('fechahoy').value);
+                  var f2=(document.getElementById('fechahoy').value);
 
-    var ti={{$Tasainteres}};
-    var f3=(document.getElementById('fechahoy').value);
+                  var ti="{{$Tasainteres}}";
+                  var f3=(document.getElementById('fechahoy').value);
+                  var id_giro_comercial="{{$id_giro_comercial}}";
 
+                  if(id_giro_comercial==='1'){
 
-  window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
+                    window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
+                  
+                  }else if(id_giro_comercial==='2'){
+                           
+                    toastr.danger('Notificación de Sinfonolas');
+                    return; 
+
+                  }else if(id_giro_comercial==='3'){
+
+                    toastr.warning('Notificación de Maquinas Electrónicas');
+                    window.open("{{ URL::to('/admin/generar_notificacion/maquinas/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id ); 
+                    
+                  }else if(id_giro_comercial==='4'){
+                           
+                    toastr.success('Notificación de Mesas de billar');
+                    return; 
+                    
+                  }else if(id_giro_comercial===5){
+                       
+                    toastr.secondary('Notificación de Aparatos Parlantes');
+                    return;  
+
+                  }
+                  
+
+                  Swal.fire('Notificación generada con exito!', '', 'success')
+                }
+            });
 
 }
 

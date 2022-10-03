@@ -75,13 +75,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                      <h5 class="modal-title"><i class="fas fa-history"></i>&nbsp;Histórico Solvencias.</span>
+                      <h5 class="modal-title"><i class="fas fa-history"></i>&nbsp;Historial de notificaciones</span>
                       </h5>
                     </div><!-- Col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Histórico solvencias.</li>
+                            <li class="breadcrumb-item active">Historial de notificaciones</li>
                         </ol>
                     </div><!-- /.col -->
             </div>
@@ -92,7 +92,7 @@
 <!--Inicia card-projectcard-project-->
 <div class="card card-projectcard-project" style="width: 98%; height:35%; margin: 0 auto; -webkit-border-radius: 5px 5px 5px 5px;border-radius: 5px 5px 5px 5px;">
       <div class="progress" style="margin: 0 auto;width: 100%;height:5px;">
-        <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar bg-primary" role="progressbar" style="width: 25%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         </div>
       </div>
   <div class="card-body">
@@ -101,29 +101,29 @@
                   
                         <div class="col-lg-3 col-6">
             
-                        <div class="small-box bg-warning">
+                        <div class="small-box bg-info">
                             <div class="inner" style="text-align: center;">
-                                <h3></h3>
-                                <p><b>Histórico Solvencias Simples</b></p>
+                                <h3><span class="badge badge-pill badge-light">{{$cantidad_avisos}}</span></h3>
+                                <p>Historial Avisos</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-person-add"><i class="fas fa-file-contract"></i></i>
+                                <i class="ion ion-person-add"><i class="fas fa-exclamation-circle "></i></i>
                             </div>
-                            <a onclick="cargar_historico_cs()" class="small-box-footer" style="cursor: pointer">Cargar <i class="fas fa-arrow-circle-down"></i></a>
+                            <a onclick="cargar_historico_avisos()" class="small-box-footer" style="cursor: pointer">Cargar <i class="fas fa-arrow-circle-down"></i></a>
                             </div>
                         </div>
             
                         <div class="col-lg-3 col-6" >
             
-                        <div class="small-box bg-success">
+                        <div class="small-box bg-primary">
                             <div class="inner" style="text-align: center;">
-                                <h3></h3>
-                                    <p><b>Histórico Solvencias Global</b></p>
+                                <h3><span class="badge badge-pill badge-light">{{$cantidad_notificaciones}}</span></h3>
+                                    <p>Historial Notificaciones</p>
                              </div>
                                 <div class="icon">
-                                    <i class="ion ion-pie-graph"><i class="fas fa-file-invoice"></i></i>
+                                    <i class="ion ion-pie-graph"><i class="fas fa-bell"></i></i>
                                 </div>
-                                <a onclick="cargar_historico_cg()" class="small-box-footer" style="cursor: pointer">Cargar <i class="fas fa-arrow-circle-down"></i></a>
+                                <a onclick="cargar_historico_notificaciones()" class="small-box-footer" style="cursor: pointer">Cargar <i class="fas fa-arrow-circle-down"></i></a>
                         </div>
                     </div>
                 </div>
@@ -133,22 +133,22 @@
  <!-- Finaliza Contenido card-project-->
 
 <!-- Inicia Contenido IMG-->
-    <div class="card" style="margin: 5 auto;width: 98%;" id="contenido_historico_solvencias">
+    <div class="card" style="margin: 5 auto;width: 98%;" id="contenido_historico_notificaciones">
       <div class="progress" style="margin: 0 auto;width: 100%;height:5px;">
         <div class="progress-bar bg-secondary" role="progressbar" style="width:10%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         </div>
       </div>
         <div class="card-body"  >
         <!-- Inicia contenido--> 
-
-        <img src="{{ asset('/img/constancias_historial.png') }}" id="img_solvente" style="display: block;margin: 0px auto;width: 30%; height:30%;" > 
-            <!-- Inclución de tabla -->
-            <div class="m-0 row justify-content-center" id="div_historico_cs">
-                    <div class="col-auto  p-5 text-center" id="tablahistoricocs"></div>
+        <!--<img src="{{ asset('/img/notificacion.gif') }}" id="img_notificacion" style="display: block;margin: 0px auto;width: 15%; height:15%;" >--> 
+        <img src="{{ asset('/img/notificacion.png') }}" id="img_notificacion" style="display: block;margin: 0px auto;width: 25%; height:25%;" > 
+        <!-- Inclución de tabla -->
+            <div class="m-0 row justify-content-center" id="div_historico_avisos">
+                    <div class="col-auto  p-5 text-center" id="tablahistoricoavisos"></div>
             </div>
             <!-- Inclución de tabla -->
-            <div class="m-0 row justify-content-center" id="div_historico_cg">
-                    <div class="col-auto  p-5 text-center" id="tablahistoricocg"></div>
+            <div class="m-0 row justify-content-center" id="div_historico_notificaciones">
+                    <div class="col-auto  p-5 text-center" id="tablahistoriconotificaciones"></div>
             </div>
 
 
@@ -211,23 +211,23 @@
 
 <script type="text/javascript">
 
-    function cargar_historico_cs()
+    function cargar_historico_avisos()
     { 
-        $('#div_historico_cs').show();
-        $('#div_historico_cg').hide();
-        $('#img_solvente').hide();
-        var ruta = "{{ url('/admin/contribuyentes/tabla/historicocs') }}";
-            $('#tablahistoricocs').load(ruta);
+        $('#div_historico_avisos').show();
+        $('#div_historico_notificaciones').hide();
+        $('#img_notificacion').hide();
+        var ruta = "{{ url('/admin/empresa/tabla/historico/avisos') }}";
+            $('#tablahistoricoavisos').load(ruta);
     }
 
     
-    function cargar_historico_cg()
+    function cargar_historico_notificaciones()
     {   
-        $('#div_historico_cs').hide();
-        $('#div_historico_cg').show();
-        $('#img_solvente').hide();
-        var ruta = "{{ url('/admin/contribuyentes/tabla/historicocg') }}";
-            $('#tablahistoricocg').load(ruta);
+        $('#div_historico_avisos').hide();
+        $('#div_historico_notificaciones').show();
+        $('#img_notificacion').hide();
+        var ruta = "{{ url('/admin/empresa/tabla/historico/notificaciones') }}";
+            $('#tablahistoriconotificaciones').load(ruta);
     }
 
 </script>

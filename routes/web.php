@@ -25,7 +25,7 @@ use App\Http\Controllers\Backend\Reportes\reportesBusesController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
 use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
-
+use App\Models\Empresas;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,7 +93,8 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::post('/admin/empresas/calificacion/asignar_anterior', [EmpresaController::class, 'asignar_anterior']);
     Route::post('/admin/empresas/llenar_detalle_matriculas', [EmpresaController::class, 'llenar_detalle_matriculas']);
     Route::post('/admin/empresa/buscar/act_especifica', [EmpresaController::class, 'buscarActividadEsp']);
-    
+    Route::get('/admin/empresa/historial/avisos_notificaciones', [EmpresaController::class,'historial_avisos_notificaciones'])->name('admin.historico.avisos.index');
+
     //OBLIGACIONES TRIBUTARIAS
     Route::get('/admin/nuevo/empresa/vista_cobro_general', [EmpresaController::class,'vista_cobro_general'])->name('admin.cobrar.empresa.index');
     Route::post('/admin/buscar/obligaciones_tributarias', [EmpresaController::class,'buscar_obligaciones_tributarias']);
@@ -277,6 +278,9 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']);
     Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso']);
     Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion']);
+    Route::get('/admin/generar_notificacion/maquinas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_maquinas']);
+
+    
     Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor']);
     Route::get('/admin/estado_cuenta_aparatos/pdf/{f1}/{f2}/{ap}/{id}', [reportesController::class, 'estado_cuenta_aparatos']);
     Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas']);
@@ -297,6 +301,9 @@ use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
     //REPORTE EMPRESAS
     Route::get('/admin/generar/solvencia/empresa/pdf/{id}', [reportesController::class, 'generar_solvencia_empresa']);
 
+    //AVISOS Y NOTIFICACIONES HISTORIAL
+    Route::get('/admin/empresa/tabla/historico/avisos', [EmpresaController::class,'tablahistoricoavisos']);
+    Route::get('/admin/empresa/tabla/historico/notificaciones', [EmpresaController::class,'tablahistoriconotificaciones']);
 
 
     //AVISOS Y NOTIFICACIONES DE MATRICULAS

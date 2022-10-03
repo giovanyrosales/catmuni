@@ -26,6 +26,7 @@ use App\Models\MatriculasDetalle;
 use App\Models\TarifaFija;
 use App\Models\TarifaVariable;
 use App\Models\MatriculasDetalleEspecifico;
+use App\Models\NotificacionesHistorico;
 use App\Models\Rotulos;
 use App\Models\Traspasos;
 use DateInterval;
@@ -574,7 +575,7 @@ public function Recalificacion($id)
                     
     ->select('matriculas_detalle.id', 'matriculas_detalle.cantidad','matriculas_detalle.monto','matriculas_detalle.pago_mensual',
             'empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-            'matriculas.nombre as tipo_matricula')
+            'matriculas.nombre as tipo_matricula','matriculas.codigo as codigo_matricula')
     ->where('id_empresa', "=", "$id")     
     ->first($id);
 
@@ -665,6 +666,8 @@ public function show($id)
     )
     ->find($id);    
 
+    $id_giro_comercial=$empresa->id_giro;
+    log::info('ID del giro comercial de la emppresa '.$empresa->nombre.' ID: '.$id_giro_comercial);
     $contribuyentes = Contribuyentes::All();
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
@@ -797,40 +800,7 @@ public function show($id)
                  }
          }
 
-        //ukll
-        log::info('|°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°|');
-        $f3=carbon::now()->format('Y-m-d');
-        $f1=Carbon::parse($ComprobandoPagoAlDia);
-        Log::info('f1 es el ultimo pago: '.$f1);
-        Log::info('f3 fecha actual: '.$f3);
 
-        //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
-        Log::info('UltimoDiaMes: '.$UltimoDiaMes);
-        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-        
-
-        $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
-        //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
-        Log::info('inicio Moratorio aqui: '.$FechaDeInicioMoratorio);
-
-        if($FechaDeInicioMoratorio->lt($f3)){
-                $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
-                Log::info('Cantidad de dias de insteres moratorio: '.$DiasinteresMoratorio);
-                Log::info('No entro al else');
-        }else{
-                $DiasinteresMoratorio=0;
-                Log::info('Cantidad de dias de interes moratorio: '.$DiasinteresMoratorio);
-                Log::info('Entro al else');
-             }
-
-    if($DiasinteresMoratorio>0)
-    {
-            $estado_de_solvencia=1;//Si es 1 esta en Mora
-            
-    }else{
-            $estado_de_solvencia=0;//Si es 0 esta Solvente
-         } 
     //** Comprobando si la empresa esta al dia con sus pagos de impuestos de empresa */
     if($ComprobandoPagoAlDia>=$fechahoy)
     {   
@@ -874,7 +844,16 @@ public function show($id)
 
     if( $ultimo_cobro==null)
     {
-        $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+        $ultimo_cobro = CobrosMatriculas::latest()
+        ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
+        ->first();
+        if( $ultimo_cobro==null)
+        {
+            $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+        }else{
+            $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
+        }
+        
     }else{
             $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
         }
@@ -928,8 +907,6 @@ public function show($id)
     {
 
         $id_detalle=$dato->id_matriculas_detalle;
-
-       
 
         $ComprobandoPagoAlDiaMatriculas=CobrosMatriculas::latest()
         ->where('id_matriculas_detalle',$id_detalle)
@@ -1029,6 +1006,65 @@ public function show($id)
 
     //**************************** FIN-SOLO PARA MATRÍCULAS ****************************/
 
+
+
+//******************* Determinando si una empresa esta en mora  *******************/
+
+        log::info('|°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°|');
+        $f3=carbon::now()->format('Y-m-d');
+        $f1=Carbon::parse($ComprobandoPagoAlDia);
+        Log::info('f1 es el ultimo pago: '.$f1);
+        Log::info('f3 fecha actual: '.$f3);
+
+        //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+        Log::info('UltimoDiaMes: '.$UltimoDiaMes);
+        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+
+
+        $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+        //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+        Log::info('inicio Moratorio aqui: '.$FechaDeInicioMoratorio);
+
+        if($FechaDeInicioMoratorio->lt($f3)){
+                $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+                Log::info('Cantidad de dias de insteres moratorio: '.$DiasinteresMoratorio);
+                Log::info('No entro al else');
+        }else{
+                $DiasinteresMoratorio=0;
+                Log::info('Cantidad de dias de interes moratorio: '.$DiasinteresMoratorio);
+                Log::info('Entro al else');
+            }
+
+         if($MatriculasReg===1){
+            Log::info('id empresa: '.$id);
+            $estado_matricula=MatriculasDetalle::where('id_empresa',$id)
+            ->pluck('id_estado_moratorio')
+            ->first();
+
+                if($estado_matricula===2){
+
+                        $estado_de_solvencia=1;//Si es 1 esta en Mora
+
+                }else{
+
+                        $estado_de_solvencia=0;//Si es 0 esta Solvente
+                    }
+              
+                    Log::info('Entro a matriculas y el estado de solvencia es: '.$estado_de_solvencia);
+         }else{
+                    if($DiasinteresMoratorio>0)
+                    {
+                        $estado_de_solvencia=1;//Si es 1 esta en Mora
+                        
+                    }else{
+                        $estado_de_solvencia=0;//Si es 0 esta Solvente
+                    } 
+                    Log::info('Era empresa y el estado de solvencia es: '.$estado_de_solvencia);
+              }
+
+//******************* FIN - Determinando si una empresa o matricula esta en mora  *******************/
+
    if ($calificaciones == null)
     { 
         $detectorNull=0;
@@ -1072,6 +1108,7 @@ public function show($id)
                                                         'pase_matriculas',
                                                         'pase_recalificacion_mat',
                                                         'estado_de_solvencia',
+                                                        'id_giro_comercial'
                                                  
 
                                                 ));
@@ -2750,6 +2787,7 @@ public function nuevaCalificacion(Request $request){
                 $dato->id_estado_licencia_licor ='2';
                 $dato->id_multa ='1';
                 $dato->id_estado_multa ='2';
+                $dato->id_giro_empresarial = $request->id_giro_empresarial;
                 $dato->fecha_calificacion = $request->fecha_calificacion;
                 $dato->tipo_tarifa = $request->tipo_tarifa;
                 $dato->estado_calificacion = $request->estado_calificacion;
@@ -2771,8 +2809,7 @@ public function nuevaCalificacion(Request $request){
                 $dato->total_impuesto = $request->total_impuesto;
                 $dato->total_impuesto_anual = $total_impuesto_anual;
                 $dato->multa_balance = $request->multaBalance;
-                $dato->codigo_tarifa = $request->codigo_tarifa;
-                $dato->giro_empresarial = $request->nombre_giro;
+                $dato->codigo_tarifa = $request->codigo_tarifa;               
                 $dato->save();
                 if($dato->save())
                         {
@@ -3073,5 +3110,57 @@ public function infoTraspaso(Request $request)
 
    }
 //Terminar llenar select
+
+
+public function historial_avisos_notificaciones()
+{
+    $cantidad_avisos=NotificacionesHistorico::where('id_alertas',1)
+    ->count();
+
+    $cantidad_notificaciones=NotificacionesHistorico::where('id_alertas',2)
+    ->count();
+    
+    return view('backend.admin.Empresas.Historial_avisos_notificaciones.Historial_avisos_notificaciones', compact('cantidad_avisos','cantidad_notificaciones'));
+}
+
+public function tablahistoricoavisos(){
+
+    $historico_avisos= NotificacionesHistorico::join('empresa','notificaciones_historico.id_empresa','=','empresa.id')
+    ->join('alertas','notificaciones_historico.id_alertas','=','alertas.id')
+
+    ->select('notificaciones_historico.id as id_notificaciones_historico','notificaciones_historico.created_at',
+    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'alertas.id as id_alertas','alertas.tipo_alerta',
+     )
+    ->where('id_alertas','1')
+    ->get();
+
+    foreach($historico_avisos as $dato){
+        $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));  
+    }
+
+    return view('backend.admin.Empresas.Historial_avisos_notificaciones.tabla.tablahistoricoavisos', compact('historico_avisos'));
+
+}
+
+public function tablahistoriconotificaciones(){
+
+    $historico_notificaciones= NotificacionesHistorico::join('empresa','notificaciones_historico.id_empresa','=','empresa.id')
+    ->join('alertas','notificaciones_historico.id_alertas','=','alertas.id')
+
+    ->select('notificaciones_historico.id as id_notificaciones_historico','notificaciones_historico.created_at',
+    'empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'alertas.id as id_alertas','alertas.tipo_alerta',
+     )
+    ->where('id_alertas','2')
+    ->get();
+
+    foreach($historico_notificaciones as $dato){
+        $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));  
+    }
+
+    return view('backend.admin.Empresas.Historial_avisos_notificaciones.tabla.tablahistoriconotificaciones', compact('historico_notificaciones'));
+
+}
 
 } //* Cierre final

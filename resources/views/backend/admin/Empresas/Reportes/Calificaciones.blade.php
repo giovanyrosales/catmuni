@@ -191,7 +191,7 @@
         </tr>
         <tr>
             <td id="uno"> GIRO ECONOMICO</td>
-            <td id="dos">{{$ultimaCalificacion->giro_empresarial}}</td>
+            <td id="dos">{{$giro_empresarial}}</td>
         </tr>
         <tr>
             <td id="uno">FECHA INICIO DE OPERACIONES</td>
@@ -226,10 +226,10 @@
                                 </tr>
                                 <tr>
                                     <td>-</td>
-                                    <td>-</td>
+                                    <td>1</td>
+                                    <td>${{$ultimaCalificacion->licencia}}</td>
                                     <td>$0.00</td>
-                                    <td>$0.00</td>
-                                    <td>$0.00</td>
+                                    <td>${{$ultimaCalificacion->total_mat_permisos}}</td>
                                 </tr>
                                 @else
                                 <tr>
@@ -386,8 +386,8 @@
                       </tr>
 
                       <tr>
-                        <td align="center">{{$ultimaCalificacion->giro_empresarial}}</td>
-                        <td align="center">{{$empresa->codigo}}</td>
+                        <td align="center">{{$giro_empresarial}}</td>
+                        <td align="center">{{$ultimaCalificacion->id_giro_empresarial}}</td>
                         <td> </td>
                         <td>${{$ultimaCalificacion->pago_mensual}}</td>
                         <td>${{$ultimaCalificacion->pago_anual}}</td>
@@ -421,7 +421,7 @@
                             <th scope="col">&nbsp;BASE LEGAL&nbsp;</th>
                         </tr>
                         <tr align="center">
-                            <td>{{$ultimaCalificacion->giro_empresarial}}</td>
+                            <td>{{$giro_empresarial}}</td>
                             <td>@if($detectorNull==1)
                                 ${{$ultimaCalificacion->multa_balance}}
                                 @else
