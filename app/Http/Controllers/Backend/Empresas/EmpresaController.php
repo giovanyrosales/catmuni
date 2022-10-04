@@ -3147,6 +3147,7 @@ public function tablahistoricoavisos(){
     'alertas.id as id_alertas','alertas.tipo_alerta',
      )
     ->where('id_alertas','1')
+    ->orderby('id','desc')
     ->get();
 
     foreach($historico_avisos as $dato){
@@ -3167,6 +3168,7 @@ public function tablahistoriconotificaciones(){
     'alertas.id as id_alertas','alertas.tipo_alerta',
      )
     ->where('id_alertas','2')
+    ->orderby('id','desc')
     ->get();
 
     foreach($historico_notificaciones as $dato){

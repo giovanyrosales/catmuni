@@ -3937,126 +3937,134 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
             $monto_pago_PmatriculaDollar="$".number_format($monto_pago_matricula, 2, '.', ','); 
             $multaDolarMaquinas="$".number_format($multa, 2, '.', ','); 
 
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
+        
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+        // mostrar errores
+        $mpdf->showImageErrors = false;
 
-    // mostrar errores
-    $mpdf->showImageErrors = false;
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
 
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-    $imgf1 = 'images/imgf1.png';
-    
-    
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
-
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
             </p>
-            </td>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
-            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align='right'>TASAS POR SERVICIO</td>
-            <td align='center'>$impuesto_año_actual_Dollar</td>
-        </tr>
-        <tr>
-            <td align='right'>TASAS POR SERVICIO MORA</td>
-            <td align='center'>$impuestos_mora_Dollar</td>
-        </tr>
-        <tr>
-            <td align='right'>INTERESES MORATORIOS</td>
-            <td align='center'>$InteresTotalDollar</td>
-        </tr>
-        <tr>
-            <td align='right'>MATRÍCULA</td>
-            <td align='center'>$monto_pago_PmatriculaDollar</td>
-        </tr>
-        <tr>
-            <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$fondoFP</td>
-        </tr>
-        <tr>
-            <td align='right'>MUL. MATRICULA</td>
-            <td align='center'>$multaDolarMaquinas</td>
-        </tr>
-        <tr>
-            <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$totalPagoMatriculasDollar</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                <p>
-                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
-                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
-                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
-                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
-                <br><br>
-                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
-   
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
+                </td>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
+            </tr>
+            <tr>
+                <td align='right'>TASAS POR SERVICIO</td>
+                <td align='center'>$impuesto_año_actual_Dollar</td>
+            </tr>
+            <tr>
+                <td align='right'>TASAS POR SERVICIO MORA</td>
+                <td align='center'>$impuestos_mora_Dollar</td>
+            </tr>
+            <tr>
+                <td align='right'>INTERESES MORATORIOS</td>
+                <td align='center'>$InteresTotalDollar</td>
+            </tr>
+            <tr>
+                <td align='right'>MATRÍCULA</td>
+                <td align='center'>$monto_pago_PmatriculaDollar</td>
+            </tr>
+            <tr>
+                <td align='right'>FONDO F. PATRONALES 5%</td>
+                <td align='center'>$fondoFP</td>
+            </tr>
+            <tr>
+                <td align='right'>MUL. MATRICULA</td>
+                <td align='center'>$multaDolarMaquinas</td>
+            </tr>
+            <tr>
+                <th scope='row'>TOTAL ADEUDADO</th>
+                <th align='center'>$totalPagoMatriculasDollar</th>
+            </tr>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                    <p>
+                    Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                    solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                    pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                    pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                    <br><br>
+                    Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                    </p>
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+    
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
-
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }//Fin If Dato->save
 }
 public function notificacion_mesas($f1,$f2,$ti,$f3,$id){
     log::info('f1: '.$f1);
@@ -4461,130 +4469,139 @@ public function notificacion_mesas($f1,$f2,$ti,$f3,$id){
             $totalPagoValor="$".number_format($totalPagoValor, 2, '.', ',');
 
    
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
 
     
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    // mostrar errores
-    $mpdf->showImageErrors = false;
+        // mostrar errores
+        $mpdf->showImageErrors = false;
 
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-    $imgf1 = 'images/imgf1.png';
-    
-    
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
 
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
             </p>
-            </td>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
-            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTO MORA</td>
-            <td align='center'>$impuestos_mora</td>
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTOS</td>
-            <td align='center'>$impuesto_año_actual</td>
-        </tr>
-        <tr>
-            <td align='right'>INTERESES MORATORIOS</td>
-            <td align='center'>$InteresTotal</td>
-        </tr>
-        <tr>
-            <td align='right'>MULTAS</td>
-            <td align='center'>$totalMultaPagoExtemporaneo</td>
-        </tr>
-        <tr>
-            <td align='right'>MATRÍCULA</td>
-            <td align='center'>$monto_pago_matricula</td>
-        </tr>
-        <tr>
-            <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$fondoFPValor</td>
-        </tr>
-        <tr>
-        <td align='right'>MUL. MATRICULA</td>
-        <td align='center'>$multa</td>
-        </tr>
-        <tr>
-            <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$totalPagoValor</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                <p>
-                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
-                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
-                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
-                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
-                <br><br>
-                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
-   
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
+                </td>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTO MORA</td>
+                <td align='center'>$impuestos_mora</td>
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTOS</td>
+                <td align='center'>$impuesto_año_actual</td>
+            </tr>
+            <tr>
+                <td align='right'>INTERESES MORATORIOS</td>
+                <td align='center'>$InteresTotal</td>
+            </tr>
+            <tr>
+                <td align='right'>MULTAS</td>
+                <td align='center'>$totalMultaPagoExtemporaneo</td>
+            </tr>
+            <tr>
+                <td align='right'>MATRÍCULA</td>
+                <td align='center'>$monto_pago_matricula</td>
+            </tr>
+            <tr>
+                <td align='right'>FONDO F. PATRONALES 5%</td>
+                <td align='center'>$fondoFPValor</td>
+            </tr>
+            <tr>
+            <td align='right'>MUL. MATRICULA</td>
+            <td align='center'>$multa</td>
+            </tr>
+            <tr>
+                <th scope='row'>TOTAL ADEUDADO</th>
+                <th align='center'>$totalPagoValor</th>
+            </tr>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                    <p>
+                    Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                    solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                    pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                    pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                    <br><br>
+                    Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                    </p>
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+    
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
-
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }//Fin If Dato->save
 }
 
 public function notificacion_aparatos($f1,$f2,$id){
@@ -4755,119 +4772,126 @@ public function notificacion_aparatos($f1,$f2,$id){
                 
         //** Finaliza calculo de cobro licencia licor **/
 
-    
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
-
-    // mostrar errores
-    $mpdf->showImageErrors = false;
-
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-    $imgf1 = 'images/imgf1.png';
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
     
     
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
+
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
             </p>
-            </td>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $PInicio&nbsp;</th>
-            <th scope='col'>&nbsp;&nbsp;hasta&nbsp;  $PFinal&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align='right'>LICENCIAS</td>
-            <td align='center'>$$monto_pago_matricula</td>
-        </tr>
-        <tr>
-            <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$$fondoFPValor</td>
-        </tr>
-        <tr>
-        <td align='right'>MULTAS POR LICENCIA</td>
-        <td align='center'>$$multa</td>
-        </tr>
-        <tr>
-            <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$$totalPagoValor</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                <p>
-                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
-                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
-                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
-                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
-                <br><br>
-                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
-   
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
+                </td>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $PInicio&nbsp;</th>
+                <th scope='col'>&nbsp;&nbsp;hasta&nbsp;  $PFinal&nbsp;</th>    
+            </tr>
+            <tr>
+                <td align='right'>LICENCIAS</td>
+                <td align='center'>$$monto_pago_matricula</td>
+            </tr>
+            <tr>
+                <td align='right'>FONDO F. PATRONALES 5%</td>
+                <td align='center'>$$fondoFPValor</td>
+            </tr>
+            <tr>
+            <td align='right'>MULTAS POR LICENCIA</td>
+            <td align='center'>$$multa</td>
+            </tr>
+            <tr>
+                <th scope='row'>TOTAL ADEUDADO</th>
+                <th align='center'>$$totalPagoValor</th>
+            </tr>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                    <p>
+                    Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                    solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                    pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                    pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                    <br><br>
+                    Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                    </p>
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+    
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
-
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }//Fin If Dato->save
 }
 
-public function notificacion_sinfonolas($f1,$f2,$f3,$id){
-    log::info('f1: '.$f1);
-    log::info('f2: '.$f2);
-    log::info('f3: '.$f3);
+public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
     $fechahoy=carbon::now()->format('d-m-Y');
 
@@ -4881,7 +4905,6 @@ public function notificacion_sinfonolas($f1,$f2,$f3,$id){
     $dia = $dias[(date('N', strtotime($fechaF))) - 1];
     /** FIN - Obtener la fecha y días en español y formato tradicional*/
 
-    $año=carbon::now()->format('y');
 
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -4899,60 +4922,21 @@ public function notificacion_sinfonolas($f1,$f2,$f3,$id){
     )
     ->find($id);
 
+    $f1_original=$f1;
+    $fechaPagaraSinfonolas=$f2;
+    $tasa_interes=$ti;
+    $fecha_interesMoratorio=Carbon::now()->format('Y-m-d');
+
     $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$id)
     ->pluck('id')
     ->first();
 
-    $f1_original=$f1;
-    $fechaPagaraMaquinas=$f2;
-    $id_matriculadetalleMesas=$id_matriculadetalle;
-
     $MesNumero=Carbon::createFromDate($f1)->format('d');
-    //log::info($MesNumero);
 
-    $MesNumero=Carbon::createFromDate($f1)->format('d');
-    //log::info($MesNumero);
-
-    if($MesNumero<='15')
-    {
-        $f1=Carbon::parse($f1)->format('Y-m-01');
-        $f1=Carbon::parse($f1);
-        $InicioPeriodo=Carbon::createFromDate($f1);
-        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        //log::info('inicio de mes');
-    }
-    else
-        {
-         $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
-        // log::info('fin de mes ');
-         }
-
-    
-    $f2=Carbon::parse($f2);
-    $f3=Carbon::parse($f3);
-    $añoActual=Carbon::now()->format('Y');
+    $id_matriculadetalleSinfonolas=$id_matriculadetalle;
    
-    //** Inicia - Para determinar el intervalo de años a pagar */
-    $monthInicio='01';
-    $dayInicio='01';
-    $monthFinal='12';
-    $dayFinal='31';
-    $AñoInicio=$f1->format('Y');
-    $AñoFinal=$f2->format('Y');
-    $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
-    $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
-    //** Finaliza - Para determinar el intervalo de años a pagar */
-
-    $MesNumero=Carbon::createFromDate($f1)->format('d');
-        $f1_original=$f1;
-        $fechaPagaraSinfonolas=$f2;
-        $id_matriculadetalleSinfonolas=$is;
-        $tasa_interes=$ti;
-        $fecha_interesMoratorio=Carbon::now()->format('Y-m-d');
-        $Message=0;
     
-        if($MesNumero<='15')
+    if($MesNumero<='15')
         {
             $f1=Carbon::parse($f1)->format('Y-m-01');
             $f1=Carbon::parse($f1);
@@ -5297,130 +5281,145 @@ public function notificacion_sinfonolas($f1,$f2,$f3,$id){
                 $totalPagoValor=number_format($totalPagoValor, 2, '.', ',');
 
  
-    
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
-
-    // mostrar errores
-    $mpdf->showImageErrors = false;
-
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-    $imgf1 = 'images/imgf1.png';
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
     
     
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
+
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
             </p>
-            </td>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
-            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTO MORA</td>
-            <td align='center'>$impuestos_mora</td>
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTOS</td>
-            <td align='center'>$impuesto_año_actual</td>
-        </tr>
-        <tr>
-            <td align='right'>INTERESES MORATORIOS</td>
-            <td align='center'>$InteresTotal</td>
-        </tr>
-        <tr>
-            <td align='right'>MULTAS</td>
-            <td align='center'>$totalMultaPagoExtemporaneo</td>
-        </tr>
-        <tr>
-            <td align='right'>MATRÍCULA</td>
-            <td align='center'>$monto_pago_matricula</td>
-        </tr>
-        <tr>
-            <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$fondoFPValor</td>
-        </tr>
-        <tr>
-        <td align='right'>MUL. MATRICULA</td>
-        <td align='center'>$multa</td>
-        </tr>
-        <tr>
-            <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$totalPagoValor</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                <p>
-                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
-                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
-                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
-                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
-                <br><br>
-                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
-   
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
+                </td>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTO MORA</td>
+                <td align='center'>$$impuestos_mora</td>
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTOS</td>
+                <td align='center'>$$impuesto_año_actual</td>
+            </tr>
+            <tr>
+                <td align='right'>INTERESES MORATORIOS</td>
+                <td align='center'>$$InteresTotal</td>
+            </tr>
+            <tr>
+                <td align='right'>MULTAS</td>
+                <td align='center'>$$totalMultaPagoExtemporaneo</td>
+            </tr>
+            <tr>
+                <td align='right'>MATRÍCULA</td>
+                <td align='center'>$$monto_pago_matricula</td>
+            </tr>
+            <tr>
+                <td align='right'>FONDO F. PATRONALES 5%</td>
+                <td align='center'>$$fondoFPValor</td>
+            </tr>
+            <tr>
+            <td align='right'>MUL. MATRICULA</td>
+            <td align='center'>$$multa</td>
+            </tr>
+            <tr>
+                <th scope='row'>TOTAL ADEUDADO</th>
+                <th align='center'>$$totalPagoValor</th>
+            </tr>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                    <p>
+                    Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                    solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                    pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                    pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                    <br><br>
+                    Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                    </p>
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+    
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+
+    }//Fin If Dato->save
 
 }
+
+
+
 
 //** Fin de reportes controller */    
 }

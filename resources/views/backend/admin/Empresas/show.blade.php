@@ -770,7 +770,7 @@ function reporte_notificacion(id){
                   
                   }else if(id_giro_comercial==='2'){
                     //Si es Sinfonolas   
-                    window.open("{{ URL::to('/admin/generar_notificacion/sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + f3 + "/" + id ); 
+                    window.open("{{ URL::to('/admin/generar_notificacion/sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id ); 
 
                   }else if(id_giro_comercial==='3'){
                     //Si es Maquinas Electronicas
