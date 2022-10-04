@@ -225,7 +225,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" onchange ="calculo({{$calificaciones->id}},0)"  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
+                        <input  type="date" onchange =""  class="form-control text-success" name="fecha_hasta_donde_pagara" id="fecha_hasta_donde_pagara" class="form-control" required >   
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -292,11 +292,14 @@
                           <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-calculator"></i></span>
                            </div>
+                           
                       </div>
                </div><!-- /.col-md-6 -->
-               <!-- /.form-group -->
-                              <!-- /.form-group -->
-                              <div class="col-md-6">
+                  <button type="button" class="btn btn-outline-danger btn-lg" onclick="calculo({{$calificaciones->id}},0)">
+                      <i class="fas fa-envelope-open-text"></i>
+                      &nbsp;Generar Cobro &nbsp;
+                  </button>
+                            <div class="col-md-6">                           
                   <div class="form-group">
                         <br>
                       
@@ -319,7 +322,7 @@
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
             <button type="submit" class="btn btn-outline-success btn-sm float-right" 
-            onclick="" id="estado_de_cuentabuses" >
+            onclick="reporte_buses({{$calificaciones->id}})" id="estado_de_cuentabuses" >
               <i class="fas fa-print"></i> Estado cuenta
             </button>    
          </div>
@@ -353,7 +356,7 @@
 
                           <tr>
                             <td class="table-light">TASAS POR SERVICIO MORA</td>
-                            <td class="table-light"></td>
+                            <td class="table-light">32201</td>
                             <td class="table-light"><h6 id="impuestos_mora_imp"></h6></td>
                           
                           </tr>
@@ -496,6 +499,22 @@
     }
 
         </script>
+
+        <script>
+          function reporte_buses(id)
+          {
+
+              var f1=(document.getElementById('ultimo_cobro').value);
+              var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
+              var ti=(document.getElementById('select_interes').value);
+              var f3=(document.getElementById('fecha_interes_moratorio').value);
+             
+
+              window.open("{{ URL::to('/admin/estado_cuenta/buses_detalle/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/"  + id );
+
+          }
+
+          </script>
 
 <style>
 @media screen 

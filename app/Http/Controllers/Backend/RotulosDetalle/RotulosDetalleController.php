@@ -171,75 +171,27 @@ class RotulosDetalleController extends Controller
 
     public function agregar_rotulos_detalle_especifico(Request $request)
     {
-       
-        for ($i = 0; $i < isset ($request->nombre) ? count($request->nombre) : 0; $i++){     
-
-            log::info($request->nombre);
-
-            if ($request->file('foto_rotulo')[$i]) {
-              Log::info('siii');
-            }else{
-                Log::info('nooo');
-            }
-
-
-        }
-        log::info('pppp');
-        return 99;
-
-
-
-
-
-
-
-
-
         $especificada="especificada";
-    
-
-        $regla = array(
-    
-            'id_rotulos_detalle' => 'required',            
-            
-        );
-        $validar = Validator::make($request->all(), $regla, 
        
-    
-    );
-       
-    if ($validar->fails()){
+        for ($i = 0; $i < count ($request->nombre) ; $i++){
 
-    return [
+            if (isset ($request->foto_rotulo[$i] )) {
+               
+                $cadena = Str::random(15);
+                $tiempo = microtime();
+                $union = $cadena.$tiempo;
+                $nombre = str_replace(' ', '_', $union);
+              
+                  
+                $extension = '.'.$request->foto_rotulo[$i];
+                $extension = '.'.$request->file('foto_rotulo')->getClientOriginalExtension();
+                $file = $nombre.strtolower($extension);
+                $avatar = $request->file('foto_rotulo');
+                $estado = Storage::disk('images')->put($file, \File::get($avatar));
+               
+             
 
-     'success'=> 0,
-
-    'message' => $validar->errors()->first()
-
-    ];
-    }
-
-    if ($request->file('foto_rotulo'))
-    {
-        
-            $cadena = Str::random(15);
-            $tiempo = microtime();
-            $union = $cadena.$tiempo;
-            $nombre = str_replace(' ', '_', $union);
-
-            $extension = '.'.$request->foto_rotulo->getClientOriginalExtension();
-            $nomImagen = $nombre.strtolower($extension);
-            $avatar = $request->file('foto_rotulo');
-            $estado = Storage::disk('archivos')->put($nomImagen, \File::get($avatar));
-
-            if($estado)
-            {
-
-    
-                for ($i = 0; $i < count($request->nombre); $i++) 
-                {      
-                    
-                    $Bd = new RotulosDetalleEspecifico();
+                    $Bd = new RotulosDetalleEspecifico();                 
                     $Bd->id_rotulos_detalle = $request->id_rotulos_detalle;               
                     $Bd->nombre = $request->nombre[$i];
                     $Bd->medidas = $request->medidas[$i];
@@ -248,23 +200,22 @@ class RotulosDetalleController extends Controller
                     $Bd->tarifa = $request->tarifa[$i];
                     $Bd->total_tarifa = $request->total_tarifa[$i];
                     $Bd->coordenadas_geo = $request->coordenadas_geo[$i];
-                    $Bd->foto_rotulo = $request->$nomImagen[$i];
+                    $Bd->foto_rotulo = $request->$file[$i];
+
                     
-                    $Bd->save();
-                
-                }   
-           
-            RotulosDetalle::where('id', $request->id_rotulos_detalle)
-            ->update([
-                        'estado_especificacion' =>$especificada,               
-                    ]);
+                       
+                    RotulosDetalle::where('id', $request->id_rotulos_detalle)
+                    ->update([
+                                'estado_especificacion' =>$especificada,               
+                            ]);
+                     
                     
-                
+             
                     return ['success' => 1];
-            }
-        }else
-            {
-                return ['success' => 2];
-            }        
+    
+            }else{return ['success' => 2];}
+          
+        }
+             
     } 
 }
