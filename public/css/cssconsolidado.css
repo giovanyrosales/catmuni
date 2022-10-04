@@ -1,16 +1,16 @@
 		#logo{
 			  float: left;
-			  height:60px; 
+			  height:60px;
 			  width:60px;
 			 }
 		#EscudoSV{
 			  float: right;
-			  height:60px; 
+			  height:60px;
 			  width:62px;
 			 }
 		#LeyT{
 			  width:650px;
-			  height:120px; 
+			  height:120px;
 			 }
 		#PLeyT{
 				 font-size:7;
@@ -38,13 +38,13 @@
         }
         header h2{
             margin: 0 0 10px 0;
-           
+
         }
         header h3{
             margin: 5px 0;
             color: #1E1E1E;
         }
-		
+
         header p{
             margin-left: 15px;
             display: block;
@@ -101,7 +101,7 @@
         }
 
         .content hr{
-             
+
              border: none;
              margin: 0;
              padding: 0;
@@ -155,8 +155,40 @@
         }
         #uno{
                 font-size: 10px;
-            
+
         }
         #dos{
                 font-size: 10px;
+        }
+
+
+        tablaFor {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 35px;
+            text-align: center;
+        }
+
+        #tablaFor td{
+            border: 1px solid #1E1E1E;
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #tablaFor th {
+            border: 1px solid #1E1E1E;
+            padding: 8px;
+            text-align: center;
+        }
+
+        #tablaFor th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            color: #1E1E1E;
+            text-align: left;
+            font-size: 14px;
         }

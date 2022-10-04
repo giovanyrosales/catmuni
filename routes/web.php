@@ -150,7 +150,7 @@ use App\Models\Empresas;
     Route::post('/admin/TarifaFija/editar', [TarifaFijaController::class, 'editarTarifaF']);
     Route::post('/admin/TarifaFija/eliminar', [TarifaFijaController::class, 'eliminarTarifaF']);
 
-    
+
     // --- LLENAR SELECT ACTIVIDAD ESPECIFICA EN EL FORM TARIFA FIJA
     Route::post('/admin/TarifaFija/buscar', [TarifaFijaController::class,'buscarActividadEsp'] );
 
@@ -206,13 +206,13 @@ use App\Models\Empresas;
     Route::post('/admin/matriculas_detalle_especifico/agregar', [MatriculasDetalleController::class,'agregar_matriculas_detalle_especifico']);
     Route::post('/admin/matriculas_detalle/especificar', [MatriculasDetalleController::class, 'especificarMatriculas']);
 
-    
+
     // --- RÓTULOS
-    Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');   
+    Route::get('/admin/nuevo/rotulos/Crear', [RotulosController::class,'crearRotulos'])->name('admin.crear.rotulos.index');
     Route::post('/admin/Rotulos/CrearRotulos', [RotulosController::class,'nuevoRotulo']);
     Route::get('/admin/Rotulos/tabla', [RotulosController::class,'tablaRotulos']);
     Route::get('/admin/Rotulos/Listar', [RotulosController::class,'listarRotulos'])->name('admin.listarRotulos.index');
-    Route::post('/admin/Rotulos/Ver', [RotulosController::class, 'informacionRotulo']); 
+    Route::post('/admin/Rotulos/Ver', [RotulosController::class, 'informacionRotulo']);
     Route::post('/admin/Rotulos/Editar', [RotulosController::class, 'editarRotulos']);
     Route::post('/admin/Rotulos/Borrar', [RotulosController::class, 'eliminarRotulo']);
     Route::get('/admin/Rotulos/vista/{rotulo}', [RotulosController::class, 'showRotulos']);
@@ -231,7 +231,7 @@ use App\Models\Empresas;
 
     Route::post('/admin/rotulos/buscarE', [RotulosController::class,'buscarEmpresa'] );
     Route::post('/admin/rotulos/buscar-traspaso', [RotulosController::class,'buscarEmpresaTraspaso'] );
-    
+
     //CIERRE Y TRASPASO DE RÓTULOS
     Route::post('/admin/rotulos/show/informacion', [RotulosController::class,'infoTraspasoR']);
     Route::get('/admin/rotulos/cierres_traspasos/{rotulo}', [RotulosController::class,'cierres_traspasosRotulo']);
@@ -239,7 +239,7 @@ use App\Models\Empresas;
     Route::post('/admin/rotulos/show/traspaso', [RotulosController::class,'nuevoTraspasoRotulo']);
 
     //BUSES
-    Route::get('/admin/nuevo/buses/Crear', [BusesDetalleController::class,'index'])->name('admin.crear.buses.index');   
+    Route::get('/admin/nuevo/buses/Crear', [BusesDetalleController::class,'index'])->name('admin.crear.buses.index');
     Route::post('/admin/buses/agregar', [BusesDetalleController::class,'nuevoBus']);
     Route::get('/admin/buses/tabla', [BusesDetalleController::class,'tablaBuses']);
     Route::get('/admin/buses/Listar', [BusesDetalleController::class,'listarBuses'])->name('admin.listarBuses.index');
@@ -280,7 +280,7 @@ use App\Models\Empresas;
     Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion']);
     Route::get('/admin/generar_notificacion/maquinas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_maquinas']);
 
-    
+
     Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor']);
     Route::get('/admin/estado_cuenta_aparatos/pdf/{f1}/{f2}/{ap}/{id}', [reportesController::class, 'estado_cuenta_aparatos']);
     Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas']);
@@ -293,7 +293,7 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
     Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
-    
+
     //REPORTES CONTRIBUYENTES
     Route::get('/admin/generar/solvencia/pdf/{id}', [reportesController::class, 'generar_solvencia']);
     Route::get('/admin/generar/constancia/simple/pdf/{id}', [reportesController::class, 'generar_constancia_simple']);
@@ -308,10 +308,18 @@ use App\Models\Empresas;
 
     //AVISOS Y NOTIFICACIONES DE MATRICULAS
 
+    // REPORTES
+    Route::get('/admin/reporte/actividad/economica/index', [reportesController::class, 'indexReporteActividadEconomica'])->name('admin.sidebar.reporte.actividad.economica');
+    Route::get('/admin/pdf/reporte/actividad/economica/{id}', [reportesController::class, 'pdfReporteActividadEconomica']);
+
+    Route::get('/admin/reporte/contribuyentes/index', [reportesController::class, 'indexReporteContribuyentes'])->name('admin.sidebar.reporte.contribuyentes');
+    Route::get('/admin/pdf/reporte/contribuyentes/{id}', [reportesController::class, 'pdfReporteContribuyentes']);
+
+
+
 
 
 
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
-   
