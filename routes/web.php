@@ -319,4 +319,4 @@ use App\Models\Empresas;
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
 
     //REPORTES BUSES
-    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{ib}/{id_contribuyente}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
+    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{f3}{id}/{id_buses}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
