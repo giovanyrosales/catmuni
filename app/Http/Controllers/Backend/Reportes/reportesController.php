@@ -3630,6 +3630,7 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
     ->pluck('id')
     ->first();
 
+    $f1_original=$f1;
     $fechaPagaraMaquinas=$f2;
     $id_matriculadetalleMaquinas=$id_matriculadetalle;
     $tasa_interes=$ti;
@@ -3642,15 +3643,15 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
     {
         $f1=Carbon::parse($f1)->format('Y-m-01');
         $f1=Carbon::parse($f1);
-        $InicioPeriodo=Carbon::createFromDate($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1_original);
         $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
         //log::info('inicio de mes');
     }
     else
         {
          $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-         $InicioPeriodo= $f1->format('Y-m-d');
-        log::info('f1: '.$f1);
+         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
+        log::info('f1_original: '.$f1_original);
         log::info('InicioPeriodo: '.$InicioPeriodo);
         log::info('fin de mes ');
          }
@@ -3951,8 +3952,14 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
 
     $logoalcaldia = 'images/logo.png';
     $logoelsalvador = 'images/EscudoSV.png';
+<<<<<<< HEAD
     $LeyT = 'images/LeyT.png';
 
+=======
+    $imgf1 = 'images/imgf1.png';
+    
+    
+>>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2
     $tabla = "<div class='content'>
                     <img id='logo' src='$logoalcaldia'>
                     <img id='EscudoSV' src='$logoelsalvador'>
@@ -3962,7 +3969,7 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
                     <hr>
             </div>";
 
-    $tabla .= "<table border='0' align='center' style='width: 650px;font-size:12px;'>
+    $tabla .= "<table border='0' align='center' style='width: 650px;'>
     <tr>
     <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
     </tr>
@@ -3972,17 +3979,18 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
     </td>
     </tr>
     <tr>
-    <td colspan='2'>
-    <p style='font-size:12'>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-        Dirección:&nbsp;$empresa->direccionCont<br>
-        Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-        Empresa o Negocio:&nbsp;$empresa->nombre</p>
+    <td colspan='2' style='font-size: 13;'>
+        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+            Dirección:&nbsp;$empresa->direccionCont<br>
+            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+            Empresa o Negocio:&nbsp;$empresa->nombre
+        </p>
         <br>
         Estimado(a) señor (a):
-        <p style='text-indent:20; font-size:11'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
             motivo de la presente es para manifestarle que su estado de cuenta en esta
             Municipalidad es el siguiente:</p>
-        <p style='font-size:11'>
+        <p>
         <br>
             <strong>Impuestos Municipales</strong><br>
             Validez: <strong><u>$FechaDelDia</u></strong><br>
@@ -3998,39 +4006,39 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
         </tr>
         <tr>
             <td align='right'>TASAS POR SERVICIO</td>
-            <td align='center'>$impuesto_año_actual</td>
+            <td align='center'>$impuesto_año_actual_Dollar</td>
         </tr>
         <tr>
             <td align='right'>TASAS POR SERVICIO MORA</td>
-            <td align='center'>$impuestos_mora</td>
+            <td align='center'>$impuestos_mora_Dollar</td>
         </tr>
         <tr>
             <td align='right'>INTERESES MORATORIOS</td>
-            <td align='center'>$InteresTotal</td>
+            <td align='center'>$InteresTotalDollar</td>
         </tr>
         <tr>
             <td align='right'>MATRÍCULA</td>
-            <td align='center'>$monto_pago_matricula</td>
+            <td align='center'>$monto_pago_PmatriculaDollar</td>
         </tr>
         <tr>
             <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$fondoFPValor</td>
+            <td align='center'>$fondoFP</td>
         </tr>
         <tr>
             <td align='right'>MUL. MATRICULA</td>
-            <td align='center'>$multa</td>
+            <td align='center'>$multaDolarMaquinas</td>
         </tr>
         <tr>
             <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$totalPagoValor</th>
+            <th align='center'>$totalPagoMatriculasDollar</th>
         </tr>
         <tr>
             <td><hr></td>
             <td><hr></td>
         </tr>
         <tr>
-            <td colspan='2'>
-                <p style='color: black; font-family: Arial; font-size: 10; text-align: justify; text-indent:20'>
+            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                <p>
                 Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
                 solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
                 pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
@@ -4041,8 +4049,537 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
             </td>
         </tr>
         <tr align='center'>
-            <td colspan='2'>
-            <img src='{{ asset('images/imgf1.png') }}' style='float: left' alt='' height='200px' width='600px'>
+            <td colspan='2' align='center'>
+                    
+                    <img id='imgf1' src='$imgf1'>
+            </td>
+        </tr>
+        </table>";
+   
+    $stylesheet = file_get_contents('css/cssconsolidado.css');
+    $mpdf->WriteHTML($stylesheet,1);
+    $mpdf->SetMargins(0, 0, 5);
+
+
+    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+    $mpdf->WriteHTML($tabla,2);
+    $mpdf->Output();
+
+}
+public function notificacion_mesas($f1,$f2,$ti,$f3,$id){
+    log::info('f1: '.$f1);
+    log::info('f2: '.$f2);
+    log::info('f3: '.$f3);
+
+    $fechahoy=carbon::now()->format('d-m-Y');
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse($fechahoy);
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+    $año=carbon::now()->format('y');
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+           
+            
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.num_resolucion',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'contribuyente.id as id_contribuyente',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro',
+    )
+    ->find($id);
+
+    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$id)
+    ->pluck('id')
+    ->first();
+
+    $f1_original=$f1;
+    $fechaPagaraMaquinas=$f2;
+    $id_matriculadetalleMesas=$id_matriculadetalle;
+    $tasa_interes=$ti;
+    $Message=0;
+
+    $MesNumero=Carbon::createFromDate($f1)->format('d');
+    //log::info($MesNumero);
+
+    $MesNumero=Carbon::createFromDate($f1)->format('d');
+    //log::info($MesNumero);
+
+    if($MesNumero<='15')
+    {
+        $f1=Carbon::parse($f1)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
+        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+        //log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
+        // log::info('fin de mes ');
+         }
+
+    
+    $f2=Carbon::parse($f2);
+    $f3=Carbon::parse($f3);
+    $añoActual=Carbon::now()->format('Y');
+   
+    //** Inicia - Para determinar el intervalo de años a pagar */
+    $monthInicio='01';
+    $dayInicio='01';
+    $monthFinal='12';
+    $dayFinal='31';
+    $AñoInicio=$f1->format('Y');
+    $AñoFinal=$f2->format('Y');
+    $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+    $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+    //** Finaliza - Para determinar el intervalo de años a pagar */
+
+ ///** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
+    $PagoUltimoDiaMes=Carbon::parse($f2)->endOfMonth()->format('Y-m-d');
+    //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+    Log::info('Pago ultimo dia del mes---->' .$PagoUltimoDiaMes);
+
+    //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+    $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+    Log::info('ultimo dia del mes---->' .$UltimoDiaMes);
+    $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+    Log::info($FechaDeInicioMoratorio);
+    
+    $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+    $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+    //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+    
+     Log::info($DiasinteresMoratorio);
+   
+     $calificacionesMesas = CalificacionMatriculas::latest()
+        
+     ->join('matriculas_detalle','calificacion_matriculas.id_matriculas_detalle','=','matriculas_detalle.id')
+     
+     ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion','calificacion_matriculas.id_estado_matricula',
+     'matriculas_detalle.id as id_matriculadetalle','matriculas_detalle.id_empresa',)
+ 
+     ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleMesas)
+     ->first();
+
+            $intervalo = DateInterval::createFromDateString('1 Year');
+            $periodo = new DatePeriod ($FechaInicio, $intervalo, $FechaFinal);
+
+            $Cantidad_MesesTotal=0;
+            $impuestoTotal=0;
+            $impuestos_mora=0;
+            $impuesto_año_actual=0;
+            $multaPagoExtemporaneo=0;
+         
+            $totalMultaPagoExtemporaneo=0;
+           
+            //** Inicia Foreach para cálculo de impuesto por años de la matricula mesas de billar */
+            foreach ($periodo as $dt) {
+
+                $AñoPago =$dt->format('Y');
+               
+                $AñoSumado=Carbon::createFromDate($AñoPago, 12, 31);
+
+                
+                $tarifa=CalificacionMatriculas::where('año_calificacion','=',$AñoPago)
+                ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleMesas)
+                    ->pluck('pago_mensual') 
+                        ->first();
+                
+         
+                        if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
+                            {
+                                $CantidadMeses=ceil(($f1->floatDiffInRealMonths($PagoUltimoDiaMes)));
+                            }
+                        else
+                            {
+
+                                $CantidadMeses=ceil(($f1->floatDiffInRealMonths($AñoSumado)));  
+                                $f1=$f1->addYears(1)->month(1)->day(1);
+   
+                            }
+
+                //*** calculo */
+       
+                $impuestosValor=(round($tarifa*$CantidadMeses,2));
+                $impuestoTotal=$impuestoTotal+$impuestosValor;
+                $Cantidad_MesesTotal=$Cantidad_MesesTotal+$CantidadMeses;
+
+                if($AñoPago==$AñoFinal and $AñoPago<$añoActual)
+                {
+                        $impuestos_mora=$impuestos_mora+$impuestosValor;
+                        $impuesto_año_actual=$impuesto_año_actual;
+                }
+                else if( $AñoPago==$AñoFinal and $AñoPago==$añoActual)
+                {
+                        $impuestos_mora=$impuestos_mora;
+                        $impuesto_año_actual=$impuesto_año_actual+$impuestosValor;
+                }else{
+                        $impuestos_mora=$impuestos_mora+$impuestosValor;
+                        $impuesto_año_actual=$impuesto_año_actual;
+                }
+
+                $linea="_____________________<<::>>";
+                $divisiondefila=".....................";
+   
+   
+
+                Log::info($AñoPago);
+                Log::info($CantidadMeses);
+                Log::info($tarifa);
+                Log::info($impuestosValor);
+                Log::info($impuestos_mora);
+                Log::info($impuesto_año_actual);
+                
+                Log::info($AñoSumado);
+                
+                Log::info($f2);
+                Log::info($divisiondefila);
+                
+                Log::info($linea);
+
+            }   //** Termina el foreach */
+
+            //** -------Inicia - Cálculo para multas por pago extemporaneo--------- */
+            /* -------------------------------------------------------------------
+               "Se determina una multa por día en mora, despues de haberse vencido 
+               la fecha de pago y una vez haya transcurrido 60 días despues del 
+               vencimiento de la fecha limite de pago".
+               ------------------------------------------------------------------*/
+               $TasaInteresDiaria=($tasa_interes/365);
+               $InteresTotal=0;
+               $MesDeMulta=Carbon::parse($FechaDeInicioMoratorio)->subDays(60);
+               $contador=0;
+               $fechaFinMeses=$f2->addMonthsNoOverflow(1);
+               $intervalo2 = DateInterval::createFromDateString('1 Month');
+               $periodo2 = new DatePeriod ($MesDeMulta, $intervalo2, $fechaFinMeses);
+                    
+               //** Inicia Foreach para cálculo por meses */
+                    foreach ($periodo2 as $dt) 
+                    {
+                       $contador=$contador+1;
+                       $divisiondefila=".....................";
+
+  
+                        $TarifaAñoMulta=Carbon::parse($MesDeMulta)->format('Y');
+                            $Date1=Carbon::parse($MesDeMulta)->day(1);
+                            $Date2=Carbon::parse($MesDeMulta)->endOfMonth();
+                            
+                            $MesDeMultaDiainicial=Carbon::parse($Date1)->format('Y-m-d'); 
+                            $MesDeMultaDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
+                            
+                
+                        $Fecha60Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(60); 
+                        Log::info($Fecha60Sumada);
+                        Log::info($f3);
+                        if($f3>$Fecha60Sumada){
+                        $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3)); //**le tenia floatdiffInDays y funcinona bien  */
+                        }else
+                        {
+                            $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));
+                            $CantidaDiasMesMulta=-$CantidaDiasMesMulta;
+                            
+                        }
+                        Log::info($CantidaDiasMesMulta);
+                        
+                        $tarifa=CalificacionMatriculas::where('año_calificacion','=',$AñoPago)
+                          ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleMesas)
+                              ->pluck('pago_mensual') 
+                                  ->first();
+
+                        $monto_matricula=CalificacionMatriculas::where('año_calificacion','=',$AñoPago)
+                          ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleMesas)
+                              ->pluck('monto_matricula') 
+                                  ->first();
+                    
+                    $MesDeMulta->addMonthsNoOverflow(1)->format('Y-M');
+  
+
+                   //** INICIO- Determinar multa por pago extemporaneo. */
+                   if($CantidaDiasMesMulta>0){                                                   
+                        if($CantidaDiasMesMulta<=90)
+                        {  
+                                    $multaPagoExtemporaneo=round(($tarifa*0.05),2);
+                                    $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;
+                                    $stop="Avanza:Multa";
+
+                        }elseif($CantidaDiasMesMulta>=90)
+                                {
+                                    $multaPagoExtemporaneo=round(($tarifa*0.10),2);
+                                    $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;  
+                                    $stop="Avanza:Multa";
+                                }
+
+                        //** INICIO-  Cálculando el interes. */
+                        $Interes=round((($TasaInteresDiaria*$CantidaDiasMesMulta)/100*$tarifa),2);
+                        $InteresTotal=$InteresTotal+$Interes;
+                        //** FIN-  Cálculando el interes. */
+
+
+                        
+                    }
+                    else
+                        { 
+                            $Interes=0;
+                            $InteresTotal=$InteresTotal;
+                            $multaPagoExtemporaneo=$multaPagoExtemporaneo;
+                            $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo;
+                            $stop="Alto:No multa";
+                        }
+                   //** FIN-  Determinar multa por pago extemporaneo. */
+
+                   
+                    Log::info($contador);
+                    Log::info($stop);
+                    Log::info($MesDeMultaDiainicial);                   
+                    Log::info($MesDeMultaDiaFinal); 
+                    Log::info($MesDeMulta);
+                    Log::info($multaPagoExtemporaneo);
+                    Log::info($totalMultaPagoExtemporaneo);
+                    Log::info($Interes);
+                    Log::info($InteresTotal);
+                    Log::info($divisiondefila);
+                    }//FIN - Foreach para meses multa
+                
+                 if($totalMultaPagoExtemporaneo>0 and $totalMultaPagoExtemporaneo<2.86)
+                 {
+                     $totalMultaPagoExtemporaneo=2.86;
+                 }
+
+             //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
+
+             $añoActual=carbon::now()->format('Y');
+             $fecha_limiteMesas=Carbon::createFromDate($añoActual,03, 31);
+             $fechahoy=carbon::now();
+
+                /** Calculando las licencias*/
+                $Cantidad_matriculas=0;
+                $monto_pago_matricula=0;
+                $multa=0;
+                $fila='------------------';
+                $fila2='_______________________';
+
+                //** Inicia Foreach para calcular matriculas y sus multas */
+                foreach ($periodo as $dt) {
+
+                 $AñoCancelar=$dt->format('Y');
+                
+                 $año_calificacion=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMesas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('año_calificacion')
+                 ->first();
+
+                 $id_estado_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMesas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('id_estado_matricula')
+                 ->first();
+
+                 $monto_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleMesas)
+                 ->where('año_calificacion',$AñoCancelar)
+                 ->pluck('monto_matricula')
+                 ->first();
+                 
+                 log::info($año_calificacion);
+                 log::info($id_estado_matricula);
+                 log::info($monto_matricula);
+                 log::info($fila);
+
+                if($id_estado_matricula=='2' and $año_calificacion<$añoActual)
+                {
+                         $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                         $Cantidad_matriculas=$Cantidad_matriculas+1;
+                         $multa= $multa+$monto_matricula;
+                         Log::info($monto_pago_matricula);
+                         Log::info($Cantidad_matriculas);
+                         Log::info($multa);
+                         Log::info('IF1- Con Multa');
+                         log::info($fila2);
+                }else if($id_estado_matricula=='2' and $año_calificacion===$añoActual)
+                {
+                    if($fechahoy>$fecha_limiteMesas)
+                    {
+
+                     $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                     $Cantidad_matriculas=$Cantidad_matriculas+1;
+                     $multa= $multa+$monto_matricula;
+                     Log::info($monto_pago_matricula);
+                     Log::info($Cantidad_matriculas);
+                     Log::info($multa);
+                     Log::info('IF2- Con Multa');
+                     log::info($fila2);
+
+                    }else 
+                         {
+                             $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                             $Cantidad_matriculas=$Cantidad_matriculas+1;
+                             $multa=$multa;
+                             Log::info($monto_pago_matricula);
+                             Log::info($Cantidad_matriculas);
+                             Log::info($multa);
+                             Log::info('IF3 - Sin Multa');
+                             log::info($fila2);
+                         } 
+                 }
+             } //** Finaliza foreach para calcular multa matricula y calculo de las matriculas */                                   
+          
+
+
+             Log::info($monto_pago_matricula);
+             Log::info($Cantidad_matriculas);
+
+            $fondoFPValor=round(($impuestoTotal*0.05)+($monto_pago_matricula*0.05),2);
+            $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$impuestoTotal+$totalMultaPagoExtemporaneo+$InteresTotal+$multa,2);
+            //Le agregamos su signo de dollar para la vista al usuario
+
+            $empresa= Empresas
+            ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+            ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+            ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+            ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+           
+            ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+            'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+            'estado_empresa.estado',
+            'giro_comercial.nombre_giro',
+            'actividad_economica.rubro',
+             )
+            ->find($id); 
+
+            //** Agregando formato de número */
+            $fondoFPValor="$".number_format($fondoFPValor, 2, '.', ',');
+            $impuestos_mora="$".number_format($impuestos_mora, 2, '.', ',');
+            $impuesto_año_actual="$".number_format($impuesto_año_actual, 2, '.', ',');
+            $totalMultaPagoExtemporaneo="$".number_format($totalMultaPagoExtemporaneo, 2, '.', ',');
+            $InteresTotal="$".number_format($InteresTotal, 2, '.', ',');
+            $multa="$".number_format($multa, 2, '.', ',');
+            $monto_pago_matricula="$".number_format($monto_pago_matricula, 2, '.', ',');
+            $totalPagoValor="$".number_format($totalPagoValor, 2, '.', ',');
+
+   
+
+    
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+    $imgf1 = 'images/imgf1.png';
+    
+    
+    $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+    $tabla .= "<table border='0' align='center' style='width: 650px;'>
+    <tr>
+    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+    </tr>
+    <tr>
+    <td align='right' colspan='2'>
+        <strong>Metapán, $FechaDelDia</strong>
+    </td>
+    </tr>
+    <tr>
+    <td colspan='2' style='font-size: 13;'>
+        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+            Dirección:&nbsp;$empresa->direccionCont<br>
+            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+            Empresa o Negocio:&nbsp;$empresa->nombre
+        </p>
+        <br>
+        Estimado(a) señor (a):
+        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+            motivo de la presente es para manifestarle que su estado de cuenta en esta
+            Municipalidad es el siguiente:</p>
+        <p>
+        <br>
+            <strong>Impuestos Municipales</strong><br>
+            Validez: <strong><u>$FechaDelDia</u></strong><br>
+            </p>
+            </td>
+        <tr>
+            <td><hr></td>
+            <td><hr></td>
+        </tr>
+        <tr>
+            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
+        </tr>
+        <tr>
+            <td align='right'>IMPUESTO MORA</td>
+            <td align='center'>$impuestos_mora</td>
+        </tr>
+        <tr>
+            <td align='right'>IMPUESTOS</td>
+            <td align='center'>$impuesto_año_actual</td>
+        </tr>
+        <tr>
+            <td align='right'>INTERESES MORATORIOS</td>
+            <td align='center'>$InteresTotal</td>
+        </tr>
+        <tr>
+            <td align='right'>MULTAS</td>
+            <td align='center'>$totalMultaPagoExtemporaneo</td>
+        </tr>
+        <tr>
+            <td align='right'>MATRÍCULA</td>
+            <td align='center'>$monto_pago_matricula</td>
+        </tr>
+        <tr>
+            <td align='right'>FONDO F. PATRONALES 5%</td>
+            <td align='center'>$fondoFPValor</td>
+        </tr>
+        <tr>
+        <td align='right'>MUL. MATRICULA</td>
+        <td align='center'>$multa</td>
+        </tr>
+        <tr>
+            <th scope='row'>TOTAL ADEUDADO</th>
+            <th align='center'>$totalPagoValor</th>
+        </tr>
+        <tr>
+            <td><hr></td>
+            <td><hr></td>
+        </tr>
+        <tr>
+            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                <p>
+                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                <br><br>
+                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                </p>
+            </td>
+        </tr>
+        <tr align='center'>
+            <td colspan='2' align='center'>
+                    
+                    <img id='imgf1' src='$imgf1'>
             </td>
         </tr>
         </table>";
@@ -4058,7 +4595,844 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
     $mpdf->Output();
 }
 
+<<<<<<< HEAD
     function indexReporteActividadEconomica(){
+=======
+public function notificacion_aparatos($f1,$f2,$id){
+    log::info('f1: '.$f1);
+    log::info('f2: '.$f2);
+
+    $fechahoy=carbon::now()->format('d-m-Y');
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse($fechahoy);
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+    $año=carbon::now()->format('y');
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+           
+            
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.num_resolucion',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'contribuyente.id as id_contribuyente',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro',
+    )
+    ->find($id);
+
+    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$id)
+    ->pluck('id')
+    ->first();
+
+    $f1_original=$f1;
+    $id_matriculadetalleAparatos=$id_matriculadetalle;
+
+
+    $MesNumero=Carbon::createFromDate($f1)->format('d');
+    //log::info($MesNumero);
+
+    if($MesNumero<='15')
+        {
+            $f1=Carbon::parse($f1)->format('Y-m-01');
+            $f1=Carbon::parse($f1);
+            $InicioPeriodo=Carbon::createFromDate($f1);
+            $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+            //log::info('inicio de mes');
+        }
+        else
+            {
+             $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
+             $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
+            // log::info('fin de mes ');
+             }
+    
+        
+        $f2=Carbon::parse($f2);
+        $f3=carbon::now();
+        $añoActual=Carbon::now()->format('Y');
+       
+        //** Inicia - Para determinar el intervalo de años a pagar */
+        $monthInicio='01';
+        $dayInicio='01';
+        $monthFinal='12';
+        $dayFinal='31';
+        $AñoInicio=$f1->format('Y');
+        $AñoFinal=$f2->format('Y');
+        $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+        $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+        $PInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio)->format('Y-m-d');
+        $PFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal)->format('Y-m-d');
+        log::info('fecha iniciooooo: '.$PInicio);
+        log::info('fecha finaaaaal: '.$PFinal);
+        //** Finaliza - Para determinar el intervalo de años a pagar */
+    
+
+    
+                    $añoActual=carbon::now()->format('Y');
+             
+                    $fecha_limite=Carbon::createFromDate($añoActual,03, 31);
+                    $fechahoy=carbon::now();
+                    //$fechahoy='2022-02-17';
+    
+                     $Cantidad_matriculas=0;
+                     $monto_pago_matricula=0;
+                     $multa=0;
+    
+                     $intervalo = DateInterval::createFromDateString('1 Year');
+                     $periodo = new DatePeriod ($FechaInicio, $intervalo, $FechaFinal);
+          
+                     $fila='------------------';
+                     $fila2='_______________________';
+                     foreach ($periodo as $dt) {
+                        $AñoPago =$dt->format('Y');
+                        $año_calificacion=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleAparatos)
+                        ->where('año_calificacion',$AñoPago)
+                        ->pluck('año_calificacion')
+                        ->first();
+    
+                        $id_estado_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleAparatos)
+                        ->where('año_calificacion',$AñoPago)
+                        ->pluck('id_estado_matricula')
+                        ->first();
+    
+                        $monto_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleAparatos)
+                        ->where('año_calificacion',$AñoPago)
+                        ->pluck('monto_matricula')
+                        ->first();
+                        
+                        log::info($año_calificacion);
+                        log::info($id_estado_matricula);
+                        log::info($monto_matricula);
+                        log::info($fila);
+    
+                       if($id_estado_matricula=='2' and $año_calificacion<$añoActual)
+                       {
+                                $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                                $Cantidad_matriculas=$Cantidad_matriculas+1;
+                                $multa= $multa+$monto_matricula;
+                                Log::info($monto_pago_matricula);
+                                Log::info($Cantidad_matriculas);
+                                Log::info($multa);
+                                Log::info('IF1- Con Multa');
+                                log::info($fila2);
+                       }else if($id_estado_matricula=='2' and $año_calificacion===$añoActual)
+                       {
+                           if($fechahoy>$fecha_limite)
+                           {
+    
+                            $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                            $Cantidad_matriculas=$Cantidad_matriculas+1;
+                            $multa= $multa+$monto_matricula;
+                            Log::info($monto_pago_matricula);
+                            Log::info($Cantidad_matriculas);
+                            Log::info($multa);
+                            Log::info('IF2- Con Multa');
+                            log::info($fila2);
+    
+                           }else 
+                                {
+                                    $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                                    $Cantidad_matriculas=$Cantidad_matriculas+1;
+                                    $multa=$multa;
+                                    Log::info($monto_pago_matricula);
+                                    Log::info($Cantidad_matriculas);
+                                    Log::info($multa);
+                                    Log::info('IF3 - Sin Multa');
+                                    log::info($fila2);
+                                }
+    
+                       }                                     
+                }//** Finaliza foreach -periodo- */
+                 //** Fin- Determinar si el permiso de una matricula ya fue pagada y Determinar multa  matricula */ 
+    
+                 Log::info($monto_pago_matricula);
+                 Log::info($Cantidad_matriculas);
+    
+                $fondoFPValor=round(($monto_pago_matricula*0.05),2);
+                $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$multa,2);
+
+                
+        //** Finaliza calculo de cobro licencia licor **/
+
+    
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+    $imgf1 = 'images/imgf1.png';
+    
+    
+    $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+    $tabla .= "<table border='0' align='center' style='width: 650px;'>
+    <tr>
+    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+    </tr>
+    <tr>
+    <td align='right' colspan='2'>
+        <strong>Metapán, $FechaDelDia</strong>
+    </td>
+    </tr>
+    <tr>
+    <td colspan='2' style='font-size: 13;'>
+        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+            Dirección:&nbsp;$empresa->direccionCont<br>
+            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+            Empresa o Negocio:&nbsp;$empresa->nombre
+        </p>
+        <br>
+        Estimado(a) señor (a):
+        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+            motivo de la presente es para manifestarle que su estado de cuenta en esta
+            Municipalidad es el siguiente:</p>
+        <p>
+        <br>
+            <strong>Impuestos Municipales</strong><br>
+            Validez: <strong><u>$FechaDelDia</u></strong><br>
+            </p>
+            </td>
+        <tr>
+            <td><hr></td>
+            <td><hr></td>
+        </tr>
+        <tr>
+            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $PInicio&nbsp;</th>
+            <th scope='col'>&nbsp;&nbsp;hasta&nbsp;  $PFinal&nbsp;</th>    
+        </tr>
+        <tr>
+            <td align='right'>LICENCIAS</td>
+            <td align='center'>$$monto_pago_matricula</td>
+        </tr>
+        <tr>
+            <td align='right'>FONDO F. PATRONALES 5%</td>
+            <td align='center'>$$fondoFPValor</td>
+        </tr>
+        <tr>
+        <td align='right'>MULTAS POR LICENCIA</td>
+        <td align='center'>$$multa</td>
+        </tr>
+        <tr>
+            <th scope='row'>TOTAL ADEUDADO</th>
+            <th align='center'>$$totalPagoValor</th>
+        </tr>
+        <tr>
+            <td><hr></td>
+            <td><hr></td>
+        </tr>
+        <tr>
+            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                <p>
+                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                <br><br>
+                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                </p>
+            </td>
+        </tr>
+        <tr align='center'>
+            <td colspan='2' align='center'>
+                    
+                    <img id='imgf1' src='$imgf1'>
+            </td>
+        </tr>
+        </table>";
+   
+    $stylesheet = file_get_contents('css/cssconsolidado.css');
+    $mpdf->WriteHTML($stylesheet,1);
+    $mpdf->SetMargins(0, 0, 5);
+
+
+    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+    $mpdf->WriteHTML($tabla,2);
+    $mpdf->Output();
+
+}
+
+public function notificacion_sinfonolas($f1,$f2,$f3,$id){
+    log::info('f1: '.$f1);
+    log::info('f2: '.$f2);
+    log::info('f3: '.$f3);
+
+    $fechahoy=carbon::now()->format('d-m-Y');
+
+    /** Obtener la fecha y días en español y formato tradicional*/
+    $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $fechaF = Carbon::parse($fechahoy);
+    $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+    $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+    $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+    $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+    /** FIN - Obtener la fecha y días en español y formato tradicional*/
+
+    $año=carbon::now()->format('y');
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+           
+            
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.num_resolucion',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'contribuyente.id as id_contribuyente',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro',
+    )
+    ->find($id);
+
+    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$id)
+    ->pluck('id')
+    ->first();
+
+    $f1_original=$f1;
+    $fechaPagaraMaquinas=$f2;
+    $id_matriculadetalleMesas=$id_matriculadetalle;
+
+    $MesNumero=Carbon::createFromDate($f1)->format('d');
+    //log::info($MesNumero);
+
+    $MesNumero=Carbon::createFromDate($f1)->format('d');
+    //log::info($MesNumero);
+
+    if($MesNumero<='15')
+    {
+        $f1=Carbon::parse($f1)->format('Y-m-01');
+        $f1=Carbon::parse($f1);
+        $InicioPeriodo=Carbon::createFromDate($f1);
+        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+        //log::info('inicio de mes');
+    }
+    else
+        {
+         $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
+         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
+        // log::info('fin de mes ');
+         }
+
+    
+    $f2=Carbon::parse($f2);
+    $f3=Carbon::parse($f3);
+    $añoActual=Carbon::now()->format('Y');
+   
+    //** Inicia - Para determinar el intervalo de años a pagar */
+    $monthInicio='01';
+    $dayInicio='01';
+    $monthFinal='12';
+    $dayFinal='31';
+    $AñoInicio=$f1->format('Y');
+    $AñoFinal=$f2->format('Y');
+    $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+    $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+    //** Finaliza - Para determinar el intervalo de años a pagar */
+
+    $MesNumero=Carbon::createFromDate($f1)->format('d');
+        $f1_original=$f1;
+        $fechaPagaraSinfonolas=$f2;
+        $id_matriculadetalleSinfonolas=$is;
+        $tasa_interes=$ti;
+        $fecha_interesMoratorio=Carbon::now()->format('Y-m-d');
+        $Message=0;
+    
+        if($MesNumero<='15')
+        {
+            $f1=Carbon::parse($f1)->format('Y-m-01');
+            $f1=Carbon::parse($f1);
+            $InicioPeriodo=Carbon::createFromDate($f1);
+            $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+            log::info('inicio de mes');
+        }
+        else
+            {
+             $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
+             $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
+            log::info('fin de mes ');
+             }
+        $f2=Carbon::parse($f2);
+        $f3=Carbon::parse($fecha_interesMoratorio);
+        $añoActual=Carbon::now()->format('Y');
+       
+        //** Inicia - Para determinar el intervalo de años a pagar */
+        $monthInicio='01';
+        $dayInicio='01';
+        $monthFinal='12';
+        $dayFinal='31';
+        $AñoInicio=$f1->format('Y');
+        $AñoFinal=$f2->format('Y');
+        $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+        $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+        //** Finaliza - Para determinar el intervalo de años a pagar */
+    
+     
+        //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
+        $PagoUltimoDiaMes=Carbon::parse($fechaPagaraSinfonolas)->endOfMonth()->format('Y-m-d');
+        //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+    
+         //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+         $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+         $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+    
+         Log::info($FechaDeInicioMoratorio);
+         $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+         $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+         //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+         Log::info($DiasinteresMoratorio);
+       
+         $calificacionesSinfonolas = CalificacionMatriculas::latest()
+            
+         ->join('matriculas_detalle','calificacion_matriculas.id_matriculas_detalle','=','matriculas_detalle.id')
+         
+         ->select('calificacion_matriculas.id','calificacion_matriculas.nombre_matricula','calificacion_matriculas.cantidad','calificacion_matriculas.monto_matricula','calificacion_matriculas.pago_mensual','calificacion_matriculas.año_calificacion','calificacion_matriculas.estado_calificacion','calificacion_matriculas.id_estado_matricula',
+         'matriculas_detalle.id as id_matriculadetalle','matriculas_detalle.id_empresa',)
+     
+         ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+         ->first();
+    
+
+    
+                $intervalo = DateInterval::createFromDateString('1 Year');
+                $periodo = new DatePeriod ($FechaInicio, $intervalo, $FechaFinal);
+    
+                $Cantidad_MesesTotal=0;
+                $impuestoTotal=0;
+                $impuestos_mora=0;
+                $impuesto_año_actual=0;
+                $multaPagoExtemporaneo=0;
+             
+                $totalMultaPagoExtemporaneo=0;
+               
+                //** Inicia Foreach para cálculo de impuesto por años de la matricula mesas de billar */
+                foreach ($periodo as $dt) {
+    
+                    $AñoPago =$dt->format('Y');
+                   
+                    $AñoSumado=Carbon::createFromDate($AñoPago, 12, 31);
+    
+                    
+                    $tarifa=CalificacionMatriculas::where('año_calificacion','=',$AñoPago)
+                    ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                        ->pluck('pago_mensual') 
+                            ->first();
+                    
+             
+                            if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
+                                {
+                                    $CantidadMeses=ceil(($f1->floatDiffInRealMonths($PagoUltimoDiaMes)));
+                                }
+                            else
+                                {
+    
+                                    $CantidadMeses=ceil(($f1->floatDiffInRealMonths($AñoSumado)));  
+                                    $f1=$f1->addYears(1)->month(1)->day(1);
+       
+                                }
+    
+                    //*** calculo */
+           
+                    $impuestosValor=(round($tarifa*$CantidadMeses,2));
+                    $impuestoTotal=$impuestoTotal+$impuestosValor;
+                    $Cantidad_MesesTotal=$Cantidad_MesesTotal+$CantidadMeses;
+    
+                    if($AñoPago==$AñoFinal and $AñoPago<$añoActual)
+                    {
+                            $impuestos_mora=$impuestos_mora+$impuestosValor;
+                            $impuesto_año_actual=$impuesto_año_actual;
+                    }
+                    else if( $AñoPago==$AñoFinal and $AñoPago==$añoActual)
+                    {
+                            $impuestos_mora=$impuestos_mora;
+                            $impuesto_año_actual=$impuesto_año_actual+$impuestosValor;
+                    }else{
+                            $impuestos_mora=$impuestos_mora+$impuestosValor;
+                            $impuesto_año_actual=$impuesto_año_actual;
+                    }
+    
+                    $linea="_____________________<<::>>";
+                    $divisiondefila=".....................";
+       
+       
+    
+                    Log::info($AñoPago);
+                    Log::info($CantidadMeses);
+                    Log::info($tarifa);
+                    Log::info($impuestosValor);
+                    Log::info($impuestos_mora);
+                    Log::info($impuesto_año_actual);
+                    
+                    Log::info($AñoSumado);
+                    
+                    Log::info($f2);
+                    Log::info($divisiondefila);
+                    
+                    Log::info($linea);
+    
+                }   //** Termina el foreach */
+    
+                //** -------Inicia - Cálculo para multas por pago extemporaneo--------- */
+                /* -------------------------------------------------------------------
+                   "Se determina una multa por día en mora, despues de haberse vencido 
+                   la fecha de pago y una vez haya transcurrido 60 días despues del 
+                   vencimiento de la fecha limite de pago".
+                   ------------------------------------------------------------------*/
+                   $TasaInteresDiaria=($tasa_interes/365);
+                   $InteresTotal=0;
+                   $MesDeMulta=Carbon::parse($FechaDeInicioMoratorio)->subDays(60);
+                   $contador=0;
+                   $fechaFinMeses=$f2->addMonthsNoOverflow(1);
+                   $intervalo2 = DateInterval::createFromDateString('1 Month');
+                   $periodo2 = new DatePeriod ($MesDeMulta, $intervalo2, $fechaFinMeses);
+                        
+                   //** Inicia Foreach para cálculo de multas por por pago extemporaneos e interese moratorios */
+                        foreach ($periodo2 as $dt) 
+                        {
+                           $contador=$contador+1;
+                           $divisiondefila=".....................";
+    
+      
+                            $TarifaAñoMulta=Carbon::parse($MesDeMulta)->format('Y');
+                                $Date1=Carbon::parse($MesDeMulta)->day(1);
+                                $Date2=Carbon::parse($MesDeMulta)->endOfMonth();
+                                
+                                $MesDeMultaDiainicial=Carbon::parse($Date1)->format('Y-m-d'); 
+                                $MesDeMultaDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
+                                
+                    
+                            $Fecha60Sumada=Carbon::parse($MesDeMultaDiaFinal)->addDays(60); 
+                            Log::info($Fecha60Sumada);
+                            Log::info($f3);
+                            if($f3>$Fecha60Sumada){
+                            $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3)); //**le tenia floatdiffInDays y funcinona bien  */
+                            }else
+                            {
+                                $CantidaDiasMesMulta=ceil($Fecha60Sumada->diffInDays($f3));
+                                $CantidaDiasMesMulta=-$CantidaDiasMesMulta;
+                                
+                            }
+                            Log::info($CantidaDiasMesMulta);
+                            
+                            $tarifa=CalificacionMatriculas::where('año_calificacion','=',$AñoPago)
+                              ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                                  ->pluck('pago_mensual') 
+                                      ->first();
+    
+                            $monto_Sinfonolas=CalificacionMatriculas::where('año_calificacion','=',$AñoPago)
+                              ->where('calificacion_matriculas.id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                                  ->pluck('monto_matricula') 
+                                      ->first();
+                        
+                        $MesDeMulta->addMonthsNoOverflow(1)->format('Y-M');
+      
+    
+                       //** INICIO- Determinar multa por pago extemporaneo. */
+                       if($CantidaDiasMesMulta>0){                                                   
+                            if($CantidaDiasMesMulta<=90)
+                            {  
+                                        $multaPagoExtemporaneo=round(($tarifa*0.05),2);
+                                        $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;
+                                        $stop="Avanza:Multa";
+    
+                            }elseif($CantidaDiasMesMulta>=90)
+                                    {
+                                        $multaPagoExtemporaneo=round(($tarifa*0.10),2);
+                                        $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo+$multaPagoExtemporaneo;  
+                                        $stop="Avanza:Multa";
+                                    }
+    
+                            //** INICIO-  Cálculando el interes. */
+                            $Interes=round((($TasaInteresDiaria*$CantidaDiasMesMulta)/100*$tarifa),2);
+                            $InteresTotal=$InteresTotal+$Interes;
+                            //** FIN-  Cálculando el interes. */
+    
+    
+                            
+                        }
+                        else
+                            { 
+                                $Interes=0;
+                                $InteresTotal=$InteresTotal;
+                                $multaPagoExtemporaneo=$multaPagoExtemporaneo;
+                                $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo;
+                                $stop="Alto:No multa";
+                            }
+                       //** FIN-  Determinar multa por pago extemporaneo. */
+    
+                       
+                        Log::info($contador);
+                        Log::info($stop);
+                        Log::info($MesDeMultaDiainicial);                   
+                        Log::info($MesDeMultaDiaFinal); 
+                        Log::info($MesDeMulta);
+                        Log::info($multaPagoExtemporaneo);
+                        Log::info($totalMultaPagoExtemporaneo);
+                        Log::info($Interes);
+                        Log::info($InteresTotal);
+                        Log::info($divisiondefila);
+                        }//FIN - Foreach para meses multa
+                    
+                     if($totalMultaPagoExtemporaneo>0 and $totalMultaPagoExtemporaneo<2.86)
+                     {
+                         $totalMultaPagoExtemporaneo=2.86;
+                     }
+    
+                 //** Para determinar si el permiso de una matricula ya fue pagada y Determinar multa por permiso matricula */ */
+    
+                    $añoActual=carbon::now()->format('Y');
+                    $fecha_limiteSinfonolas=Carbon::createFromDate($añoActual,03, 31);
+                    $fechahoy=carbon::now();
+    
+                       /** Calculando las licencias*/
+                       $Cantidad_matriculas=0;
+                       $monto_pago_matricula=0;
+                       $multa=0;
+                       $fila='------------------';
+                       $fila2='_______________________';
+    
+                       //** Inicia Foreach para calcular matriculas y sus multas */
+                       foreach ($periodo as $dt) {
+    
+                        $AñoCancelar=$dt->format('Y');
+                       
+                        $año_calificacion=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                        ->where('año_calificacion',$AñoCancelar)
+                        ->pluck('año_calificacion')
+                        ->first();
+    
+                        $id_estado_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                        ->where('año_calificacion',$AñoCancelar)
+                        ->pluck('id_estado_matricula')
+                        ->first();
+    
+                        $monto_matricula=CalificacionMatriculas::where('id_matriculas_detalle',$id_matriculadetalleSinfonolas)
+                        ->where('año_calificacion',$AñoCancelar)
+                        ->pluck('monto_matricula')
+                        ->first();
+                        
+                        log::info($año_calificacion);
+                        log::info($id_estado_matricula);
+                        log::info($monto_matricula);
+                        log::info($fila);
+    
+                       if($id_estado_matricula=='2' and $año_calificacion<$añoActual)
+                       {
+                                $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                                $Cantidad_matriculas=$Cantidad_matriculas+1;
+                                $multa= $multa+$monto_matricula;
+                                Log::info($monto_pago_matricula);
+                                Log::info($Cantidad_matriculas);
+                                Log::info($multa);
+                                Log::info('IF1- Con Multa');
+                                log::info($fila2);
+                       }else if($id_estado_matricula=='2' and $año_calificacion===$añoActual)
+                       {
+                           if($fechahoy>$fecha_limiteSinfonolas)
+                           {
+    
+                            $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                            $Cantidad_matriculas=$Cantidad_matriculas+1;
+                            $multa= $multa+$monto_matricula;
+                            Log::info($monto_pago_matricula);
+                            Log::info($Cantidad_matriculas);
+                            Log::info($multa);
+                            Log::info('IF2- Con Multa');
+                            log::info($fila2);
+    
+                           }else 
+                                {
+                                    $monto_pago_matricula= $monto_pago_matricula+$monto_matricula;
+                                    $Cantidad_matriculas=$Cantidad_matriculas+1;
+                                    $multa=$multa;
+                                    Log::info($monto_pago_matricula);
+                                    Log::info($Cantidad_matriculas);
+                                    Log::info($multa);
+                                    Log::info('IF3 - Sin Multa');
+                                    log::info($fila2);
+                                } 
+                        }
+                    } //** Finaliza foreach para calcular multa matricula y calculo de las matriculas */                                   
+
+    
+                $fondoFPValor=round(($impuestoTotal*0.05)+($monto_pago_matricula*0.05),2);
+                $totalPagoValor= round($fondoFPValor+$monto_pago_matricula+$impuestoTotal+$totalMultaPagoExtemporaneo+$InteresTotal+$multa,2);
+                $empresa= Empresas
+                ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+                ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+                ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+                ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+                
+                
+                ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+                'estado_empresa.estado',
+                'giro_comercial.nombre_giro',
+                'actividad_economica.rubro',
+                 )
+                ->find($id); 
+
+                //** Agregando formato de número */
+                $fondoFPValor=number_format($fondoFPValor, 2, '.', ',');
+                $impuestos_mora=number_format($impuestos_mora, 2, '.', ',');
+                $impuesto_año_actual=number_format($impuesto_año_actual, 2, '.', ',');
+                $totalMultaPagoExtemporaneo=number_format($totalMultaPagoExtemporaneo, 2, '.', ',');
+                $InteresTotal=number_format($InteresTotal, 2, '.', ',');
+                $multa=number_format($multa, 2, '.', ',');
+                $monto_pago_matricula=number_format($monto_pago_matricula, 2, '.', ',');
+                $totalPagoValor=number_format($totalPagoValor, 2, '.', ',');
+
+ 
+    
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+    $imgf1 = 'images/imgf1.png';
+    
+    
+    $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+    $tabla .= "<table border='0' align='center' style='width: 650px;'>
+    <tr>
+    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+    </tr>
+    <tr>
+    <td align='right' colspan='2'>
+        <strong>Metapán, $FechaDelDia</strong>
+    </td>
+    </tr>
+    <tr>
+    <td colspan='2' style='font-size: 13;'>
+        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+            Dirección:&nbsp;$empresa->direccionCont<br>
+            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+            Empresa o Negocio:&nbsp;$empresa->nombre
+        </p>
+        <br>
+        Estimado(a) señor (a):
+        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+            motivo de la presente es para manifestarle que su estado de cuenta en esta
+            Municipalidad es el siguiente:</p>
+        <p>
+        <br>
+            <strong>Impuestos Municipales</strong><br>
+            Validez: <strong><u>$FechaDelDia</u></strong><br>
+            </p>
+            </td>
+        <tr>
+            <td><hr></td>
+            <td><hr></td>
+        </tr>
+        <tr>
+            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
+        </tr>
+        <tr>
+            <td align='right'>IMPUESTO MORA</td>
+            <td align='center'>$impuestos_mora</td>
+        </tr>
+        <tr>
+            <td align='right'>IMPUESTOS</td>
+            <td align='center'>$impuesto_año_actual</td>
+        </tr>
+        <tr>
+            <td align='right'>INTERESES MORATORIOS</td>
+            <td align='center'>$InteresTotal</td>
+        </tr>
+        <tr>
+            <td align='right'>MULTAS</td>
+            <td align='center'>$totalMultaPagoExtemporaneo</td>
+        </tr>
+        <tr>
+            <td align='right'>MATRÍCULA</td>
+            <td align='center'>$monto_pago_matricula</td>
+        </tr>
+        <tr>
+            <td align='right'>FONDO F. PATRONALES 5%</td>
+            <td align='center'>$fondoFPValor</td>
+        </tr>
+        <tr>
+        <td align='right'>MUL. MATRICULA</td>
+        <td align='center'>$multa</td>
+        </tr>
+        <tr>
+            <th scope='row'>TOTAL ADEUDADO</th>
+            <th align='center'>$totalPagoValor</th>
+        </tr>
+        <tr>
+            <td><hr></td>
+            <td><hr></td>
+        </tr>
+        <tr>
+            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                <p>
+                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                <br><br>
+                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                </p>
+            </td>
+        </tr>
+        <tr align='center'>
+            <td colspan='2' align='center'>
+                    
+                    <img id='imgf1' src='$imgf1'>
+            </td>
+        </tr>
+        </table>";
+   
+    $stylesheet = file_get_contents('css/cssconsolidado.css');
+    $mpdf->WriteHTML($stylesheet,1);
+    $mpdf->SetMargins(0, 0, 5);
+
+
+    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+    $mpdf->WriteHTML($tabla,2);
+    $mpdf->Output();
+
+}
+>>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2
 
         $girosempresarial = GiroEmpresarial::orderBy('nombre_giro_empresarial')->get();
         return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('girosempresarial'));

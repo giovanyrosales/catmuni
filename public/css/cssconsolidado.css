@@ -16,6 +16,11 @@
 				 font-size:7;
 				 text-align:justify;
 				}
+
+        #imgf1{
+                width:600px;
+                height:195px; 
+               }
         #interlineado{
 
             line-height:5px;

@@ -25,6 +25,7 @@ use App\Http\Controllers\Backend\Reportes\reportesBusesController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
 use App\Http\Controllers\Backend\Reportes\reportesRotulosController;
+use App\Http\Controllers\Backend\Reportes\reportesBusesDetalleController;
 use App\Models\Empresas;
 
 /*
@@ -279,8 +280,14 @@ use App\Models\Empresas;
     Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso']);
     Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion']);
     Route::get('/admin/generar_notificacion/maquinas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_maquinas']);
+    Route::get('/admin/generar_notificacion/mesas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_mesas']);
+    Route::get('/admin/generar_notificacion/aparatos/pdf/{f1}/{f2}/{id}', [reportesController::class, 'notificacion_aparatos']);
+    Route::get('/admin/generar_notificacion/sinfonolas/pdf/{f1}/{f2}/{f3}/{id}', [reportesController::class, 'notificacion_sinfonolas']);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2
     Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor']);
     Route::get('/admin/estado_cuenta_aparatos/pdf/{f1}/{f2}/{ap}/{id}', [reportesController::class, 'estado_cuenta_aparatos']);
     Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas']);
@@ -323,3 +330,9 @@ use App\Models\Empresas;
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
+<<<<<<< HEAD
+=======
+
+    //REPORTES BUSES
+    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{ib}/{id_contribuyente}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
+>>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2

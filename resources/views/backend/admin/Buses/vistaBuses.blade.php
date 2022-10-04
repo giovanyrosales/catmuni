@@ -136,6 +136,36 @@
      @endif
     </div>
 
+    <div class="col-md-4 col-sm-8">
+          
+              <a href="#" onclick="Aldia()">           
+              <a href="#" onclick="reporteAviso()">           
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-primary">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Generar aviso</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-exclamation-circle"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    </div>
+
+    <div class="col-md-4 col-sm-8">
+            
+                  <a href="#" onclick="Aldia()">                
+                  <a href="#" onclick="reporte_notificacion()">                  
+                  <div class="widget stats-widget">
+                    <div class="widget-body clearfix bg-purple">
+                     <div class="pull-left">
+                     <h3 class="widget-title text-white">Generar notificación</h3>
+                     <input type="hidden" id="fechahoy" value="" class="form-control" >
+                        <input type="hidden" id="f1" value="" class="form-control" >
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
+                </div>
+    </div>
+
 </div>
 </div>
 </div> 

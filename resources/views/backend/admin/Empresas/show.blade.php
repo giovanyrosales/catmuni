@@ -765,29 +765,25 @@ function reporte_notificacion(id){
                   var id_giro_comercial="{{$id_giro_comercial}}";
 
                   if(id_giro_comercial==='1'){
-
+                    //Si es Empresa
                     window.open("{{ URL::to('/admin/generar_notificacion/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
                   
                   }else if(id_giro_comercial==='2'){
-                           
-                    toastr.danger('Notificación de Sinfonolas');
-                    return; 
+                    //Si es Sinfonolas   
+                    window.open("{{ URL::to('/admin/generar_notificacion/sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + f3 + "/" + id ); 
 
                   }else if(id_giro_comercial==='3'){
-
-                    toastr.warning('Notificación de Maquinas Electrónicas');
+                    //Si es Maquinas Electronicas
                     window.open("{{ URL::to('/admin/generar_notificacion/maquinas/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id ); 
                     
                   }else if(id_giro_comercial==='4'){
-                           
-                    toastr.success('Notificación de Mesas de billar');
-                    return; 
+                    //Si es Mesas de billar
+                    window.open("{{ URL::to('/admin/generar_notificacion/mesas/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id ); 
                     
-                  }else if(id_giro_comercial===5){
-                       
-                    toastr.secondary('Notificación de Aparatos Parlantes');
-                    return;  
-
+                  }else if(id_giro_comercial==='5'){
+                    //Si es Aparatos Parlantes
+                    window.open("{{ URL::to('/admin/generar_notificacion/aparatos/pdf') }}/" + f1 + "/" + f2 + "/" + id ); 
+                        
                   }
                   
 

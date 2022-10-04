@@ -53,9 +53,9 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
-        'archivos' => [
+        'images' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/archivos'),
+            'root' => storage_path('app/public/images'),
         ],
 
     ],
