@@ -745,8 +745,13 @@ public function show($id)
                 ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
                 ->pluck('periodo_cobro_fin')
                     ->first();
+                    if($ComprobandoPagoAlDia==null){
+                        $ComprobandoPagoAlDia=$empresa->inicio_operaciones;
+                    }
+                   
         }else{
                     $ComprobandoPagoAlDia=$empresa->inicio_operaciones;
+                    
              }
 
     }//** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
@@ -838,25 +843,34 @@ public function show($id)
          }
     
     
-    $ultimo_cobro = Cobros::latest()
-    ->where('id_empresa',$id)
-    ->first();
 
-    if( $ultimo_cobro==null)
-    {
-        $ultimo_cobro = CobrosMatriculas::latest()
-        ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
+    if($empresa->id_giro===1){
+        //Es empresa
+
+        $ultimo_cobro = Cobros::latest()
+        ->where('id_empresa',$id)
         ->first();
-        if( $ultimo_cobro==null)
-        {
-            $ultimoCobroEmpresa=$empresa->inicio_operaciones;
-        }else{
-            $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
-        }
         
+            if( $ultimo_cobro==null)
+            {
+                $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+            }else{
+                $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
+            }
+
     }else{
-            $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
-        }
+            $ultimo_cobro = CobrosMatriculas::latest()
+            ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
+            ->first();
+
+            if( $ultimo_cobro==null)
+            {
+                $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+            }else{
+                $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
+            }
+         }
+
 
     //**¨Para detectar los cobros especiales */
     if($empresa->excepciones_especificas==='SI')
@@ -930,7 +944,7 @@ public function show($id)
         //*Si es Aparatos Parlantes
         //* Estado matricula: 1= solvente.
         if($dato->id_matricula==2){
-            if($ComprobandoPagoAlDiaMatriculas>$fechaLimite)  
+            if($ComprobandoPagoAlDiaMatriculas<$fechaLimite)  
                     {
                             if($estado_moratorioM!=1){
                             MatriculasDetalle::where('id',$id_detalle)
