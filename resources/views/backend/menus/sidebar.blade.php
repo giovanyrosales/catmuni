@@ -41,7 +41,7 @@
                             <p>Actividades específicas</p>
                         </a>
                     </li>
-                                    
+
                     <li class="nav-item">
                         <a href="{{ route('admin.listarTarifaVariable.index') }}" target="frameprincipal" class="nav-link">
                             <i class="fas fa-donate"></i>
@@ -77,8 +77,8 @@
                     </li>
                 </ul>
              </li>
-            
-            
+
+
                 <!-- Grupo Contribuyentes -->
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -117,7 +117,7 @@
                 <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="fas fa-building"></i>
-                                    <p>Empresas 
+                                    <p>Empresas
                                     <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -148,7 +148,7 @@
                                 <a href="#" class="nav-link">
                                 <i class="fas fa-sign"></i>
                                 <p>Rótulos <i class="right fas fa-angle-left"></i></p>
-                                
+
                                 </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -184,13 +184,13 @@
                             </li>
                         </ul>
                     <!-- TERMINA NUEVO MÓDULO DE RÓTULOS DETALLE -->
-               
+
                 <!-- Grupo Buses -->
                                 <li class="nav-item">
                                 <a href="#" class="nav-link">
                                 <i class="fas fa-bus"></i>
                                 <p>Buses <i class="right fas fa-angle-left"></i></p>
-                                
+
                                 </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -213,7 +213,7 @@
                                 <a href="#" class="nav-link">
                                 <i class="fas fa-file"></i>
                                 <p>Reportes <i class="right fas fa-angle-left"></i></p>
-                                
+
                                 </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -229,9 +229,25 @@
                                 <p>2</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.sidebar.reporte.actividad.economica') }}" target="frameprincipal" class="nav-link">
+                                    <i class="fas fa-list-ul nav-icon"></i>
+                                    <p>Actividad Económica</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.sidebar.reporte.contribuyentes') }}" target="frameprincipal" class="nav-link">
+                                    <i class="fas fa-list-ul nav-icon"></i>
+                                    <p>Contribuyentes</p>
+                                </a>
+                            </li>
+
+
                         </ul>
                 <!-- Finaliza Grupo Rótulos -->
-             
+
                     </ul>
                 </li>
 

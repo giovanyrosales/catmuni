@@ -645,7 +645,7 @@ public function Recalificacion($id)
 public function show($id)
 {
     $fechahoy=carbon::now()->format('Y-m-d');
-
+    //$fechahoy='2022-02-17';
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -889,6 +889,10 @@ public function show($id)
     //**************************** SOLO PARA MATRÍCULAS ****************************/
 
     $AnioActual=carbon::now()->format('Y');
+    log::info('año actual: '.$AnioActual);
+    $AnioAnterior=carbon::now()->subYear()->format('Y-12-31'); 
+    log::info('año anterior: '.$AnioAnterior);
+    log::info('Fecha hoy: '.$fechahoy);
     $month=03;
     $day=31;
     $fechaLimite=Carbon::createFromDate($AnioActual, $month, $day);
@@ -944,25 +948,64 @@ public function show($id)
         //*Si es Aparatos Parlantes
         //* Estado matricula: 1= solvente.
         if($dato->id_matricula==2){
-            if($ComprobandoPagoAlDiaMatriculas<$fechaLimite)  
-                    {
-                            if($estado_moratorioM!=1){
-                            MatriculasDetalle::where('id',$id_detalle)
-                            ->update([
-                                        'id_estado_moratorio' =>'1',              
-                                    ]);
-                                    log::info('estado: solvente');
-                                }else{log::info('estado: Ya estaba en Solvente');}
+            if($ComprobandoPagoAlDiaMatriculas<$AnioAnterior) 
+                //*Si es true esta en Mora 
+                {
+                    if($estado_moratorioM!=2){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'2',              
+                                ]);
+                                log::info('else if 1: estado: en mora');
+                        }else{log::info('else if 1: estado: Ya estaba en mora');} 
 
-                    }else{
-                            if($estado_moratorioM!=2){
-                                    MatriculasDetalle::where('id',$id_detalle)
-                                    ->update([
-                                                'id_estado_moratorio' =>'2',              
-                                            ]);
-                                            log::info('estado: en mora');
-                                    }else{log::info('estado: Ya estaba en mora');}
-                    }
+                }else if($ComprobandoPagoAlDiaMatriculas>$fechaLimite){
+                    //*Si es true esta esta solvente 
+                    if($estado_moratorioM!=1){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'1',              
+                                ]);
+                                log::info('else if 2: estado: solvente');
+                            }else{log::info('else if 2: estado: Ya estaba en Solvente');}
+
+                }else if($ComprobandoPagoAlDiaMatriculas==$AnioAnterior and $fechahoy>$fechaLimite){
+                    //*Si es true esta en Mora
+                    if($estado_moratorioM!=2){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'2',              
+                                ]);
+                                log::info('else if 3: estado: en mora');
+                        }else{log::info('else if 3: estado: Ya estaba en mora');} 
+                }else if($ComprobandoPagoAlDiaMatriculas==$AnioAnterior and $fechahoy<$fechaLimite){
+                    //*Si es true esta esta solvente 
+                    if($estado_moratorioM!=1){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'1',              
+                                ]);
+                                log::info('else if 4: estado: solvente');
+                            }else{log::info('else if 4: estado: Ya estaba en Solvente');}
+                }
+
+
+
+
+
+
+
+
+                  
+
+
+
+
+
+
+
+
+
             //*Si es Mesas de billar o  Sinfonolas
             }else if($dato->id_matricula==1 or $dato->id_matricula==4)
             {
@@ -1898,7 +1941,7 @@ public function cobros($id)
          }
 
     //**¨Fin detectar los cobros especiales */
-log::info($tipo_matricula); //ancla
+log::info($tipo_matricula); 
     $date=Carbon::now()->toDateString();
 
     if ($calificaciones == null)
@@ -2157,7 +2200,6 @@ public function calculo_calificacion(Request $request)
    $licenciaMatricula= $licencia+ $matricula;
    $licenciaMatriculaSigno=$signo . $licenciaMatricula;
 
-    //ancla3
 
    //************* Declarando variables globales para operacion Multa por Balance *************//
    $Year=$año_calificacion;
@@ -2647,7 +2689,6 @@ if($calificacion_anterior==null and $consulta_detalle_matricula!=null)
             /*** Para aumentar el año de calificación */
             $Anio_a_calificar=$calificacion_anterior->año_calificacion+1;
 
-            //ancla4
 
             //************* Declarando variables globales para operacion Multa por Balance *************//
             $Year=$Anio_a_calificar;
@@ -3048,7 +3089,7 @@ public function infoTraspaso(Request $request)
         ->where('id_empresa', "=", $id) 
         ->first();
 
-          //anclaaa      
+            
         $calificaciones=calificacion::latest()
         ->where('id_empresa', $id)     
         ->get();

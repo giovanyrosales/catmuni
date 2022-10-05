@@ -313,35 +313,50 @@
             if (nRegistro <= 0)
             {
 
-                        modalMensaje('Registro Vacio', 'Debe especificar al menos una matrícula');
-                        return;
+                    modalMensaje('Registro Vacio', 'Debe especificar al menos una matrícula');
+                    return;
             }
 
-           
-
+            
+          
             //**** Fin de validar */
 
             let formData = new FormData();
 
+                       
             // llenar array para enviar
             for(var j = 0; j < nombre.length; j++)
             {
+
                 if(foto_rotulo[j].files[0] && foto_rotulo[j].files[0])
                 { // si trae doc
                     if (!foto_rotulo[j].files[0].type.match('image/jpeg|image/jpeg|image/png'))
                     {
                         toastr.error('formato de documento permitido: .png .jpg .jpeg');
                         return;
+                       
                     }
-                }
 
+                    formData.append('nombre[]', nombre[j]);  
+                    formData.append('medidas[]', medidas[j]);
+                    formData.append('total_medidas[]', total_medidas[j]);
+                    formData.append('caras[]', caras[j]);
+                    formData.append('tarifa[]', tarifa[j]);
+                    formData.append('total_tarifa[]', total_tarifa[j]);
+                    formData.append('coordenadas_geo[]', coordenadas_geo[j]);   
+                    formData.append('foto_rotulo[]',foto_rotulo[j]);
+
+
+                 
                 
-                formData.append('nombre[]', nombre[j]);
-                formData.append('foto_rotulo[]',foto_rotulo[j]);
+                }
+                  
+                    
+                
             }
 
 
-               formData.append('id_rotulos_detalle', id_rotulos_detalle);
+                formData.append('id_rotulos_detalle[]', id_rotulos_detalle[j]);
          
                     axios.post('/admin/rotulos_detalle_especifico/agregar', formData, {
                     })
@@ -366,7 +381,7 @@
                 });
 
         }//**** Fin de guardar bus */
-
+ 
         function agregado_rotulos_especifico()
         {
                 Swal.fire({
