@@ -284,10 +284,7 @@ use App\Models\Empresas;
     Route::get('/admin/generar_notificacion/aparatos/pdf/{f1}/{f2}/{id}', [reportesController::class, 'notificacion_aparatos']);
     Route::get('/admin/generar_notificacion/sinfonolas/pdf/{f1}/{f2}/{f3}/{id}', [reportesController::class, 'notificacion_sinfonolas']);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2
     Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor']);
     Route::get('/admin/estado_cuenta_aparatos/pdf/{f1}/{f2}/{ap}/{id}', [reportesController::class, 'estado_cuenta_aparatos']);
     Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas']);
@@ -330,13 +327,10 @@ use App\Models\Empresas;
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
-<<<<<<< HEAD
-=======
+
+
 
     //REPORTES BUSES
-<<<<<<< HEAD
-    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{f3}{id}/{id_buses}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
-=======
-    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{ib}/{id_contribuyente}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
->>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2
->>>>>>> 3831355552e6192228b9bfee451ecdd47512ca78
+    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{f3}/{id}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
+    Route::get('/admin/generar_aviso/buses/pdf/{id}', [reportesBusesDetalleController::class, 'aviso_buses']);
+

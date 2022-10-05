@@ -139,7 +139,7 @@
     <div class="col-md-4 col-sm-8">
           
               <a href="#" onclick="Aldia()">           
-              <a href="#" onclick="reporteAviso()">           
+              <a href="#" onclick="reporteAviso({{$buses->id}})">           
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
                     <div class="pull-left">
@@ -639,10 +639,23 @@
       
     }
 
-    function VerCalificacion()
-    {
-      
-    }
+    function reporteAviso(id){
+        Swal.fire({
+                title: '¿Realmente desea generar un aviso para este contribuyente?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Confirmar',
+           
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  location.reload();
+                  window.open("{{ URL::to('/admin/generar_aviso/buses/pdf') }}/" + id );
+                  Swal.fire('Aviso generado con exito!', '', 'success')
+                }
+            });
+          
+}
 
     </script>
 @stop
