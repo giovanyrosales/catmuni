@@ -3943,58 +3943,62 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
             $multaDolarMaquinas="$".number_format($multa, 2, '.', ',');
 
 
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
+        
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+        // mostrar errores
+        $mpdf->showImageErrors = false;
 
-    // mostrar errores
-    $mpdf->showImageErrors = false;
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
 
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-<<<<<<< HEAD
-    $LeyT = 'images/LeyT.png';
-
-=======
-    $imgf1 = 'images/imgf1.png';
-    
-    
->>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
-
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
+            </p>
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
             </p>
             </td>
         <tr>
@@ -4047,27 +4051,67 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
                 <br><br>
                 Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
-   
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+       
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }//Fin If Dato->save
 
+      //Registrando las alertas de notificaciones 
+      $cantidad=0;
+      $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+      ->where('id_alerta','2')
+      ->pluck('cantidad')
+      ->first();
+  
+      if($alerta_notificacion===null){
+  
+          $cantidad_notificaciones=$cantidad+1;
+  
+          $registro = new alertas_detalle();
+          $registro->id_empresa = $id;
+          $registro->id_alerta ='2';
+          $registro->cantidad = $cantidad_notificaciones;
+          $registro->save();
+  
+      }else if($alerta_notificacion==0)
+      {
+          $cantidad=$alerta_notificacion+1;
+  
+          alertas_detalle::where('id_empresa',$id)
+          ->where('id_alerta','2')
+          ->update([
+                      'cantidad' =>$cantidad,
+                  ]);
+          }
+          else
+                  { $cantidad=$alerta_notificacion+1;
+  
+                      alertas_detalle::where('id_empresa',$id)
+                      ->where('id_alerta','2')
+                      ->update([
+                                  'cantidad' =>$cantidad,
+                              ]);
+                  }
+      //Fin - Registrando las alertas de notificaciones 
+      
 }
+
 public function notificacion_mesas($f1,$f2,$ti,$f3,$id){
     log::info('f1: '.$f1);
     log::info('f2: '.$f2);
@@ -4471,134 +4515,180 @@ public function notificacion_mesas($f1,$f2,$ti,$f3,$id){
             $totalPagoValor="$".number_format($totalPagoValor, 2, '.', ',');
 
    
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
 
     
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    // mostrar errores
-    $mpdf->showImageErrors = false;
+        // mostrar errores
+        $mpdf->showImageErrors = false;
 
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-    $imgf1 = 'images/imgf1.png';
-    
-    
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
 
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
             </p>
-            </td>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
-            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTO MORA</td>
-            <td align='center'>$impuestos_mora</td>
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTOS</td>
-            <td align='center'>$impuesto_año_actual</td>
-        </tr>
-        <tr>
-            <td align='right'>INTERESES MORATORIOS</td>
-            <td align='center'>$InteresTotal</td>
-        </tr>
-        <tr>
-            <td align='right'>MULTAS</td>
-            <td align='center'>$totalMultaPagoExtemporaneo</td>
-        </tr>
-        <tr>
-            <td align='right'>MATRÍCULA</td>
-            <td align='center'>$monto_pago_matricula</td>
-        </tr>
-        <tr>
-            <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$fondoFPValor</td>
-        </tr>
-        <tr>
-        <td align='right'>MUL. MATRICULA</td>
-        <td align='center'>$multa</td>
-        </tr>
-        <tr>
-            <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$totalPagoValor</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                <p>
-                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
-                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
-                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
-                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
-                <br><br>
-                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
+                </td>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTO MORA</td>
+                <td align='center'>$impuestos_mora</td>
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTOS</td>
+                <td align='center'>$impuesto_año_actual</td>
+            </tr>
+            <tr>
+                <td align='right'>INTERESES MORATORIOS</td>
+                <td align='center'>$InteresTotal</td>
+            </tr>
+            <tr>
+                <td align='right'>MULTAS</td>
+                <td align='center'>$totalMultaPagoExtemporaneo</td>
+            </tr>
+            <tr>
+                <td align='right'>MATRÍCULA</td>
+                <td align='center'>$monto_pago_matricula</td>
+            </tr>
+            <tr>
+                <td align='right'>FONDO F. PATRONALES 5%</td>
+                <td align='center'>$fondoFPValor</td>
+            </tr>
+            <tr>
+            <td align='right'>MUL. MATRICULA</td>
+            <td align='center'>$multa</td>
+            </tr>
+            <tr>
+                <th scope='row'>TOTAL ADEUDADO</th>
+                <th align='center'>$totalPagoValor</th>
+            </tr>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                    <p>
+                    Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                    solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                    pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                    pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                    <br><br>
+                    Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                    </p>
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+    
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
 
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }//Fin If Dato->save
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
+      //Registrando las alertas de notificaciones 
+      $cantidad=0;
+      $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+      ->where('id_alerta','2')
+      ->pluck('cantidad')
+      ->first();
+  
+      if($alerta_notificacion===null){
+  
+          $cantidad_notificaciones=$cantidad+1;
+  
+          $registro = new alertas_detalle();
+          $registro->id_empresa = $id;
+          $registro->id_alerta ='2';
+          $registro->cantidad = $cantidad_notificaciones;
+          $registro->save();
+  
+      }else if($alerta_notificacion==0)
+      {
+          $cantidad=$alerta_notificacion+1;
+  
+          alertas_detalle::where('id_empresa',$id)
+          ->where('id_alerta','2')
+          ->update([
+                      'cantidad' =>$cantidad,
+                  ]);
+          }
+          else
+                  { $cantidad=$alerta_notificacion+1;
+  
+                      alertas_detalle::where('id_empresa',$id)
+                      ->where('id_alerta','2')
+                      ->update([
+                                  'cantidad' =>$cantidad,
+                              ]);
+                  }
+      //Fin - Registrando las alertas de notificaciones 
+
 }
 
-<<<<<<< HEAD
-    function indexReporteActividadEconomica(){
-=======
 public function notificacion_aparatos($f1,$f2,$id){
     log::info('f1: '.$f1);
     log::info('f2: '.$f2);
@@ -4767,119 +4857,165 @@ public function notificacion_aparatos($f1,$f2,$id){
                 
         //** Finaliza calculo de cobro licencia licor **/
 
-    
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
-
-    // mostrar errores
-    $mpdf->showImageErrors = false;
-
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-    $imgf1 = 'images/imgf1.png';
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
     
     
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
+
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
             </p>
-            </td>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $PInicio&nbsp;</th>
-            <th scope='col'>&nbsp;&nbsp;hasta&nbsp;  $PFinal&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align='right'>LICENCIAS</td>
-            <td align='center'>$$monto_pago_matricula</td>
-        </tr>
-        <tr>
-            <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$$fondoFPValor</td>
-        </tr>
-        <tr>
-        <td align='right'>MULTAS POR LICENCIA</td>
-        <td align='center'>$$multa</td>
-        </tr>
-        <tr>
-            <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$$totalPagoValor</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                <p>
-                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
-                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
-                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
-                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
-                <br><br>
-                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
-   
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
+                </td>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $PInicio&nbsp;</th>
+                <th scope='col'>&nbsp;&nbsp;hasta&nbsp;  $PFinal&nbsp;</th>    
+            </tr>
+            <tr>
+                <td align='right'>LICENCIAS</td>
+                <td align='center'>$$monto_pago_matricula</td>
+            </tr>
+            <tr>
+                <td align='right'>FONDO F. PATRONALES 5%</td>
+                <td align='center'>$$fondoFPValor</td>
+            </tr>
+            <tr>
+            <td align='right'>MULTAS POR LICENCIA</td>
+            <td align='center'>$$multa</td>
+            </tr>
+            <tr>
+                <th scope='row'>TOTAL ADEUDADO</th>
+                <th align='center'>$$totalPagoValor</th>
+            </tr>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                    <p>
+                    Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                    solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                    pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                    pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                    <br><br>
+                    Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                    </p>
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+    
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }//Fin If Dato->save
+
+      //Registrando las alertas de notificaciones 
+      $cantidad=0;
+      $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+      ->where('id_alerta','2')
+      ->pluck('cantidad')
+      ->first();
+  
+      if($alerta_notificacion===null){
+  
+          $cantidad_notificaciones=$cantidad+1;
+  
+          $registro = new alertas_detalle();
+          $registro->id_empresa = $id;
+          $registro->id_alerta ='2';
+          $registro->cantidad = $cantidad_notificaciones;
+          $registro->save();
+  
+      }else if($alerta_notificacion==0)
+      {
+          $cantidad=$alerta_notificacion+1;
+  
+          alertas_detalle::where('id_empresa',$id)
+          ->where('id_alerta','2')
+          ->update([
+                      'cantidad' =>$cantidad,
+                  ]);
+          }
+          else
+                  { $cantidad=$alerta_notificacion+1;
+  
+                      alertas_detalle::where('id_empresa',$id)
+                      ->where('id_alerta','2')
+                      ->update([
+                                  'cantidad' =>$cantidad,
+                              ]);
+                  }
+      //Fin - Registrando las alertas de notificaciones 
 
 }
 
-public function notificacion_sinfonolas($f1,$f2,$f3,$id){
-    log::info('f1: '.$f1);
-    log::info('f2: '.$f2);
-    log::info('f3: '.$f3);
+public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
     $fechahoy=carbon::now()->format('d-m-Y');
 
@@ -4893,7 +5029,6 @@ public function notificacion_sinfonolas($f1,$f2,$f3,$id){
     $dia = $dias[(date('N', strtotime($fechaF))) - 1];
     /** FIN - Obtener la fecha y días en español y formato tradicional*/
 
-    $año=carbon::now()->format('y');
 
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -4911,60 +5046,21 @@ public function notificacion_sinfonolas($f1,$f2,$f3,$id){
     )
     ->find($id);
 
+    $f1_original=$f1;
+    $fechaPagaraSinfonolas=$f2;
+    $tasa_interes=$ti;
+    $fecha_interesMoratorio=Carbon::now()->format('Y-m-d');
+
     $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$id)
     ->pluck('id')
     ->first();
 
-    $f1_original=$f1;
-    $fechaPagaraMaquinas=$f2;
-    $id_matriculadetalleMesas=$id_matriculadetalle;
-
     $MesNumero=Carbon::createFromDate($f1)->format('d');
-    //log::info($MesNumero);
 
-    $MesNumero=Carbon::createFromDate($f1)->format('d');
-    //log::info($MesNumero);
-
-    if($MesNumero<='15')
-    {
-        $f1=Carbon::parse($f1)->format('Y-m-01');
-        $f1=Carbon::parse($f1);
-        $InicioPeriodo=Carbon::createFromDate($f1);
-        $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
-        //log::info('inicio de mes');
-    }
-    else
-        {
-         $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
-         $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
-        // log::info('fin de mes ');
-         }
-
-    
-    $f2=Carbon::parse($f2);
-    $f3=Carbon::parse($f3);
-    $añoActual=Carbon::now()->format('Y');
+    $id_matriculadetalleSinfonolas=$id_matriculadetalle;
    
-    //** Inicia - Para determinar el intervalo de años a pagar */
-    $monthInicio='01';
-    $dayInicio='01';
-    $monthFinal='12';
-    $dayFinal='31';
-    $AñoInicio=$f1->format('Y');
-    $AñoFinal=$f2->format('Y');
-    $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
-    $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
-    //** Finaliza - Para determinar el intervalo de años a pagar */
-
-    $MesNumero=Carbon::createFromDate($f1)->format('d');
-        $f1_original=$f1;
-        $fechaPagaraSinfonolas=$f2;
-        $id_matriculadetalleSinfonolas=$is;
-        $tasa_interes=$ti;
-        $fecha_interesMoratorio=Carbon::now()->format('Y-m-d');
-        $Message=0;
     
-        if($MesNumero<='15')
+    if($MesNumero<='15')
         {
             $f1=Carbon::parse($f1)->format('Y-m-01');
             $f1=Carbon::parse($f1);
@@ -5309,137 +5405,182 @@ public function notificacion_sinfonolas($f1,$f2,$f3,$id){
                 $totalPagoValor=number_format($totalPagoValor, 2, '.', ',');
 
  
-    
-    //Configuracion de Reporte en MPDF
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-    $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
-
-    // mostrar errores
-    $mpdf->showImageErrors = false;
-
-    $logoalcaldia = 'images/logo.png';
-    $logoelsalvador = 'images/EscudoSV.png';
-    $imgf1 = 'images/imgf1.png';
+    //** Guardando en el historico de avisos */
+    $dato = new NotificacionesHistorico();
+    $dato->id_empresa = $id;
+    $dato->id_alertas = '2'; 
+    $created_at=new Carbon();
+    $dato->created_at=$created_at->setTimezone('America/El_Salvador');
+    $dato->save();
+    if($dato->save())
+    { 
     
     
-    $tabla = "<div class='content'>
-                    <img id='logo' src='$logoalcaldia'>
-                    <img id='EscudoSV' src='$logoelsalvador'>
-                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                    <hr>
-            </div>";
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
 
-    $tabla .= "<table border='0' align='center' style='width: 650px;'>
-    <tr>
-    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
-    </tr>
-    <tr>
-    <td align='right' colspan='2'>
-        <strong>Metapán, $FechaDelDia</strong>
-    </td>
-    </tr>
-    <tr>
-    <td colspan='2' style='font-size: 13;'>
-        <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
-            Dirección:&nbsp;$empresa->direccionCont<br>
-            Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
-            Empresa o Negocio:&nbsp;$empresa->nombre
-        </p>
-        <br>
-        Estimado(a) señor (a):
-        <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
-            motivo de la presente es para manifestarle que su estado de cuenta en esta
-            Municipalidad es el siguiente:</p>
-        <p>
-        <br>
-            <strong>Impuestos Municipales</strong><br>
-            Validez: <strong><u>$FechaDelDia</u></strong><br>
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+        
+        
+        $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                </div>";
+
+        $tabla .= "<table border='0' align='center' style='width: 650px;'>
+        <tr>
+        <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+        </tr>
+        <tr>
+        <td align='right' colspan='2'>
+            <strong>Metapán, $FechaDelDia</strong>
+        </td>
+        </tr>
+        <tr>
+        <td colspan='2' style='font-size: 13;'>
+            <p>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                Dirección:&nbsp;$empresa->direccionCont<br>
+                Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                Empresa o Negocio:&nbsp;$empresa->nombre
             </p>
-            </td>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
-            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTO MORA</td>
-            <td align='center'>$impuestos_mora</td>
-        </tr>
-        <tr>
-            <td align='right'>IMPUESTOS</td>
-            <td align='center'>$impuesto_año_actual</td>
-        </tr>
-        <tr>
-            <td align='right'>INTERESES MORATORIOS</td>
-            <td align='center'>$InteresTotal</td>
-        </tr>
-        <tr>
-            <td align='right'>MULTAS</td>
-            <td align='center'>$totalMultaPagoExtemporaneo</td>
-        </tr>
-        <tr>
-            <td align='right'>MATRÍCULA</td>
-            <td align='center'>$monto_pago_matricula</td>
-        </tr>
-        <tr>
-            <td align='right'>FONDO F. PATRONALES 5%</td>
-            <td align='center'>$fondoFPValor</td>
-        </tr>
-        <tr>
-        <td align='right'>MUL. MATRICULA</td>
-        <td align='center'>$multa</td>
-        </tr>
-        <tr>
-            <th scope='row'>TOTAL ADEUDADO</th>
-            <th align='center'>$totalPagoValor</th>
-        </tr>
-        <tr>
-            <td><hr></td>
-            <td><hr></td>
-        </tr>
-        <tr>
-            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                <p>
-                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
-                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
-                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
-                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
-                <br><br>
-                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+            <br>
+            Estimado(a) señor (a):
+            <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                motivo de la presente es para manifestarle que su estado de cuenta en esta
+                Municipalidad es el siguiente:</p>
+            <p>
+            <br>
+                <strong>Impuestos Municipales</strong><br>
+                Validez: <strong><u>$FechaDelDia</u></strong><br>
                 </p>
-            </td>
-        </tr>
-        <tr align='center'>
-            <td colspan='2' align='center'>
-                    
-                    <img id='imgf1' src='$imgf1'>
-            </td>
-        </tr>
-        </table>";
-   
-    $stylesheet = file_get_contents('css/cssconsolidado.css');
-    $mpdf->WriteHTML($stylesheet,1);
-    $mpdf->SetMargins(0, 0, 5);
+                </td>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>    
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTO MORA</td>
+                <td align='center'>$$impuestos_mora</td>
+            </tr>
+            <tr>
+                <td align='right'>IMPUESTOS</td>
+                <td align='center'>$$impuesto_año_actual</td>
+            </tr>
+            <tr>
+                <td align='right'>INTERESES MORATORIOS</td>
+                <td align='center'>$$InteresTotal</td>
+            </tr>
+            <tr>
+                <td align='right'>MULTAS</td>
+                <td align='center'>$$totalMultaPagoExtemporaneo</td>
+            </tr>
+            <tr>
+                <td align='right'>MATRÍCULA</td>
+                <td align='center'>$$monto_pago_matricula</td>
+            </tr>
+            <tr>
+                <td align='right'>FONDO F. PATRONALES 5%</td>
+                <td align='center'>$$fondoFPValor</td>
+            </tr>
+            <tr>
+            <td align='right'>MUL. MATRICULA</td>
+            <td align='center'>$$multa</td>
+            </tr>
+            <tr>
+                <th scope='row'>TOTAL ADEUDADO</th>
+                <th align='center'>$$totalPagoValor</th>
+            </tr>
+            <tr>
+                <td><hr></td>
+                <td><hr></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                    <p>
+                    Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                    solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                    pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                    pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                    <br><br>
+                    Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                    </p>
+                </td>
+            </tr>
+            <tr align='center'>
+                <td colspan='2' align='center'>
+                        
+                        <img id='imgf1' src='$imgf1'>
+                </td>
+            </tr>
+            </table>";
+    
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
 
 
-    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
 
-    $mpdf->WriteHTML($tabla,2);
-    $mpdf->Output();
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+
+    }//Fin If Dato->save
+
+    //Registrando las alertas de notificaciones 
+    $cantidad=0;
+    $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+    ->where('id_alerta','2')
+    ->pluck('cantidad')
+    ->first();
+
+    if($alerta_notificacion===null){
+
+        $cantidad_notificaciones=$cantidad+1;
+
+        $registro = new alertas_detalle();
+        $registro->id_empresa = $id;
+        $registro->id_alerta ='2';
+        $registro->cantidad = $cantidad_notificaciones;
+        $registro->save();
+
+    }else if($alerta_notificacion==0)
+    {
+        $cantidad=$alerta_notificacion+1;
+
+        alertas_detalle::where('id_empresa',$id)
+        ->where('id_alerta','2')
+        ->update([
+                    'cantidad' =>$cantidad,
+                ]);
+        }
+        else
+                { $cantidad=$alerta_notificacion+1;
+
+                    alertas_detalle::where('id_empresa',$id)
+                    ->where('id_alerta','2')
+                    ->update([
+                                'cantidad' =>$cantidad,
+                            ]);
+                }
+    //Fin - Registrando las alertas de notificaciones 
 
 }
->>>>>>> 3c35e03a4c18686634bee430fd9e6db485c1d9b2
 
-        $girosempresarial = GiroEmpresarial::orderBy('nombre_giro_empresarial')->get();
-        return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('girosempresarial'));
-    }
-
-    public function pdfReporteActividadEconomica($id){
+ public function pdfReporteActividadEconomica($id){
         // viene ID de giro_empresarial
 
         $infoGiro = GiroComercial::where('id', $id)->first();
@@ -5708,6 +5849,232 @@ public function notificacion_sinfonolas($f1,$f2,$f3,$id){
 
         $mpdf->WriteHTML($tabla,2);
         $mpdf->Output();
+    }
+
+
+
+
+    public function pdfReporteMoraTributaria(){
+
+
+        $cobros_11801=Cobros::select('pago_total')
+        ->where('codigo','11801')
+        ->get();
+     
+        $cobros_11802=Cobros::select('pago_total')
+        ->where('codigo','11802')
+        ->get();
+
+        $total_cobros_11801=0;
+        $total_cobros_11802=0;
+
+        foreach($cobros_11802 as $dato){
+            $pago_totales=$dato->pago_total;
+            $total_cobros_11802=$total_cobros_11802+$pago_totales;
+          
+        }
+
+        foreach($cobros_11801 as $dato){
+            $pago_totales=$dato->pago_total;
+            $total_cobros_11801=$total_cobros_11801+$pago_totales;
+
+        }
+        $total_cobros= $total_cobros_11801+$total_cobros_11802;
+        $total_cobros=number_format($total_cobros, 2, '.', ',');
+        
+        log::info('Total de cobros: '.$total_cobros);
+
+
+        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Mora Tributaria');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+            if(sizeof($cobros_11801) > 0){
+                $tabla .= "<p><strong>Cobros Generados</strong></p>";
+    
+                $tabla .= "
+            <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
+            <tbody>
+            <tr>
+                <th style='text-align: center; font-size:13px; width: 50%'>CÓDIGO</th>
+                <th style='text-align: center; font-size:13px; width: 50%'>MONTO</th>
+            </tr>";
+    
+          
+            //Fila1
+            $tabla .= "<tr>
+            <td style='font-size:11px; text-align: center'>" . "11801"  . "</td>
+            <td style='font-size:11px; text-align: center'>" . "$". $total_cobros_11801 . "</td>
+            </tr>";
+            //Fila2
+            $tabla .= "<tr>
+            <td style='font-size:11px; text-align: center'>" . "11802"  . "</td>
+            <td style='font-size:11px; text-align: center'>" . "$". $total_cobros_11802 . "</td>
+            </tr>";
+            //Fila3
+            $tabla .= "<tr>
+            <td style='font-size:11px; text-align: center'>" . "<h3>Total</b>"  . "</h3>
+            <td style='font-size:11px; text-align: center'>" . "<h3> $".  $total_cobros ."<h/3>" . "</td>
+            </tr>";
+    
+            $tabla .= "</tbody></table>";
+
+            }
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }
+
+    
+    public function indexReporteMoraTributaria(){
+
+       
+        $contribuyentes = Contribuyentes::orderBy('nombre')->get();
+        foreach($contribuyentes as $dato){
+            $dato->nombre_contribuyente= $dato->nombre.' '.$dato->apellido;
+        }
+
+        return view('backend.admin.Reportes.MoraTributaria.vistaReporteMoraTributaria', compact('contribuyentes'));
+    }
+
+    public function calculo_mora(Request $request){
+
+    $fecha_corte=$request->fecha_corte;
+
+    $mora_empresas=Empresas::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+   
+    ->select('empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+    'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+    'empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+    'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+    'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+    'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
+    'giro_comercial.nombre_giro','giro_comercial.id as id_giro_comercial',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica',
+     )
+    ->get();
+
+    if(sizeof($mora_empresas)>0)
+    {
+        
+        foreach($mora_empresas as $dato)
+        {
+                $ultima_fecha_pago=Cobros::latest()
+                ->where('id_empresa',$dato->id_empresa)
+                ->pluck('periodo_cobro_fin')
+                ->first();
+                
+                //** Sacando la ultima fecha de pago */
+                if($ultima_fecha_pago==null)
+                {
+                    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
+                    ->pluck('id')
+                    ->first();
+
+                            if($id_matriculadetalle==null){
+                                    $ultima_fecha_pago=$dato->inicio_operaciones; 
+                                                                    
+                            }else{
+                                    
+                                        $ultima_fecha_pago=CobrosMatriculas::latest()
+                                            ->where('id_matriculas_detalle',$id_matriculadetalle)
+                                            ->pluck('periodo_cobro_fin')
+                                            ->first();
+
+                                        //Nos aseguramos que si la última fecha de pago es nula se obtenga el inicio de operaciones
+                                        if($ultima_fecha_pago==null)
+                                        {
+                                            $ultima_fecha_pago=$dato->inicio_operaciones;
+                                            
+                                        }
+                                            
+                                    }
+                }
+                if($dato->id_giro_comercial!=1){
+                    
+                    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
+                    ->pluck('id')
+                    ->first();
+
+                    $dato_tarifa=CalificacionMatriculas::latest()
+                    ->where('id_matriculas_detalle',$id_matriculadetalle)
+                    ->first();
+                    
+                    if($dato_tarifa===null){
+                        $tarifa=0;
+                        $año='Sin calificación';
+                    }else{
+                            $tarifa=$dato_tarifa->pago_mensual;
+                            $año=$dato_tarifa->año_calificacion;
+                         }
+                    log::info('entro a giro comercial matriculas '.'Tarifa: '.$tarifa);
+
+                }else{
+
+                    $dato_tarifa=calificacion::latest()
+                    ->where('id_empresa',$dato->id_empresa)
+                    ->first();
+                    
+                    if($dato_tarifa===null){
+                        $tarifa=0;
+                        $año='Sin calificación';
+                    }else{
+                            $tarifa=$dato_tarifa->pago_mensual;
+                            $año=$dato_tarifa->año_calificacion;
+                         }
+
+                    log::info('entro a giro comercial empresas '.'Tarifa: '.$tarifa);
+                }
+               
+
+
+                //** Calculos */
+                $cantidad=ceil(carbon::parse($fecha_corte)->diffInDays(carbon::parse($ultima_fecha_pago)));
+                $meses=(($cantidad/365)*12);
+                $meses_redondeado=round($meses,0);
+                $suma_total_pago=number_format(($meses_redondeado*$tarifa), 2, '.', ',');
+                //** Modificando y creando nuevas variables */
+                $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
+                $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
+                $dato->meses=$meses_redondeado;
+                $dato->tarifaE=$tarifa.' '.'('.$año.')';
+                $dato->total_pago=$suma_total_pago;
+
+            }//** FIn Foreach mora_empresas */
+            
+        }
+
+    return [
+        'success' => 1,
+        'mora_empresas'=>$mora_empresas,
+        ];
+
     }
 
 

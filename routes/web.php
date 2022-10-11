@@ -282,8 +282,7 @@ use App\Models\Empresas;
     Route::get('/admin/generar_notificacion/maquinas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_maquinas']);
     Route::get('/admin/generar_notificacion/mesas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_mesas']);
     Route::get('/admin/generar_notificacion/aparatos/pdf/{f1}/{f2}/{id}', [reportesController::class, 'notificacion_aparatos']);
-    Route::get('/admin/generar_notificacion/sinfonolas/pdf/{f1}/{f2}/{f3}/{id}', [reportesController::class, 'notificacion_sinfonolas']);
-
+    Route::get('/admin/generar_notificacion/sinfonolas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_sinfonolas']);
 
     Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor']);
     Route::get('/admin/estado_cuenta_aparatos/pdf/{f1}/{f2}/{ap}/{id}', [reportesController::class, 'estado_cuenta_aparatos']);
@@ -318,11 +317,10 @@ use App\Models\Empresas;
 
     Route::get('/admin/reporte/contribuyentes/index', [reportesController::class, 'indexReporteContribuyentes'])->name('admin.sidebar.reporte.contribuyentes');
     Route::get('/admin/pdf/reporte/contribuyentes/{id}', [reportesController::class, 'pdfReporteContribuyentes']);
-
-
-
-
-
+    
+    Route::get('/admin/reporte/mora_tributaria/index', [reportesController::class, 'indexReporteMoraTributaria'])->name('admin.sidebar.reporte.mora_tributaria');
+    Route::get('/admin/pdf/reporte/mora_tributaria', [reportesController::class, 'pdfReporteMoraTributaria']);
+    Route::post('/admin/calculo/mora', [reportesController::class, 'calculo_mora']);
 
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);

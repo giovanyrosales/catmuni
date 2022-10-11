@@ -28,6 +28,7 @@ use App\Models\TarifaVariable;
 use App\Models\MatriculasDetalleEspecifico;
 use App\Models\NotificacionesHistorico;
 use App\Models\Rotulos;
+use App\Models\RotulosDetalle;
 use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
@@ -124,7 +125,22 @@ class EmpresaController extends Controller
     'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
     'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
     'contribuyente.direccion as direccionCont',
-    'estado_buses.estado as estado_bus','estado_buses.id as id_buses',
+    'estado_buses.estado as estado_bus','estado_buses.id as id_estado_bus',
+    )
+    ->where('id_contribuyente',$request->id_contribuyente)
+    ->get();
+
+    $rotulos_registrados=RotulosDetalle
+    ::join('contribuyente','rotulos_detalle.id_contribuyente','=','contribuyente.id')
+    ->join('estado_rotulo','rotulos_detalle.id_estado_rotulo','=','estado_rotulo.id')
+
+    ->select('rotulos_detalle.id','rotulos_detalle.num_ficha as nFicha','rotulos_detalle.cantidad_rotulos','rotulos_detalle.nom_empresa',
+    'rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa','rotulos_detalle.email_empresa',
+    'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+    'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+    'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+    'contribuyente.direccion as direccionCont',
+    'estado_rotulo.estado as estado_rotulo','estado_rotulo.id as id_estado_rotulo',
     )
     ->where('id_contribuyente',$request->id_contribuyente)
     ->get();
@@ -221,13 +237,19 @@ class EmpresaController extends Controller
          }
     
     //** Buscando Rótulos resgistrados del contribuyente */
+    if(sizeof($rotulos_registrados) == 0)
+    {
+            $rotulos_reg=0;
+    }else{
+            $rotulos_reg=1;
+         }
+    
 
-
-
+    
 
 
     //** Verificando si todas las busquedas realizadas son vacias */
-    if(sizeof($empresas_registradas) == 0 and sizeof($buses_registrados) == 0){
+    if(sizeof($empresas_registradas) == 0 and sizeof($buses_registrados) == 0 and sizeof($rotulos_registrados) == 0){
         return [
                     'success' => 2,
                ];
@@ -237,8 +259,12 @@ class EmpresaController extends Controller
                 'success' => 1,
                 'empresas_registradas'=>$empresas_registradas,
                 'buses_registrados'=>$buses_registrados,
+                'rotulos_registrados'=>$rotulos_registrados,
+
                 'empresas_reg'=>$empresas_reg,
                 'buses_reg'=>$buses_reg,
+                'rotulos_reg'=>$rotulos_reg,
+
                 'Solvencia'=>$Solvencia,
 
            ];
@@ -645,7 +671,7 @@ public function Recalificacion($id)
 public function show($id)
 {
     $fechahoy=carbon::now()->format('Y-m-d');
-
+    //$fechahoy='2022-02-17';
     $empresa= Empresas
     ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
     ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
@@ -889,6 +915,10 @@ public function show($id)
     //**************************** SOLO PARA MATRÍCULAS ****************************/
 
     $AnioActual=carbon::now()->format('Y');
+    log::info('año actual: '.$AnioActual);
+    $AnioAnterior=carbon::now()->subYear()->format('Y-12-31'); 
+    log::info('año anterior: '.$AnioAnterior);
+    log::info('Fecha hoy: '.$fechahoy);
     $month=03;
     $day=31;
     $fechaLimite=Carbon::createFromDate($AnioActual, $month, $day);
@@ -944,25 +974,64 @@ public function show($id)
         //*Si es Aparatos Parlantes
         //* Estado matricula: 1= solvente.
         if($dato->id_matricula==2){
-            if($ComprobandoPagoAlDiaMatriculas<$fechaLimite)  
-                    {
-                            if($estado_moratorioM!=1){
-                            MatriculasDetalle::where('id',$id_detalle)
-                            ->update([
-                                        'id_estado_moratorio' =>'1',              
-                                    ]);
-                                    log::info('estado: solvente');
-                                }else{log::info('estado: Ya estaba en Solvente');}
+            if($ComprobandoPagoAlDiaMatriculas<$AnioAnterior) 
+                //*Si es true esta en Mora 
+                {
+                    if($estado_moratorioM!=2){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'2',              
+                                ]);
+                                log::info('else if 1: estado: en mora');
+                        }else{log::info('else if 1: estado: Ya estaba en mora');} 
 
-                    }else{
-                            if($estado_moratorioM!=2){
-                                    MatriculasDetalle::where('id',$id_detalle)
-                                    ->update([
-                                                'id_estado_moratorio' =>'2',              
-                                            ]);
-                                            log::info('estado: en mora');
-                                    }else{log::info('estado: Ya estaba en mora');}
-                    }
+                }else if($ComprobandoPagoAlDiaMatriculas>$fechaLimite){
+                    //*Si es true esta esta solvente 
+                    if($estado_moratorioM!=1){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'1',              
+                                ]);
+                                log::info('else if 2: estado: solvente');
+                            }else{log::info('else if 2: estado: Ya estaba en Solvente');}
+
+                }else if($ComprobandoPagoAlDiaMatriculas==$AnioAnterior and $fechahoy>$fechaLimite){
+                    //*Si es true esta en Mora
+                    if($estado_moratorioM!=2){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'2',              
+                                ]);
+                                log::info('else if 3: estado: en mora');
+                        }else{log::info('else if 3: estado: Ya estaba en mora');} 
+                }else if($ComprobandoPagoAlDiaMatriculas==$AnioAnterior and $fechahoy<$fechaLimite){
+                    //*Si es true esta esta solvente 
+                    if($estado_moratorioM!=1){
+                        MatriculasDetalle::where('id',$id_detalle)
+                        ->update([
+                                    'id_estado_moratorio' =>'1',              
+                                ]);
+                                log::info('else if 4: estado: solvente');
+                            }else{log::info('else if 4: estado: Ya estaba en Solvente');}
+                }
+
+
+
+
+
+
+
+
+                  
+
+
+
+
+
+
+
+
+
             //*Si es Mesas de billar o  Sinfonolas
             }else if($dato->id_matricula==1 or $dato->id_matricula==4)
             {
@@ -1122,7 +1191,8 @@ public function show($id)
                                                         'pase_matriculas',
                                                         'pase_recalificacion_mat',
                                                         'estado_de_solvencia',
-                                                        'id_giro_comercial'
+                                                        'id_giro_comercial',
+                                                        'ultimoCobroEmpresa'
                                                  
 
                                                 ));
@@ -1470,7 +1540,8 @@ public function calculo_cobros_empresa(Request $request)
                 $cobro->id_usuario =$idusuario;
                 $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
                 $cobro->impuesto_mora_32201 = $impuestos_mora;
-                $cobro->impuestos_11801 = $impuesto_año_actual;
+                $cobro->impuestos = $impuesto_año_actual;
+                $cobro->codigo = $empresa->codigo_atc_economica;
                 $cobro->intereses_moratorios_15302 = $InteresTotal;
                 $cobro->monto_multa_balance_15313 = $monto_pago_multaBalance;
                 $cobro->monto_multaPE_15313 = $totalMultaPagoExtemporaneo;
@@ -1479,7 +1550,6 @@ public function calculo_cobros_empresa(Request $request)
                 $cobro->fecha_cobro = $request->fecha_interesMoratorio;
                 $cobro->periodo_cobro_inicio = $InicioPeriodo;
                 $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
-                $cobro->cod_act_economica = $empresa->codigo_atc_economica;
                 $cobro->tipo_cobro = 'impuesto';
                 $cobro->save();
 
@@ -1898,7 +1968,7 @@ public function cobros($id)
          }
 
     //**¨Fin detectar los cobros especiales */
-log::info($tipo_matricula); //ancla
+log::info($tipo_matricula); 
     $date=Carbon::now()->toDateString();
 
     if ($calificaciones == null)
@@ -2157,7 +2227,6 @@ public function calculo_calificacion(Request $request)
    $licenciaMatricula= $licencia+ $matricula;
    $licenciaMatriculaSigno=$signo . $licenciaMatricula;
 
-    //ancla3
 
    //************* Declarando variables globales para operacion Multa por Balance *************//
    $Year=$año_calificacion;
@@ -2647,7 +2716,6 @@ if($calificacion_anterior==null and $consulta_detalle_matricula!=null)
             /*** Para aumentar el año de calificación */
             $Anio_a_calificar=$calificacion_anterior->año_calificacion+1;
 
-            //ancla4
 
             //************* Declarando variables globales para operacion Multa por Balance *************//
             $Year=$Anio_a_calificar;
@@ -3048,7 +3116,7 @@ public function infoTraspaso(Request $request)
         ->where('id_empresa', "=", $id) 
         ->first();
 
-          //anclaaa      
+            
         $calificaciones=calificacion::latest()
         ->where('id_empresa', $id)     
         ->get();
@@ -3147,6 +3215,7 @@ public function tablahistoricoavisos(){
     'alertas.id as id_alertas','alertas.tipo_alerta',
      )
     ->where('id_alertas','1')
+    ->orderby('id','desc')
     ->get();
 
     foreach($historico_avisos as $dato){
@@ -3167,6 +3236,7 @@ public function tablahistoriconotificaciones(){
     'alertas.id as id_alertas','alertas.tipo_alerta',
      )
     ->where('id_alertas','2')
+    ->orderby('created_at','desc')
     ->get();
 
     foreach($historico_notificaciones as $dato){

@@ -33,6 +33,10 @@
         height: 50px;
         border-radius: 50%;
     }
+  #pago{
+    text-align: center;
+    font-size: 12px;
+  }
 
 *{
     margin: 0;
@@ -408,6 +412,7 @@
                       <tr>
                           <th>
                               <img src="{{ asset('/img/edificio.gif') }}" alt="Avatar" class="avatar">
+                              
                           </th>
                           <td >
                               <a href="#">
@@ -424,6 +429,20 @@
                         <tr>
                           <th>Nombre</th>
                           <td >{{$empresa->nombre}}</td>
+                        </tr>
+                        <tr>
+                          <th>Estado</th>
+                              @if($empresa->estado == 'Activo')
+                              <td> <span class="badge bg-success">Activo</span></td>
+                               @elseif($empresa->estado == 'Cerrado')
+                              <td> <span class="badge bg-danger">Cerrado</span></td>
+                              @else
+                              <td> <span class="badge bg-Warning">En Mora</span></td>
+                              @endif
+                        </tr>
+                        <tr>
+                          <th>Último Pago:</th>
+                          <td><span class="badge badge-pill badge-secondary">{{$ultimoCobroEmpresa}}</span></td>
                         </tr>
                         <tr>
                           <th>Matricula de comercio</th>
@@ -452,16 +471,6 @@
                         <tr>
                           <th>Inicio de Operaciones</th>
                           <td id="inicio_operaciones-ver"><a href="#" target="_blank"> </a>{{$empresa->inicio_operaciones}}</td>
-                        </tr>
-                        <tr>
-                          <th>Estado</th>
-                              @if($empresa->estado == 'Activo')
-                              <td> <span class="badge bg-success">Activo</span></td>
-                               @elseif($empresa->estado == 'Cerrado')
-                              <td> <span class="badge bg-danger">Cerrado</span></td>
-                              @else
-                              <td> <span class="badge bg-Warning">En Mora</span></td>
-                              @endif
                         </tr>
                         <tr>
                           <th>Giro Comercial</th>
@@ -770,7 +779,7 @@ function reporte_notificacion(id){
                   
                   }else if(id_giro_comercial==='2'){
                     //Si es Sinfonolas   
-                    window.open("{{ URL::to('/admin/generar_notificacion/sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + f3 + "/" + id ); 
+                    window.open("{{ URL::to('/admin/generar_notificacion/sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id ); 
 
                   }else if(id_giro_comercial==='3'){
                     //Si es Maquinas Electronicas
