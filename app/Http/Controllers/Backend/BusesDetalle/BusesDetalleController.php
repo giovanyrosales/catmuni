@@ -582,7 +582,7 @@ class BusesDetalleController extends Controller
                         }
                     
             }else{
-                        $ComprobandoPagoAlDia=$empresa->inicio_operaciones;
+                        $ComprobandoPagoAlDia=$buses->fecha_apertura;
                         
                 }
 
