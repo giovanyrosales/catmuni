@@ -449,18 +449,29 @@ class reportesBusesDetalleController extends Controller
 
     public function aviso_buses($id)
     {
+       
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+
+                 
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $imgf1 = 'images/imgf1.png';
+         
+
         $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
         $fechaF = Carbon::parse(Carbon::now());
         $mes = $mesesEspañol[($fechaF->format('n')) - 1];
         $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+       
+      
 
-        $cantidad = 0;
-        $alerta_aviso_buses = alertas_detalle_buses::where('id_contribuyente',$id)
-        ->where('id_alerta','1')
-        ->pluck('cantidad')
-        ->first();
-
-        $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+        $buses = BusesDetalle
+        ::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
         ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
 
         ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
@@ -468,82 +479,75 @@ class reportesBusesDetalleController extends Controller
         'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
         'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
         
-        'contribuyente.nombre as contribuyente', 'contribuyente.apellido',
-        'contribuyente.id as id_contribuyente',
+        'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente', 'contribuyente.apellido',      
         'estado_buses.estado')
                         
         ->find($id);
+        
+      
+        $cantidad = 0;
+        $alerta_aviso_buses = alertas_detalle_buses::where('id_contribuyente', $buses->id_contribuyente)
+        ->where('id_alerta','1')
+        ->pluck('cantidad')
+        ->first();
+
+        
       
         //** Guardando en el historico de avisos */
-        $dato = new NotificacionesHistoricoBuses();     
-        $dato->id_contribuyente = $id;       
-        $dato->id_alertas = '1';        
+        $dato = new NotificacionesHistoricoBuses();
+        $dato->id_contribuyente = $buses->id_contribuyente;
+        $dato->id_alertas = '1';
         $created_at=new Carbon();
         $dato->created_at=$created_at->setTimezone('America/El_Salvador');
-       
         $dato->save();
-        log::info('siiiii');
-        return;
+
 
         if($alerta_aviso_buses === null)
         {
 
-            $cantidad_avisos = $cantidad+1;
+            $cantidad_avisos = $cantidad + 1;
 
             $registro = new alertas_detalle_buses();
-            $registro->id_contribuyente = $id;
+            $registro->id_contribuyente = $buses->id_contribuyente;
             $registro->id_alerta ='1';
             $registro->cantidad = $cantidad_avisos;
             $registro->save();
-
+           
         }else if($alerta_aviso_buses == 0)
         {
 
-            $cantidad = $alerta_aviso_buses +1;
+            $cantidad = $alerta_aviso_buses + 1;
 
-            alertas_detalle_buses::where('id_contribuyente',$id)
+            alertas_detalle_buses::where('id_contribuyente', $buses->id_contribuyente)
             ->where('id_alerta','1')
             ->update([
-                        'cantidad' =>$cantidad,
+                        'cantidad' => $cantidad,
                     ]);
 
-            }else if($alerta_aviso_buses >= 2)
-            {
+        }else if($alerta_aviso_buses >= 2){
 
-                $cantidad=0;
+            $cantidad=0;
 
-                alertas_detalle_buses::where('id_contribuyente',$id)
-                ->where('id_alerta','1')
-                ->update([
-                            'cantidad' =>$cantidad,
-                        ]);
+            alertas_detalle_buses::where('id_contribuyente',$buses->id_contribuyente)
+            ->where('id_alerta','1')
+            ->update([
+                        'cantidad' => $cantidad,
+                    ]);
             }
                 else{
-                        $cantidad=$alerta_aviso_buses + 1;
+                    $cantidad = $alerta_aviso_buses + 1;
 
-                        alertas_detalle_buses::where('id_contribuyente',$id)
-                        ->where('id_alerta','1')
-                        ->update([
-                                    'cantidad' =>$cantidad,
-                                ]);
-                    }
+                    alertas_detalle_buses::where('id_contribuyente',$buses->id_contribuyente)
+                    ->where('id_alerta','1')
+                    ->update([
+                                'cantidad' => $cantidad,
+                            ]);
+                }
+              
 
-
-
-               //Configuracion de Reporte en MPDF
-               $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-               $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
-   
-                       
-               // mostrar errores
-               $mpdf->showImageErrors = false;
-   
-               $logoalcaldia = 'images/logo.png';
-               $logoelsalvador = 'images/EscudoSV.png';
-               $imgf1 = 'images/imgf1.png';
-               
-               
-               $tabla = "<div class='content'>
+                //CREANDO PDF
+              
+                $tabla = "<div class='content'>
                                <img id='logo' src='$logoalcaldia'>
                                <img id='EscudoSV' src='$logoelsalvador'>
                                <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
@@ -551,7 +555,122 @@ class reportesBusesDetalleController extends Controller
                                DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
                                <hr>
                        </div>";
-   
+
+                $tabla .= "<table border='0' align='center' style='width: 650px;'>
+                       <tr>
+                       <td align='right' colspan='2'>
+                            <strong><u> EXP.</u></strong> &nbsp; <strong><u> 1606 </u></strong><br>
+                          <h5> <strong>Fecha,&nbsp; $FechaDelDia</strong></h3>
+                       </td>
+                       </tr>
+                       <br>
+
+                       <tr>
+                       <td colspan='2' style='font-size: 13;'>
+                           <h3><p><strong>Sr/a. &nbsp;&nbsp;$buses->contribuyente&nbsp;$buses->apellido</strong><br>
+                            <strong>Presente</strong><br>
+                            <strong>Cantidad de buses: &nbsp;$buses->cantidad &nbsp;<strong>
+                           </p>
+
+                           &nbsp;
+                           &nbsp;
+                           &nbsp;
+
+                           <tr>
+                           <td colspan='2' align='center'><strong><u>A V I S O</u></strong></td>
+                           </tr>
+                    </td>
+
+                    <br>
+                    <br>
+                    <br>
+
+                    <tr>                    
+                    <td colspan='2'  style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                        <p>
+                        Aprovecho la oportunidad para saludarle y a la vez informarle que la falta de pago de los tributos
+                        municipales en el plazo o fecha límite correspondiente, coloca al sujeto pasivo en situación de mora, 
+                        sin necesidad de requerimiento de parte de la administración tributaria municipal y sin tomar en
+                        consideración, las causas o motivos de esa falta de pago. Art. 45 (Ley General Tributaria).  
+                        <br><br>
+
+                        </p>
+                        <br>
+                        <br>
+                        <br>
+                    </td>
+                    
+                    
+                    </tr>
+
+               
+                    <tr>
+                    <td colspan='2' style='font-size: 13;'>
+                           <p>Nombre del Negocio o Empresa en Mora:<strong> &nbsp;&nbsp;$buses->nom_empresa </strong><br>
+                           <br>
+                            Direccion: <strong> &nbsp;$buses->dir_empresa &nbsp; </strong>
+                           </p>
+                         
+                    </td>
+                    </tr>
+
+                    <br>
+                    <br>
+                    <br>
+
+                    <tr>                    
+                    <td colspan='2'  style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                        <p>
+
+                    La mora del sujeto pasivo producirá, entre otros, los siguientes efectos: 1º Hace exigible la deuda
+                    tributaria, 2º Da lugar al devengo de intereses moratorios, 3º Da lugar a la aplicación de multas, por
+                    configurar dicha mora, una infracción tributaria. Los intereses moratorios se aplicarán desde el
+                    vencimiento de plazo en que debió pagarse el tributo hasta el día de la extinción total de la obligación
+                    tributaria. Art. 46 (Ley General Tributaria), Por tanto, es necesario que se acerque al Departamento
+                    de Catastro Tributario de esta Municipalidad a la mayor brevedad posible, para cancelar la deuda o
+                    solicitar de manera escrita un plan de pago. 
+
+                        <br><br><br>
+
+                    Agradecemos de antemano la atención prestada a esta nota, y esperamos la disposición necesaria
+                    para solventar su situación. 
+
+                        <br><br>
+                    
+                    Atentamente.
+
+                        </p>
+
+                            <br>
+                            <br>
+                            <br>
+                    </td>
+                    <tr>
+
+                    <td colspan='2'  style='text-indent: 20px;font-family: Arial; text-align: center;font-size: 16;'>
+                    <p>
+
+                    Sr. José Roberto Solito<br>
+                    Delegado de cobro
+                    </td>
+
+                    </tr>
+            
+                    </table>";
+
+                       $stylesheet = file_get_contents('css/cssconsolidado.css');
+                       $mpdf->WriteHTML($stylesheet,1);
+                       $mpdf->SetMargins(0, 0, 5);
+           
+           
+                      //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+           
+                       $mpdf->WriteHTML($tabla,2);
+                       $mpdf->Output();
+            //TERMINA CREANDO PDF
+
+
+                                  
     }
 
 

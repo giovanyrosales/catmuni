@@ -59,6 +59,57 @@
           </div>
       <!--body-->
         </div>
+
+        <div class="card-body">
+      <!-- Cajitas para estadísticas inicia aquí -->
+      <section class="content">
+           <br><br>
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="m-0 row justify-content-center" >
+    
+
+        <div class="col-lg-3 col-8">
+            <!-- small box -->
+            <div class="small-box bg-default">
+              <div class="inner" style="text-align: center;">
+                <div class="col-auto">
+                  <i class="fas fa-exclamation-circle " style="color:EBEBEB;float:right;font-size: 7vh;"></i>
+                </div>
+                <p class="font-weight text-primary">
+                  Avisos: &nbsp;<span class="badge badge-pill badge-primary"></span>
+                </p>
+                 
+              </div>
+              <div class="icon">
+                <i class="ion ion-ios-paper"></i>
+              </div>
+              <a class="small-box-footer"><i class="icon ion-pie-graph"></i></a>
+            </div>
+          </div>
+           <!-- ./col -->
+           <div class="col-lg-3 col-8">
+            <!-- small box -->
+            <div class="small-box bg-default" >
+              
+              <div class="inner " style="text-align: center;">
+                <div class="col-auto">
+                  <i class="fas fa-bell" style="color:EBEBEB;float:right;font-size: 7vh;"></i>
+                </div>
+                <p class="font-weight text-primary">
+                  Notificaciones: <span class="badge badge-pill badge-primary"></span>
+                </p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-ios-paper"></i>
+              </div>
+              <a class="small-box-footer"><i class="icon ion-pie-graph"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      </section>
+        </div>
   
         <div class="row">
     <div class="col-md-4 col-sm-8">
@@ -139,7 +190,7 @@
     <div class="col-md-4 col-sm-8">
           
               <a href="#" onclick="Aldia()">           
-              <a href="#" onclick="reporteAviso({{$buses->id}})">           
+              <a href="#" onclick="reporteeAviso({{$buses->id}})">           
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
                     <div class="pull-left">
@@ -639,7 +690,7 @@
       
     }
 
-    function reporteAviso(id){
+    function reporteeAviso(id){
         Swal.fire({
                 title: '¿Realmente desea generar un aviso para este contribuyente?',
                 icon: 'question',
