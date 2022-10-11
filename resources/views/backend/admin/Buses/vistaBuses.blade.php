@@ -187,7 +187,7 @@
      @endif
     </div>
 
-    <div class="col-md-4 col-sm-8">
+    <div class="col-md-4 col-sm-6">
           
               <a href="#" onclick="Aldia()">           
               <a href="#" onclick="reporteeAviso({{$buses->id}})">           
@@ -202,7 +202,7 @@
         </a>
     </div>
 
-    <div class="col-md-4 col-sm-8">
+    <div class="col-md-4 col-sm-6">
             
                   <a href="#" onclick="Aldia()">                
                   <a href="#" onclick="reporte_notificacion()">                  
