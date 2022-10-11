@@ -454,9 +454,9 @@ public function aviso($id)
         $created_at=new Carbon();
         $dato->created_at=$created_at->setTimezone('America/El_Salvador');
         $dato->save();
+
         if($dato->save())
         {
-
             $view = View::make('backend.admin.Empresas.Reportes.Aviso', compact(['FechaDelDia',
             'empresa',
 
@@ -477,6 +477,7 @@ public function aviso($id)
                 $registro->id_alerta ='1';
                 $registro->cantidad = $cantidad_avisos;
                 $registro->save();
+
             }else if($alerta_aviso==0){
 
                 $cantidad=$alerta_aviso+1;

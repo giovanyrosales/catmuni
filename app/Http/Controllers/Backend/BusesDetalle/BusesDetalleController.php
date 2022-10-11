@@ -503,7 +503,7 @@ class BusesDetalleController extends Controller
         'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
         'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
         
-        'contribuyente.nombre as contribuyente', 'contribuyente.apellido',
+        'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente', 'contribuyente.apellido',
         'estado_buses.estado')
 
         ->find($id);
@@ -563,6 +563,31 @@ class BusesDetalleController extends Controller
         }
           return view('backend.admin.Buses.vistaBuses', compact('id','calificacion','buses','listado','detectorNull','detectorEsp','ultimaEsp'));
         }
+
+        //** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
+            $ComprobandoPagoAlDiaBus = CobrosBuses::latest()
+            ->where('id_contribuyente', $buses->id_contribuyente)
+            ->pluck('periodo_cobro_fin')
+                ->first();
+
+        if($ComprobandoPagoAlDiaBus == null){
+            
+            if($consulta_detalle_matricula!=null){
+                    $ComprobandoPagoAlDia=CobrosMatriculas::latest()
+                    ->where('id_matriculas_detalle', $consulta_detalle_matricula->id)
+                    ->pluck('periodo_cobro_fin')
+                        ->first();
+                        if($ComprobandoPagoAlDia==null){
+                            $ComprobandoPagoAlDia=$empresa->inicio_operaciones;
+                        }
+                    
+            }else{
+                        $ComprobandoPagoAlDia=$buses->fecha_apertura;
+                        
+                }
+
+        }//** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
+
           
 }
 
