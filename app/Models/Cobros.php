@@ -15,7 +15,8 @@ class Cobros extends Model
         'id_usuario',
         'cantidad_meses_cobro',
         'impuesto_mora_32201',
-        'impuestos_11801',
+        'impuestos',
+        'codigo',
         'intereses_moratorios_15302',
         'monto_multa_balance_15313',
         'monto_multaPE_15313',
@@ -25,6 +26,6 @@ class Cobros extends Model
         'periodo_cobro_inicio',
         'periodo_cobro_fin',
         'tipo_cobro',
-        'cod_act_economica'
+        
         ];
 }

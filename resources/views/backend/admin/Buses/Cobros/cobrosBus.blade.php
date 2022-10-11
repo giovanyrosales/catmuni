@@ -501,6 +501,7 @@
         </script>
 
         <script>
+
           function reporte_buses(id)
           {
 
@@ -510,7 +511,7 @@
               var f3=(document.getElementById('fecha_interes_moratorio').value);
              
 
-              window.open("{{ URL::to('/admin/estado_cuenta/buses_detalle/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/"  + id );
+              window.open("{{ URL::to('/admin/estado_cuenta/buses_detalle/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
 
           }
 

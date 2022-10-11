@@ -4070,6 +4070,45 @@ public function notificacion_maquinas($f1,$f2,$ti,$f3,$id){
         $mpdf->WriteHTML($tabla,2);
         $mpdf->Output();
     }//Fin If Dato->save
+
+      //Registrando las alertas de notificaciones 
+      $cantidad=0;
+      $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+      ->where('id_alerta','2')
+      ->pluck('cantidad')
+      ->first();
+  
+      if($alerta_notificacion===null){
+  
+          $cantidad_notificaciones=$cantidad+1;
+  
+          $registro = new alertas_detalle();
+          $registro->id_empresa = $id;
+          $registro->id_alerta ='2';
+          $registro->cantidad = $cantidad_notificaciones;
+          $registro->save();
+  
+      }else if($alerta_notificacion==0)
+      {
+          $cantidad=$alerta_notificacion+1;
+  
+          alertas_detalle::where('id_empresa',$id)
+          ->where('id_alerta','2')
+          ->update([
+                      'cantidad' =>$cantidad,
+                  ]);
+          }
+          else
+                  { $cantidad=$alerta_notificacion+1;
+  
+                      alertas_detalle::where('id_empresa',$id)
+                      ->where('id_alerta','2')
+                      ->update([
+                                  'cantidad' =>$cantidad,
+                              ]);
+                  }
+      //Fin - Registrando las alertas de notificaciones 
+      
 }
 
 public function notificacion_mesas($f1,$f2,$ti,$f3,$id){
@@ -4608,6 +4647,45 @@ public function notificacion_mesas($f1,$f2,$ti,$f3,$id){
         $mpdf->WriteHTML($tabla,2);
         $mpdf->Output();
     }//Fin If Dato->save
+
+      //Registrando las alertas de notificaciones 
+      $cantidad=0;
+      $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+      ->where('id_alerta','2')
+      ->pluck('cantidad')
+      ->first();
+  
+      if($alerta_notificacion===null){
+  
+          $cantidad_notificaciones=$cantidad+1;
+  
+          $registro = new alertas_detalle();
+          $registro->id_empresa = $id;
+          $registro->id_alerta ='2';
+          $registro->cantidad = $cantidad_notificaciones;
+          $registro->save();
+  
+      }else if($alerta_notificacion==0)
+      {
+          $cantidad=$alerta_notificacion+1;
+  
+          alertas_detalle::where('id_empresa',$id)
+          ->where('id_alerta','2')
+          ->update([
+                      'cantidad' =>$cantidad,
+                  ]);
+          }
+          else
+                  { $cantidad=$alerta_notificacion+1;
+  
+                      alertas_detalle::where('id_empresa',$id)
+                      ->where('id_alerta','2')
+                      ->update([
+                                  'cantidad' =>$cantidad,
+                              ]);
+                  }
+      //Fin - Registrando las alertas de notificaciones 
+
 }
 
 public function notificacion_aparatos($f1,$f2,$id){
@@ -4895,6 +4973,45 @@ public function notificacion_aparatos($f1,$f2,$id){
         $mpdf->WriteHTML($tabla,2);
         $mpdf->Output();
     }//Fin If Dato->save
+
+      //Registrando las alertas de notificaciones 
+      $cantidad=0;
+      $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+      ->where('id_alerta','2')
+      ->pluck('cantidad')
+      ->first();
+  
+      if($alerta_notificacion===null){
+  
+          $cantidad_notificaciones=$cantidad+1;
+  
+          $registro = new alertas_detalle();
+          $registro->id_empresa = $id;
+          $registro->id_alerta ='2';
+          $registro->cantidad = $cantidad_notificaciones;
+          $registro->save();
+  
+      }else if($alerta_notificacion==0)
+      {
+          $cantidad=$alerta_notificacion+1;
+  
+          alertas_detalle::where('id_empresa',$id)
+          ->where('id_alerta','2')
+          ->update([
+                      'cantidad' =>$cantidad,
+                  ]);
+          }
+          else
+                  { $cantidad=$alerta_notificacion+1;
+  
+                      alertas_detalle::where('id_empresa',$id)
+                      ->where('id_alerta','2')
+                      ->update([
+                                  'cantidad' =>$cantidad,
+                              ]);
+                  }
+      //Fin - Registrando las alertas de notificaciones 
+
 }
 
 public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
@@ -5422,6 +5539,44 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
     }//Fin If Dato->save
 
+    //Registrando las alertas de notificaciones 
+    $cantidad=0;
+    $alerta_notificacion=alertas_detalle::where('id_empresa',$id)
+    ->where('id_alerta','2')
+    ->pluck('cantidad')
+    ->first();
+
+    if($alerta_notificacion===null){
+
+        $cantidad_notificaciones=$cantidad+1;
+
+        $registro = new alertas_detalle();
+        $registro->id_empresa = $id;
+        $registro->id_alerta ='2';
+        $registro->cantidad = $cantidad_notificaciones;
+        $registro->save();
+
+    }else if($alerta_notificacion==0)
+    {
+        $cantidad=$alerta_notificacion+1;
+
+        alertas_detalle::where('id_empresa',$id)
+        ->where('id_alerta','2')
+        ->update([
+                    'cantidad' =>$cantidad,
+                ]);
+        }
+        else
+                { $cantidad=$alerta_notificacion+1;
+
+                    alertas_detalle::where('id_empresa',$id)
+                    ->where('id_alerta','2')
+                    ->update([
+                                'cantidad' =>$cantidad,
+                            ]);
+                }
+    //Fin - Registrando las alertas de notificaciones 
+
 }
 
  public function pdfReporteActividadEconomica($id){
@@ -5693,6 +5848,232 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
         $mpdf->WriteHTML($tabla,2);
         $mpdf->Output();
+    }
+
+
+
+
+    public function pdfReporteMoraTributaria(){
+
+
+        $cobros_11801=Cobros::select('pago_total')
+        ->where('codigo','11801')
+        ->get();
+     
+        $cobros_11802=Cobros::select('pago_total')
+        ->where('codigo','11802')
+        ->get();
+
+        $total_cobros_11801=0;
+        $total_cobros_11802=0;
+
+        foreach($cobros_11802 as $dato){
+            $pago_totales=$dato->pago_total;
+            $total_cobros_11802=$total_cobros_11802+$pago_totales;
+          
+        }
+
+        foreach($cobros_11801 as $dato){
+            $pago_totales=$dato->pago_total;
+            $total_cobros_11801=$total_cobros_11801+$pago_totales;
+
+        }
+        $total_cobros= $total_cobros_11801+$total_cobros_11802;
+        $total_cobros=number_format($total_cobros, 2, '.', ',');
+        
+        log::info('Total de cobros: '.$total_cobros);
+
+
+        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Mora Tributaria');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+            if(sizeof($cobros_11801) > 0){
+                $tabla .= "<p><strong>Cobros Generados</strong></p>";
+    
+                $tabla .= "
+            <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
+            <tbody>
+            <tr>
+                <th style='text-align: center; font-size:13px; width: 50%'>CÓDIGO</th>
+                <th style='text-align: center; font-size:13px; width: 50%'>MONTO</th>
+            </tr>";
+    
+          
+            //Fila1
+            $tabla .= "<tr>
+            <td style='font-size:11px; text-align: center'>" . "11801"  . "</td>
+            <td style='font-size:11px; text-align: center'>" . "$". $total_cobros_11801 . "</td>
+            </tr>";
+            //Fila2
+            $tabla .= "<tr>
+            <td style='font-size:11px; text-align: center'>" . "11802"  . "</td>
+            <td style='font-size:11px; text-align: center'>" . "$". $total_cobros_11802 . "</td>
+            </tr>";
+            //Fila3
+            $tabla .= "<tr>
+            <td style='font-size:11px; text-align: center'>" . "<h3>Total</b>"  . "</h3>
+            <td style='font-size:11px; text-align: center'>" . "<h3> $".  $total_cobros ."<h/3>" . "</td>
+            </tr>";
+    
+            $tabla .= "</tbody></table>";
+
+            }
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }
+
+    
+    public function indexReporteMoraTributaria(){
+
+       
+        $contribuyentes = Contribuyentes::orderBy('nombre')->get();
+        foreach($contribuyentes as $dato){
+            $dato->nombre_contribuyente= $dato->nombre.' '.$dato->apellido;
+        }
+
+        return view('backend.admin.Reportes.MoraTributaria.vistaReporteMoraTributaria', compact('contribuyentes'));
+    }
+
+    public function calculo_mora(Request $request){
+
+    $fecha_corte=$request->fecha_corte;
+
+    $mora_empresas=Empresas::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+   
+    ->select('empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+    'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+    'empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+    'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+    'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+    'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
+    'giro_comercial.nombre_giro','giro_comercial.id as id_giro_comercial',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica',
+     )
+    ->get();
+
+    if(sizeof($mora_empresas)>0)
+    {
+        
+        foreach($mora_empresas as $dato)
+        {
+                $ultima_fecha_pago=Cobros::latest()
+                ->where('id_empresa',$dato->id_empresa)
+                ->pluck('periodo_cobro_fin')
+                ->first();
+                
+                //** Sacando la ultima fecha de pago */
+                if($ultima_fecha_pago==null)
+                {
+                    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
+                    ->pluck('id')
+                    ->first();
+
+                            if($id_matriculadetalle==null){
+                                    $ultima_fecha_pago=$dato->inicio_operaciones; 
+                                                                    
+                            }else{
+                                    
+                                        $ultima_fecha_pago=CobrosMatriculas::latest()
+                                            ->where('id_matriculas_detalle',$id_matriculadetalle)
+                                            ->pluck('periodo_cobro_fin')
+                                            ->first();
+
+                                        //Nos aseguramos que si la última fecha de pago es nula se obtenga el inicio de operaciones
+                                        if($ultima_fecha_pago==null)
+                                        {
+                                            $ultima_fecha_pago=$dato->inicio_operaciones;
+                                            
+                                        }
+                                            
+                                    }
+                }
+                if($dato->id_giro_comercial!=1){
+                    
+                    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
+                    ->pluck('id')
+                    ->first();
+
+                    $dato_tarifa=CalificacionMatriculas::latest()
+                    ->where('id_matriculas_detalle',$id_matriculadetalle)
+                    ->first();
+                    
+                    if($dato_tarifa===null){
+                        $tarifa=0;
+                        $año='Sin calificación';
+                    }else{
+                            $tarifa=$dato_tarifa->pago_mensual;
+                            $año=$dato_tarifa->año_calificacion;
+                         }
+                    log::info('entro a giro comercial matriculas '.'Tarifa: '.$tarifa);
+
+                }else{
+
+                    $dato_tarifa=calificacion::latest()
+                    ->where('id_empresa',$dato->id_empresa)
+                    ->first();
+                    
+                    if($dato_tarifa===null){
+                        $tarifa=0;
+                        $año='Sin calificación';
+                    }else{
+                            $tarifa=$dato_tarifa->pago_mensual;
+                            $año=$dato_tarifa->año_calificacion;
+                         }
+
+                    log::info('entro a giro comercial empresas '.'Tarifa: '.$tarifa);
+                }
+               
+
+
+                //** Calculos */
+                $cantidad=ceil(carbon::parse($fecha_corte)->diffInDays(carbon::parse($ultima_fecha_pago)));
+                $meses=(($cantidad/365)*12);
+                $meses_redondeado=round($meses,0);
+                $suma_total_pago=number_format(($meses_redondeado*$tarifa), 2, '.', ',');
+                //** Modificando y creando nuevas variables */
+                $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
+                $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
+                $dato->meses=$meses_redondeado;
+                $dato->tarifaE=$tarifa.' '.'('.$año.')';
+                $dato->total_pago=$suma_total_pago;
+
+            }//** FIn Foreach mora_empresas */
+            
+        }
+
+    return [
+        'success' => 1,
+        'mora_empresas'=>$mora_empresas,
+        ];
+
     }
 
 

@@ -217,16 +217,9 @@
                                 </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('admin.crear.buses.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-plus-circle nav-icon"></i>
-                                <p>1</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('admin.listarBuses.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-list-ul nav-icon"></i>
-                                <p>2</p>
+                                <a href="{{ route('admin.sidebar.reporte.mora_tributaria') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-file-alt nav-icon"></i>
+                                <p>Mora Tributaria</p>
                                 </a>
                             </li>
 
@@ -243,7 +236,7 @@
                                     <p>Contribuyentes</p>
                                 </a>
                             </li>
-
+                            
 
                         </ul>
                 <!-- Finaliza Grupo Rótulos -->

@@ -28,6 +28,7 @@ use App\Models\TarifaVariable;
 use App\Models\MatriculasDetalleEspecifico;
 use App\Models\NotificacionesHistorico;
 use App\Models\Rotulos;
+use App\Models\RotulosDetalle;
 use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
@@ -124,7 +125,22 @@ class EmpresaController extends Controller
     'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
     'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
     'contribuyente.direccion as direccionCont',
-    'estado_buses.estado as estado_bus','estado_buses.id as id_buses',
+    'estado_buses.estado as estado_bus','estado_buses.id as id_estado_bus',
+    )
+    ->where('id_contribuyente',$request->id_contribuyente)
+    ->get();
+
+    $rotulos_registrados=RotulosDetalle
+    ::join('contribuyente','rotulos_detalle.id_contribuyente','=','contribuyente.id')
+    ->join('estado_rotulo','rotulos_detalle.id_estado_rotulo','=','estado_rotulo.id')
+
+    ->select('rotulos_detalle.id','rotulos_detalle.num_ficha as nFicha','rotulos_detalle.cantidad_rotulos','rotulos_detalle.nom_empresa',
+    'rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa','rotulos_detalle.email_empresa',
+    'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+    'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+    'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+    'contribuyente.direccion as direccionCont',
+    'estado_rotulo.estado as estado_rotulo','estado_rotulo.id as id_estado_rotulo',
     )
     ->where('id_contribuyente',$request->id_contribuyente)
     ->get();
@@ -221,13 +237,19 @@ class EmpresaController extends Controller
          }
     
     //** Buscando Rótulos resgistrados del contribuyente */
+    if(sizeof($rotulos_registrados) == 0)
+    {
+            $rotulos_reg=0;
+    }else{
+            $rotulos_reg=1;
+         }
+    
 
-
-
+    
 
 
     //** Verificando si todas las busquedas realizadas son vacias */
-    if(sizeof($empresas_registradas) == 0 and sizeof($buses_registrados) == 0){
+    if(sizeof($empresas_registradas) == 0 and sizeof($buses_registrados) == 0 and sizeof($rotulos_registrados) == 0){
         return [
                     'success' => 2,
                ];
@@ -237,8 +259,12 @@ class EmpresaController extends Controller
                 'success' => 1,
                 'empresas_registradas'=>$empresas_registradas,
                 'buses_registrados'=>$buses_registrados,
+                'rotulos_registrados'=>$rotulos_registrados,
+
                 'empresas_reg'=>$empresas_reg,
                 'buses_reg'=>$buses_reg,
+                'rotulos_reg'=>$rotulos_reg,
+
                 'Solvencia'=>$Solvencia,
 
            ];
@@ -1165,7 +1191,8 @@ public function show($id)
                                                         'pase_matriculas',
                                                         'pase_recalificacion_mat',
                                                         'estado_de_solvencia',
-                                                        'id_giro_comercial'
+                                                        'id_giro_comercial',
+                                                        'ultimoCobroEmpresa'
                                                  
 
                                                 ));
@@ -1513,7 +1540,8 @@ public function calculo_cobros_empresa(Request $request)
                 $cobro->id_usuario =$idusuario;
                 $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
                 $cobro->impuesto_mora_32201 = $impuestos_mora;
-                $cobro->impuestos_11801 = $impuesto_año_actual;
+                $cobro->impuestos = $impuesto_año_actual;
+                $cobro->codigo = $empresa->codigo_atc_economica;
                 $cobro->intereses_moratorios_15302 = $InteresTotal;
                 $cobro->monto_multa_balance_15313 = $monto_pago_multaBalance;
                 $cobro->monto_multaPE_15313 = $totalMultaPagoExtemporaneo;
@@ -1522,7 +1550,6 @@ public function calculo_cobros_empresa(Request $request)
                 $cobro->fecha_cobro = $request->fecha_interesMoratorio;
                 $cobro->periodo_cobro_inicio = $InicioPeriodo;
                 $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
-                $cobro->cod_act_economica = $empresa->codigo_atc_economica;
                 $cobro->tipo_cobro = 'impuesto';
                 $cobro->save();
 
@@ -3209,7 +3236,7 @@ public function tablahistoriconotificaciones(){
     'alertas.id as id_alertas','alertas.tipo_alerta',
      )
     ->where('id_alertas','2')
-    ->orderby('id','desc')
+    ->orderby('created_at','desc')
     ->get();
 
     foreach($historico_notificaciones as $dato){

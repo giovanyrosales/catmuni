@@ -771,7 +771,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <td>{{ $dato-> fecha_cobro }}</td>
                     <td>{{ $dato-> cantidad_meses_cobro }}</td>
                     <td>${{ $dato-> impuesto_mora_32201 }}</td>
-                    <td>${{ $dato-> impuestos_11801 }}</td>
+                    <td>${{ $dato-> impuestos }}</td>
                     <td>${{ $dato-> intereses_moratorios_15302 }}</td>
                     <td>${{ $dato-> monto_multa_balance_15313 }}</td>
                     <td>${{ $dato-> monto_multaPE_15313 }}</td>

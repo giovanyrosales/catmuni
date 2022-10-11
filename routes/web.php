@@ -317,15 +317,18 @@ use App\Models\Empresas;
 
     Route::get('/admin/reporte/contribuyentes/index', [reportesController::class, 'indexReporteContribuyentes'])->name('admin.sidebar.reporte.contribuyentes');
     Route::get('/admin/pdf/reporte/contribuyentes/{id}', [reportesController::class, 'pdfReporteContribuyentes']);
-
-
-
-
-
+    
+    Route::get('/admin/reporte/mora_tributaria/index', [reportesController::class, 'indexReporteMoraTributaria'])->name('admin.sidebar.reporte.mora_tributaria');
+    Route::get('/admin/pdf/reporte/mora_tributaria', [reportesController::class, 'pdfReporteMoraTributaria']);
+    Route::post('/admin/calculo/mora', [reportesController::class, 'calculo_mora']);
 
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
 
+
+
     //REPORTES BUSES
-    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{ib}/{id_contribuyente}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
+    Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{f3}/{id}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
+    Route::get('/admin/generar_aviso/buses/pdf/{id}', [reportesBusesDetalleController::class, 'aviso_buses']);
+

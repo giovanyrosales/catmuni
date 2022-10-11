@@ -246,9 +246,33 @@
                           <!--Tabla 12-->
                           <table class="table" id="matriz_ver_buses" style="border: 100px;" data-toggle="table">
                                     <thead>
+                                      <tr>  
+                                        <th style="width: 15%; text-align: center;font-weight: 700;">Opciones</th>                         
+                                        <th style="width: 25%; text-align: center;font-weight: 700;">Empresa</th>
+                                        <th style="width: 15%; text-align: center;font-weight: 700;">Cantidad</th>
+                                        <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
+                                        <th style="width: 15%; text-align: center;font-weight: 700;">N° Ficha</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                
+                                    </tbody>
+                          </table>
+                      </div>
+            </div>
+
+                        <!--Tarjeta para Buses-->
+                        <div class="card border-success mb-3" id="tarjeta_rotulos_registrados">
+                    <div class="card-header" style="background-color:#DE4C35; color: #FFFFFF;">
+                        <h5><span class="badge badge-pill badge-dark"><i class="fas fa-sign"></i>&nbsp;</span>&nbsp;<b>Rótulos registrados</b></h5>
+                    </div>
+                      <div class="card-body">
+                          <!--Tabla 12-->
+                          <table class="table" id="matriz_ver_rotulos" style="border: 100px;" data-toggle="table">
+                                    <thead>
                                     <tr>  
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Opciones</th>                         
-                                      <th style="width: 25%; text-align: center;font-weight: 700;">Empresa</th>
+                                      <th style="width: 25%; text-align: center;font-weight: 700;">Rótulo</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Cantidad</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">N° Ficha</th>
@@ -321,6 +345,7 @@ $(document).ready(function(){
   
   $('#tarjeta_empresas_registradas').hide();
   $('#tarjeta_buses_registradas').hide();
+  $('#tarjeta_rotulos_registrados').hide();
   $('#contenedor').hide();
   $('#constancia_simple').hide();
 
@@ -333,6 +358,7 @@ function buscar_obligaciones_tributarias(){
           openLoading();
          $("#matriz_ver_empresas tbody tr").remove();
          $("#matriz_ver_buses tbody tr").remove();
+         $("#matriz_ver_rotulos tbody tr").remove();
 
           var id_contribuyente = document.getElementById('select-contribuyente').value;
           
@@ -373,6 +399,11 @@ function buscar_obligaciones_tributarias(){
                                 $('#tarjeta_empresas_registradas').show();
                             }
                         
+                        if(response.data.rotulos_reg==0){
+                          $('#tarjeta_rotulos_registrados').hide();
+                        }else{
+                                $('#tarjeta_rotulos_registrados').show();
+                            }
 
                         if(response.data.Solvencia===1){
                             $('#contenedor').show();
@@ -441,7 +472,7 @@ function buscar_obligaciones_tributarias(){
                                 
                                 <td align="center">
                         
-                                ${infodetalle_bus[i].id_buses!=1? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-danger">Cerrado</span>'}
+                                ${infodetalle_bus[i].id_estado_bus!=1? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-danger">Cerrado</span>'}
 
                                 </td>
 
@@ -454,6 +485,42 @@ function buscar_obligaciones_tributarias(){
                             $("#matriz_ver_buses tbody").append(markup);
                             
                             }//*Cierre de for buses
+
+                            //****  Cargar información buses registradas ****//
+                            var infodetalle_rotulo = response.data.rotulos_registrados;
+
+                            for (var i = 0; i < infodetalle_rotulo.length; i++) {
+
+                             var markup = `<tr id="${infodetalle_rotulo[i].id}">
+                            
+                                <td align="center">               
+                                      <button type="button" class="btn btn-danger btn-xs" onclick="VerRotulos(${infodetalle_rotulo[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;<b>VER</b>&nbsp;&nbsp;</button>
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle_rotulo[i].nom_empresa}
+                                </td>
+                            
+                                <td align="center">
+                                ${infodetalle_rotulo[i].cantidad_rotulos}
+                                </td>
+                                
+                                <td align="center">
+                        
+                                ${infodetalle_rotulo[i].id_estado_rotulo!=1? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-danger">Cerrado</span>'}
+
+                                </td>
+
+                                <td align="center">
+                                <span class="badge badge-pill badge-dark"> ${infodetalle_rotulo[i].nFicha} </span>
+                                </td>
+
+                                </tr>`;
+
+                            $("#matriz_ver_rotulos tbody").append(markup);
+                            
+                            }//*Cierre de for rótulos
+
 
 
 
@@ -468,6 +535,7 @@ function buscar_obligaciones_tributarias(){
                                 $('#img_contribuyente').show();
                                 $('#tarjeta_empresas_registradas').hide();
                                 $('#tarjeta_buses_registradas').hide();
+                                $('#tarjeta_rotulos_registrados').hide();
 
                     }
             })
@@ -495,6 +563,12 @@ function VerBuses(id_bus)
         openLoading();
         window.location.href="{{ url('/admin/buses/vista/') }}/"+id_bus;
     }
+
+function VerRotulos(id_rotulo)
+{
+    openLoading();
+    window.location.href="{{ url('/admin/Rotulos/vista//') }}/"+id_rotulo;
+}
 
 function modalMensaje(titulo, mensaje)
 {
