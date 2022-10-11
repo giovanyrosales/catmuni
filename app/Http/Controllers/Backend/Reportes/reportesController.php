@@ -6015,6 +6015,8 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                                             
                                     }
                 }
+
+                //** Sacando la ultima tarifa */
                 if($dato->id_giro_comercial!=1){
                     
                     $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
@@ -6032,7 +6034,7 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                             $tarifa=$dato_tarifa->pago_mensual;
                             $año=$dato_tarifa->año_calificacion;
                          }
-                    log::info('entro a giro comercial matriculas '.'Tarifa: '.$tarifa);
+                   
 
                 }else{
 
@@ -6048,7 +6050,6 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                             $año=$dato_tarifa->año_calificacion;
                          }
 
-                    log::info('entro a giro comercial empresas '.'Tarifa: '.$tarifa);
                 }
                
 
@@ -6057,13 +6058,14 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                 $cantidad=ceil(carbon::parse($fecha_corte)->diffInDays(carbon::parse($ultima_fecha_pago)));
                 $meses=(($cantidad/365)*12);
                 $meses_redondeado=round($meses,0);
-                $suma_total_pago=number_format(($meses_redondeado*$tarifa), 2, '.', ',');
+                $calculo_total_pago=number_format(($meses_redondeado*$tarifa), 2, '.', ',');
+
                 //** Modificando y creando nuevas variables */
                 $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
                 $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
                 $dato->meses=$meses_redondeado;
                 $dato->tarifaE=$tarifa.' '.'('.$año.')';
-                $dato->total_pago=$suma_total_pago;
+                $dato->total_pago=$calculo_total_pago;
 
             }//** FIn Foreach mora_empresas */
             

@@ -139,7 +139,7 @@
                     Swal.fire({
                           position:'top-end',
                           icon: 'success',
-                          title: '¡Calculo realizado!',
+                          title: '¡Cálculo realizado!',
                           showConfirmButton: true,                     
                         })
       
