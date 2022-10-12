@@ -78,7 +78,7 @@ class reportesBusesDetalleController extends Controller
                 'contribuyente.id as id_contribuyente',
                 'estado_buses.estado')
                                 
-            ->find($id);
+                ->find($id);
 
         
             $fechahoy=carbon::now()->format('d-m-Y');
@@ -426,9 +426,10 @@ class reportesBusesDetalleController extends Controller
                         </p>
                     </td>
                 </tr>
+               
                 <tr align='center'>
                     <td colspan='2' align='center'>
-                            
+                  
                             <img id='imgf1' src='$imgf1'>
                     </td>
                 </tr>
@@ -440,7 +441,7 @@ class reportesBusesDetalleController extends Controller
 
 
             //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
-
+           
             $mpdf->WriteHTML($tabla,2);
             $mpdf->Output();
 
@@ -671,6 +672,343 @@ class reportesBusesDetalleController extends Controller
 
 
                                   
+    }
+
+    public function reporte_notificacion_bus($f1,$f2,$f3,$id,$ti)
+    {
+
+        log::info([$f1,$f2,$f3,$id,$ti]);
+        $f1_original=$f1;
+
+
+        $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+        ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+
+        ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+        'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+        'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+        'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+        
+        'contribuyente.nombre as contribuyente', 'contribuyente.apellido',
+        'contribuyente.id as id_contribuyente',
+        'estado_buses.estado')
+                        
+        ->find($id);
+
+        //Guardando en el historico de notificacines
+        $aviso = new NotificacionesHistoricoBuses();
+        $aviso->id_contribuyente = $buses->id_contribuyente;
+        $aviso->id_alertas = '2';
+        $created_at=new Carbon();
+        $aviso->created_at=$created_at->setTimezone('America/El_Salvador');
+        $aviso->save();
+      
+
+            $MesNumero=Carbon::createFromDate($f1)->format('d');
+        //log::info($MesNumero);
+
+        if($MesNumero<='15')
+        {
+            $f1=Carbon::parse($f1)->format('Y-m-01');
+            $f1=Carbon::parse($f1);
+            $InicioPeriodo=Carbon::createFromDate($f1);
+            $InicioPeriodo= $InicioPeriodo->format('Y-m-d');
+            //log::info('inicio de mes');
+        }
+        else
+            {
+            $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
+            $InicioPeriodo=Carbon::parse($f1_original)->addMonthsNoOverflow(1)->day(1)->format('Y-m-d');
+            // log::info('fin de mes ');
+            }
+        
+        $f2=Carbon::parse($f2);
+        $f3=Carbon::parse($f3);
+        $añoActual=Carbon::now()->format('Y');
+    
+        //** Inicia - Para determinar el intervalo de años a pagar */
+        $monthInicio='01';
+        $dayInicio='01';
+        $monthFinal='12';
+        $dayFinal='31';
+        $AñoInicio=$f1->format('Y');
+        $AñoFinal=$f2->format('Y');
+        $FechaInicio=Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+        $FechaFinal=Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+        //** Finaliza - Para determinar el intervalo de años a pagar */
+
+    
+        //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
+        $PagoUltimoDiaMes=Carbon::parse($f2)->endOfMonth()->format('Y-m-d');
+        //Log::info($PagoUltimoDiaMes);
+        //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+
+        //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
+
+        $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+        Log::info('Inicio moratorio inicia aqui');
+        Log::info($FechaDeInicioMoratorio);
+        $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+        //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+
+    
+      
+      
+        $calificacion = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+            ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+    
+            ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+            'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+            'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+            'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+            
+            'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+            'estado_buses.estado')
+                            
+        ->find($id);
+
+     
+        $calificaciones = CalificacionBuses::select('calificacion_buses.id','calificacion_buses.cantidad','calificacion_buses.monto','calificacion_buses.pago_mensual',
+        'calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion')
+       
+        ->where('id_buses_detalle', $id)
+        ->latest()
+        ->first(); 
+          
+        //Termina consulta para mostrar los rótulos que pertenecen a una sola empresa
+     
+          
+
+            if($f1->lt($PagoUltimoDiaMes))
+            {
+
+                $intervalo = DateInterval::createFromDateString('1 Year');
+                $periodo = new DatePeriod ($FechaInicio, $intervalo, $FechaFinal);
+
+                $Cantidad_MesesTotal=0;
+                $impuestoTotal=0;
+                $impuestos_mora=0;
+                $impuesto_año_actual=0;
+                $multaPagoExtemporaneo=0;         
+                $totalMultaPagoExtemporaneo=0;
+
+           
+                $tarifas=CalificacionBuses::select('monto')
+                ->where('id_buses_detalle',$id
+                )
+                 ->get();
+
+                $tarifa_total=0;
+                 foreach($tarifas as $dt)
+                 {
+                    $tarifa=$dt->monto;
+                    $tarifa_total=$tarifa_total+$tarifa;
+
+                 }
+                //** Inicia Foreach para cálculo de impuesto por años */
+                foreach ($periodo as $dt) {
+
+                    $AñoPago =$dt->format('Y');
+                
+                    $AñoSumado=Carbon::createFromDate($AñoPago, 12, 31);
+
+                    log::info($tarifa_total);
+            
+                            if($AñoPago==$AñoFinal)//Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
+                                {
+                                    $CantidadMeses=ceil(($f1->floatDiffInRealMonths($PagoUltimoDiaMes)));
+                                }
+                            else
+                                {
+
+                                    $CantidadMeses=ceil(($f1->floatDiffInRealMonths($AñoSumado)));  
+                                    $f1=$f1->addYears(1)->month(1)->day(1);
+    
+                                }
+
+                    //*** calculo */
+        
+                    $impuestosValor=(round($tarifa_total*$CantidadMeses,2));
+                    $impuestoTotal=$impuestoTotal+$impuestosValor;
+                    $Cantidad_MesesTotal=$Cantidad_MesesTotal+$CantidadMeses;
+
+                    if($AñoPago==$AñoFinal and $AñoPago<$añoActual)
+                    {
+                            $impuestos_mora=$impuestos_mora+$impuestosValor;
+                            $impuesto_año_actual=$impuesto_año_actual;
+                    }
+                    else if( $AñoPago==$AñoFinal and $AñoPago==$añoActual)
+                    {
+                            $impuestos_mora=$impuestos_mora;
+                            $impuesto_año_actual=$impuesto_año_actual+$impuestosValor;
+                    }else{
+                            $impuestos_mora=$impuestos_mora+$impuestosValor;
+                            $impuesto_año_actual=$impuesto_año_actual;
+                    }
+
+                    $linea="_____________________<<::>>";
+                    $divisiondefila=".....................";
+    
+    
+
+                    Log::info($AñoPago);
+                    Log::info($CantidadMeses);
+                    Log::info($tarifa);
+                    Log::info($impuestosValor);
+                    Log::info($impuestos_mora);
+                    Log::info('año actual '. $impuesto_año_actual);                    
+                    Log::info($AñoSumado);                    
+                    Log::info($f2);
+                    Log::info($divisiondefila);             
+                    Log::info($linea);
+
+                }   //** Termina el foreach */
+
+                //** -------Inicia - Cálculo para intereses--------- */
+
+                $TasaInteresDiaria=($ti/365);
+                $InteresTotal=0;
+                $MesDeInteres=Carbon::parse($FechaDeInicioMoratorio)->subDays(30);
+                $contador=0;
+                $fechaFinMeses=$f2->addMonthsNoOverflow(1);
+                $intervalo2 = DateInterval::createFromDateString('1 Month');
+                $periodo2 = new DatePeriod ($MesDeInteres, $intervalo2, $fechaFinMeses);
+                        
+                //** Inicia Foreach para cálculo por meses */
+                foreach ($periodo2 as $dt) 
+                {
+                   $contador=$contador+1;
+                   $divisiondefila=".....................";
+
+                        $Date1=Carbon::parse($MesDeInteres)->day(1);
+                        $Date2=Carbon::parse($MesDeInteres)->endOfMonth();
+                        
+                        $MesDeInteresDiainicial=Carbon::parse($Date1)->format('Y-m-d'); 
+                        $MesDeInteresDiaFinal=Carbon::parse($Date2)->format('Y-m-d'); 
+                        
+            
+                    $Fecha30Sumada=Carbon::parse($MesDeInteresDiaFinal)->addDays(30); 
+                    Log::info($Fecha30Sumada);
+                    Log::info($f3);
+                    if($f3>$Fecha30Sumada){
+                    $CantidaDiasMesInteres=ceil($Fecha30Sumada->diffInDays($f3));//**le tenia floatdiffInDays y funcinona bien  */
+                    }else
+                    {
+                        $CantidaDiasMesInteres=ceil($Fecha30Sumada->diffInDays($f3));
+                        $CantidaDiasMesInteres=-$CantidaDiasMesInteres;
+                        
+                    }
+                    Log::info($CantidaDiasMesInteres);
+
+                
+                $MesDeInteres->addMonthsNoOverflow(1)->format('Y-M');
+
+
+               //** INICIO- Determinar Interes. */
+               if($CantidaDiasMesInteres>0){                                                   
+                 
+                    $stop="Avanza:interes";    
+
+                    //** INICIO-  Cálculando el interes. */
+                    $Interes=round((($TasaInteresDiaria*$CantidaDiasMesInteres)/100*$tarifa_total),2);
+                    $InteresTotal=$InteresTotal+$Interes;
+                    //** FIN-  Cálculando el interes. */
+
+                }
+                else
+                    { 
+                        $Interes=0;
+                        $InteresTotal=$InteresTotal;
+                        $multaPagoExtemporaneo=$multaPagoExtemporaneo;
+                        $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo;
+                        $stop="Alto: Sin interes";
+                    }
+               //** FIN-  Determinar multa por pago extemporaneo. */
+
+               
+               
+                    Log::info($contador);
+                    Log::info('Mes multa '.$MesDeInteres);
+                    Log::info($stop);
+                    Log::info($MesDeInteresDiainicial);                   
+                    Log::info($MesDeInteresDiaFinal);                 
+                    Log::info($multaPagoExtemporaneo);
+                    Log::info($totalMultaPagoExtemporaneo);
+                    Log::info($Interes);
+                    Log::info($InteresTotal);
+                    Log::info($divisiondefila);
+                }                 
+                
+                
+                $fondoFPValor=round($impuestoTotal*0.05,2);
+                $totalPagoValor= round($fondoFPValor+$impuestoTotal+$InteresTotal,2);
+
+                //Le agregamos su signo de dollar para la vista al usuario
+                $fondoFP= "$". $fondoFPValor;     
+                $totalPago="$".$totalPagoValor;
+                $impuestos_mora_Dollar="$".$impuestos_mora;
+                $impuesto_año_actual_Dollar="$".$impuesto_año_actual; 
+                $InteresTotalDollar="$".$InteresTotal;
+                
+            
+            }  
+                     
+            //Configuracion de Reporte en MPDF
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+            $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+
+                    
+            // mostrar errores
+            $mpdf->showImageErrors = false;
+
+            $logoalcaldia = 'images/logo.png';
+            $logoelsalvador = 'images/EscudoSV.png';
+            $imgf1 = 'images/imgf1.png';
+            
+            
+            $tabla = "<div class='content'>
+                            <img id='logo' src='$logoalcaldia'>
+                            <img id='EscudoSV' src='$logoelsalvador'>
+                            <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                            UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                            DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                            <hr>
+                    </div>"; 
+
+                            
+                    $tabla .= "<table border='0' align='center' style='width: 650px;'>
+                    <tr>
+                    <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+                    </tr>
+                    <tr>
+                    <td align='right' colspan='2'>
+                        <strong>Metapán, </strong>
+                    </td>
+                    </tr>
+
+
+
+
+                    
+
+                    </table>";
+
+
+
+                    $stylesheet = file_get_contents('css/cssconsolidado.css');
+                    $mpdf->WriteHTML($stylesheet,1);
+                    $mpdf->SetMargins(0, 0, 5);
+
+
+                    //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+                    
+                    $mpdf->WriteHTML($tabla,2);
+                    $mpdf->Output();
+
+          
+
     }
 
 
