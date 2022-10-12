@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\BusesDetalle;
 
 use App\Http\Controllers\Backend\MatriculasDetalle\alert;
 use App\Http\Controllers\Controller;
+use App\Models\alertas_detalle_buses;
 use App\Models\BusesDetalle;
 use App\Models\Calificacion;
 use App\Models\CalificacionMatriculas;
@@ -494,6 +495,7 @@ class BusesDetalleController extends Controller
 
     public function showBuses($id)
     {
+        $fechahoy =carbon::now()->format('Y-m-d');
                
         $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
         ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
@@ -529,6 +531,12 @@ class BusesDetalleController extends Controller
         ->where('id', $id)
         ->first();
 
+        //** Inicia - Para obtener la tasa de interes más reciente */
+        $Tasainteres=Interes::latest()
+        ->pluck('monto_interes')
+            ->first();
+        //** Finaliza - Para obtener la tasa de interes más reciente */
+
 
         if ($calificacion == null  )
         {
@@ -539,7 +547,6 @@ class BusesDetalleController extends Controller
                 $detectorNull = 0;
                 $detectorEsp = 0;
          
-            return view('backend.admin.Buses.vistaBuses', compact('id','detectorNull','detectorEsp','buses','calificacion'));
           
         }
 
@@ -553,7 +560,6 @@ class BusesDetalleController extends Controller
             $detectorNull=0;
             $detectorEsp=0;
 
-            return view('backend.admin.Buses.vistaBuses', compact('id','calificacion','buses','listado','detectorNull','detectorEsp',));        
         }
         else 
         {
@@ -561,7 +567,6 @@ class BusesDetalleController extends Controller
           $detectorEsp = 1;
 
         }
-          return view('backend.admin.Buses.vistaBuses', compact('id','calificacion','buses','listado','detectorNull','detectorEsp','ultimaEsp'));
         }
 
         //** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
@@ -572,24 +577,106 @@ class BusesDetalleController extends Controller
 
         if($ComprobandoPagoAlDiaBus == null){
             
-            if($consulta_detalle_matricula!=null){
-                    $ComprobandoPagoAlDia=CobrosMatriculas::latest()
-                    ->where('id_matriculas_detalle', $consulta_detalle_matricula->id)
-                    ->pluck('periodo_cobro_fin')
-                        ->first();
-                        if($ComprobandoPagoAlDia==null){
-                            $ComprobandoPagoAlDia=$empresa->inicio_operaciones;
-                        }
+           
+                        if($ComprobandoPagoAlDiaBus == null){
+                            $ComprobandoPagoAlDiaBus = $buses->fecha_apertura;
+                       
                     
             }else{
-                        $ComprobandoPagoAlDia=$buses->fecha_apertura;
+                        $ComprobandoPagoAlDiaBus = $buses->fecha_apertura;
                         
                 }
 
         }//** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
 
+        log::info('comprobacion de pago:' .$ComprobandoPagoAlDiaBus);
+
+        $alerta_notificacion_bus = alertas_detalle_buses::where('id_contribuyente', $buses->id_contribuyente)
+        ->where('id_alerta','2')
+        ->pluck('cantidad')
+        ->first();
+    
+        $alerta_aviso_bus = alertas_detalle_buses::where('id_contribuyente', $buses->id_contribuyente)
+        ->where('id_alerta','1')
+        ->pluck('cantidad')
+        ->first();
+    
+        if($alerta_aviso_bus == null)
+            {           
+                $alerta_aviso_bus = 0;
+
+            }else{
+    
+                    if($ComprobandoPagoAlDiaBus >= $fechahoy)  
+                    {
+                       
+                        $alerta_aviso_bus=0;
+
+                        alertas_detalle_buses::where('id_contribuyente', $buses->id_contribuyente)
+                        ->where('id_alerta','1')
+                        ->update([
+                                    'cantidad' => $alerta_aviso_bus,              
+                                ]);   
+    
+                    }else{
+                            $alerta_aviso_bus = $alerta_aviso_bus;
+                        }
+                }
+    
+        if($alerta_notificacion_bus == null)
+        {
+            $alerta_notificacion_bus = 0;
+
+        }else{
+                if($ComprobandoPagoAlDiaBus >= $fechahoy)  
+                {
+                    $alerta_notificacion_bus=0;
+                    alertas_detalle_buses::where('id_contribuyente', $buses->id_contribuyente)
+                    ->where('id_alerta','2')
+                    ->update([
+                                'cantidad' => $alerta_notificacion_bus,              
+                            ]); 
+    
+                }else{
+                         $alerta_notificacion_bus = $alerta_notificacion_bus;
+                     }
+            }
+    
+    
+        //** Comprobando si la empresa esta al dia con sus pagos de impuestos de empresa */
+        if($ComprobandoPagoAlDiaBus >= $fechahoy)
+        {   
           
-}
+            //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
+            $NoNotificarBus = 1;
+            log::info('NoNotificar:' .$NoNotificarBus);
+
+        }else
+                {
+                    //** Si NoNotificar vale 0 entonces es permitido imprimir una notificación o avisos*/
+                    $NoNotificarBus = 0;
+                    log::info('NoNotificar:' .$NoNotificarBus);
+
+                }
+            
+        //* fin de comprobar */
+        return view('backend.admin.Buses.vistaBuses', compact('id',                                                   
+                                                    'calificacion',
+                                                    'buses',
+                                                    'listado',
+                                                    'detectorNull',
+                                                    'detectorEsp',
+                                                    'ultimaEsp',
+                                                    'fechahoy',                                                   
+                                                    'calificacion',
+                                                    'alerta_aviso_bus',                                                        
+                                                    'alerta_notificacion_bus', 
+                                                    'NoNotificarBus',
+                                                    'Tasainteres'
+                                                
+                                                ));
+
+    }
 
 
     public function calificacionBus($id)

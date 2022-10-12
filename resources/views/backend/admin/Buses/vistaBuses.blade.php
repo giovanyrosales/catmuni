@@ -183,14 +183,17 @@
                     <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>                   
                 </div>
             </div><!-- .widget -->
-        </a>
+        </a>       
     </div>
     @endif
-
+ 
+    
     <div class="col-md-4 col-sm-8">
-          
-              <a href="#" onclick="Aldia()">           
-              <a href="#" onclick="reporteeAviso({{$buses->id}})">           
+    @if($NoNotificarBus == '1')
+              <a href="#" onclick="Aldia()">      
+              @else     
+              <a href="#" onclick="reporteeAviso({{$buses->id}})">
+              @endif           
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
                     <div class="pull-left">
@@ -203,9 +206,11 @@
     </div>
 
     <div class="col-md-4 col-sm-8">
-            
-                  <a href="#" onclick="Aldia()">                
-                  <a href="#" onclick="reporte_notificacion()">                  
+    
+                  <a href="#" onclick="Aldia()">     
+                                             
+                  <a href="#" onclick="reporte_notificacion_bus({{$buses->id}})">                  
+                 
                   <div class="widget stats-widget">
                     <div class="widget-body clearfix bg-purple">
                      <div class="pull-left">
@@ -674,6 +679,11 @@
         return;
     }
 
+    function Aldia()
+    {
+      toastr.warning('Este bus se encuentra al día con sus pagos.');
+      return;
+    }
     
     function CobrosB(id)
     {
@@ -690,7 +700,14 @@
       
     }
 
-    function reporteeAviso(id){
+    function NoNotificar()
+    {
+      toastr.warning('Esta empresa no es notificable.');
+      return;
+    }
+
+    function reporteeAviso(id)
+    {
         Swal.fire({
                 title: '¿Realmente desea generar un aviso para este contribuyente?',
                 icon: 'question',
@@ -706,7 +723,37 @@
                 }
             });
           
-}
+    }
 
+    function reporte_notificacion_bus(id)
+    {
+      
+      Swal.fire({
+                title: '¿Realmente desea generar una notificación para esta empresa?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Confirmar',
+           
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  //location.reload();
+                  var f1=(document.getElementById('f1').value);
+
+                  var f2=(document.getElementById('fechahoy').value);
+
+                  var ti="{{$Tasainteres}}";
+                  var f3=(document.getElementById('fechahoy').value);
+                
+
+                    //Si es Empresa
+                    window.open("{{ URL::to('/admin/generar_notificacion_bus/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
+                  
+                    Swal.fire('Notificación generada con exito!', '', 'success')
+               
+              }
+              });
+
+          }
     </script>
 @stop

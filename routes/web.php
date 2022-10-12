@@ -331,4 +331,6 @@ use App\Models\Empresas;
     //REPORTES BUSES
     Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{f3}/{id}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
     Route::get('/admin/generar_aviso/buses/pdf/{id}', [reportesBusesDetalleController::class, 'aviso_buses']);
+    Route::get('/admin/generar_notificacion_bus/pdf/{f1}/{f2}/{ti}/{f3}/{id}', [reportesBusesDetalleController::class, 'reporte_notificacion_bus']);
+
 
