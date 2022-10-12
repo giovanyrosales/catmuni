@@ -201,7 +201,7 @@ class EmpresaController extends Controller
                         $estado_moratorio='Solvente';
 
                 }else{
-                        //** Nos aseguramos que la empresa que va estar en mora, no se una que ya esta cerrada **/
+                        //** Nos aseguramos que la empresa que va estar en mora, no sea una que ya esta cerrada **/
                         //** ---- Si una empresa esta cerrada auntomaticamente esta solvente ---- */
                         
                         if($dato->id_estado_empresa===1)
@@ -1954,8 +1954,23 @@ public function cobros($id)
     if($ultimo_cobro!=null){
         $ultimo_cobro_empresa=Carbon::parse($ultimo_cobro->periodo_cobro_fin)->format('d-m-Y');
     }else{
-            
+
             $ultimo_cobro_empresa=Carbon::parse($empresa->inicio_operaciones)->format('d-m-Y');
+            $ultima_fecha_pago_original=$ultimo_cobro_empresa;
+
+            //** Revisando que la ultima fecha sea el final o inicio de mes */
+            $MesNumero=Carbon::createFromDate($ultimo_cobro_empresa)->format('d');
+
+            if($MesNumero<='15')
+            {
+                $ultimo_cobro_empresa=Carbon::parse($ultima_fecha_pago_original)->subMonthNoOverflow(1)->lastOfMonth()->format('d-m-Y');
+            }
+            else
+                {
+                    $ultimo_cobro_empresa=Carbon::parse($ultima_fecha_pago_original)->lastOfMonth()->format('d-m-Y');
+                }
+            //** Fin - Revisando que la ultima fecha sea el final o inicio de mes */          
+            
          }
 
     //**¨Para detectar los cobros especiales */

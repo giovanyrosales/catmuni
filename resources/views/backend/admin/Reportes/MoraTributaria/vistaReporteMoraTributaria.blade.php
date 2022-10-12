@@ -21,31 +21,41 @@
         <div class="container-fluid">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Periodo de Mora</h3>
+                    <h3 class="card-title">Mora Tributaria</h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                       
-                            <div class="col-md-5">
-                            <label>FECHA CORTE:</label>
-                                <div class="input-group mb-4">
-                                        <input type="date" id="fecha_corte" required class="form-control" >               
-                                        &nbsp;
-                                        <button type="button" class="btn btn-outline-primary btn-sm" 
-                                        onclick="generar_mora();" >
-                                        <i class="fas fa-file-signature"></i> Calcular Mora
-                                    </button>
-                                </div>
-                                
-                            </div>  
-
-                            <div id="tablaDatatable">
-                            </div>
-                        
-                    </div>
+                    <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:190px;">
+                            <h5><i class="fas fa-info"></i> Generar reporte de Mora Tributaria</h5>
+                                <form class="form-horizontal">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <div class="col-sm-6">
+                                                <div class="info-box shadow">
+                                                    <span class="info-box-icon bg-transparent"><i class="fas fa-donate"></i></span>
+                                                    <div class="info-box-content">
+                                                        
+                                                        <div class="input-group mb-6">
+                                                            &nbsp;
+                                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="generar_mora();" >
+                                                                <i class="fas fa-file-signature"></i> Calcular Mora
+                                                            </button>                   
+                                                                &nbsp;
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="generarPdfMoraTributaria();" id="btn_mora_pdf">
+                                                                <i class="fas fa-file-pdf"></i> Generar PDF
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            
+                        </div>
                 </div>
             </div>
         </div>
+
     </section>
 
     <!-- Main content -->
@@ -53,30 +63,47 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                <div class="callout callout-info">
-                    <table class="table" id="matriz_ver_mora" style="border: 100px;" data-toggle="table">
-                                        <thead style="background-color:#14A3D9; color: #FFFFFF;">
-                                        <tr>  
-                                        <th style="width: 8%; text-align: center;font-weight: 700;">N° FICHA</th>
-                                        <th style="width: 12%; text-align: center;font-weight: 700;">COD ACT ECO.</th>
-                                        <th style="width: 20%; text-align: center;font-weight: 700;">EMPRESA O NEGOCIO</th>       
-                                        <th style="width: 15%; text-align: center;font-weight: 700;">ULTIMO PAGO</th>
-                                        <th style="width: 8%; text-align: center;font-weight: 700;">MESES</th>
-                                        <th style="width: 20%; text-align: center;font-weight: 700;">U. TARIFA</th>
-                                        <th style="width: 10%; text-align: center;font-weight: 700;">MORA</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                    
-                                        </tbody>
-                            </table>
+                    <div class="callout callout-info">
+                        <table class="table" id="matriz_ver_mora" style="border: 100px;" data-toggle="table">
+                            <thead style="background-color:#14A3D9; color: #FFFFFF;">
+                                <tr>  
+                                    <th style="width: 10%; text-align: center;font-weight: 700;">N° FICHA</th>
+                                    <th style="width: 12%; text-align: center;font-weight: 700;">COD ACT ECO.</th>
+                                    <th style="width: 20%; text-align: center;font-weight: 700;">EMPRESA O NEGOCIO</th>       
+                                    <th style="width: 15%; text-align: center;font-weight: 700;">ULTIMO PAGO</th>
+                                    <th style="width: 10%; text-align: center;font-weight: 700;">MESES</th>
+                                    <th style="width: 20%; text-align: center;font-weight: 700;">ULTIMA TARIFA/AÑO</th>
+                                    <th style="width: 12%; text-align: right;font-weight: 700;">MORA</th>
+                                </tr>
+                            </thead>
+                                <tbody>
+
+                                </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+<!-- Inicia Contenido IMG-->
+    <div class="card" style="margin: 5 auto;width: 97%;" id="contenido_img">
+      <div class="progress" style="margin: 0 auto;width: 100%;height:5px;">
+        <div class="progress-bar bg-secondary" role="progressbar" style="width:10%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        </div>
+      </div>
+        <div class="card-body">
+        <!-- Inicia contenido--> 
 
+        <div class="col-auto  p-5 text-center">
+         <img src="{{ asset('/img/mora.png') }}" id="img_mora" style="display: block;margin: 0px auto;width: 25%; height:25%;" >
+        </div>
+
+        <!-- Finaliza contenido-->
+        </div>
+      </div>
+    </div>
+<!-- Finaliza Contenido IMG-->
    
 
 </div>
@@ -98,6 +125,8 @@
         $(document).ready(function() {
             document.getElementById("divcc").style.display = "block";
             $('#div_generar_reporte').hide();
+            $('#btn_mora_pdf').hide();
+
             $('#select-contribuyente').select2({
                 theme: "bootstrap-5",
                 "language": {
@@ -113,39 +142,36 @@
     <script>
 
         function generarPdfMoraTributaria(){
-            window.open("{{ URL::to('admin/pdf/reporte/mora_tributaria') }}/" );
+
+            window.open("{{ URL::to('admin/pdf/reporte/mora_tributaria') }}/");
         }
         
         function generar_mora(){
-
-            $('#div_generar_reporte').show();
-            var fecha_corte = document.getElementById("fecha_corte").value; 
-            if(fecha_corte == ""){
-                                    modalMensaje('Fecha de corte vacía', 'Debe selecionar una fecha de corte.');
-                                    return;
-                                }
+ 
                 
             $("#matriz_ver_mora tbody tr").remove();
             var formData = new FormData();
-            formData.append('fecha_corte', fecha_corte);
-          
+
+  
           axios.post('/admin/calculo/mora', formData, {
            })
         .then((response) => {
         
         if(response.data.success === 1)
                 {
-                    
+
                     Swal.fire({
                           position:'top-end',
                           icon: 'success',
                           title: '¡Cálculo realizado!',
                           showConfirmButton: true,                     
                         })
-      
+                            $('#btn_mora_pdf').show();
+                            $('#div_generar_reporte').show();
+                            $('#contenido_img').hide();
                             //**** Cargar información empresas registradas ****//
                             var infodetalle = response.data.mora_empresas;
-                            
+                         
                             
                             for (var i = 0; i < infodetalle.length; i++) {
 
@@ -174,15 +200,25 @@
                             $${infodetalle[i].tarifaE}
                             </td>
 
-                            <td align="center">
+                            <td align="right">
                             $${infodetalle[i].total_pago}
                             </td>
 
                            </tr>`;
 
                             $("#matriz_ver_mora tbody").append(markup);
-                            
+
                             }//*Cierre de for empresas
+                           
+                            var markup2 = `<tr>
+                            
+                            <td align="right" colspan="7">
+                                <b>TOTAL: ${response.data.total_mora_final}</b>
+                            </td>
+
+                           </tr>`;
+
+                            $("#matriz_ver_mora tbody").append(markup2);
 
                 }
                 else{
@@ -193,6 +229,7 @@
                                  // footer: '<a href="">Why do I have this issue?</a>'
                                 })
                                 $('#div_generar_reporte').hide();
+                                $('#contenido_img').show();
 
                     }
             })

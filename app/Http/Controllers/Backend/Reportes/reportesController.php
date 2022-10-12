@@ -5856,35 +5856,149 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
     public function pdfReporteMoraTributaria(){
 
+ 
+    $mora_empresas=Empresas::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+   
+    ->select('empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+    'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+    'empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
+    'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
+    'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+    'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
+    'giro_comercial.nombre_giro','giro_comercial.id as id_giro_comercial',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica',
+     )
+    ->get();
 
-        $cobros_11801=Cobros::select('pago_total')
-        ->where('codigo','11801')
-        ->get();
-     
-        $cobros_11802=Cobros::select('pago_total')
-        ->where('codigo','11802')
-        ->get();
+    if(sizeof($mora_empresas)>0)
+    {
+        $calculo_total_mora=0;
+        foreach($mora_empresas as $dato)
+        {
+                $ultima_fecha_pago=Cobros::latest()
+                ->where('id_empresa',$dato->id_empresa)
+                ->pluck('periodo_cobro_fin')
+                ->first();
+                
+                //** Sacando la ultima fecha de pago */
+                if($ultima_fecha_pago==null)
+                {
+                    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
+                    ->pluck('id')
+                    ->first();
 
-        $total_cobros_11801=0;
-        $total_cobros_11802=0;
+                            if($id_matriculadetalle==null){
+                                    $ultima_fecha_pago=$dato->inicio_operaciones; 
+                                                                    
+                            }else{
+                                    
+                                        $ultima_fecha_pago=CobrosMatriculas::latest()
+                                            ->where('id_matriculas_detalle',$id_matriculadetalle)
+                                            ->pluck('periodo_cobro_fin')
+                                            ->first();
 
-        foreach($cobros_11802 as $dato){
-            $pago_totales=$dato->pago_total;
-            $total_cobros_11802=$total_cobros_11802+$pago_totales;
-          
-        }
+                                        //Nos aseguramos que si la última fecha de pago es nula se obtenga el inicio de operaciones
+                                        if($ultima_fecha_pago==null)
+                                        {
+                                            $ultima_fecha_pago=$dato->inicio_operaciones;
+                                            
+                                        }
+                                            
+                                    }
+                }
+                
+                //** Revisando que la ultima fecha sea el final de mes */
+                $MesNumero=Carbon::createFromDate($ultima_fecha_pago)->format('d');
 
-        foreach($cobros_11801 as $dato){
-            $pago_totales=$dato->pago_total;
-            $total_cobros_11801=$total_cobros_11801+$pago_totales;
+                $ultima_fecha_pago_original=$ultima_fecha_pago;
+                if($MesNumero<='15')
+                {
+                    $ultima_fecha_pago=Carbon::parse($ultima_fecha_pago_original)->subMonthNoOverflow(1)->lastOfMonth();
+                }
+                else
+                    {
+                        $ultima_fecha_pago=Carbon::parse($ultima_fecha_pago_original)->lastOfMonth();
+                    }
+                //** Fin - Revisando que la ultima fecha sea el final de mes */
 
-        }
-        $total_cobros= $total_cobros_11801+$total_cobros_11802;
-        $total_cobros=number_format($total_cobros, 2, '.', ',');
+                //** Sacando la ultima tarifa */
+                if($dato->id_giro_comercial!=1){
+                        
+                    $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
+                    ->pluck('id')
+                    ->first();
+
+                    $dato_tarifa=CalificacionMatriculas::latest()
+                    ->where('id_matriculas_detalle',$id_matriculadetalle)
+                    ->first();
+                    
+                    if($dato_tarifa===null){
+                        $tarifa=0.00;
+                        $año='Sin calificación';
+                        $año_real=Carbon::now()->format('Y');
+                        
+                    }else{
+                            $tarifa=$dato_tarifa->pago_mensual;
+                            $año=$dato_tarifa->año_calificacion;
+                            $año_real=$dato_tarifa->año_calificacion;
+                            }
+                    
+
+                }else{
+
+                    $dato_tarifa=calificacion::latest()
+                    ->where('id_empresa',$dato->id_empresa)
+                    ->first();
+                    
+                    if($dato_tarifa===null){
+                        $tarifa=0.00;
+                        $año='Sin calificación';
+                        $año_real=Carbon::now()->format('Y');
+                        
+                    }else{
+                            $tarifa=$dato_tarifa->pago_mensual;
+                            $año=$dato_tarifa->año_calificacion;
+                            $año_real=$dato_tarifa->año_calificacion;
+                            }
+
+                }
+               
+
+
+               //** Creamos una fecha de corte personalizada para cada empresa segun su año de ultima calificación */
+               $FechaCortePorEmpresa=Carbon::createFromDate($año_real, 12, 31);
+               //** Calculos */
+               $cantidad=ceil(carbon::parse($FechaCortePorEmpresa)->diffInDays(carbon::parse($ultima_fecha_pago)));
+               $meses=(($cantidad/365)*12);
+               if($dato_tarifa===null){$meses_redondeado=0;}else{$meses_redondeado=round($meses,0);}
+               $calculo_total_pago=$meses_redondeado*$tarifa;
+               $calculo_total_mora=($calculo_total_mora+$calculo_total_pago);
+
+               /** Formatenado variables numericas */
+               $calculo_total_pago_formateado=number_format(( $calculo_total_pago), 2, '.', ',');
+               $calculo_total_mora_formateado=number_format(( $calculo_total_mora), 2, '.', ',');
+               $tarifa_formateado=number_format(($tarifa), 2, '.', ',');
+
+               //** Modificando y creando nuevas variables */
+               $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
+               $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
+               $dato->meses=$meses_redondeado;
+               $dato->tarifaE=$tarifa_formateado.' '.'/ '.$año;
+               $dato->total_pago=$calculo_total_pago_formateado;
+               $dato->total_moraE=$calculo_total_mora_formateado;
+
+               $total_mora_final=$dato->total_moraE;
+            }//** FIn Foreach mora_empresas */
+            
+            log::info('Total Mora: $'.$calculo_total_mora_formateado);
+        }//** FIn if sizeof mora_empresas */
+
         
-        log::info('Total de cobros: '.$total_cobros);
-
-
         //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
         $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
         $mpdf->SetTitle('Alcaldía Metapán | Mora Tributaria');
@@ -5904,34 +6018,52 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                     <hr>
             </div>";
 
-            if(sizeof($cobros_11801) > 0){
-                $tabla .= "<p><strong>Cobros Generados</strong></p>";
+            if(sizeof($mora_empresas) > 0){
+                $tabla .= "<p><strong>REPORTE DE MORA TRIBUTARIA</strong></p>";
     
                 $tabla .= "
-            <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
-            <tbody>
+            <table id='tablaMora' style='width: 100%; border-collapse:collapse; border: none;'>
+            <tbody> 
             <tr>
-                <th style='text-align: center; font-size:13px; width: 50%'>CÓDIGO</th>
-                <th style='text-align: center; font-size:13px; width: 50%'>MONTO</th>
+                <th style='width: 9%; text-align: center;'>N° FICHA</th>
+                <th style='width: 15%; text-align: center;'>ACT. ECONOMICA</th>
+                <th style='width: 20%; text-align: center;'>EMPRESA O NEGOCIO</th>       
+                <th style='width: 15%; text-align: center;'>ULTIMO PAGO</th>
+                <th style='width: 10%; text-align: center;'>MESES</th>
+                <th style='width: 20%; text-align: center;'>ULTIMA TARIFA/AÑO</th>
+                <th style='width: 12%; text-align: center;'>MORA</th>
             </tr>";
-    
-          
+
+            foreach ($mora_empresas as $dd) {
             //Fila1
             $tabla .= "<tr>
-            <td style='font-size:11px; text-align: center'>" . "11801"  . "</td>
-            <td style='font-size:11px; text-align: center'>" . "$". $total_cobros_11801 . "</td>
-            </tr>";
-            //Fila2
+                            <td align='center'>
+                            <span class='badge badge-pill badge-dark'>". $dd->num_tarjeta . "</span> </td>
+                            
+                            <td align='center'>". $dd->codigo_atc_economica ."</td>
+
+                            <td align='center'>". $dd->nombre ."</td>
+
+                            <td align='center'>". $dd->ultima_fecha_pago ."</td>
+
+                            <td align='center'>". $dd->meses ."</td>
+
+                            <td align='center'>". '$'. $dd->tarifaE ."</td>
+
+                            <td align='center'>". '$'. $dd->total_pago ."</td>
+
+                           </tr>";
+
+            }//** Fin foreach */
+
             $tabla .= "<tr>
-            <td style='font-size:11px; text-align: center'>" . "11802"  . "</td>
-            <td style='font-size:11px; text-align: center'>" . "$". $total_cobros_11802 . "</td>
-            </tr>";
-            //Fila3
-            $tabla .= "<tr>
-            <td style='font-size:11px; text-align: center'>" . "<h3>Total</b>"  . "</h3>
-            <td style='font-size:11px; text-align: center'>" . "<h3> $".  $total_cobros ."<h/3>" . "</td>
-            </tr>";
-    
+                            
+            <td align='right' colspan='7'>
+                <b>TOTAL: ". $total_mora_final . "</b>
+            </td>
+
+           </tr>";
+
             $tabla .= "</tbody></table>";
 
             }
@@ -5982,7 +6114,7 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
     if(sizeof($mora_empresas)>0)
     {
-        
+        $calculo_total_mora=0;
         foreach($mora_empresas as $dato)
         {
                 $ultima_fecha_pago=Cobros::latest()
@@ -6017,6 +6149,20 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                                     }
                 }
 
+                //** Revisando que la ultima fecha sea el final de mes */
+                $MesNumero=Carbon::createFromDate($ultima_fecha_pago)->format('d');
+
+                $ultima_fecha_pago_original=$ultima_fecha_pago;
+                if($MesNumero<='15')
+                {
+                    $ultima_fecha_pago=Carbon::parse($ultima_fecha_pago_original)->subMonthNoOverflow(1)->lastOfMonth();
+                }
+                else
+                    {
+                        $ultima_fecha_pago=Carbon::parse($ultima_fecha_pago_original)->lastOfMonth();
+                    }
+                //** Fin - Revisando que la ultima fecha sea el final de mes */
+                
                 //** Sacando la ultima tarifa */
                 if($dato->id_giro_comercial!=1){
                     
@@ -6029,11 +6175,14 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                     ->first();
                     
                     if($dato_tarifa===null){
-                        $tarifa=0;
+                        $tarifa=0.00;
                         $año='Sin calificación';
+                        $año_real=Carbon::now()->format('Y');
+                     
                     }else{
                             $tarifa=$dato_tarifa->pago_mensual;
                             $año=$dato_tarifa->año_calificacion;
+                            $año_real=$dato_tarifa->año_calificacion;
                          }
                    
 
@@ -6044,37 +6193,50 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
                     ->first();
                     
                     if($dato_tarifa===null){
-                        $tarifa=0;
+                        $tarifa=0.00;
                         $año='Sin calificación';
+                        $año_real=Carbon::now()->format('Y');
+                        
                     }else{
                             $tarifa=$dato_tarifa->pago_mensual;
                             $año=$dato_tarifa->año_calificacion;
+                            $año_real=$dato_tarifa->año_calificacion;
                          }
 
                 }
                
-
-
+                //** Creamos una fecha de corte personalizada para cada empresa segun su año de ultima calificación */
+                $FechaCortePorEmpresa=Carbon::createFromDate($año_real, 12, 31);
                 //** Calculos */
-                $cantidad=ceil(carbon::parse($fecha_corte)->diffInDays(carbon::parse($ultima_fecha_pago)));
+                $cantidad=ceil(carbon::parse($FechaCortePorEmpresa)->diffInDays(carbon::parse($ultima_fecha_pago)));
                 $meses=(($cantidad/365)*12);
-                $meses_redondeado=round($meses,0);
-                $calculo_total_pago=number_format(($meses_redondeado*$tarifa), 2, '.', ',');
+                if($dato_tarifa===null){$meses_redondeado=0;}else{$meses_redondeado=round($meses,0);}
+                $calculo_total_pago=$meses_redondeado*$tarifa;
+                $calculo_total_mora=($calculo_total_mora+$calculo_total_pago);
+
+                /** Formatenado variables numericas */
+                $calculo_total_pago_formateado=number_format(( $calculo_total_pago), 2, '.', ',');
+                $calculo_total_mora_formateado=number_format(( $calculo_total_mora), 2, '.', ',');
+                $tarifa_formateado=number_format(($tarifa), 2, '.', ',');
 
                 //** Modificando y creando nuevas variables */
                 $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
                 $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
                 $dato->meses=$meses_redondeado;
-                $dato->tarifaE=$tarifa.' '.'('.$año.')';
-                $dato->total_pago=$calculo_total_pago;
+                $dato->tarifaE=$tarifa_formateado.' '.'/ '.$año;
+                $dato->total_pago=$calculo_total_pago_formateado;
+                $dato->total_moraE=$calculo_total_mora_formateado;
 
-            }//** FIn Foreach mora_empresas */
+                $total_mora_final=$dato->total_moraE;
+        }//** FIn Foreach mora_empresas */
             
-        }
+            log::info('Total Mora: $'.$calculo_total_mora_formateado);
+     }
 
     return [
         'success' => 1,
         'mora_empresas'=>$mora_empresas,
+        'total_mora_final'=>$total_mora_final,
         ];
 
     }
