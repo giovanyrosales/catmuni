@@ -21,11 +21,28 @@
         <div class="container-fluid">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Mora Tributaria</h3>
+                    <h3 class="card-title">Mora tributaria</h3>
                 </div>
                 <div class="card-body">
-                    <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:190px;">
-                            <h5><i class="fas fa-info"></i> Generar reporte de Mora Tributaria</h5>
+                <!--Inicia NAV--> 
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-mora-total-tab" onclick="reset_mora_total();" data-toggle="pill" href="#pills-mora-total" role="tab" aria-controls="pills-mora-total" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> Mora total</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-mora-codigo-tab" onclick="mora_codigos();" data-toggle="pill" href="#pills-mora-codigo" role="tab" aria-controls="pills-mora-codigo" aria-selected="false"><i class="fab fa-slack-hash"></i> Por códigos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-mora-tasas-tab" onclick="generar_mora_tasas();" data-toggle="pill" href="#pills-mora-tasas" role="tab" aria-controls="pills-mora-tasas" aria-selected="false"><i class="fas fa-coins"></i> Por tasas</a>
+                </li>
+                </ul>
+                <!--Contenido NAV-->
+                <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-mora-total" role="tabpanel" aria-labelledby="pills-home-tab">
+                       
+                        <!--Contenido 1 NAV -->
+                        <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:190px;">
+                            <h6><i class="fas fa-info"></i> Generar reporte de mora tributaria total</h6>
                                 <form class="form-horizontal">
                                     <div class="card-body">
                                         <div class="form-group row">
@@ -52,13 +69,27 @@
                                 </form>
                             
                         </div>
+                
+                
+                </div><!--FIN Contenido 1 NAV -->
+
+                <div class="tab-pane fade" id="pills-mora-codigo" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <!--Contenido 2 NAV -->
+                </div>
+                <div class="tab-pane fade" id="pills-mora-tasas" role="tabpanel" aria-labelledby="pills-contact-tab">
+                    <!--Contenido 3 NAV -->
+                </div>
+                </div>
+                <!-- Finaliza NAV-->
+                
+        
                 </div>
             </div>
         </div>
 
     </section>
 
-    <!-- Main content -->
+    <!-- Sección generar reporte mora total -->
     <section class="content" id="div_generar_reporte">
         <div class="container-fluid">
             <div class="row">
@@ -85,6 +116,169 @@
             </div>
         </div>
     </section>
+
+    <!-- Sección generar reporte mora codigos -->
+    <section class="content" id="div_generar_mora_codigos">
+    
+        <!-- Lista -->
+        <div class="content-list" style="margin: 0 auto;width: 98%;">
+            <!--end of content list head-->
+                    <div class="content-list-body row filter-list-1665680682896"><div class="col-lg-6">
+                        
+                    <!--Inicia card para cargar mora por códigos-->
+                        <div class="card card-project">
+                          <div class="progress"  style="margin: 0 auto;width: 100%;height:10px;">
+                            <div class="progress-bar bg-secondary" role="progressbar" style="width:20%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="card-body">
+                            
+                          <div class="container-fluid">
+                            <table class="table" id="matriz_ver_mora_codigos" style="border: 100px;" data-toggle="table">
+                                <thead style="background-color:#97999A; color: #FFFFFF;">
+                                    <tr>  
+                                        <th style="width: 50%; text-align: left;font-weight: 700;">DESCRIPCION</th>
+                                        <th style="width: 25%; text-align: center;font-weight: 700;">CODIGO</th>
+                                        <th style="width: 25%; text-align: right;font-weight: 700;">MORA</th>       
+                                    </tr>
+                                </thead>
+                                    <tbody>
+
+                                    </tbody>
+                            </table>
+                        </div>
+                            
+                          </div>
+                        </div>
+                    </div>
+                    <!--Finaliza card para cargar mora por códigos-->
+
+                    <!--Inicia card para cargar gráfico de mora por códigos-->
+                      <div class="col-lg-6">
+                        <div class="card card-project">
+
+                          <div class="progress" style="margin: 0 auto;width: 100%;height:10px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width:35%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+
+                          <div class="card-body">
+
+                                        <!-- Card Header - Dropdown -->
+                                        <div
+                                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                            <h6 class="m-0 font-weight-bold text-primary">Espacio para Gráfico</h6>
+                                        </div>
+                                        <!-- Card Body -->
+                                        <div class="card-body">
+                                            <div class="chart-pie pt-4 pb-2">
+                                                <canvas id="myPieChart"></canvas>
+                                            </div>
+                                            <div class="mt-4 text-center small">
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-primary"></i> Direct
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-success"></i> Social
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-info"></i> Referral
+                                                </span>
+                                            </div>
+                                        </div>
+                            
+                            </div>
+                           
+                            
+                            
+                          </div>
+                        </div>
+                      </div>
+                    <!--IniciaFinaliza card para cargar gráfico de mora por códigos-->
+        </div>
+        <!--end of content list body-->
+    </section>
+
+
+    <!-- Sección generar reporte mora tasas -->
+    <section class="content" id="div_generar_mora_tasas">
+    
+    <!-- Lista -->
+    <div class="content-list" style="margin: 0 auto;width: 98%;">
+        <!--end of content list head-->
+                <div class="content-list-body row filter-list-1665680682896"><div class="col-lg-6">
+                    
+                <!--Inicia card para cargar mora por códigos-->
+                    <div class="card card-project">
+                      <div class="progress"  style="margin: 0 auto;width: 100%;height:10px;">
+                        <div class="progress-bar" role="progressbar" style="background-color:#98E826;width:20%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="card-body">
+                        
+                      <div class="container-fluid">
+                        <table class="table" id="matriz_ver_mora_tasas" style="border: 100px;" data-toggle="table">
+                            <thead style="background-color:#98E826; color: #FFFFFF;">
+                                <tr>  
+                                    <th style="width: 50%; text-align: left;font-weight: 700;">DESCRIPCION</th>
+                                    <th style="width: 25%; text-align: center;font-weight: 700;">CODIGO</th>
+                                    <th style="width: 25%; text-align: right;font-weight: 700;">MORA</th>       
+                                </tr>
+                            </thead>
+                                <tbody>
+
+                                </tbody>
+                        </table>
+                    </div>
+                        
+                      </div>
+                    </div>
+                </div>
+                <!--Finaliza card para cargar mora por códigos-->
+
+                <!--Inicia card para cargar gráfico de mora por códigos-->
+                  <div class="col-lg-6">
+                    <div class="card card-project">
+
+                      <div class="progress" style="margin: 0 auto;width: 100%;height:10px;">
+                        <div class="progress-bar bg-dark" role="progressbar" style="width:35%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+
+                      <div class="card-body">
+
+                                    <!-- Card Header - Dropdown -->
+                                    <div
+                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Espacio para Gráfico</h6>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        <div class="chart-pie pt-4 pb-2">
+                                            <canvas id="myPieChart"></canvas>
+                                        </div>
+                                        <div class="mt-4 text-center small">
+                                            <span class="mr-2">
+                                                <i class="fas fa-circle text-primary"></i> Direct
+                                            </span>
+                                            <span class="mr-2">
+                                                <i class="fas fa-circle text-success"></i> Social
+                                            </span>
+                                            <span class="mr-2">
+                                                <i class="fas fa-circle text-info"></i> Referral
+                                            </span>
+                                        </div>
+                                    </div>
+                        
+                        </div>
+                       
+                        
+                        
+                      </div>
+                    </div>
+                  </div>
+                <!--IniciaFinaliza card para cargar gráfico de mora por códigos-->
+    </div>
+    <!--end of content list body-->
+    </section>
+
+
 
 <!-- Inicia Contenido IMG-->
     <div class="card" style="margin: 5 auto;width: 97%;" id="contenido_img">
@@ -121,20 +315,22 @@
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/select2.min.js') }}" type="text/javascript"></script>
 
+ 
+    <!-- Page level plugins -->
+    <script src="{{ asset('vendor/chart.js/Chart.min.js') }}" ></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ asset('js/demo/chart-area-demo.js') }}" ></script>
+    <script src="{{ asset('js/demo/chart-pie-demo.js') }}" ></script>
+
     <script>
         $(document).ready(function() {
             document.getElementById("divcc").style.display = "block";
             $('#div_generar_reporte').hide();
+            $('#div_generar_mora_codigos').hide();
+            $('#div_generar_mora_tasas').hide();
             $('#btn_mora_pdf').hide();
-
-            $('#select-contribuyente').select2({
-                theme: "bootstrap-5",
-                "language": {
-                    "noResults": function(){
-                        return "Búsqueda no encontrada";
-                    }
-                },
-            });
+            
         });
 
     </script>
@@ -145,10 +341,157 @@
 
             window.open("{{ URL::to('admin/pdf/reporte/mora_tributaria') }}/");
         }
+
+        function mora_codigos(){
+            
+            $("#matriz_ver_mora tbody tr").remove();
+            $('#div_generar_reporte').hide();
+            $('#div_generar_mora_tasas').hide();
+            $('#btn_mora_pdf').hide();
+            $('#contenido_img').hide();
+
+            $("#matriz_ver_mora_codigos tbody tr").remove();
+            var formData = new FormData();
+
+  
+          axios.post('/admin/calculo/mora_codigos', formData, {
+           })
+          .then((response) => {
         
+            if(response.data.success === 1)
+                {
+
+                    $('#div_generar_mora_codigos').show();
+                    $('#contenido_img').hide();
+                    //**** Cargar información empresas registradas ****//
+                    var mora_11801_formateado = response.data.mora_11801_formateado;
+                    var mora_11802_formateado = response.data.mora_11802_formateado;
+                    var mora_11803_formateado = response.data.mora_11803_formateado;
+                    var mora_11804_formateado = response.data.mora_11804_formateado; 
+                    var mora_11806_formateado = response.data.mora_11806_formateado;
+                    var mora_11808_formateado = response.data.mora_11808_formateado;
+                    var mora_11809_formateado = response.data.mora_11809_formateado;
+                    var mora_11810_formateado = response.data.mora_11810_formateado;
+                    var mora_11813_formateado = response.data.mora_11813_formateado;
+                    var mora_11814_formateado = response.data.mora_11814_formateado;
+                    var mora_11815_formateado = response.data.mora_11815_formateado;
+                    var mora_11816_formateado = response.data.mora_11816_formateado;
+                    var mora_11899_formateado = response.data.mora_11899_formateado;
+                    var mora_15799_formateado = response.data.mora_15799_formateado;                 
+            
+                    var markup = `<tr>
+                    <td align="left">COMERCIO</td>
+                    <td align="center">11801</td>
+                    <td align="right">$${mora_11801_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">INDUSTRIA</td>
+                    <td align="center">11802</td>
+                    <td align="right">$${mora_11802_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">FINANCIERA</td>
+                    <td align="center">11803</td>
+                    <td align="right">$${mora_11803_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">SERVICIOS</td>
+                    <td align="center">11804</td>
+                    <td align="right">$${mora_11804_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">BAR Y RESTAURANTES</td>
+                    <td align="center">11806</td>
+                    <td align="right">$${mora_11806_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">CENTROS DE ENSEÑANAZA</td>
+                    <td align="center">11808</td>
+                    <td align="right">$${mora_11808_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">ESTUDIO DE FOTOS</td>
+                    <td align="center">11809</td>
+                    <td align="right">$${mora_11809_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">HOTELES Y HOSPEDAJE</td>
+                    <td align="center">11810</td>
+                    <td align="right">$${mora_11810_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">CONSULTORIOS MEDICOS</td>
+                    <td align="center">11813</td>
+                    <td align="right">$${mora_11813_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">SERVICIOS PROFESIONALES</td>
+                    <td align="center">11814</td>
+                    <td align="right">$${mora_11814_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">CENTROS RECREATIVOS</td>
+                    <td align="center">11815</td>
+                    <td align="right">$${mora_11815_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">TRANSPORTE</td>
+                    <td align="center">11816</td>
+                    <td align="right">$${mora_11816_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">MESAS DE BILLAR</td>
+                    <td align="center">11899</td>
+                    <td align="right">$${mora_11899_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">LIBRERIAS</td>
+                    <td align="center">15799</td>
+                    <td align="right">$${mora_15799_formateado}</td>
+                    </tr>`;      
+
+                    $("#matriz_ver_mora_codigos tbody").append(markup);
+                    
+                    var markup2 = `<tr>
+                    
+                    <td align="right" colspan="7">
+                        <b>TOTAL: ${response.data.total_mora_final}</b>
+                    </td>
+
+                    </tr>`;
+
+                    $("#matriz_ver_mora_codigos tbody").append(markup2);
+
+                }
+                else{
+                      Swal.fire({
+                                  icon: 'error',
+                                  title: 'Oops...',
+                                  text: 'Error al calcular la mora!',
+                                })
+                                // $('#div_generar_mora_codigos').hide();
+                                // $('#contenido_img').show();
+
+                    }
+            })
+         .catch((error) =>{
+                            toastr.error('Error al calcular la mora');
+                           });        
+   
+        }
+
+        function reset_mora_total(){
+            $("#matriz_ver_mora tbody tr").remove();
+            $('#btn_mora_pdf').hide();
+            $('#div_generar_reporte').hide();
+            $('#div_generar_mora_codigos').hide();
+            $('#div_generar_mora_tasas').hide();
+            $('#contenido_img').show();
+        }
+
         function generar_mora(){
  
-                
+            openLoading();    
             $("#matriz_ver_mora tbody tr").remove();
             var formData = new FormData();
 
@@ -187,6 +530,7 @@
 
                             <td align="center">
                             ${infodetalle[i].nombre}
+                            </td>
 
                             <td align="center">
                             ${infodetalle[i].ultima_fecha_pago}
@@ -236,6 +580,121 @@
          .catch((error) =>{
                             toastr.error('Error al calcular la mora');
                            });        
+        }
+
+        function generar_mora_tasas(){
+            $('#div_generar_reporte').hide();
+            $('#div_generar_mora_codigos').hide();
+            
+            $("#matriz_ver_mora_tasas tbody tr").remove();
+            var formData = new FormData();
+
+  
+          axios.post('/admin/calculo/mora_tasas', formData, {
+           })
+          .then((response) => {
+        
+            if(response.data.success === 1)
+                {
+
+                    $('#div_generar_mora_tasas').show();
+                    $('#contenido_img').hide();
+                    //**** Cargar información empresas registradas ****//
+                    var mora_11801_formateado = response.data.mora_11801_formateado;
+                    var mora_11802_formateado = response.data.mora_11802_formateado;
+                    var mora_11803_formateado = response.data.mora_11803_formateado;
+                    var mora_11804_formateado = response.data.mora_11804_formateado; 
+                    var mora_11806_formateado = response.data.mora_11806_formateado;
+                    var mora_11808_formateado = response.data.mora_11808_formateado;
+                    var mora_11809_formateado = response.data.mora_11809_formateado;
+                    var mora_11810_formateado = response.data.mora_11810_formateado;
+                    var mora_11813_formateado = response.data.mora_11813_formateado;
+                    var mora_11814_formateado = response.data.mora_11814_formateado;
+                    var mora_11815_formateado = response.data.mora_11815_formateado;
+                    var mora_11816_formateado = response.data.mora_11816_formateado;
+                    var mora_11899_formateado = response.data.mora_11899_formateado;
+                    var mora_15799_formateado = response.data.mora_15799_formateado;                 
+            
+                    var markup = `<tr>
+                    <td align="left">ALUMBRADO</td>
+                    <td align="center">12108</td>
+                    <td align="right">$${mora_11801_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">ASEO</td>
+                    <td align="center">12109</td>
+                    <td align="right">$${mora_11802_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">PAVIMENTO</td>
+                    <td align="center">12117</td>
+                    <td align="right">$${mora_11803_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">BUSES</td>
+                    <td align="center">12122</td>
+                    <td align="right">$${mora_11804_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">APARATOS PARLANTES</td>
+                    <td align="center">12210</td>
+                    <td align="right">$${mora_11806_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">ROTULOS, TAXIS, MAQUINAS</td>
+                    <td align="center">12299</td>
+                    <td align="right">$${mora_11808_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">TORRES ELECTRICAS</td>
+                    <td align="center">TSC006</td>
+                    <td align="right">$${mora_11809_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">POSTES (ELECT.)</td>
+                    <td align="center">TSP03E</td>
+                    <td align="right">$${mora_11810_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">POSTES (CABLE)</td>
+                    <td align="center">TSP03T</td>
+                    <td align="right">$${mora_11813_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">TORRES TELEFONICAS</td>
+                    <td align="center">TST004</td>
+                    <td align="right">$${mora_11814_formateado}</td>                  
+                    </tr>`;      
+
+                    $("#matriz_ver_mora_tasas tbody").append(markup);
+                    
+                    var markup2 = `<tr>
+                    
+                    <td align="right" colspan="7">
+                        <b>TOTAL: ${response.data.total_mora_final}</b>
+                    </td>
+
+                    </tr>`;
+
+                    $("#matriz_ver_mora_tasas tbody").append(markup2);
+
+                }
+                else{
+                      Swal.fire({
+                                  icon: 'error',
+                                  title: 'Oops...',
+                                  text: 'Error al calcular la mora!',
+                                })
+                                // $('#div_generar_mora_codigos').hide();
+                                // $('#contenido_img').show();
+
+                    }
+            })
+         .catch((error) =>{
+                            toastr.error('Error al calcular la mora');
+                           });        
+   
+        
         }
 
         function modalMensaje(titulo, mensaje){
