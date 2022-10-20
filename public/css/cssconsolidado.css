@@ -229,3 +229,31 @@
             text-align: left;
             font-size: 12px;
         }
+
+        #bus{
+              
+            height: 2px;
+            width: 90%;
+            background-color: black;
+            text-align: left;
+
+        } 
+
+        #texto{
+            margin: 10px 0;
+            color: #A9A8A7;
+            font-size: 18px;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        }
+
+        #name{
+            font-size: 12px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        #name1{
+                font-size: 13px;
+                border: 1px solid #ddd;
+                padding: 0px;
+                color: #1E1E1E;
+        }

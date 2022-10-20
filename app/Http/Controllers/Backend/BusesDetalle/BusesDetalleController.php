@@ -21,6 +21,7 @@ use App\Models\Usuario;
 use App\Models\MatriculasDetalleEspecifico;
 use App\Models\BusesDetalleEspecifico;
 use App\Models\CalificacionBuses;
+use App\Models\NotificacionesHistoricoBuses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
@@ -495,7 +496,7 @@ class BusesDetalleController extends Controller
 
     public function showBuses($id)
     {
-        $fechahoy =carbon::now()->format('Y-m-d');
+        $fechahoy = carbon::now()->format('Y-m-d');
                
         $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
         ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
@@ -553,21 +554,36 @@ class BusesDetalleController extends Controller
         else
         {
 
-        $detectorNull=1;
+                $detectorNull=1;
 
-        if ($buses == null)
-        {
-            $detectorNull=0;
-            $detectorEsp=0;
+            if ($buses == null)
+            {
+                $detectorNull=0;
+                $detectorEsp=0;
 
-        }
-        else 
-        {
-          $detectorNull = 1;
-          $detectorEsp = 1;
+            }
+            else 
+            {
 
+                $detectorNull = 1;
+                $detectorEsp = 1;
+
+            }
         }
-        }
+
+        
+       
+            $ultimo_cobro_bus = CobrosBuses::latest()
+            ->where('id_contribuyente', $buses->id_contribuyente)
+            ->first();
+            
+                if( $ultimo_cobro_bus==null)
+                {
+                    $ultimoCobroBuses=$buses->fecha_apertura;
+                }else{
+                    $ultimoCobroBuses=$ultimo_cobro_bus->periodo_cobro_fin;
+                }
+
 
         //** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
             $ComprobandoPagoAlDiaBus = CobrosBuses::latest()
@@ -672,7 +688,9 @@ class BusesDetalleController extends Controller
                                                     'alerta_aviso_bus',                                                        
                                                     'alerta_notificacion_bus', 
                                                     'NoNotificarBus',
-                                                    'Tasainteres'
+                                                    'Tasainteres',
+                                                    'ultimoCobroBuses',
+                                                    
                                                 
                                                 ));
 
@@ -1489,6 +1507,63 @@ class BusesDetalleController extends Controller
                     'buses',
                     'id'));
         
+    }
+
+    public function historial_avisos_notificaciones_bus()
+    {
+        $cantidad_avisos = NotificacionesHistoricoBuses::where('id_alertas', 1)
+        ->count();
+
+        $cantidad_notificaciones = NotificacionesHistoricoBuses::where('id_alertas', 2)
+        ->count();
+        
+        return view('backend.admin.Buses.HistoricoReporteNotificaciones.historico_aviso_notificacion', compact('cantidad_avisos','cantidad_notificaciones'));
+    }
+
+    public function tablahistoricoavisosbuses()
+    {
+
+        $historico_avisos_bus = NotificacionesHistoricoBuses::join('contribuyente','notificaciones_historico_buses.id_contribuyente','=','contribuyente.id')
+        ->join('alertas','notificaciones_historico_buses.id_alertas','=','alertas.id')
+    
+        ->select('notificaciones_historico_buses.id as id_notificaciones_historico_buses','notificaciones_historico_buses.created_at',
+        'contribuyente.id','contribuyente.nombre','contribuyente.apellido','contribuyente.direccion','contribuyente.dui','contribuyente.nit','contribuyente.registro_comerciante','contribuyente.telefono','contribuyente.email',
+        'contribuyente.fax',
+        'alertas.id as id_alertas','alertas.tipo_alerta',
+         )
+        ->where('id_alertas','1')
+        ->orderby('id','desc')
+        ->get();
+    
+        foreach($historico_avisos_bus as $dato){
+            $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));  
+        }
+    
+        return view('backend.admin.Buses.HistoricoReporteNotificaciones.tabla.tabla_historico_avisos_bus', compact('historico_avisos_bus'));
+    
+    }
+
+    public function tablahistoriconotificacionesbuses()
+    {
+
+        $historico_notificacion_bus = NotificacionesHistoricoBuses::join('contribuyente','notificaciones_historico_buses.id_contribuyente','=','contribuyente.id')
+        ->join('alertas','notificaciones_historico_buses.id_alertas','=','alertas.id')
+    
+        ->select('notificaciones_historico_buses.id as id_notificaciones_historico_buses','notificaciones_historico_buses.created_at',
+        'contribuyente.id','contribuyente.nombre','contribuyente.apellido','contribuyente.direccion','contribuyente.dui','contribuyente.nit','contribuyente.registro_comerciante','contribuyente.telefono','contribuyente.email',
+        'contribuyente.fax',
+        'alertas.id as id_alertas','alertas.tipo_alerta',
+         )
+        ->where('id_alertas','2')
+        ->orderby('id','desc')
+        ->get();
+    
+        foreach($historico_notificacion_bus as $dato){
+            $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));  
+        }
+    
+        return view('backend.admin.Buses.HistoricoReporteNotificaciones.tabla.tabla_historico_avisos_bus', compact('historico_notificacion_bus'));
+    
     }
 
 }   

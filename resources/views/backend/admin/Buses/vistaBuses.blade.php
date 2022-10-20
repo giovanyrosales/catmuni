@@ -206,23 +206,25 @@
     </div>
 
     <div class="col-md-4 col-sm-8">
-    
-                  <a href="#" onclick="Aldia()">     
-                                             
-                  <a href="#" onclick="reporte_notificacion_bus({{$buses->id}})">                  
-                 
+             
+                    @if($NoNotificarBus== '1')
+                  <a href="#" onclick="Aldia()">
+                    @else 
+                  <a href="#" onclick="reporte_notificacion_bus({{$buses->id}})">
+                    @endif
                   <div class="widget stats-widget">
                     <div class="widget-body clearfix bg-purple">
                      <div class="pull-left">
                      <h3 class="widget-title text-white">Generar notificación</h3>
-                     <input type="hidden" id="fechahoy" value="" class="form-control" >
-                        <input type="hidden" id="f1" value="" class="form-control" >
+                     <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
+                        <input type="hidden" id="f1" value="{{$ultimoCobroBuses}}" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
                 </div>
+                </a>
+                </a>
     </div>
-
-</div>
+    
 </div>
 </div> 
     
@@ -256,6 +258,10 @@
                       <tr>
                         <th>Fecha de apertura </th>
                         <td>{{$buses->fecha_apertura}}</td>
+                      </tr>
+                      <tr>
+                        <th>Último pago </th>
+                        <td>{{$ultimoCobroBuses}}</td>
                       </tr>
             @if($buses->nom_empresa == '')
                       <tr>
@@ -306,181 +312,32 @@
  <!-- Termina sección cargar datos rótulo -->
             <div class="card-footer">
             <button type="button" class="btn btn-default" onclick="VerListaRotulo()" data-dismiss="modal">Volver</button>
-                  <button type="button" class="btn btn-success  float-right" onclick="">Imprimir</button>
-          </div>
+                 
+             
+          </div>        
+  </section> 
+              <!-- seccion botón flotante -->
+              <div id="contenedor">
+                              <input type="checkbox" id="btn-mas">
+                          <div class="redes">
+                         
+                              <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa()"></a>
+                          
+                              <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura()"></a>
+                        
+                              <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Buses" onclick="reporteBusesDatos('{{$buses->id}}')"></a>
+                            </div>
+                  <div class="btn-mas">
+                      <label for="btn-mas" class="fa fa-plus"></label>
+                  </div>
+              </div>
+              <!--Fin seccion botón flotante -->
         </div>
       </form>
     </div>
 </div>
+ 
 
-<!-- Modal cierre de rótulo -->
-<div class="modal fade" id="modalCierreRotulos">
-    <div class = "modal-dialog modal-xl">
-        <div class = "modal-content">
-            <div class = "modal-header">
-              <h5 class="modal title">Cierre de rótulos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class = "modal-body">
-                <form id = "formulario-CierreRotulo">
-                @csrf
-                  <div class="card-body">
-                 <!-- Inicia Formulario Cierre -->
-                    <section class="content">
-                      <div class = "container-fluid">
-                        <div class = "card card-green">
-                          <div class = "card-header">
-                            <h3 class = "card-title">FORMULARIO CIERRE DE RÓTULOS</h3>
-
-                            <div class = "card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-                            </div>
-                            </div> 
-
-                            <div class = "card border-success mb-3">
-                              <div class = "card-header text-success"><label>I. CIERRE DE RÓTULO</label></div>
-                              <div class = "card-body">
-
-                                <div class = "row">
-                                  <div class = "col-md-6">
-                                    <div class = "form-group">
-                                      <label>Nombre del Rótulo: <span class="badge badge"> &nbsp;</span></label>
-                                      <label>Dirección del rótulo: <span class="badge badge">&nbsp;</span>&nbsp;</label>
-                                      
-                                     </div>
-                                   </div>
-                                </div>
-                                     
-                            <div class = "row">
-                                <div class="col-md-6">
-                                   <div class="form-group">
-                                   <label>ESTADO DE LA EMPRESA:</label>
-                                  
-                                   </div>
-                                </div><!-- /.col-md-6 -->
-                    <!-- /.form-group -->
-
-                              <div class="col-md-4">
-                                 <div class="form-group">
-                                    <div class="input-group mb-10">
-                                          <select 
-                                          required
-                                          class="form-control" 
-                                          data-show-subtext="true" 
-                                          data-live-search="true"   
-                                          id="select-estado-cierre" 
-                                          title="-- Selecione estado --"
-                                          >
-                                          <option value="Activo">Activo</option>
-                                          <option value="Cerrado">Cerrado</option>
-                                          </select> 
-                                       </div>
-                                    <!-- finaliza asignar actividad economica-->
-                                     </div>
-                                    </div>
-                                  </div><!-- /.form-group -->
-                                 
-                           <div class = "row">
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                  <label>Fecha de cierre:</label>
-                                </div>
-                              </div>
-                                
-                              <div class = "col-md-4">
-                                <div class="form-group">
-                                  <input type="date" name="fecha_cierre" id="fecha_cierre" class="form-control" required placeholder="Fecha de apertura" >
-                                  <input type="hidden" name="id" id="id" class="form-control" >
-                                 </div>
-                                </div>                             
-                           </div><!--  /.ROW2 -->
-
-                            <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Imprimir</button>
-                                <button type="button" class="btn btn-success" onclick="guardarCierre()">Guardar Cierre</button>
-                            </div>
-                               </div>
-                            </div>
-
-                            <div class="card border-success mb-3"><!-- Panel TRASPASO DE EMPRESA -->
-                         <div class="card-header text-success"><label>II. TRASPASO DE RÓTULO</label></div>
-                       <div class="card-body">
-
-                       <div class="row"><!-- /.ROW2 -->
-
-                          <!-- /.form-group -->
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                    <label>TRASPASO A NOMBRE DE:</label>
-                              </div>
-                            </div><!-- /.col-md-6 -->
-                    <!-- /.form-group -->
-
-                              <div class="col-md-6">
-                                  <div class="form-group">
-                                    <!-- Select estado - live search -->
-                                      <div class="input-group mb-9">
-                                            <select 
-                                            required
-                                            class="form-control"
-                                            data-style="btn-success"
-                                            data-show-subtext="true" 
-                                            data-live-search="true"   
-                                            id="select-contribuyente-traspaso" 
-                                            title="-- Seleccione un registro --"
-                                            >
-                                            
-                                            <option value=""> </option>
-                                           
-                                            </select>
-                                      </div>
-                                    <!-- finaliza select estado-->  
-                                  </div><!-- /.col-md-3 -->
-                              </div><!-- /.form-group -->
-                                <!-- /.form-group -->
-                                    </div><!--  /.ROW2 -->
-                                  <!-- /.form-group -->
-                                  <div class="row"><!-- /.ROW3 -->
-                                  <!-- /.form-group -->
-                                  <div class="col-md-6">
-                                      <div class="form-group">
-                                    
-                                  <!-- Botón Imprimir Traspaso-->
-                                  <br>
-                                    <button type="button"  onclick="ImpimirTraspaso()" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
-                                      &nbsp; Imprimir resolución de traspaso&nbsp;</button>
-                                    </button>
-                    <!-- /.Botón Imprimir Traspaso -->
-
-                                </div>
-                                  </div><!-- /.col-md-6 -->
-                                  <div class="col-md-6">
-                                      <div class="form-group">
-                                          <!-- Botón Guardar Traspaso -->
-                                            <br>
-                                            <button type="button"  onclick="guardarTraspaso()" class="btn btn-success btn-sm float-right" ><i class="fa fa-print"></i>
-                                            &nbsp; Guardar Traspaso &nbsp;</button>
-                                          <!-- /.Botón Guardar Traspaso -->
-                                      </div>
-                                    </div><!-- /.col-md-6 -->
-                                  <!-- /.form-group -->
-                                  </div><!-- /.ROW3 -->
-
-                              </div><!--  /.card-header text-success -->
-                            </div> <!-- /.Panel CIERRE DE EMPRESA --> 
-                         </div>
-                      </div>
-                    </section>
-                  </div>       
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Termina modal cierre de rótulo -->
 
 
 @extends('backend.menus.footerjs')
@@ -502,8 +359,12 @@
     <script type="text/javascript">
         $(document).ready(function(){
             document.getElementById("divcontenedor").style.display = "block";
+
+                  //** Tooltips de botón flotante */
+          $('[data-toggle="tooltip"]').tooltip();
         });
 
+    
     function recargar()
     {
 
@@ -528,45 +389,7 @@
       
     }
         
-    function informacionCierre(id)
-    {
-      
-            openLoading();
-            document.getElementById("formulario-CierreRotulo").reset();
-
-            axios.post('/admin/Rotulos/vista/inf-cierre',{
-                'id': id
-            })
-            .then((response) => {
-              console.log(response);
-                    closeLoading();
-                    if(response.data.success === 1){
-                        $('#modalCierreRotulos').modal('show');
-                        
-                        $('#fecha_cierre').val(response.data.rotulos.fecha_cierre);
-                        $('#select-estado-cierre').val(response.data.rotulos.estado);
-                       
-                        document.getElementById("select-contribuyente-traspaso").options.length = 0;
-
-                        $.each(response.data.contribuyente, function( key, val ){
-                            if(response.data.idcont == val.id){
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }else{
-                                $('#select-contribuyente-traspaso').append('<option value="' +val.id +'">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
-                            }
-                        });
-
-                      }else{
-                        toastr.error('Información no encontrada');
-                    }
-
-                })
-                .catch((error) => {
-                    closeLoading();
-                    toastr.error('Información no encontrada');
-                });
     
-    }
     </script>
 
 
@@ -580,99 +403,7 @@
 
     }
 
-    function guardarCierre()
-    {
-      //Llamar la variable id desde el controlador
-     
-      var estado = document.getElementById('select-estado-cierre').value;
-      var fecha_cierre = document.getElementById('fecha_cierre').value;
     
-      if(estado === '')
-      {
-          toastr.error('El estado requerido');
-          return;
-      }
-
-        openLoading();
-            var formData = new FormData();
-            formData.append('id', id);
-            formData.append('estado', estado);
-            formData.append('fecha_cierre', fecha_cierre);
-
-            axios.post('/admin/Rotulos/vista/cierre', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
-
-                if (response.data.success === 1) 
-                {
-                    Swal.fire({
-                          position: 'top-end',
-                          icon: 'success',
-                          title: '¡Datos actualizados correctamente!',
-                          showConfirmButton: false,
-                          timer: 3000
-                        })
-                        $('#modalCierreRotulos').modal('hide');
-                        location.reload();
-                }
-                else 
-                    {
-                       toastMensaje('Error al actualizar');
-                       $('#modalCierreRotulos').modal('hide');
-                              recargar();
-                    }
-             
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar empresa');
-                closeLoading();
-            });
-    }
-    
-    function guardarTraspaso()
-    {
-     
-     
-      var contribuyente = document.getElementById('select-contribuyente-traspaso').value;
-
-      if(contribuyente === '')
-      {
-            toastr.error('El dato contribuyente es requerido');
-            return;
-      }
-
-        openLoading();
-            var formData = new FormData();
-                formData.append('id', id);
-                formData.append('contribuyente', contribuyente);
-
-            axios.post('/admin/Rotulos/vista/traspaso', formData, {
-            })
-            .then((response) => {          
-                closeLoading();
-
-                if (response.data.success === 1) 
-                {
-
-                       toastr.success('¡Propietario actualizado!');
-                       $('#modalCierresTraspasos').modal('hide');
-                       location.reload();
-                }
-                else 
-                {
-                    toastMensaje('Error al actualizar');
-                    $('#modalCierresTraspasos').modal('hide');
-                    recargar();
-                }
-             
-            })
-            .catch((error) => {
-                toastr.error('Error al actualizar empresa');
-                closeLoading();
-            });
-    }
-
     function InspeccionRealizada()
     {
         toast.success('La inspeccion ya fue realizada');
@@ -743,17 +474,81 @@
                   var f2=(document.getElementById('fechahoy').value);
 
                   var ti="{{$Tasainteres}}";
-                  var f3=(document.getElementById('fechahoy').value);
                 
-
+                  var f3=(document.getElementById('fechahoy').value);
+                 
                     //Si es Empresa
-                    window.open("{{ URL::to('/admin/generar_notificacion_bus/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
+                    window.open("{{ URL::to('/admin/generar_notificacion_bus/pdf') }}/" + f1 + "/" + f2 + "/" + ti  + "/" + id+ "/" + f3 );
                   
                     Swal.fire('Notificación generada con exito!', '', 'success')
-               
+               console.log(id,);
+       
               }
               });
 
           }
+
+          function reporteBusesDatos(id)
+          {
+
+              window.open("{{ URL::to('/admin/generar/solvencia/bus/pdf') }}/"+ id );
+
+          }
     </script>
+
+    <style>
+      #contenedor
+      {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          float: left;
+      }
+
+      .redes a, .btn-mas label{
+          display: block;
+          text-decoration: none;
+          background: #08BE4D;
+          color: #fff;
+          width: 55px;
+          height: 55px;
+          line-height: 55px;
+          text-align: center;
+          border-radius: 50%;
+          box-shadow: 0px 1px 10px rgba(0,0,0,0.4);
+          transition: all 500ms ease;
+      }
+      .redes a:hover{
+          background: #fff;
+          color: #C20E0E;
+      }
+      .redes a{
+          margin-bottom: -15px;
+          opacity: 0;
+          visibility: hidden;
+      }
+      #btn-mas:checked~ .redes a{
+          margin-bottom: 10px;
+          opacity: 1;
+          visibility: visible;
+      }
+
+      .btn-mas label{
+          cursor: pointer;
+          background: #118EE5; /** Color del botón */
+          font-size: 23px;
+      }
+      #btn-mas:checked ~ .btn-mas label{
+          transform: rotate(135deg);
+          font-size: 25px;
+      }
+      *{
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      #btn-mas{
+          display: none;
+      }
+      </style>
 @stop
