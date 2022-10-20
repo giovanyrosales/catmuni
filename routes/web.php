@@ -263,6 +263,8 @@ use App\Models\Empresas;
     Route::get('/admin/buses/cierres_traspasosB/{buses}', [BusesDetalleController::class,'cierres_traspasosBus']);
     Route::post('/admin/buses/show/traspaso-buses', [BusesDetalleController::class,'nTraspasoBus']);
     Route::get('/admin/buses/tabla-traspaso', [BusesDetalleController::class,'tablaTraspasos']);
+    Route::get('/admin/empresa/historial/avisos_notificaciones_bus', [BusesDetalleController::class,'historial_avisos_notificaciones_bus'])->name('admin.historico.bus.index');
+
 
     //NUEVO MÓDULO RÓTULOS
     Route::get('/admin/nuevo/rotulo-detalle/Crear', [RotulosDetalleController::class,'index'])->name('admin.crear.rotulos.index');
@@ -307,6 +309,8 @@ use App\Models\Empresas;
     //AVISOS Y NOTIFICACIONES HISTORIAL
     Route::get('/admin/empresa/tabla/historico/avisos', [EmpresaController::class,'tablahistoricoavisos']);
     Route::get('/admin/empresa/tabla/historico/notificaciones', [EmpresaController::class,'tablahistoriconotificaciones']);
+    Route::get('/admin/busesdetalle/tabla/historico/avisos/buses', [BusesDetalleController::class,'tablahistoricoavisosbuses']);
+    Route::get('/admin/busesdetalle/tabla/historico/notificaciones/buses', [BusesDetalleController::class,'tablahistoriconotificacionesbuses']);
 
 
     //AVISOS Y NOTIFICACIONES DE MATRICULAS
@@ -337,6 +341,7 @@ use App\Models\Empresas;
     //REPORTES BUSES
     Route::get('/admin/estado_cuenta/buses_detalle/pdf/{f1}/{f2}/{ti}/{f3}/{id}', [reportesBusesDetalleController::class, 'estado_cuentas_buses_d']);
     Route::get('/admin/generar_aviso/buses/pdf/{id}', [reportesBusesDetalleController::class, 'aviso_buses']);
-    Route::get('/admin/generar_notificacion_bus/pdf/{f1}/{f2}/{ti}/{f3}/{id}', [reportesBusesDetalleController::class, 'reporte_notificacion_bus']);
+    Route::get('/admin/generar_notificacion_bus/pdf/{f1}/{f2}/{ti}/{id}/{f3}', [reportesBusesDetalleController::class, 'reporte_notificacion_bus']);
+    Route::get('/admin/generar/solvencia/bus/pdf/{id}', [reportesBusesDetalleController::class, 'generar_solvencia_buses']);
 
 

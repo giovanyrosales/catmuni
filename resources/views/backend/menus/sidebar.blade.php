@@ -206,6 +206,12 @@
                                 <p>Listar Buses</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.historico.bus.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-list-ul nav-icon"></i>
+                                <p>Historial notificaciones</p>
+                                </a>
+                            </li>
                         </ul>
                 <!-- Finaliza Grupo Rótulos -->
                 <!-- Grupo Buses -->
