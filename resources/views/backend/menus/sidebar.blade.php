@@ -219,7 +219,14 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.mora_tributaria') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-file-alt nav-icon"></i>
-                                <p>Mora Tributaria</p>
+                                <p>Mora tributaria global</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.sidebar.reporte.mora_tributaria_periodica') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-calendar-alt nav-icon"></i>
+                                <p>Mora tributaria periódica</p>
                                 </a>
                             </li>
 

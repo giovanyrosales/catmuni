@@ -19,73 +19,81 @@
     
     <section class="content" id="divcontenedor">
         <div class="container-fluid">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Mora tributaria global</h3>
+            <div class="card card">
+                <div class="card-header" style="color:#FFFFFF; background:#11B689">
+                    <h3 class="card-title">Mora tributaria global por período</h3>
                 </div>
-                <div class="card-body">
-                <!--Inicia NAV--> 
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="pills-mora-total-tab" onclick="reset_mora_total();" data-toggle="pill" href="#pills-mora-total" role="tab" aria-controls="pills-mora-total" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> Mora total</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="pills-mora-codigo-tab" onclick="mora_codigos();" data-toggle="pill" href="#pills-mora-codigo" role="tab" aria-controls="pills-mora-codigo" aria-selected="false"><i class="fab fa-slack-hash"></i> Por códigos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="pills-mora-tasas-tab" onclick="generar_mora_tasas();" data-toggle="pill" href="#pills-mora-tasas" role="tab" aria-controls="pills-mora-tasas" aria-selected="false"><i class="fas fa-coins"></i> Por tasas</a>
-                </li>
-                </ul>
-                <!--Contenido NAV-->
-                <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-mora-total" role="tabpanel" aria-labelledby="pills-home-tab">
-                       
-                        <!--Contenido 1 NAV -->
-                        <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:190px;">
-                            <h6><i class="fas fa-info"></i> Generar reporte de mora tributaria total</h6>
-                                <form class="form-horizontal">
-                                    <div class="card-body">
-                                        <div class="form-group row">
-                                            <div class="col-sm-6">
-                                                <div class="info-box shadow">
-                                                    <span class="info-box-icon bg-transparent"><i class="fas fa-donate"></i></span>
-                                                    <div class="info-box-content">
-                                                        
-                                                        <div class="input-group mb-6">
-                                                            &nbsp;
-                                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="generar_mora();" >
-                                                                <i class="fas fa-file-signature"></i> Calcular Mora
-                                                            </button>                   
-                                                                &nbsp;
-                                                            <button type="button" class="btn btn-primary btn-sm" onclick="generarPdfMoraTributaria();" id="btn_mora_pdf">
-                                                                <i class="fas fa-file-pdf"></i> Generar PDF
-                                                            </button>
+                    <div class="card-body">
+                    <!--Inicia NAV--> 
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active " id="nav-mora-total-tab" data-toggle="tab" href="#nav-mora-total-tab" role="tab" aria-controls="nav-mora-total" aria-selected="true" style="color:#11B689;"><i class="fas fa-hand-holding-usd"></i> Mora total</a></a>
+                            <a class="nav-item nav-link" id="nav-mora-codigo-tab" data-toggle="tab" href="#nav-mora-codigo-tab" role="tab" aria-controls="nav-mora-codigo" aria-selected="false" style="color:#11B689;"><i class="fab fa-slack-hash"></i> Por códigos</a>
+                            <a class="nav-item nav-link" id="nav-mora-tasas-tab" data-toggle="tab" href="#nav-mora-tasas-tab" role="tab" aria-controls="nav-mora-tasas" aria-selected="false" style="color:#11B689;"><i class="fas fa-coins"></i> Por tasas</a>
+                        </div>
+                    </nav>
+                        <!--Contenido NAV 1-->
+                        <div class="tab-content" id="nav-tabContent">
+                            <br>
+                        <!--FIN Contenido 1 NAV -->
+                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                <!--Contenido 1 NAV -->
+                                <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:230px;">
+                                    <h6><i class="fas fa-info"></i> Generar reporte de mora tributaria total según período selecionado.</h6>
+                                        <form class="form-horizontal">
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-10">
+                                                        <div class="info-box shadow">
+                                                            <span class="info-box-icon bg-transparent"><i class="fas fa-donate"></i></span>
+                                                            <div class="info-box-content">
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <label>FECHA INICIO:</label>
+                                                                        <div class="input-group mb-3 shadow">
+                                                                                <input type="date" id="fecha_inicio_mora" value="2021-10-01" required class="form-control" >                                                                   
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>FECHA FINAL:</label>
+                                                                        <div class="input-group mb-3 shadow">
+                                                                                <input type="date" id="fecha_fin_mora" value="2021-12-31" required class="form-control" >                                                                   
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label>&nbsp;</label>
+                                                                        <div class="input-group mb-3">
+                                                                            &nbsp;
+                                                                            <button type="button" class="btn btn-outline btn-sm" style="color:white; background:#11B689" onclick="generar_mora();" >
+                                                                                <i class="fas fa-file-signature"></i> Calcular Mora
+                                                                            </button>                   
+                                                                                &nbsp;
+                                                                            <button type="button" class="btn btn btn-sm" style="color:white; background:#11B689" onclick="generarPdfMoraTributaria();" id="btn_mora_pdf">
+                                                                                <i class="fas fa-file-pdf"></i> Generar PDF
+                                                                            </button>                                                                   
+                                                                        </div>
+                                                                    </div>
+                                                                                                                                          
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </form>
+                                    
                                     </div>
-                                </form>
-                            
+                                </div>
+                            <!--FIN Contenido 1 NAV -->
                         </div>
-                
-                
-                </div><!--FIN Contenido 1 NAV -->
+                        <!-- Finaliza NAV-->
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
+                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
+                    </div>
 
-                <div class="tab-pane fade" id="pills-mora-codigo" role="tabpanel" aria-labelledby="pills-profile-tab">
-                    <!--Contenido 2 NAV -->
-                </div>
-                <div class="tab-pane fade" id="pills-mora-tasas" role="tabpanel" aria-labelledby="pills-contact-tab">
-                    <!--Contenido 3 NAV -->
-                </div>
-                </div>
-                <!-- Finaliza NAV-->
-                
-        
-                </div>
             </div>
         </div>
+
 
     </section>
 
@@ -96,7 +104,7 @@
                 <div class="col-md-12">
                     <div class="callout callout-info">
                         <table class="table" id="matriz_ver_mora" style="border: 100px;" data-toggle="table">
-                            <thead style="background-color:#14A3D9; color: #FFFFFF;">
+                            <thead style="background-color:#11B689; color:white;">
                                 <tr>  
                                     <th style="width: 10%; text-align: center;font-weight: 700;">N° FICHA</th>
                                     <th style="width: 12%; text-align: center;font-weight: 700;">COD ACT ECO.</th>
@@ -212,7 +220,7 @@
                 <!--Finaliza card para cargar mora por códigos-->
 
                 <!--Inicia card para cargar gráfico de mora por códigos-->
-                  <div class="col-lg-6">
+                <div class="col-lg-6">
                     <div class="card card-project">
 
                       <div class="progress" style="margin: 0 auto;width: 100%;height:10px;">
@@ -235,8 +243,8 @@
 
 
 
-    <!-- Inicia Contenido IMG-->
-    <div class="card" style="margin: 5 auto;width: 97%;" id="contenido_img">
+<!-- Inicia Contenido IMG-->
+    <div class="card" style="margin: 0 auto;width: 97%;" id="contenido_img">
       <div class="progress" style="margin: 0 auto;width: 100%;height:5px;">
         <div class="progress-bar bg-secondary" role="progressbar" style="width:10%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         </div>
@@ -252,7 +260,7 @@
         </div>
       </div>
     </div>
-    <!-- Finaliza Contenido IMG-->
+<!-- Finaliza Contenido IMG-->
    
 
 </div>
@@ -319,7 +327,7 @@
             var formData = new FormData();
 
   
-          axios.post('/admin/calculo/mora_codigos', formData, {
+          axios.post('/admin/calculo/mora_codigos_periodo', formData, {
            })
           .then((response) => {
             closeLoading();
@@ -435,7 +443,7 @@
                     var markup2 = `<tr>
                     
                     <td align="right" colspan="7">
-                        <b>TOTAL: ${response.data.total_mora_final}</b>
+                        <b>TOTAL: $ ${response.data.total_mora_final}</b>
                     </td>
 
                     </tr>`;
@@ -532,10 +540,25 @@
 
             openLoading();    
             $("#matriz_ver_mora tbody tr").remove();
-            var formData = new FormData();
 
+            //Validaciones
+            var fecha_inicio_mora = document.getElementById("fecha_inicio_mora").value;
+            var fecha_fin_mora = document.getElementById("fecha_fin_mora").value; 
+
+            if(fecha_inicio_mora == ""){
+                                    modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio para la mora.');
+                                    return;
+                                }
+            if(fecha_fin_mora == ""){
+                modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final para la mora.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('fecha_inicio_mora', fecha_inicio_mora);
+            formData.append('fecha_fin_mora', fecha_fin_mora);
   
-          axios.post('/admin/calculo/mora', formData, {
+          axios.post('/admin/calculo/mora_periodo', formData, {
            })
         .then((response) => {
         
@@ -596,7 +619,7 @@
                             var markup2 = `<tr>
                             
                             <td align="right" colspan="7">
-                                <b>TOTAL: ${response.data.total_mora_final}</b>
+                                <b>TOTAL: $ ${response.data.total_mora_final}</b>
                             </td>
 
                            </tr>`;
@@ -621,7 +644,7 @@
                            });        
         }
 
-        function generar_mora_tasas(){
+        function generar_mora_tasas_periodo(){
 
             //verificando si el grafico ya fue generado antes
             if (window.imp_grafico_mora_codigos=='1') {
@@ -642,7 +665,7 @@
             var formData = new FormData();
 
   
-          axios.post('/admin/calculo/mora_tasas', formData, {
+          axios.post('/admin/calculo/mora_tasas_periodo', formData, {
            })
           .then((response) => {
         
