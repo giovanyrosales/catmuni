@@ -20,16 +20,16 @@
     <section class="content" id="divcontenedor">
         <div class="container-fluid">
             <div class="card card">
-                <div class="card-header" style="color:#FFFFFF; background:#11B689">
-                    <h3 class="card-title">Mora tributaria global por período</h3>
+                <div class="card-header" style="color:#FFFFFF; background:#94D913">
+                    <h3 class="card-title">Reporte cobros global</h3>
                 </div>
                     <div class="card-body">
                     <!--Inicia NAV--> 
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active " id="nav-mora-total-tab" data-toggle="tab" href="#nav-mora-total-tab" role="tab" aria-controls="nav-mora-total" aria-selected="true" style="color:#11B689;"><i class="fas fa-hand-holding-usd"></i> Mora total</a></a>
-                            <a class="nav-item nav-link" id="nav-mora-codigo-tab" data-toggle="tab" href="#nav-mora-codigo-tab" role="tab" aria-controls="nav-mora-codigo" aria-selected="false" style="color:#11B689;"><i class="fab fa-slack-hash"></i> Por códigos</a>
-                            <a class="nav-item nav-link" id="nav-mora-tasas-tab" data-toggle="tab" href="#nav-mora-tasas-tab" role="tab" aria-controls="nav-mora-tasas" aria-selected="false" style="color:#11B689;"><i class="fas fa-coins"></i> Por tasas</a>
+                            <a class="nav-item nav-link active " id="nav-mora-total-tab" data-toggle="tab" href="#nav-mora-total-tab" role="tab" aria-controls="nav-mora-total" aria-selected="true" style="color:#727370;"><i class="fas fa-hand-holding-usd"></i> Cobros global</a></a>
+                            <a class="nav-item nav-link" id="nav-mora-codigo-tab" data-toggle="tab" href="#nav-mora-codigo-tab" role="tab" aria-controls="nav-mora-codigo" aria-selected="false" style="color:#727370;"><i class="fas fa-city"></i> Por empresas</a>
+                            <a class="nav-item nav-link" id="nav-mora-tasas-tab" data-toggle="tab" href="#nav-mora-tasas-tab" role="tab" aria-controls="nav-mora-tasas" aria-selected="false" style="color:#727370;"><i class="fas fa-coins"></i> Por tasas</a>
                         </div>
                     </nav>
                         <!--Contenido NAV 1-->
@@ -39,7 +39,7 @@
                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                 <!--Contenido 1 NAV -->
                                 <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:230px;">
-                                    <h6><i class="fas fa-info"></i> Generar reporte de mora tributaria total según período selecionado.</h6>
+                                    <h6><i class="fas fa-info"></i> Generar reporte de cobros global.</h6>
                                         <form class="form-horizontal">
                                             <div class="card-body">
                                                 <div class="form-group row">
@@ -51,24 +51,24 @@
                                                                     <div class="col-md-3">
                                                                         <label>FECHA INICIO:</label>
                                                                         <div class="input-group mb-3 shadow">
-                                                                                <input type="date" id="fecha_inicio_mora" value="2021-01-01" required class="form-control" >                                                                   
+                                                                                <input type="date" id="fecha_inicio" value="2021-01-01" required class="form-control" >                                                                   
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <label>FECHA FINAL:</label>
                                                                         <div class="input-group mb-3 shadow">
-                                                                                <input type="date" id="fecha_fin_mora" value="2022-12-31" required class="form-control" >                                                                   
+                                                                                <input type="date" id="fecha_fin" value="2022-12-31" required class="form-control" >                                                                   
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label>&nbsp;</label>
                                                                         <div class="input-group mb-3">
                                                                             &nbsp;
-                                                                            <button type="button" class="btn btn-outline btn-sm" style="color:white; background:#11B689" onclick="generar_mora();" >
-                                                                                <i class="fas fa-file-signature"></i> Calcular Mora
+                                                                            <button type="button" class="btn btn-outline btn-sm" style="color:white; background:#94D913" onclick="generar_lista_cobros();" >
+                                                                            <i class="fas fa-search-dollar"></i> Ver histórico de cobros
                                                                             </button>                   
                                                                                 &nbsp;
-                                                                            <button type="button" class="btn btn btn-sm" style="color:white; background:#11B689" onclick="generarPdfMoraTributaria();" id="btn_mora_pdf">
+                                                                            <button type="button" class="btn btn btn-sm" style="color:white; background:#94D913" onclick="generarPdfMoraTributaria();" id="btn_mora_pdf">
                                                                                 <i class="fas fa-file-pdf"></i> Generar PDF
                                                                             </button>                                                                   
                                                                         </div>
@@ -103,16 +103,16 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="callout callout-info">
-                        <table class="table" id="matriz_ver_mora" style="border: 100px;" data-toggle="table">
-                            <thead style="background-color:#11B689; color:white;">
+                        <table class="table" id="matriz_ver_cobros_global" style="border: 100px;" data-toggle="table">
+                            <thead style="background-color:#94D913; color:white;">
                                 <tr>  
                                     <th style="width: 10%; text-align: center;font-weight: 700;">N° FICHA</th>
-                                    <th style="width: 12%; text-align: center;font-weight: 700;">COD ACT ECO.</th>
-                                    <th style="width: 20%; text-align: center;font-weight: 700;">EMPRESA O NEGOCIO</th>       
-                                    <th style="width: 15%; text-align: center;font-weight: 700;">ULTIMO PAGO</th>
-                                    <th style="width: 10%; text-align: center;font-weight: 700;">MESES</th>
-                                    <th style="width: 20%; text-align: center;font-weight: 700;">TARIFA/AÑO</th>
-                                    <th style="width: 12%; text-align: right;font-weight: 700;">MORA</th>
+                                    <th style="width: 20%; text-align: center;font-weight: 700;">EMPRESA O NEGOCIO</th>
+                                    <th style="width: 10%; text-align: center;font-weight: 700;">CÓDIGO</th>       
+                                    <th style="width: 15%; text-align: center;font-weight: 700;">A PARTIR DE</th>
+                                    <th style="width: 15%; text-align: center;font-weight: 700;">HASTA</th>
+                                    <th style="width: 15%; text-align: center;font-weight: 700;">FECHA DE PAGO</th>
+                                    <th style="width: 20%; text-align: center;font-weight: 700;">TOTAL PAGADO</th>
                                 </tr>
                             </thead>
                                 <tbody>
@@ -253,7 +253,7 @@
         <!-- Inicia contenido--> 
 
         <div class="col-auto  p-5 text-center">
-         <img src="{{ asset('/img/mora.png') }}" id="img_mora" style="display: block;margin: 0px auto;width: 25%; height:25%;" >
+         <img src="{{ asset('/img/empresa.png') }}" id="img_mora" style="display: block;margin: 0px auto;width: 25%; height:25%;" >
         </div>
 
         <!-- Finaliza contenido-->
@@ -528,7 +528,7 @@
                 window.imp_grafico_mora_tasas=0;
             }
 
-            $("#matriz_ver_mora tbody tr").remove();
+            $("#matriz_ver_cobros_global tbody tr").remove();
             $('#btn_mora_pdf').hide();
             $('#div_generar_reporte').hide();
             $('#div_generar_mora_codigos').hide();
@@ -536,29 +536,29 @@
             $('#contenido_img').show();
         }
 
-        function generar_mora(){
+        function generar_lista_cobros(){
 
             openLoading();    
-            $("#matriz_ver_mora tbody tr").remove();
+            $("#matriz_ver_cobros_global tbody tr").remove();
 
             //Validaciones
-            var fecha_inicio_mora = document.getElementById("fecha_inicio_mora").value;
-            var fecha_fin_mora = document.getElementById("fecha_fin_mora").value; 
+            var fecha_inicio = document.getElementById("fecha_inicio").value;
+            var fecha_fin = document.getElementById("fecha_fin").value; 
 
-            if(fecha_inicio_mora == ""){
-                                    modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio para la mora.');
+            if(fecha_inicio == ""){
+                                    modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio.');
                                     return;
                                 }
-            if(fecha_fin_mora == ""){
-                modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final para la mora.');
+            if(fecha_fin == ""){
+                modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final.');
                 return;
             }
 
             var formData = new FormData();
-            formData.append('fecha_inicio_mora', fecha_inicio_mora);
-            formData.append('fecha_fin_mora', fecha_fin_mora);
+            formData.append('fecha_inicio', fecha_inicio);
+            formData.append('fecha_fin', fecha_fin);
   
-          axios.post('/admin/calculo/mora_periodo', formData, {
+          axios.post('/admin/cobros/globales/periodo', formData, {
            })
         .then((response) => {
         
@@ -587,11 +587,11 @@
                             </td>
                             
                             <td align="center">
-                            ${infodetalle[i].codigo_atc_economica}
+                            ${infodetalle[i].nombre}
                             </td>
 
                             <td align="center">
-                            ${infodetalle[i].nombre}
+                            ${infodetalle[i].codigo_atc_economica}
                             </td>
 
                             <td align="center">
@@ -612,7 +612,7 @@
 
                            </tr>`;
 
-                            $("#matriz_ver_mora tbody").append(markup);
+                            $("#matriz_ver_cobros_global tbody").append(markup);
 
                             }//*Cierre de for empresas
                            
@@ -624,7 +624,7 @@
 
                            </tr>`;
 
-                            $("#matriz_ver_mora tbody").append(markup2);
+                            $("#matriz_ver_cobros_global tbody").append(markup2);
 
                 }
                 else{

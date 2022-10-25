@@ -237,15 +237,22 @@
                             </li>
 
                             <li class="nav-item">
+                                <a href="{{ route('admin.sidebar.reporte.reporte_cobros') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                                <p>Reporte de cobros</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.actividad.economica') }}" target="frameprincipal" class="nav-link">
-                                    <i class="fas fa-list-ul nav-icon"></i>
+                                    <i class="fas fa-sitemap nav-icon"></i>
                                     <p>Actividad Económica</p>
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.contribuyentes') }}" target="frameprincipal" class="nav-link">
-                                    <i class="fas fa-list-ul nav-icon"></i>
+                                <i class="fas fa-id-badge nav-icon"></i>
                                     <p>Contribuyentes</p>
                                 </a>
                             </li>
