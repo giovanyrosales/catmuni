@@ -173,10 +173,11 @@ class RotulosDetalleController extends Controller
     {
         $especificada="especificada";
        
-        for ($i = 0; $i < count ($request->nombre) ; $i++){
+        for ($i = 0; $i < count ((array)$request->nombre) ; $i++){
 
-            if (isset ($request->foto_rotulo[$i] )) {
+            if (($request->foto_rotulo[$i] )) {
                
+         
                 $cadena = Str::random(15);
                 $tiempo = microtime();
                 $union = $cadena.$tiempo;
@@ -184,9 +185,10 @@ class RotulosDetalleController extends Controller
               
                   
                 $extension = '.'.$request->foto_rotulo[$i];
+                $avatar = $request->file('foto_rotulo');
                 $extension = '.'.$request->file('foto_rotulo')->getClientOriginalExtension();
                 $file = $nombre.strtolower($extension);
-                $avatar = $request->file('foto_rotulo');
+                
                 $estado = Storage::disk('images')->put($file, \File::get($avatar));
                
              
@@ -209,12 +211,10 @@ class RotulosDetalleController extends Controller
                                 'estado_especificacion' =>$especificada,               
                             ]);
                      
-                    
-             
                     return ['success' => 1];
     
             }else{return ['success' => 2];}
-          
+       
         }
              
     } 

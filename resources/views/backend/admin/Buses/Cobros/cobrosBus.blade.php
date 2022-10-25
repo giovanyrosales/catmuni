@@ -116,6 +116,69 @@
 </script>
 
 
+<!-- Modal Historial de cobros -->
+<div class="modal fade" id="historial_cobros_buses">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="fas fa-history"></i> &nbsp;Historial de cobros</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+               <div class="modal-body" id="tres">
+                    <form id="formulario_ver_historial_cobros_emp">        
+                 <!-- /.card-header -->
+                 <div>
+                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_emp()"  target="frameprincipal">
+                    <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+                 </div>
+                        
+  
+              <!--inicia los campos del formulario ver-->
+
+
+              <table id="tab_historial_cobros_emp" class="table table-bordered table-hover" > 
+              <thead>             
+                <tr id="uno">  
+                    <th style="width: 25%;">Fecha pago</th> 
+                    <th style="width: 8%;">Meses</th>   
+                    <th style="width: 20%;">Impuestos Mora</th>                          
+                    <th style="width: 15%;">Impuestos</th>                          
+                    <th style="width: 15%;">Intereses</th>    
+                    <th style="width: 15%;">Multa Balance</th>
+                    <th style="width: 20%;">Multas</th>                          
+                    <th style="width: 10%;">Total</th>                           
+                </tr>
+                    </thead>
+                    <tbody>     
+                    @foreach($ListarCobros as $dato)
+                <tr id="dos">
+                    <td>{{$dato->fecha_cobro}}</td>
+                    <td>{{ $dato-> cantidad_meses_cobro }}</td>
+                    <td>${{ $dato-> impuesto_mora_32201 }}</td>
+                    <td>${{ $dato-> impuestos }}</td>
+                    <td>${{ $dato-> intereses_moratorios_15302 }}</td>
+                    <td>${{ $dato-> monto_multa_balance_15313 }}</td>
+                    <td>${{ $dato-> monto_multaPE_15313 }}</td>
+                    <td>${{ $dato-> pago_total }}</td>                    
+                </tr>
+                    @endforeach  
+                    </tbody>            
+            </table>             
+              <!--finaliza los campos del formulario-->
+                     </form>
+                    </div>
+              <div class="card-footer">
+                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i> &nbsp;Cerrar</button>
+              </div>
+        </div>
+    </div>
+</div>
+
+<!-- FIN Modal Historial de cobros -->
+
+
 <div class="content-wrapper" style="display: none" id="divcontenedor">
     <section class="content-header">
         <div class="container-fluid">
@@ -176,6 +239,10 @@
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-success"><b>DATOS GENERALES</b>.</div>
+          <button type="button" class="btn btn-outline-success btn-sm float-right" 
+                  onclick="historial_cobros_empresa({{$buses->id}});" id="Historial_cobrosIMP" >
+                  <i class="fas fa-history"></i> Historial de cobros
+                </button> 
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
             
@@ -514,6 +581,12 @@
               window.open("{{ URL::to('/admin/estado_cuenta/buses_detalle/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
 
           }
+
+          function historial_cobros_empresa(id)
+          {
+            $('#historial_cobros_buses').modal('show');
+          }
+
 
           </script>
 

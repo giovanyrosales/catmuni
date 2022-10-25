@@ -328,7 +328,7 @@
             for(var j = 0; j < nombre.length; j++)
             {
 
-                if(foto_rotulo[j].files[0] && foto_rotulo[j].files[0])
+                if(foto_rotulo[j].files[0] && foto_rotulo[j].files[0].length)
                 { // si trae doc
                     if (!foto_rotulo[j].files[0].type.match('image/jpeg|image/jpeg|image/png'))
                     {
@@ -337,6 +337,8 @@
                        
                     }
 
+                
+                }                  
                     formData.append('nombre[]', nombre[j]);  
                     formData.append('medidas[]', medidas[j]);
                     formData.append('total_medidas[]', total_medidas[j]);
@@ -344,19 +346,15 @@
                     formData.append('tarifa[]', tarifa[j]);
                     formData.append('total_tarifa[]', total_tarifa[j]);
                     formData.append('coordenadas_geo[]', coordenadas_geo[j]);   
-                    formData.append('foto_rotulo[]',foto_rotulo[j]);
+                    formData.append('foto_rotulo[]',foto_rotulo[j].files[0]);
 
-
-                 
-                
-                }
-                  
                     
-                
+                    console.log(nombre[j],foto_rotulo[j]);
+                               
+                    
             }
 
-
-                formData.append('id_rotulos_detalle[]', id_rotulos_detalle[j]);
+                formData.append('id_rotulos_detalle', id_rotulos_detalle);
          
                     axios.post('/admin/rotulos_detalle_especifico/agregar', formData, {
                     })

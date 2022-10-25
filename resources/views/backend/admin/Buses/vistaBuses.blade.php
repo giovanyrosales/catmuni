@@ -77,7 +77,7 @@
                   <i class="fas fa-exclamation-circle " style="color:EBEBEB;float:right;font-size: 7vh;"></i>
                 </div>
                 <p class="font-weight text-primary">
-                  Avisos: &nbsp;<span class="badge badge-pill badge-primary"></span>
+                  Avisos: &nbsp;<span class="badge badge-pill badge-primary">{{$alerta_aviso_bus}}</span>
                 </p>
                  
               </div>
@@ -97,7 +97,7 @@
                   <i class="fas fa-bell" style="color:EBEBEB;float:right;font-size: 7vh;"></i>
                 </div>
                 <p class="font-weight text-primary">
-                  Notificaciones: <span class="badge badge-pill badge-primary"></span>
+                  Notificaciones: <span class="badge badge-pill badge-primary">{{$alerta_notificacion_bus}}</span>
                 </p>
               </div>
               <div class="icon">

@@ -618,7 +618,7 @@ class BusesDetalleController extends Controller
         ->first();
     
         if($alerta_aviso_bus == null)
-            {           
+        {           
                 $alerta_aviso_bus = 0;
 
             }else{
@@ -961,6 +961,9 @@ class BusesDetalleController extends Controller
         ->where('id_buses_detalle', $id)
         ->first();
 
+        $ListarCobros = CobrosBuses::latest()
+        ->get();
+
         $calificacion = CalificacionBuses::select('calificacion_buses.id', 'calificacion_buses.fecha_calificacion')
        
         ->where('id_buses_detalle', $id)
@@ -975,7 +978,7 @@ class BusesDetalleController extends Controller
             {
                 $detectorNull=0;
                 $detectorCobro=0;
-                return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','detectorNull','detectorCobro','calificaciones'));
+                return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','detectorNull','detectorCobro','calificaciones','ListarCobros'));
             }
         }
         else
@@ -985,14 +988,14 @@ class BusesDetalleController extends Controller
             {
              $detectorNull=0;
              $detectorCobro=0;
-            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','tasasDeInteres','date','detectorNull','detectorCobro'));
+            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','tasasDeInteres','date','detectorNull','detectorCobro','ListarCobros'));
             }
             else
             {
                 $detectorNull=1;
                 $detectorCobro=1;
                   
-            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','tasasDeInteres','date','detectorNull','detectorCobro','ultimo_cobro'));
+            return view('backend.admin.Buses.Cobros.cobrosBus', compact('buses','calificaciones','calificacion','calificacionB','tasasDeInteres','date','detectorNull','detectorCobro','ultimo_cobro','ListarCobros'));
             }
           
         }    

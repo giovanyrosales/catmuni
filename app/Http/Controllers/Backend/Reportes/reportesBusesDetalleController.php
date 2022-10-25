@@ -1193,17 +1193,13 @@ class reportesBusesDetalleController extends Controller
             'estado_buses.estado')
                             
             ->find($id);
-
-            $buses_especifico = BusesDetalleEspecifico::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
-
-            ->select('buses_detalle_especifico.id','buses_detalle_especifico.placa','buses_detalle_especifico.nombre','buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
-            'buses_detalle.id as id_buses_detalle','buses_detalle.fecha_apertura','buses_detalle.nFicha',)
-            ->find($id);
-
-            
+          
+            $buses_especifico = BusesDetalleEspecifico::latest()
+            ->where('id_buses_detalle', $buses->id)
+            ->first();
 
             $ultimaCalificacionBus = CalificacionBuses::latest()
-            ->where('id_contribuyente',$id)
+            ->where('id_contribuyente', $buses->id_contribuyente)
             ->first();
 
           
@@ -1303,15 +1299,17 @@ class reportesBusesDetalleController extends Controller
             </tr> 
 
             <tr>
-                <td id='name'>CORREO ELECTRÓNICO</td>
+                <td id='name'>FECHA DE CALIFICACIÓN</td>
                 <td id= 'name1'>$ultimaCalificacionBus->fecha_calificacion</td>
             </tr>
 
+            <tr>
+                <td id='name'>TARIFA ACTUAL</td>
+                <td id= 'name1'>$ $ultimaCalificacionBus->pago_mensual</td>
+            </tr>
+
+            </table>"; 
             
-
-           
-
-                </table>";
         
                 $stylesheet = file_get_contents('css/cssconsolidado.css');
                 $mpdf->WriteHTML($stylesheet,1);
