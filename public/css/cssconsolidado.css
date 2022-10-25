@@ -198,7 +198,7 @@
             font-size: 14px;
         }
 
-        /* Tabla para tabla Mora*/
+        /* CSS para tabla Mora*/
         tablaMora {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
@@ -229,7 +229,8 @@
             text-align: left;
             font-size: 12px;
         }
-
+        /* FIN -CSS para tabla Mora*/
+        
         #bus{
               
             height: 2px;
