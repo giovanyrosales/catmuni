@@ -27,69 +27,112 @@
                     <!--Inicia NAV--> 
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active " id="nav-mora-total-tab" data-toggle="tab" href="#nav-mora-total-tab" role="tab" aria-controls="nav-mora-total" aria-selected="true" style="color:#727370;"><i class="fas fa-hand-holding-usd"></i> Cobros global</a></a>
-                            <a class="nav-item nav-link" id="nav-mora-codigo-tab" data-toggle="tab" href="#nav-mora-codigo-tab" role="tab" aria-controls="nav-mora-codigo" aria-selected="false" style="color:#727370;"><i class="fas fa-city"></i> Por empresas</a>
-                            <a class="nav-item nav-link" id="nav-mora-tasas-tab" data-toggle="tab" href="#nav-mora-tasas-tab" role="tab" aria-controls="nav-mora-tasas" aria-selected="false" style="color:#727370;"><i class="fas fa-coins"></i> Por tasas</a>
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-global-tab" role="tab" aria-selected="true" style="color:#727370;"> <i class="fas fa-hand-holding-usd"></i> Cobros global</a>
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-empresas" role="tab" aria-selected="false" style="color:#727370;"><i class="fas fa-city"></i> Por empresas</a>
+                            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-tasas" role="tab"  aria-selected="false" style="color:#727370;"><i class="fas fa-coins"></i> Por tasas</a>
                         </div>
                     </nav>
-                        <!--Contenido NAV 1-->
-                        <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-content" id="nav-tabContent"> 
+                        <div class="tab-pane fade show active" id="nav-cobros-global-tab" role="tabpanel">
+                        <!--Contenido 1 NAV -->
                             <br>
-                        <!--FIN Contenido 1 NAV -->
-                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                <!--Contenido 1 NAV -->
-                                <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:230px;">
-                                    <h6><i class="fas fa-info"></i> Generar reporte de cobros global.</h6>
-                                        <form class="form-horizontal">
-                                            <div class="card-body">
-                                                <div class="form-group row">
-                                                    <div class="col-sm-10">
-                                                        <div class="info-box shadow">
-                                                            <span class="info-box-icon bg-transparent"><i class="fas fa-donate"></i></span>
-                                                            <div class="info-box-content">
-                                                                <div class="row">
-                                                                    <div class="col-md-3">
-                                                                        <label>FECHA INICIO:</label>
-                                                                        <div class="input-group mb-3 shadow">
-                                                                                <input type="date" id="fecha_inicio" value="2021-01-01" required class="form-control" >                                                                   
-                                                                        </div>
+                            <div class="callout callout-info" style="margin: 0 auto;width: 100%;height:230px;">
+                                <h6><i class="fas fa-info"></i> Generar reporte de cobros global.</h6>
+                                    <form class="form-horizontal">
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <div class="info-box shadow">
+                                                        <span class="info-box-icon bg-transparent"><i class="fas fa-donate"></i></span>
+                                                        <div class="info-box-content">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>FECHA INICIO:</label>
+                                                                    <div class="input-group mb-3 shadow">
+                                                                            <input type="date" id="fecha_inicio"   required class="form-control" >                                                                   
                                                                     </div>
-                                                                    <div class="col-md-3">
-                                                                        <label>FECHA FINAL:</label>
-                                                                        <div class="input-group mb-3 shadow">
-                                                                                <input type="date" id="fecha_fin" value="2022-12-31" required class="form-control" >                                                                   
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <label>&nbsp;</label>
-                                                                        <div class="input-group mb-3">
-                                                                            &nbsp;
-                                                                            <button type="button" class="btn btn-outline btn-sm" style="color:white; background:#94D913" onclick="generar_lista_cobros();" >
-                                                                            <i class="fas fa-search-dollar"></i> Ver histórico de cobros
-                                                                            </button>                   
-                                                                                &nbsp;
-                                                                            <button type="button" class="btn btn btn-sm" style="color:white; background:#94D913" onclick="generarPdfMoraTributaria();" id="btn_mora_pdf">
-                                                                                <i class="fas fa-file-pdf"></i> Generar PDF
-                                                                            </button>                                                                   
-                                                                        </div>
-                                                                    </div>
-                                                                                                                                          
                                                                 </div>
+                                                                <div class="col-md-3">
+                                                                    <label>FECHA FINAL:</label>
+                                                                    <div class="input-group mb-3 shadow">
+                                                                            <input type="date" id="fecha_fin"  required class="form-control" >                                                                   
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>&nbsp;</label>
+                                                                    <div class="input-group mb-3">
+                                                                        &nbsp;
+                                                                        <button type="button" class="btn btn-outline btn-sm" style="color:white; background:#94D913" onclick="generar_lista_cobros();" >
+                                                                        <i class="fas fa-search-dollar"></i> Ver histórico de cobros
+                                                                        </button>                   
+                                                                            &nbsp;
+                                                                        <button type="button" class="btn btn btn-sm" style="color:white; background:#94D913" onclick="generarPdfCobrosGlobal();" id="btn_cobros_pdf">
+                                                                            <i class="fas fa-file-pdf"></i> Generar PDF
+                                                                        </button>                                                                   
+                                                                    </div>
+                                                                </div>
+                                                                                                                                    
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
-                                    
-                                    </div>
+                                        </div>
+                                    </form>
+                                
                                 </div>
-                            <!--FIN Contenido 1 NAV -->
+                            </div>
+                        <!--FIN Contenido 1 NAV -->
+                        <!--Contenido 2 NAV -->
+                        <div class="tab-pane fade" id="nav-cobros-empresas" role="tabpanel">
+                            
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <div class="info-box shadow">
+                                                        <span class="info-box-icon bg-transparent"><i class="fas fa-donate"></i></span>
+                                                        <div class="info-box-content">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>FECHA INICIO:</label>
+                                                                    <div class="input-group mb-3 shadow">
+                                                                            <input type="date" id="fecha_inicio_cobros_codigos"   required class="form-control" >                                                                   
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>FECHA FINAL:</label>
+                                                                    <div class="input-group mb-3 shadow">
+                                                                            <input type="date" id="fecha_fin_cobros_codigos"  required class="form-control" >                                                                   
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>&nbsp;</label>
+                                                                    <div class="input-group mb-3">
+                                                                        &nbsp;
+                                                                        <button type="button" class="btn btn-outline btn-sm" style="color:white; background:#94D913" onclick="cobros_empresas();" >
+                                                                        <i class="fas fa-search-dollar"></i> Ver histórico de cobros
+                                                                        </button>                   
+                                                                            &nbsp;
+                                                                        <button type="button" class="btn btn btn-sm" style="color:white; background:#94D913" onclick="generarPdfCobrosEmpresas();" id="btn_cobros_empresas_pdf">
+                                                                            <i class="fas fa-file-pdf"></i> Generar PDF
+                                                                        </button>                                                                   
+                                                                    </div>
+                                                                </div>
+                                                                                                                                    
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                         </div>
-                        <!-- Finaliza NAV-->
-                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
-                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
-                    </div>
+                        <!-- Finaliza NAV 2-->
+                        <!--Contenido 3 NAV -->
+                        <div class="tab-pane fade" id="nav-cobros-tasas" role="tabpanel" >
+                            k
+                        </div>
+                        <!-- Finaliza NAV 3-->
 
             </div>
         </div>
@@ -97,7 +140,7 @@
 
     </section>
 
-    <!-- Sección generar reporte mora total -->
+    <!-- Sección generar reporte cobros global -->
     <section class="content" id="div_generar_reporte">
         <div class="container-fluid">
             <div class="row">
@@ -126,7 +169,7 @@
     </section>
 
     <!-- Sección generar reporte mora codigos -->
-    <section class="content" id="div_generar_mora_codigos">
+    <section class="content" id="div_generar_cobros_codigos">
     
         <!-- Lista -->
         <div class="content-list" style="margin: 0 auto;width: 98%;">
@@ -141,7 +184,7 @@
                           <div class="card-body">
                             
                           <div class="container-fluid">
-                            <table class="table" id="matriz_ver_mora_codigos" style="border: 100px;" data-toggle="table">
+                            <table class="table" id="matriz_ver_cobros_codigos" style="border: 100px;" data-toggle="table">
                                 <thead style="background-color:#97999A; color: #FFFFFF;">
                                     <tr>  
                                         <th style="width: 50%; text-align: left;font-weight: 700;">DESCRIPCION</th>
@@ -149,7 +192,7 @@
                                         <th style="width: 25%; text-align: right;font-weight: 700;">MORA</th>       
                                     </tr>
                                 </thead>
-                                    <tbody>
+                                    <tbody style="font-size: 14px;padding: 8px;">
 
                                     </tbody>
                             </table>
@@ -184,8 +227,8 @@
     </section>
 
 
-    <!-- Sección generar reporte mora tasas -->
-    <section class="content" id="div_generar_mora_tasas">
+    <!-- Sección generar reporte cobros tasas -->
+    <section class="content" id="div_generar_cobros_tasas">
     
     <!-- Lista -->
     <div class="content-list" style="margin: 0 auto;width: 98%;">
@@ -232,7 +275,7 @@
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Gráfico comparativo</h6>
                                 </div>
-                                <canvas id="grafico_mora_tasas" width="400" height="300"></canvas>
+                                <canvas id="grafico_cobros_tasas" width="400" height="300"></canvas>
                         </div>
                     </div>
                  </div>
@@ -286,11 +329,12 @@
             document.getElementById("divcc").style.display = "block";
  
             $('#div_generar_reporte').hide();
-            $('#div_generar_mora_codigos').hide();
-            $('#div_generar_mora_tasas').hide();
-            $('#btn_mora_pdf').hide();
-            window.imp_grafico_mora_codigos=0;         
-            window.imp_grafico_mora_tasas=0;
+            $('#div_generar_cobros_codigos').hide();
+            $('#div_generar_cobros_tasas').hide();
+            $('#btn_cobros_pdf').hide();
+            $('#btn_cobros_empresas_pdf').hide();
+            window.imp_grafico_cobros_codigos=0;         
+            window.imp_grafico_cobros_tasas=0;
            
         });
 
@@ -298,157 +342,421 @@
 
     <script>
 
-        function generarPdfMoraTributaria(){
+        function generarPdfCobrosGlobal(){
 
-            window.open("{{ URL::to('admin/pdf/reporte/mora_tributaria') }}/");
+            //Validaciones
+            var f1 = document.getElementById("fecha_inicio").value;
+            var f2 = document.getElementById("fecha_fin").value; 
+            var g='';
+            //Validando SI se selecionado una fecha de ambos calendarios
+            if(f1!="" || f2!=""){
+
+                var g=1;
+
+                if(f1 == ""){
+                                $('#div_generar_reporte').hide();
+                                $('#contenido_img').show();
+                                modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio.');
+                                return;
+                            }
+
+                if(f2 == ""){
+                                $('#div_generar_reporte').hide();
+                                $('#contenido_img').show();
+                                modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final.');
+                                return;
+                            }
+            
+            }else{
+                    
+                    var f1 = 0;
+                    var f2 = 0; 
+                    var g=0;
+                 }
+            //FIN - Validando SI se selecionado una fecha de ambos calendarios
+
+            window.open("{{ URL::to('admin/pdf/reporte/cobros_global') }}/"+ f1 + "/" + f2 + "/" + g );
        
         }
 
-        function mora_codigos(){
-            if (window.imp_grafico_mora_codigos=='1') {
+        function generar_lista_cobros(){
+
+                openLoading();    
+                $("#matriz_ver_cobros_global tbody tr").remove();
+
+                //Validaciones
+                var fecha_inicio = document.getElementById("fecha_inicio").value;
+                var fecha_fin = document.getElementById("fecha_fin").value; 
+
+                //Validando SI se selecionado una fecha de ambos calendarios
+                if(fecha_inicio !="" || fecha_fin!=""){
+
+                    var global=1;
+
+                    if(fecha_inicio == ""){
+                                            $('#div_generar_reporte').hide();
+                                            $('#contenido_img').show();
+                                            $('#btn_cobros_pdf').hide();
+                                            modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio.');
+                                            return;
+                                        }
+
+                    if(fecha_fin == ""){
+                                            $('#div_generar_reporte').hide();
+                                            $('#contenido_img').show();
+                                            $('#btn_cobros_pdf').hide();
+                                            modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final.');
+                                            return;
+                                        }
+
+                var formData = new FormData();
+                formData.append('fecha_inicio', fecha_inicio);
+                formData.append('fecha_fin', fecha_fin);
+                formData.append('global', global);
+
+
+                }else{
+                        var global=0;
+
+                        var formData = new FormData();
+                        formData.append('global', global);
+                    }
+                //FIN - Validando SI se selecionado una fecha de ambos calendarios
+
+                axios.post('/admin/cobros/globales/periodo', formData, {
+                })
+                .then((response) => {
+
+                if(response.data.success === 1)
+                    {
+
+                        Swal.fire({
+                            position:'top-end',
+                            icon: 'success',
+                            title: '¡Cálculo realizado!',
+                            showConfirmButton: true,                     
+                            })
+                                $('#btn_cobros_pdf').show();
+                                $('#div_generar_reporte').show();
+                                $('#contenido_img').hide();
+                                //**** Cargar información empresas registradas ****//
+                                var infodetalle = response.data.lista_cobros;
+                            
+                                
+                                for (var i = 0; i < infodetalle.length; i++) {
+
+                                var markup = `<tr id="${infodetalle[i].id}">
+
+                                <td align="center">
+                                <span class="badge badge-pill badge-dark">${infodetalle[i].num_tarjeta}</span>
+                                </td>
+                                
+                                <td align="center">
+                                ${infodetalle[i].nombre}
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle[i].codigo}
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle[i].apartir_de}
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle[i].hasta}
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle[i].fecha_pago}
+                                </td>
+
+                                <td align="right">
+                                $${infodetalle[i].cobro_por_empresa}
+                                </td>
+
+                            </tr>`;
+
+                                $("#matriz_ver_cobros_global tbody").append(markup);
+
+                                }//*Cierre de for empresas
+                            
+                                var markup2 = `<tr>
+                                
+                                <td align="right" colspan="7">
+                                    <b>TOTAL: $ ${response.data.total_cobros_empresas_formateado}</b>
+                                </td>
+
+                            </tr>`;
+
+                                $("#matriz_ver_cobros_global tbody").append(markup2);
+
+                    }
+                    else if(response.data.success === 2){
+                        Swal.fire({
+                                    icon: 'info',
+                                    title: 'Oops...',
+                                    text: '¡No se encontró ningún cobro realizado en el período seleccionado!',   
+                                    })
+                                    $('#div_generar_reporte').hide();
+                                    $('#contenido_img').show();
+
+                        }else{
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Error al generar el reporte de cobros global!',
+                                    // footer: '<a href="">Why do I have this issue?</a>'
+                                    })
+                                    $('#div_generar_reporte').hide();
+                                    $('#contenido_img').show();
+
+                        }
+                        
+                })
+                .catch((error) =>{
+                                toastr.error('Error al generar el reporte de cobros global');
+                            });        
+                }
+
+
+
+
+
+
+        function cobros_empresas(){
+
+            if (window.imp_grafico_cobros_codigos=='1') {
                 window.myChart.clear();
                 window.myChart.destroy();            
             }
             
-            if (window.imp_grafico_mora_tasas=='1') {
-                window.grafico_mora_tasas.clear();
-                window.grafico_mora_tasas.destroy();
-                window.imp_grafico_mora_tasas=0;
-            }
+            if (window.imp_grafico_cobros_tasas=='1') {
+                window.grafico_cobros_tasas.clear();
+                window.grafico_cobros_tasas.destroy();
+                window.imp_grafico_cobros_tasas=0;
+            }                                                                 
+                
+            //Validaciones
+            var fecha_inicio = document.getElementById("fecha_inicio_cobros_codigos").value;
+            var fecha_fin = document.getElementById("fecha_fin_cobros_codigos").value; 
 
-  
-            $("#matriz_ver_mora tbody tr").remove();
+            //Validando SI se selecionado una fecha de ambos calendarios
+            if(fecha_inicio !="" || fecha_fin!=""){
+
+                var global=1;
+
+                if(fecha_inicio == ""){
+
+                                        modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio.');
+                                        $('#div_generar_reporte').hide();
+                                        $('#div_generar_cobros_codigos').hide();
+                                        $('#div_generar_cobros_tasas').hide();
+                                        $('#contenido_img').show();
+                                        $('#btn_cobros_empresas_pdf').hide();
+                                        window.imp_grafico_cobros_codigos=0;
+                                        return;
+                                    }
+
+                if(fecha_fin == ""){
+
+                                        modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final.');
+                                        $('#div_generar_reporte').hide();
+                                        $('#div_generar_cobros_codigos').hide();
+                                        $('#div_generar_cobros_tasas').hide();
+                                        $('#contenido_img').show();
+                                        $('#btn_cobros_empresas_pdf').hide();
+                                        window.imp_grafico_cobros_codigos=0;
+                                        return;
+                                    }
+
+                var formData = new FormData();
+                formData.append('fecha_inicio', fecha_inicio);
+                formData.append('fecha_fin', fecha_fin);
+                formData.append('global', global);
+
+
+                }else{
+                        var global=0;
+
+                        var formData = new FormData();
+                        formData.append('global', global);
+                    }
+                //FIN - Validando SI se selecionado una fecha de ambos calendarios
+                  
+            $("#matriz_ver_cobros_global tbody tr").remove();
             $('#div_generar_reporte').hide();
-            $('#div_generar_mora_tasas').hide();
-            $('#btn_mora_pdf').hide();
-            $('#contenido_img').hide();
+            $('#div_generar_cobros_tasas').hide();
 
-            $("#matriz_ver_mora_codigos tbody tr").remove();
-            var formData = new FormData();
+            $("#matriz_ver_cobros_codigos tbody tr").remove();
 
-  
-          axios.post('/admin/calculo/mora_codigos_periodo', formData, {
+          axios.post('/admin/calculo/cobros_codigos_periodo', formData, {
            })
           .then((response) => {
             closeLoading();
             if(response.data.success === 1)
                 {
-                    window.imp_grafico_mora_codigos=1;
-                    $('#div_generar_mora_codigos').show();
+                    window.imp_grafico_cobros_codigos=1;
+                    $('#div_generar_cobros_codigos').show();
                     $('#contenido_img').hide();
-                    //**** Cargar información mora filtrada por códigos ****//
-                    var mora_11801 = response.data.mora_11801;
-                    var mora_11802 = response.data.mora_11802;
-                    var mora_11803 = response.data.mora_11803;
-                    var mora_11804 = response.data.mora_11804; 
-                    var mora_11806 = response.data.mora_11806;
-                    var mora_11808 = response.data.mora_11808;
-                    var mora_11809 = response.data.mora_11809;
-                    var mora_11810 = response.data.mora_11810;
-                    var mora_11813 = response.data.mora_11813;
-                    var mora_11814 = response.data.mora_11814;
-                    var mora_11815 = response.data.mora_11815;
-                    var mora_11816 = response.data.mora_11816;
-                    var mora_11899 = response.data.mora_11899;
-                    var mora_15799 = response.data.mora_15799; 
+                    $('#btn_cobros_empresas_pdf').show();
+                    //**** Cargar información sobre cobros filtrada por códigos ****//
+                    var cobro_11801 = response.data.cobro_11801;
+                    var cobro_11802 = response.data.cobro_11802;
+                    var cobro_11803 = response.data.cobro_11803;
+                    var cobro_11804 = response.data.cobro_11804; 
+                    var cobro_11806 = response.data.cobro_11806;
+                    var cobro_11808 = response.data.cobro_11808;
+                    var cobro_11809 = response.data.cobro_11809;
+                    var cobro_11810 = response.data.cobro_11810;
+                    var cobro_11813 = response.data.cobro_11813;
+                    var cobro_11814 = response.data.cobro_11814;
+                    var cobro_11815 = response.data.cobro_11815;
+                    var cobro_11816 = response.data.cobro_11816;
+                    var cobro_11899 = response.data.cobro_11899;
+                    var cobro_15799 = response.data.cobro_15799;
                     
-                    var mora_11801_formateado = response.data.mora_11801_formateado;
-                    var mora_11802_formateado = response.data.mora_11802_formateado;
-                    var mora_11803_formateado = response.data.mora_11803_formateado;
-                    var mora_11804_formateado = response.data.mora_11804_formateado; 
-                    var mora_11806_formateado = response.data.mora_11806_formateado;
-                    var mora_11808_formateado = response.data.mora_11808_formateado;
-                    var mora_11809_formateado = response.data.mora_11809_formateado;
-                    var mora_11810_formateado = response.data.mora_11810_formateado;
-                    var mora_11813_formateado = response.data.mora_11813_formateado;
-                    var mora_11814_formateado = response.data.mora_11814_formateado;
-                    var mora_11815_formateado = response.data.mora_11815_formateado;
-                    var mora_11816_formateado = response.data.mora_11816_formateado;
-                    var mora_11899_formateado = response.data.mora_11899_formateado;
-                    var mora_15799_formateado = response.data.mora_15799_formateado; 
+                    var cobro_32201 = response.data.cobro_32201;
+                    var cobro_15302 = response.data.cobro_15302;
+                    var cobro_15313 = response.data.cobro_15313; 
+                    
+                    var cobro_11801_formateado = response.data.cobro_11801_formateado;
+                    var cobro_11802_formateado = response.data.cobro_11802_formateado;
+                    var cobro_11803_formateado = response.data.cobro_11803_formateado;
+                    var cobro_11804_formateado = response.data.cobro_11804_formateado; 
+                    var cobro_11806_formateado = response.data.cobro_11806_formateado;
+                    var cobro_11808_formateado = response.data.cobro_11808_formateado;
+                    var cobro_11809_formateado = response.data.cobro_11809_formateado;
+                    var cobro_11810_formateado = response.data.cobro_11810_formateado;
+                    var cobro_11813_formateado = response.data.cobro_11813_formateado;
+                    var cobro_11814_formateado = response.data.cobro_11814_formateado;
+                    var cobro_11815_formateado = response.data.cobro_11815_formateado;
+                    var cobro_11816_formateado = response.data.cobro_11816_formateado;
+                    var cobro_11899_formateado = response.data.cobro_11899_formateado;
+                    var cobro_15799_formateado = response.data.cobro_15799_formateado;
+                    
+                    var cobro_32201_formateado = response.data.cobro_32201_formateado;
+                    var cobro_15302_formateado = response.data.cobro_15302_formateado;
+                    var cobro_15313_formateado = response.data.cobro_15313_formateado;
+                    
      
                     var markup = `<tr>
                     <td align="left">COMERCIO</td>
                     <td align="center">11801</td>
-                    <td align="right">$${mora_11801_formateado}</td>
+                    <td align="right">$${cobro_11801_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">INDUSTRIA</td>
                     <td align="center">11802</td>
-                    <td align="right">$${mora_11802_formateado}</td>
+                    <td align="right">$${cobro_11802_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">FINANCIERA</td>
                     <td align="center">11803</td>
-                    <td align="right">$${mora_11803_formateado}</td>
+                    <td align="right">$${cobro_11803_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">SERVICIOS</td>
                     <td align="center">11804</td>
-                    <td align="right">$${mora_11804_formateado}</td>
+                    <td align="right">$${cobro_11804_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">BAR Y RESTAURANTES</td>
                     <td align="center">11806</td>
-                    <td align="right">$${mora_11806_formateado}</td>
+                    <td align="right">$${cobro_11806_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">CENTROS DE ENSEÑANAZA</td>
                     <td align="center">11808</td>
-                    <td align="right">$${mora_11808_formateado}</td>
+                    <td align="right">$${cobro_11808_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">ESTUDIO DE FOTOS</td>
                     <td align="center">11809</td>
-                    <td align="right">$${mora_11809_formateado}</td>
+                    <td align="right">$${cobro_11809_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">HOTELES Y HOSPEDAJE</td>
                     <td align="center">11810</td>
-                    <td align="right">$${mora_11810_formateado}</td>
+                    <td align="right">$${cobro_11810_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">CONSULTORIOS MEDICOS</td>
                     <td align="center">11813</td>
-                    <td align="right">$${mora_11813_formateado}</td>
+                    <td align="right">$${cobro_11813_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">SERVICIOS PROFESIONALES</td>
                     <td align="center">11814</td>
-                    <td align="right">$${mora_11814_formateado}</td>
+                    <td align="right">$${cobro_11814_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">CENTROS RECREATIVOS</td>
                     <td align="center">11815</td>
-                    <td align="right">$${mora_11815_formateado}</td>
+                    <td align="right">$${cobro_11815_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">TRANSPORTE</td>
                     <td align="center">11816</td>
-                    <td align="right">$${mora_11816_formateado}</td>
+                    <td align="right">$${cobro_11816_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">MESAS DE BILLAR</td>
                     <td align="center">11899</td>
-                    <td align="right">$${mora_11899_formateado}</td>
+                    <td align="right">$${cobro_11899_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">LIBRERIAS</td>
                     <td align="center">15799</td>
-                    <td align="right">$${mora_15799_formateado}</td>
+                    <td align="right">$${cobro_15799_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">FONDO FIESTA</td>
+                    <td align="center">12114</td>
+                    <td align="right">$${cobro_11899_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">LICENCIAS</td>
+                    <td align="center">12207</td>
+                    <td align="right">$${cobro_11899_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">MATRICULAS</td>
+                    <td align="center">12210</td>
+                    <td align="right">$${cobro_11899_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">DERECHOS DIVERSOS</td>
+                    <td align="center">12299</td>
+                    <td align="right">$${cobro_11899_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">INTERESES</td>
+                    <td align="center">15302</td>
+                    <td align="right">$${cobro_15302_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">MULTAS</td>
+                    <td align="center">15313</td>
+                    <td align="right">$${cobro_15313_formateado}</td>
+                    </tr>
+                    <tr>
+                    <td align="left">IMPUESTO MORA</td>
+                    <td align="center">32201</td>
+                    <td align="right">$${cobro_32201_formateado}</td>
                     </tr>`;      
 
-                    $("#matriz_ver_mora_codigos tbody").append(markup);
+                    $("#matriz_ver_cobros_codigos tbody").append(markup);
                     
                     var markup2 = `<tr>
                     
                     <td align="right" colspan="7">
-                        <b>TOTAL: $ ${response.data.total_mora_final}</b>
+                        <b>TOTAL: $ ${response.data.total_cobros_empresas_formateado}</b>
                     </td>
 
                     </tr>`;
 
-                    $("#matriz_ver_mora_codigos tbody").append(markup2);
+                    $("#matriz_ver_cobros_codigos tbody").append(markup2);
                 
                    
                     const ctx = document.getElementById('myChart');
@@ -458,14 +766,15 @@
                         data: {
                             
                             labels: ['11801', '11802', '11803', '11804', '11806', '11808','11809', 
-                                     '11810', '11813', '11814', '11815', '11816', '11899','15799'
+                                     '11810', '11813', '11814', '11815', '11816', '11899','15799',
+                                     '15302', '15313', '32201',
                                     ],
                             datasets: [{
                                 label: 'Cantidad por Actividad Económica',
                                 
-                                data: [mora_11801, mora_11802, mora_11803, mora_11804, mora_11806, mora_11808,
-                                       mora_11809, mora_11810, mora_11813, mora_11814, mora_11815, mora_11816,
-                                       mora_11899, mora_15799
+                                data: [cobro_11801, cobro_11802, cobro_11803, cobro_11804, cobro_11806, cobro_11808,
+                                       cobro_11809, cobro_11810, cobro_11813, cobro_11814, cobro_11815, cobro_11816,
+                                       cobro_11899, cobro_15799, cobro_15302, cobro_15313, cobro_32201
                                        ],
                                        
                                 backgroundColor: [
@@ -497,165 +806,77 @@
                     });
                     
                 
-                }
-                else{
-                      Swal.fire({
-                                  icon: 'error',
-                                  title: 'Oops...',
-                                  text: 'Error al calcular la mora!',
-                                })
-                                // $('#div_generar_mora_codigos').hide();
-                                // $('#contenido_img').show();
+                }else if(response.data.success === 2){
+                        Swal.fire({
+                                    icon: 'info',
+                                    title: 'Oops...',
+                                    text: '¡No se encontró ningún cobro realizado en el período seleccionado!',   
+                                    })
+                                    $('#div_generar_reporte').hide();
+                                    $('#contenido_img').show();
 
-                    }
+                        }else{
+                                Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: '¡Error al generar el reporte de cobros!',
+                                            })
+                                }
             })
          .catch((error) =>{
-                            toastr.error('Error al calcular la mora');
+                            toastr.error('¡Error al generar el reporte de cobros!');
                            });        
    
         }
 
-        function reset_mora_total(){
-            if (window.imp_grafico_mora_codigos=='1') {
+
+
+
+
+
+        function reset_cobros_global(){
+            if (window.imp_grafico_cobros_codigos=='1') {
                 window.myChart.clear();
                 window.myChart.destroy();
-                window.imp_grafico_mora_codigos=0;
+                window.imp_grafico_cobros_codigos=0;
             }
 
-            if (window.imp_grafico_mora_tasas=='1') {
-                window.grafico_mora_tasas.clear();
-                window.grafico_mora_tasas.destroy();
-                window.imp_grafico_mora_tasas=0;
+            if (window.imp_grafico_cobros_tasas=='1') {
+                window.grafico_cobros_tasas.clear();
+                window.grafico_cobros_tasas.destroy();
+                window.imp_grafico_cobros_tasas=0;
             }
 
             $("#matriz_ver_cobros_global tbody tr").remove();
-            $('#btn_mora_pdf').hide();
+            $("#matriz_ver_cobros_codigos tbody tr").remove();
+            $('#btn_cobros_pdf').hide();
+            $('#btn_cobros_empresas_pdf').hide();
             $('#div_generar_reporte').hide();
-            $('#div_generar_mora_codigos').hide();
-            $('#div_generar_mora_tasas').hide();
+            $('#div_generar_cobros_codigos').hide();
+            $('#div_generar_cobros_tasas').hide();
             $('#contenido_img').show();
+
+            document.getElementById('fecha_inicio_cobros_codigos').value='';
+            document.getElementById('fecha_fin_cobros_codigos').value='';
+            document.getElementById('fecha_inicio').value='';
+            document.getElementById('fecha_fin').value='';
+            
         }
 
-        function generar_lista_cobros(){
-
-            openLoading();    
-            $("#matriz_ver_cobros_global tbody tr").remove();
-
-            //Validaciones
-            var fecha_inicio = document.getElementById("fecha_inicio").value;
-            var fecha_fin = document.getElementById("fecha_fin").value; 
-
-            if(fecha_inicio == ""){
-                                    modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio.');
-                                    return;
-                                }
-            if(fecha_fin == ""){
-                modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final.');
-                return;
-            }
-
-            var formData = new FormData();
-            formData.append('fecha_inicio', fecha_inicio);
-            formData.append('fecha_fin', fecha_fin);
-  
-          axios.post('/admin/cobros/globales/periodo', formData, {
-           })
-        .then((response) => {
         
-        if(response.data.success === 1)
-                {
-
-                    Swal.fire({
-                          position:'top-end',
-                          icon: 'success',
-                          title: '¡Cálculo realizado!',
-                          showConfirmButton: true,                     
-                        })
-                            $('#btn_mora_pdf').show();
-                            $('#div_generar_reporte').show();
-                            $('#contenido_img').hide();
-                            //**** Cargar información empresas registradas ****//
-                            var infodetalle = response.data.mora_empresas;
-                         
-                            
-                            for (var i = 0; i < infodetalle.length; i++) {
-
-                            var markup = `<tr id="${infodetalle[i].id}">
-
-                            <td align="center">
-                            <span class="badge badge-pill badge-dark">${infodetalle[i].num_tarjeta}</span>
-                            </td>
-                            
-                            <td align="center">
-                            ${infodetalle[i].nombre}
-                            </td>
-
-                            <td align="center">
-                            ${infodetalle[i].codigo_atc_economica}
-                            </td>
-
-                            <td align="center">
-                            ${infodetalle[i].ultima_fecha_pago}
-                            </td>
-
-                            <td align="center">
-                            ${infodetalle[i].meses}
-                            </td>
-
-                            <td align="center">
-                            ${infodetalle[i].tarifaE}
-                            </td>
-
-                            <td align="right">
-                            $${infodetalle[i].total_pago}
-                            </td>
-
-                           </tr>`;
-
-                            $("#matriz_ver_cobros_global tbody").append(markup);
-
-                            }//*Cierre de for empresas
-                           
-                            var markup2 = `<tr>
-                            
-                            <td align="right" colspan="7">
-                                <b>TOTAL: $ ${response.data.total_mora_final}</b>
-                            </td>
-
-                           </tr>`;
-
-                            $("#matriz_ver_cobros_global tbody").append(markup2);
-
-                }
-                else{
-                      Swal.fire({
-                                  icon: 'error',
-                                  title: 'Oops...',
-                                  text: 'Error al calcular la mora!',
-                                 // footer: '<a href="">Why do I have this issue?</a>'
-                                })
-                                $('#div_generar_reporte').hide();
-                                $('#contenido_img').show();
-
-                    }
-            })
-         .catch((error) =>{
-                            toastr.error('Error al calcular la mora');
-                           });        
-        }
 
         function generar_mora_tasas_periodo(){
 
             //verificando si el grafico ya fue generado antes
-            if (window.imp_grafico_mora_codigos=='1') {
+            if (window.imp_grafico_cobros_codigos=='1') {
                 window.myChart.clear();
                 window.myChart.destroy();
-                window.imp_grafico_mora_codigos=0;
+                window.imp_grafico_cobros_codigos=0;
             }
              
-            if (window.imp_grafico_mora_tasas=='1') {
-                window.grafico_mora_tasas.clear();
-                window.grafico_mora_tasas.destroy();         
+            if (window.imp_grafico_cobros_tasas=='1') {
+                window.grafico_cobros_tasas.clear();
+                window.grafico_cobros_tasas.destroy();         
             }
             
             $('#div_generar_reporte').hide();
@@ -671,7 +892,7 @@
         
             if(response.data.success === 1)
                 {
-                    window.imp_grafico_mora_tasas=1;
+                    window.imp_grafico_cobros_tasas=1;
                     $('#div_generar_mora_tasas').show();
                     $('#contenido_img').hide();
                     //**** Cargar información mora filtrada por códigos ****//
@@ -769,9 +990,9 @@
 
                     $("#matriz_ver_mora_tasas tbody").append(markup2);
 
-                    const ctx = document.getElementById('grafico_mora_tasas');
+                    const ctx = document.getElementById('grafico_cobros_tasas');
 
-                     window.grafico_mora_tasas = new Chart(ctx, {
+                     window.grafico_cobros_tasas = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             

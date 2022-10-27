@@ -218,4 +218,147 @@ class RotulosDetalleController extends Controller
         }
              
     } 
+
+    public function showRotulos($id_rotulos_detalle)
+    {
+
+        $rotulos = RotulosDetalle::join('contribuyente', 'rotulos_detalle.id_contribuyente','contribuyente.id')
+        ->join('estado_rotulo', 'rotulos_detalle.id_estado_rotulo', 'estado_rotulo.id')
+
+        ->select('rotulos_detalle.id as id_rotulos_detalle','rotulos_detalle.num_ficha','rotulos_detalle.fecha_apertura','rotulos_detalle.cantidad_rotulos',
+        'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa',
+        'rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante','rotulos_detalle.estado_especificacion',
+        'contribuyente.id', 'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+        'estado_rotulo.id','estado_rotulo.estado')
+
+        ->find($id_rotulos_detalle);
+
+        return view('backend.admin.RotulosDetalle.vistaRotulos', compact('rotulos','id_rotulos_detalle'));
+        
+    }
+
+
+    public function calificacionRotulo($id_rotulos_detalle)
+    {
+
+        $rotulo = RotulosDetalle::ALL();
+
+
+        $rotulosEspecificos = RotulosDetalleEspecifico::join('rotulos_detalle','rotulos_detalle_especifico.id_rotulos_detalle','rotulos_detalle.id')
+
+        ->select('rotulos_detalle_especifico.id','rotulos_detalle_especifico.id_rotulos_detalle', 'rotulos_detalle_especifico.nombre','rotulos_detalle_especifico.medidas',
+        'rotulos_detalle_especifico.total_medidas','rotulos_detalle_especifico.caras','rotulos_detalle_especifico.tarifa',
+        'rotulos_detalle_especifico.total_tarifa','rotulos_detalle_especifico.coordenadas_geo','rotulos_detalle_especifico.foto_rotulo',
+        
+        'rotulos_detalle.id as id_rotulos_detalle','rotulos_detalle.num_ficha','rotulos_detalle.fecha_apertura','rotulos_detalle.cantidad_rotulos',
+        'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa',
+        'rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante','rotulos_detalle.estado_especificacion',)
+
+        ->where('id_rotulos_detalle', $id_rotulos_detalle) 
+        ->get();
+
+        //log::info($rotulosEspecificos);
+     
+
+        $rotulos = RotulosDetalle::join('contribuyente', 'rotulos_detalle.id_contribuyente','contribuyente.id')
+        ->join('estado_rotulo', 'rotulos_detalle.id_estado_rotulo', 'estado_rotulo.id')
+
+        ->select('rotulos_detalle.id as id_rotulos_detalle','rotulos_detalle.num_ficha','rotulos_detalle.fecha_apertura','rotulos_detalle.cantidad_rotulos',
+        'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa',
+        'rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante','rotulos_detalle.estado_especificacion',
+        
+        'contribuyente.id', 'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+        'estado_rotulo.id','estado_rotulo.estado')
+
+        ->first();
+
+        //log::info($rotulos);
+      
+
+        $empresa = '';
+        $ficha = '';
+        $apertura = '';
+
+        if ($rotulo = RotulosDetalle::where('id', $id_rotulos_detalle)->first())
+        {
+
+            $empresa = $rotulo->nom_empresa;
+            $ficha = $rotulo->num_ficha;
+            $apertura = $rotulo->fecha_apertura;
+           
+        }
+
+        //log::info($rotulo);
+   
+
+        return view('backend.admin.RotulosDetalle.CalificacionRotulos', compact('rotulos','rotulosEspecificos','empresa','id_rotulos_detalle',
+                                            'ficha','apertura','rotulo',
+                                        ));
+
+    }
+
+    public function tablaCalificacionRotulo ($id_rotulos_detalle)
+    {
+     
+        log::info('id_rotulos_detalle ' . $id_rotulos_detalle);
+        
+        $rotulos = RotulosDetalle::where('id', $id_rotulos_detalle)->first();
+
+        //log::info('rotulos ' . $rotulos);
+       
+        $rotulosEspecificos = RotulosDetalleEspecifico::join('rotulos_detalle','rotulos_detalle_especifico.id_rotulos_detalle','rotulos_detalle.id')
+
+        ->select('rotulos_detalle_especifico.id','rotulos_detalle_especifico.id_rotulos_detalle', 'rotulos_detalle_especifico.nombre','rotulos_detalle_especifico.medidas',
+        'rotulos_detalle_especifico.total_medidas','rotulos_detalle_especifico.caras','rotulos_detalle_especifico.tarifa',
+        'rotulos_detalle_especifico.total_tarifa','rotulos_detalle_especifico.coordenadas_geo','rotulos_detalle_especifico.foto_rotulo',
+        
+        'rotulos_detalle.id as id_rotulos_detalle','rotulos_detalle.num_ficha as ficha','rotulos_detalle.fecha_apertura','rotulos_detalle.cantidad_rotulos',
+        'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa',
+        'rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante','rotulos_detalle.estado_especificacion',)
+
+        ->where('id_rotulos_detalle', $id_rotulos_detalle)
+        ->get();
+
+       log::info('especificos ' . $rotulosEspecificos);
+      
+
+        $rotulos = RotulosDetalle::join('contribuyente', 'rotulos_detalle.id_contribuyente','contribuyente.id')
+        ->join('estado_rotulo', 'rotulos_detalle.id_estado_rotulo', 'estado_rotulo.id')
+
+        ->select('rotulos_detalle.id as id_rotulos_detalle','rotulos_detalle.num_ficha','rotulos_detalle.fecha_apertura','rotulos_detalle.cantidad_rotulos',
+        'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa',
+        'rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante','rotulos_detalle.estado_especificacion',
+        
+        'contribuyente.id', 'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido',
+        'estado_rotulo.id','estado_rotulo.estado')
+      
+        ->get();
+
+        //log::info('rotulos '. $rotulos);
+      
+
+        $empresa = '';
+        $ficha = '';
+        $apertura = '';
+
+        if ($rotulo = RotulosDetalle::where('id', $id_rotulos_detalle)->first())
+        {
+
+            $empresa = $rotulo->nom_empresa;
+            $ficha = $rotulo->num_ficha;
+            $apertura = $rotulo->fecha_apertura;
+           
+        }
+
+        log::info('empresa ' . $empresa);
+    
+       
+ 
+
+        return view('backend.admin.RotulosDetalle.tabla.tabla_calificacion_rotulo', compact('rotulos','rotulosEspecificos',
+                                        'empresa','id_rotulos_detalle',
+                                        'ficha','apertura','rotulo'));
+    }
+
+
 }

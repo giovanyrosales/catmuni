@@ -273,6 +273,10 @@ use App\Models\Empresas;
     Route::get('/admin/rotulo-detalle/Listar', [RotulosDetalleController::class,'listarRotulos'])->name('admin.listarRotulosDetalle.index');
     Route::post('/admin/rotulo_detalle/especifico', [RotulosDetalleController::class, 'especificarRotulos']);
     Route::post('/admin/rotulos_detalle_especifico/agregar', [RotulosDetalleController::class,'agregar_rotulos_detalle_especifico']);
+    Route::get('/admin/rotulos_detalle/show/{rotulo}', [RotulosDetalleController::class, 'showRotulos']);
+    Route::get('/admin/rotulos_detalle/calificacion/{rotulo}', [RotulosDetalleController::class, 'calificacionRotulo']);
+    Route::get('/admin/rotulos_detalle/calificaciones/tablarotulo/{rotulo}', [RotulosDetalleController::class,'tablaCalificacionRotulo']);
+
 
 
     //TERMINA NUEVO MÓDULO RÓTULOS
@@ -329,11 +333,13 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/mora_tributaria_periodica/index', [reportesController::class, 'indexReporteMoraTributariaPeriodica'])->name('admin.sidebar.reporte.mora_tributaria_periodica');
     Route::get('/admin/reporte/reporte_cobros/index', [reportesController::class, 'indexReporteCobros'])->name('admin.sidebar.reporte.reporte_cobros');
     Route::get('/admin/pdf/reporte/mora_tributaria', [reportesController::class, 'pdfReporteMoraTributaria']);
+    Route::get('/admin/pdf/reporte/cobros_global/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_global']);
     Route::post('/admin/calculo/mora', [reportesController::class, 'calculo_mora']);
     Route::post('/admin/calculo/mora_codigos', [reportesController::class, 'calculo_mora_codigos']);
     Route::post('/admin/calculo/mora_tasas', [reportesController::class, 'calculo_mora_tasas']);
     Route::post('/admin/calculo/mora_periodo', [reportesController::class, 'calculo_mora_periodo']);
     Route::post('/admin/calculo/mora_codigos_periodo', [reportesController::class, 'calculo_mora_codigos_periodo']);
+    Route::post('/admin/calculo/cobros_codigos_periodo', [reportesController::class, 'cobros_codigos_periodo']);
     Route::post('/admin/calculo/mora_tasas_periodo', [reportesController::class, 'calculo_mora_tasas_periodo']);
     Route::post('/admin/cobros/globales/periodo', [reportesController::class, 'cobros_globales_periodo']);
     

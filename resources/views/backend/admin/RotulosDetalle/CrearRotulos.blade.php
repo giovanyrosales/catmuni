@@ -104,7 +104,7 @@ function f4(){
 
             <div class="col-md-3">
                     <div class="form-group">
-                          <label>Cantidad de Buses:</label>
+                          <label>Cantidad de Rótulos:</label>
                           <input  id='cantidad_rotulos' class='form-control' min='1' style='max-width: 400px' type='number' value=''/>                        
 
                     </div>  
@@ -332,7 +332,8 @@ function f4(){
                     confirmButtonText: 'Aceptar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                    
+                        
+                        ListarRotulo()                    
                             f3();
                         
                     }
@@ -425,10 +426,10 @@ function f4(){
 
         }
 
-        function ListarBuses()
+        function ListarRotulo()
         {
             openLoading();
-            window.location.href="{{ url('/admin/buses/Listar') }}/";
+            window.location.href="{{ url('/admin/rotulo-detalle/Listar') }}/";
         }
 
 

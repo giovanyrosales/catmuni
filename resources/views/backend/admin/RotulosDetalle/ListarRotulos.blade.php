@@ -443,4 +443,13 @@
         }
 
 </script>
+
+<script>
+        function VistaRotulo(id_rotulos_detalle)
+        {
+            openLoading();
+            window.location.href="{{ url('/admin/rotulos_detalle/show/') }}/"+id_rotulos_detalle;
+
+        }
+    </script>
 @stop
