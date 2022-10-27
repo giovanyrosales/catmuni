@@ -321,6 +321,9 @@ use App\Models\Empresas;
 
     Route::get('/admin/reporte/contribuyentes/index', [reportesController::class, 'indexReporteContribuyentes'])->name('admin.sidebar.reporte.contribuyentes');
     Route::get('/admin/pdf/reporte/contribuyentes/{id}', [reportesController::class, 'pdfReporteContribuyentes']);
+
+    Route::get('/admin/reporte/empresas/prueba/index', [reportesController::class, 'generarTablaEmpresaPrueba'])->name('admin.sidebar.reporte.empresas.prueba');
+    Route::get('/admin/pdf/reporte/empresas/prueba', [reportesController::class, 'pdfReporteEmpresasPrueba']);
     
     Route::get('/admin/reporte/mora_tributaria/index', [reportesController::class, 'indexReporteMoraTributaria'])->name('admin.sidebar.reporte.mora_tributaria');
     Route::get('/admin/reporte/mora_tributaria_periodica/index', [reportesController::class, 'indexReporteMoraTributariaPeriodica'])->name('admin.sidebar.reporte.mora_tributaria_periodica');

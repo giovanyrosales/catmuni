@@ -5851,7 +5851,106 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
         $mpdf->Output();
     }
 
+    // reporte empresas prueba
+    public function indexReporteEmpresasPrueba() {
+        $empresas = Empresas::orderBy('nombre')->get();
+        return view('backend.admin.Reportes.EmpresasPrueba.vistaReporteEmpresasPrueba', compact('empresas'));
+    }
 
+    public function generarTablaEmpresaPrueba() {
+        $datoEmpresas = Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+        ->select('empresa.nombre AS empresa','empresa.inicio_operaciones',
+        'empresa.num_tarjeta','contribuyente.nombre',"contribuyente.apellido",
+        'estado_empresa.estado','giro_comercial.nombre_giro','giro_comercial.matricula','actividad_economica.rubro',
+        'actividad_economica.categoria')
+        
+        ->get();
+
+        return view('backend.admin.Reportes.EmpresasPrueba.vistaReporteEmpresasPrueba', compact('datoEmpresas'));
+    }
+
+    public function pdfReporteEmpresasPrueba(){
+        
+        $infoEmpresas = Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+        
+        ->select('empresa.nombre AS empresa','empresa.matricula_comercio','empresa.nit','empresa.tipo_comerciante','empresa.inicio_operaciones',
+        'empresa.num_tarjeta','empresa.telefono','empresa.excepciones_especificas','contribuyente.nombre','contribuyente.apellido',
+        'estado_empresa.estado','giro_comercial.nombre_giro','giro_comercial.matricula','actividad_economica.rubro',
+        'actividad_economica.categoria')->get();
+
+        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Empresas Prueba');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+        if(sizeof($infoEmpresas) > 0){
+            $tabla .= "<p><strong>Empresas</strong></p>";
+
+            $tabla .= "
+        <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
+        <tbody>
+        <tr>
+            <th style='text-align: center; font-size:13px;'>NOMBRE EMPRESA</th>
+            <th style='text-align: center; font-size:13px;'>CATEGORÍA</th>
+            <th style='text-align: center; font-size:13px;'>CONTRIBUYENTE</th>
+            <th style='text-align: center; font-size:13px;'>NUM. TARJETA</th>
+            <th style='text-align: center; font-size:13px;'>MATRICULA</th>
+            <th style='text-align: center; font-size:13px;'>GIRO</th>
+            <th style='text-align: center; font-size:13px;'>RUBRO</th>
+            <th style='text-align: center; font-size:13px;'>ESTADO</th>
+            <th style='text-align: center; font-size:13px;'>INICIO OPERACIONES</th>
+        </tr>";
+
+            foreach ($infoEmpresas as $dd) {
+
+                $tabla .= "<tr>
+                <td style='font-size:11px; text-align: center'>" . $dd->empresa . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->categoria . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->apellido. ", " . $dd->nombre . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->num_tarjeta . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->matricula . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->nombre_giro . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->rubro . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->estado . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->inicio_operaciones . "</td>
+            </tr>";
+            }
+
+            $tabla .= "</tbody></table>";
+        }
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }
 
 
     public function pdfReporteMoraTributaria(){

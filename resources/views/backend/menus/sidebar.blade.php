@@ -257,6 +257,12 @@
                                 </a>
                             </li>
                             
+                            <li class="nav-item">
+                                <a href="{{ route('admin.sidebar.reporte.empresas.prueba') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-hotel nav-icon"></i>
+                                    <p>Empresas Prueba</p>
+                                </a>
+                            </li>
 
                         </ul>
                 <!-- Finaliza Grupo Rótulos -->
