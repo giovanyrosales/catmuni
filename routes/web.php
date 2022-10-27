@@ -273,6 +273,10 @@ use App\Models\Empresas;
     Route::get('/admin/rotulo-detalle/Listar', [RotulosDetalleController::class,'listarRotulos'])->name('admin.listarRotulosDetalle.index');
     Route::post('/admin/rotulo_detalle/especifico', [RotulosDetalleController::class, 'especificarRotulos']);
     Route::post('/admin/rotulos_detalle_especifico/agregar', [RotulosDetalleController::class,'agregar_rotulos_detalle_especifico']);
+    Route::get('/admin/rotulos_detalle/show/{rotulo}', [RotulosDetalleController::class, 'showRotulos']);
+    Route::get('/admin/rotulos_detalle/calificacion/{rotulo}', [RotulosDetalleController::class, 'calificacionRotulo']);
+    Route::get('/admin/rotulos_detalle/calificaciones/tablarotulo/{rotulo}', [RotulosDetalleController::class,'tablaCalificacionRotulo']);
+
 
 
     //TERMINA NUEVO MÓDULO RÓTULOS

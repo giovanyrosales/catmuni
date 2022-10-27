@@ -35,7 +35,7 @@
                                     
                                     @if($dato->estado_especificacion=='especificada')
 
-                                        <button type="button" class="btn btn-info btn-xs" onclick="VistaBus({{$dato->id}})">
+                                        <button type="button" class="btn btn-info btn-xs" onclick="VistaRotulo({{$dato->id_rotulos_detalle}})">
                                             <i class="fas fa-eye"></i>&nbsp; Ver
                                         </button>
 
