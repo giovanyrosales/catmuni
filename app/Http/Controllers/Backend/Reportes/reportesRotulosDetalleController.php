@@ -62,7 +62,7 @@ class reportesRotulosDetalleController extends Controller
 
             //Configuracion de Reporte en MPDF
             $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-            $mpdf->SetTitle('Alcaldía Metapán | Solvencia');
+            $mpdf->SetTitle('Alcaldía Metapán | Reporte de Rotulos');
         
             // mostrar errores
             $mpdf->showImageErrors = false;
@@ -99,7 +99,7 @@ class reportesRotulosDetalleController extends Controller
             <table border='0' align='center' style='width: 600px;margin-top: 10px'>
            
             <tr>
-                <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>I. DATOS GENERALES DE LA EMPRESA</p></strong></td>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>I. DATOS GENERALES DE LA EMPRESA</p></strong></td>
             </tr>
 
             <tr>
@@ -138,7 +138,7 @@ class reportesRotulosDetalleController extends Controller
             </tr>
          
             <tr>
-                <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>II. CONTRIBUYENTE</p></strong></td>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>II. CONTRIBUYENTE</p></strong></td>
             </tr> 
 
             <tr>
@@ -172,7 +172,7 @@ class reportesRotulosDetalleController extends Controller
             </tr>
 
             <tr>
-                <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>III. CALIFICACIÓN</p></strong></td>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>III. CALIFICACIÓN</p></strong></td>
             </tr> 
 
             <tr>

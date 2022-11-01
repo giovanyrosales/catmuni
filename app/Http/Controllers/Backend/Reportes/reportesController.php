@@ -2805,6 +2805,155 @@ public function reporte_calificacion($id){
 
 //CREAR FUNCION NUEVA AQUI
 
+public function reporte_datos_empresa_nuevo($id){
+
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Reporte de Empresa');
+
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+    $linea = 'images/linea4.png';
+
+    $empresa= Empresas
+    ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+    ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+    ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+    ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+    ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+    'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+    'estado_empresa.estado',
+    'giro_comercial.nombre_giro',
+    'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+     )
+    ->find($id);
+
+    $ultimaCalificacion=calificacion::latest()
+    ->where('id_empresa',$id)
+    ->first();
+
+    $FechaDelDia = Carbon::now()->format('Y-m-d');
+
+    $tabla = "<header> <div class='row'> <div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>DATOS GENERALES DE LA EMPRESA<br>
+                    ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
+                    UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL; TEL. 2402-7614            
+                    </h4>
+                    <img id='lineaimg' src='$linea'>
+                    </div></div></header>";
+        
+    $tabla .= "<div id='content'>
+            <table border='0' align='center' style='width: 600px;margin-top: 10px'>
+           
+            <tr>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>I. DATOS GENERALES DE LA EMPRESA</p></strong></td>
+            </tr>
+
+            <tr>
+                <td id='uno'>NÚMERO DE FICHA</td>
+                <td id='dos'>$empresa->num_tarjeta</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>NOMBRE DE NEGOCIO</td>
+                <td id='dos'>$empresa->nombre</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>GIRO ECONOMICO</td>
+                <td id='dos'>$empresa->nombre_giro</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>ACTIVIDAD ECONOMICA</td>
+                <td id='dos'>$empresa->rubro</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>FECHA INICIO DE OPERACIONES</td>
+                <td id='dos'>$empresa->inicio_operaciones</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>DIRECCION</td>
+                <td id='dos'>$empresa->direccion </td>
+            </tr>
+         
+            <tr>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>II. CONTRIBUYENTE</p></strong></td>
+            </tr> 
+
+            <tr>
+                <td id='uno'>NOMBRE</td>
+                <td id='dos'>$empresa->contribuyente $empresa->apellido</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>TELÉFONO</td>
+                <td id='dos'>$empresa->tel</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>DUI</td>
+                <td id='dos'>$empresa->dui</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>NIT</td>
+                <td id='dos'>$empresa->nitCont</td>
+            </tr>
+
+
+            <tr>
+                <td id='uno'>DIRECCIÓN</td>
+                <td id='dos'>$empresa->direccionCont</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>CORREO ELECTRÓNICO</td>
+                <td id='dos'>$empresa->email</td>
+            </tr>
+
+            <tr>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>III. CALIFICACIÓN DE LA EMPRESA</p></strong></td>
+            </tr> 
+            
+            ";
+
+            if ($ultimaCalificacion === null) {
+                $tabla .= "<tr>
+                            <td colspan='2' id='uno'>(LA EMPRESA NO CUENTA CON UNA CALIFICACIÓN)</td>
+                        </tr>";
+            } else {
+                $tabla .= "<tr>
+                            <td id='uno'>ÚLTIMA CALIFICACIÓN</td>
+                            <td id='dos'>$ultimaCalificacion->año_calificacion</td>
+                        </tr>
+                        <tr>
+                            <td id='uno'>TARIFA ACTUAL:</td>
+                            <td id='dos'>$ $ultimaCalificacion->tarifa</td>
+                        </tr> 
+                        <tr>
+                            <td id='uno'>TIPO DE TARIFA ACTUAL:</td>
+                            <td id='dos'>$ultimaCalificacion->tipo_tarifa</td>
+                        </tr> ";
+            }
+
+            $tabla .= "</table> </div>";
+            
+    $stylesheet = file_get_contents('css/cssreportepdf.css');
+    $mpdf->WriteHTML($stylesheet,1);
+    $mpdf->SetMargins(0, 0, 10);
+
+    $mpdf->WriteHTML($tabla,2);
+    $mpdf->Output();
+}
 
 //TERMINA FUNCION
 
