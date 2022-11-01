@@ -2801,8 +2801,12 @@ public function reporte_calificacion($id){
     $pdf->loadHTML($view)->setPaper('carta', 'portrait');
 
     return $pdf->stream();
-
 }
+
+//CREAR FUNCION NUEVA AQUI
+
+
+//TERMINA FUNCION
 
 public function reporte_datos_empresa($id){
 

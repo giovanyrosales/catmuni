@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
 use App\Http\Controllers\Backend\RotulosDetalle\RotulosDetalleController;
+use App\Http\Controllers\Backend\Reportes\reportesRotulosDetalleController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 use App\Http\Controllers\Backend\Buses\BusesController;
 use App\Http\Controllers\Backend\Reportes\reportesBusesController;
@@ -346,7 +347,7 @@ use App\Models\Empresas;
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
-
+    Route::get('/admin/generar/reporte/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'generar_reporte_rotulos']);
 
 
     //REPORTES BUSES
