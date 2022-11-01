@@ -313,7 +313,7 @@
                           
                               <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura()"></a>
                         
-                              <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Buses" onclick="reporteBusesDatos()"></a>
+                              <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Rotulos" onclick="reporteRotulosDatos({{$rotulos->id_rotulos_detalle}})"></a>
                             </div>
                   <div class="btn-mas">
                       <label for="btn-mas" class="fa fa-plus"></label>
@@ -478,10 +478,10 @@
 
           }
 
-          function reporteBusesDatos(id)
+          function reporteRotulosDatos(id)
           {
 
-              window.open("{{ URL::to('/admin/generar/solvencia/bus/pdf') }}/"+ id );
+              window.open("{{ URL::to('/admin/generar/reporte/rotulos/pdf') }}/"+ id );
 
           }
     </script>

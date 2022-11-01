@@ -2801,8 +2801,12 @@ public function reporte_calificacion($id){
     $pdf->loadHTML($view)->setPaper('carta', 'portrait');
 
     return $pdf->stream();
-
 }
+
+//CREAR FUNCION NUEVA AQUI
+
+
+//TERMINA FUNCION
 
 public function reporte_datos_empresa($id){
 
@@ -5851,7 +5855,106 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
         $mpdf->Output();
     }
 
+    // reporte empresas prueba
+    public function indexReporteEmpresasPrueba() {
+        $empresas = Empresas::orderBy('nombre')->get();
+        return view('backend.admin.Reportes.EmpresasPrueba.vistaReporteEmpresasPrueba', compact('empresas'));
+    }
 
+    public function generarTablaEmpresaPrueba() {
+        $datoEmpresas = Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+        ->select('empresa.nombre AS empresa','empresa.inicio_operaciones',
+        'empresa.num_tarjeta','contribuyente.nombre',"contribuyente.apellido",
+        'estado_empresa.estado','giro_comercial.nombre_giro','giro_comercial.matricula','actividad_economica.rubro',
+        'actividad_economica.categoria')
+        
+        ->get();
+
+        return view('backend.admin.Reportes.EmpresasPrueba.vistaReporteEmpresasPrueba', compact('datoEmpresas'));
+    }
+
+    public function pdfReporteEmpresasPrueba(){
+        
+        $infoEmpresas = Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+        
+        ->select('empresa.nombre AS empresa','empresa.matricula_comercio','empresa.nit','empresa.tipo_comerciante','empresa.inicio_operaciones',
+        'empresa.num_tarjeta','empresa.telefono','empresa.excepciones_especificas','contribuyente.nombre','contribuyente.apellido',
+        'estado_empresa.estado','giro_comercial.nombre_giro','giro_comercial.matricula','actividad_economica.rubro',
+        'actividad_economica.categoria')->get();
+
+        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Empresas Prueba');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+        if(sizeof($infoEmpresas) > 0){
+            $tabla .= "<p><strong>Empresas</strong></p>";
+
+            $tabla .= "
+        <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
+        <tbody>
+        <tr>
+            <th style='text-align: center; font-size:13px;'>NOMBRE EMPRESA</th>
+            <th style='text-align: center; font-size:13px;'>CATEGORÍA</th>
+            <th style='text-align: center; font-size:13px;'>CONTRIBUYENTE</th>
+            <th style='text-align: center; font-size:13px;'>NUM. TARJETA</th>
+            <th style='text-align: center; font-size:13px;'>MATRICULA</th>
+            <th style='text-align: center; font-size:13px;'>GIRO</th>
+            <th style='text-align: center; font-size:13px;'>RUBRO</th>
+            <th style='text-align: center; font-size:13px;'>ESTADO</th>
+            <th style='text-align: center; font-size:13px;'>INICIO OPERACIONES</th>
+        </tr>";
+
+            foreach ($infoEmpresas as $dd) {
+
+                $tabla .= "<tr>
+                <td style='font-size:11px; text-align: center'>" . $dd->empresa . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->categoria . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->apellido. ", " . $dd->nombre . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->num_tarjeta . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->matricula . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->nombre_giro . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->rubro . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->estado . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd->inicio_operaciones . "</td>
+            </tr>";
+            }
+
+            $tabla .= "</tbody></table>";
+        }
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+    }
 
 
     public function pdfReporteMoraTributaria(){
@@ -6135,6 +6238,10 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
         return view('backend.admin.Reportes.ReporteCobros.VistaReporteCobros', compact('contribuyentes'));
     }
+
+
+
+
 
     public function calculo_mora(){
 
@@ -7082,29 +7189,121 @@ public function calculo_mora_periodo(Request $request){
     
 
 
-//************** Reportes mora global por periodo ****************/
+//************** Reportes cobros  ****************/
 
 
     public function cobros_globales_periodo(Request $request){
         log::info($request->all());
-        $mora_empresas=Empresas::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
-        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
-        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
-        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
-       
-        ->select('empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
-        'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
-        'empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-        'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
-        'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
-        'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
-        'contribuyente.direccion as direccionCont',
-        'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
-        'giro_comercial.nombre_giro','giro_comercial.id as id_giro_comercial',
-        'actividad_economica.rubro','actividad_economica.id as id_act_economica','actividad_economica.codigo_atc_economica',
-         )
-        ->get();
 
+        if($request->global==='1'){
+
+            $fecha_inicial=$request->fecha_inicio;
+            $fecha_fin=$request->fecha_fin;
+
+            log::info('Consulta por período de cobros');
+            $lista_cobros=Cobros::join('empresa','cobros.id_empresa','=','empresa.id')
+            ->join('usuario','cobros.id_usuario','=','usuario.id')
+
+            ->select('cobros.id as id_cobros','cobros.cantidad_meses_cobro','cobros.impuesto_mora_32201',
+            'cobros.impuestos','cobros.codigo','cobros.intereses_moratorios_15302','cobros.monto_multa_balance_15313',
+            'cobros.monto_multaPE_15313','cobros.fondo_fiestasP_12114','cobros.pago_total','cobros.fecha_cobro',
+            'cobros.periodo_cobro_inicio','cobros.periodo_cobro_fin',
+            'empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+            'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+            'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.id_contribuyente',
+            'usuario.nombre as nombre_user','usuario.apellido','usuario.activo','usuario.usuario as user',
+            )
+            ->where('fecha_cobro','>=',$fecha_inicial)
+            ->where('fecha_cobro','<=',$fecha_fin)
+            ->get();
+
+        }else{
+            log::info('Consulta global de cobros');
+            $lista_cobros=Cobros::join('empresa','cobros.id_empresa','=','empresa.id')
+            ->join('usuario','cobros.id_usuario','=','usuario.id')
+
+            ->select('cobros.id as id_cobros','cobros.cantidad_meses_cobro','cobros.impuesto_mora_32201',
+            'cobros.impuestos','cobros.codigo','cobros.intereses_moratorios_15302','cobros.monto_multa_balance_15313',
+            'cobros.monto_multaPE_15313','cobros.fondo_fiestasP_12114','cobros.pago_total','cobros.fecha_cobro',
+            'cobros.periodo_cobro_inicio','cobros.periodo_cobro_fin',
+            'empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+            'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+            'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.id_contribuyente',
+            'usuario.nombre as nombre_user','usuario.apellido','usuario.activo','usuario.usuario as user',
+            )
+            ->get();
+        }
+        //Variables para sumar totales de cobros
+        $total_pagos_empresas=0;
+        $cobro_por_empresa=0;
+        $total_cobros_empresas=0;
+
+        if(sizeof($lista_cobros)>0)
+        {
+            foreach($lista_cobros as $cobro)
+                {
+                    $colsulta_contribuyente=Contribuyentes::where('id',$cobro->id_contribuyente)->first();
+
+                    //Metodo 1 - por medio del campo pago_total
+                    $total_pagos_empresas=$total_pagos_empresas+$cobro->pago_total;
+
+                    //Metodo 2 - por medio de la sumatoria de todos los campos(códigos) del cobro sin tomar encuenta el pago_total
+                    
+                        $cobro_por_empresa=($cobro->impuesto_mora_32201+$cobro->impuestos+$cobro->intereses_moratorios_15302+$cobro->monto_multa_balance_15313+$cobro->monto_multaPE_15313+$cobro->fondo_fiestasP_12114);
+                        $total_cobros_empresas=$total_cobros_empresas+$cobro_por_empresa;
+
+                        /** Formatenado variables numericas */
+                        $cobro_por_empresa_foormateado=number_format(($cobro_por_empresa), 2, '.', ',');
+                        $total_pagos_empresas_foormateado=number_format(($total_pagos_empresas), 2, '.', ',');
+                        $total_cobros_empresas_formateado=number_format(($total_cobros_empresas), 2, '.', ',');
+    
+                        //** Modificando y creando nuevas variables */
+                        $cobro->contribuyente=$colsulta_contribuyente->nombre.''.$colsulta_contribuyente->apellido;
+                        $cobro->cobro_por_empresa=$cobro_por_empresa_foormateado;
+                        $cobro->total_cobros_empresas=$total_cobros_empresas_formateado;
+                        $cobro->apartir_de=carbon::parse($cobro->periodo_cobro_inicio)->format('d-m-Y');
+                        $cobro->hasta=carbon::parse($cobro->periodo_cobro_fin)->format('d-m-Y');
+                        $cobro->fecha_pago=carbon::parse($cobro->fecha_cobro)->format('d-m-Y');
+                       // log::info('Empresa: '.$cobro->nombre.' Contribuyente: '.$cobro->contribuyente.' meses: '.$cobro->cantidad_meses_cobro.' Total pago: '.$cobro->pago_total);
+
+                   
+                
+                }//** FIn Foreach lista_cobros */
+
+        // log::info('Total de pagos: '.$total_pagos_empresas_foormateado);
+        // log::info('Total de cobros: '.$total_cobros_empresas_formateado);
+
+                return [
+                        'success' => 1,
+                        'lista_cobros'=>$lista_cobros,
+                        'total_cobros_empresas_formateado'=>$total_cobros_empresas_formateado,
+                    ];
+
+        }else{
+                return [
+                        'success' => 2,
+                       ];
+             }
+
+       
+        
+    
+        }//** Fin función */
+
+
+public function pdfReportecobros_global($f1, $f2, $g)
+{
+    $global=$g;
+
+    if($global==='1')
+    {
+
+        $fecha_inicial=$f1;
+        $fecha_fin=$f2;
+        $fecha_inicial_parseada=carbon::parse($f1)->format('d-m-Y');
+        $fecha_fin_parseada=carbon::parse($f2)->format('d-m-Y');
+
+        log::info('Consulta por período de cobros');
         $lista_cobros=Cobros::join('empresa','cobros.id_empresa','=','empresa.id')
         ->join('usuario','cobros.id_usuario','=','usuario.id')
 
@@ -7114,183 +7313,362 @@ public function calculo_mora_periodo(Request $request){
         'cobros.periodo_cobro_inicio','cobros.periodo_cobro_fin',
         'empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
         'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
-        'empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.id_contribuyente',
         'usuario.nombre as nombre_user','usuario.apellido','usuario.activo','usuario.usuario as user',
-         )
+        )
+        ->where('fecha_cobro','>=',$fecha_inicial)
+        ->where('fecha_cobro','<=',$fecha_fin)
         ->get();
 
-        //Variables 
+    }else{
+            log::info('Consulta global de cobros');
+            $lista_cobros=Cobros::join('empresa','cobros.id_empresa','=','empresa.id')
+            ->join('usuario','cobros.id_usuario','=','usuario.id')
+
+            ->select('cobros.id as id_cobros','cobros.cantidad_meses_cobro','cobros.impuesto_mora_32201',
+            'cobros.impuestos','cobros.codigo','cobros.intereses_moratorios_15302','cobros.monto_multa_balance_15313',
+            'cobros.monto_multaPE_15313','cobros.fondo_fiestasP_12114','cobros.pago_total','cobros.fecha_cobro',
+            'cobros.periodo_cobro_inicio','cobros.periodo_cobro_fin',
+            'empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+            'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+            'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.id_contribuyente',
+            'usuario.nombre as nombre_user','usuario.apellido','usuario.activo','usuario.usuario as user',
+            )
+            ->get();
+    }
+    //Variables para sumar totales de cobros
+    $total_pagos_empresas=0;
+    $cobro_por_empresa=0;
+    $total_cobros_empresas=0;
+
+    if(sizeof($lista_cobros)>0)
+    {
         foreach($lista_cobros as $cobro)
             {
+                $colsulta_contribuyente=Contribuyentes::where('id',$cobro->id_contribuyente)->first();
+
+                //Metodo 1 - por medio del campo pago_total
+                $total_pagos_empresas=$total_pagos_empresas+$cobro->pago_total;
+
+                //Metodo 2 - por medio de la sumatoria de todos los campos(códigos) del cobro sin tomar encuenta el pago_total
                 
-                log::info('Empresa: '.$cobro->nombre.' meses: '.$cobro->cantidad_meses_cobro.' Total pago: '.$cobro->pago_total);
+                    $cobro_por_empresa=($cobro->impuesto_mora_32201+$cobro->impuestos+$cobro->intereses_moratorios_15302+$cobro->monto_multa_balance_15313+$cobro->monto_multaPE_15313+$cobro->fondo_fiestasP_12114);
+                    $total_cobros_empresas=$total_cobros_empresas+$cobro_por_empresa;
 
+                    /** Formatenado variables numericas */
+                    $cobro_por_empresa_foormateado=number_format(($cobro_por_empresa), 2, '.', ',');
+                    $total_pagos_empresas_foormateado=number_format(($total_pagos_empresas), 2, '.', ',');
+                    $total_cobros_empresas_formateado=number_format(($total_cobros_empresas), 2, '.', ',');
 
+                    //** Modificando y creando nuevas variables */
+                    $cobro->contribuyente=$colsulta_contribuyente->nombre.''.$colsulta_contribuyente->apellido;
+                    $cobro->cobro_por_empresa=$cobro_por_empresa_foormateado;
+                    $cobro->total_cobros_empresas=$total_cobros_empresas_formateado;
+                    $cobro->apartir_de=carbon::parse($cobro->periodo_cobro_inicio)->format('d-m-Y');
+                    $cobro->hasta=carbon::parse($cobro->periodo_cobro_fin)->format('d-m-Y');
+                    $cobro->fecha_pago=carbon::parse($cobro->fecha_cobro)->format('d-m-Y');
+                   // log::info('Empresa: '.$cobro->nombre.' Contribuyente: '.$cobro->contribuyente.' meses: '.$cobro->cantidad_meses_cobro.' Total pago: '.$cobro->pago_total);
 
+               
+            
             }//** FIn Foreach lista_cobros */
 
-        
-        return;
-    
-        if(sizeof($mora_empresas)>0)
-        {
-            $calculo_total_mora=0;
-            foreach($mora_empresas as $dato)
-            {
-                    $ultima_fecha_pago=Cobros::latest()
-                    ->where('id_empresa',$dato->id_empresa)
-                    ->pluck('periodo_cobro_fin')
-                    ->first();
-                    
-                    //** Sacando la ultima fecha de pago */
-                    if($ultima_fecha_pago==null)
-                    {
-                        $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
-                        ->pluck('id')
-                        ->first();
-    
-                                if($id_matriculadetalle==null){
-                                        $ultima_fecha_pago=$dato->inicio_operaciones; 
-                                                                        
-                                }else{
-                                        
-                                            $ultima_fecha_pago=CobrosMatriculas::latest()
-                                                ->where('id_matriculas_detalle',$id_matriculadetalle)
-                                                ->pluck('periodo_cobro_fin')
-                                                ->first();
-    
-                                            //Nos aseguramos que si la última fecha de pago es nula se obtenga el inicio de operaciones
-                                            if($ultima_fecha_pago==null)
-                                            {
-                                                $ultima_fecha_pago=$dato->inicio_operaciones;
-                                                
-                                            }
-                                                
-                                        }
-                    }
-    
-                    //** Revisando que la ultima fecha sea el final de mes */
-                    $MesNumero=Carbon::createFromDate($ultima_fecha_pago)->format('d');
-    
-                    $ultima_fecha_pago_original=$ultima_fecha_pago;
-                    if($MesNumero<='15')
-                    {
-                        $ultima_fecha_pago=Carbon::parse($ultima_fecha_pago_original)->subMonthNoOverflow(1)->lastOfMonth();
-                    }
-                    else
-                        {
-                            $ultima_fecha_pago=Carbon::parse($ultima_fecha_pago_original)->lastOfMonth();
-                        }
-                    //** Fin - Revisando que la ultima fecha sea el final de mes */     
-    
-                    //** Sacando la ultima tarifa */
-                    if($dato->id_giro_comercial!=1){
+        // log::info('Total de pagos: '.$total_pagos_empresas_foormateado);
+        log::info('Total de cobros: '.$total_cobros_empresas_formateado);
+
+
+        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Reporte de cobros');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+            </div>";
+
+            if(sizeof($lista_cobros) > 0){
+                if($global==='1')
+                {
+                        $tabla .= "<p><strong>REPORTE DE COBROS PERÍODO DEL $fecha_inicial_parseada AL $fecha_fin_parseada</strong></p>";
+                }else{
+                        $tabla .= "<p><strong>REPORTE DE COBROS</strong></p>";
+                     }
+                $tabla .= "
+            <table id='tablaMora' style='width: 100%; border-collapse:collapse; border: none;'>
+            <tbody> 
+            <tr>
+            <th style='width: 10%; text-align: center;font-weight: 700;'>N° FICHA</th>
+            <th style='width: 20%; text-align: center;font-weight: 700;'>EMPRESA O NEGOCIO</th>
+            <th style='width: 10%; text-align: center;font-weight: 700;'>CÓDIGO</th>       
+            <th style='width: 15%; text-align: center;font-weight: 700;'>A PARTIR DE</th>
+            <th style='width: 15%; text-align: center;font-weight: 700;'>HASTA</th>
+            <th style='width: 20%; text-align: center;font-weight: 700;'>FECHA DE PAGO</th>
+            <th style='width: 15%; text-align: center;font-weight: 700;'>TOTAL PAGADO</th>
+            </tr>";
+
+            foreach ($lista_cobros as $dd) {
+            //Fila1
+            $tabla .= "<tr>
+                            <td align='center'>
+                            <span class='badge badge-pill badge-dark'>". $dd->num_tarjeta . "</span> </td>                        
+
+                            <td align='center'>". $dd->nombre ."</td>
+
+                            <td align='center'>". $dd->codigo ."</td>
+
+                            <td align='center'>". $dd->apartir_de ."</td>
+
+                            <td align='center'>".  $dd->hasta ."</td>
+
+                            <td align='center'>". $dd->fecha_pago ."</td>
+
+                            <td align='center'>". '$'. $dd->cobro_por_empresa ."</td>
+
+                        </tr>";
+
+            }//** Fin foreach */
+
+        $tabla .= "<tr>
                         
-                        $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
-                        ->pluck('id')
-                        ->first();
-    
-                        $dato_tarifa=CalificacionMatriculas::latest()
-                        ->where('id_matriculas_detalle',$id_matriculadetalle)
-                        ->first();
-                        
-                        if($dato_tarifa===null){
-                            $tarifa=0.00;
-                            $año='Sin calificación';
-                            $año_real=Carbon::now()->format('Y');
-                         
-                        }else{
-                                $tarifa=$dato_tarifa->pago_mensual;
-                                $año=$dato_tarifa->año_calificacion;
-                                $año_real=$dato_tarifa->año_calificacion;
-                             }
-                       
-    
-                    }else{
-    
-                        $dato_tarifa=calificacion::latest()
-                        ->where('id_empresa',$dato->id_empresa)
-                        ->first();
-                        
-                        if($dato_tarifa===null){
-                            $tarifa=0.00;
-                            $año='Sin calificación';
-                            $año_real=Carbon::now()->format('Y');
-                            
-                        }else{
-                                $tarifa=$dato_tarifa->pago_mensual;
-                                $año=$dato_tarifa->año_calificacion;
-                                $año_real=$dato_tarifa->año_calificacion;
-                             }
-    
-                    }
-    
-                    $ultima_fecha_pago_parseada=Carbon::parse($ultima_fecha_pago);        
-                    $Inicio_moratorio=$ultima_fecha_pago_parseada->addDays(60);
-                    $año_ultimo_pago=$ultima_fecha_pago->format('Y');
-                    log::info('Inicio_moratorio: '.$Inicio_moratorio);
-                    $año_actual=Carbon::now()->format('Y');
-                    $fechahoy=Carbon::now();
-                    log::info('ultima_fecha_pago: '.$ultima_fecha_pago);
-                    log::info('Empresa: '.$dato->nombre.' año mora: '.$año_ultimo_pago);
-                    log::info('año_actual: '.$año_actual);
-    
-                    //** Creamos una fecha de corte personalizada para cada empresa segun su año de ultima calificación */
-                    $FechaCortePorEmpresa=Carbon::createFromDate($año_real, 12, 31);
-    
-                    //** Calculos */
-    
-                    if($fechahoy>$FechaCortePorEmpresa){
-                        $cantidad=ceil(carbon::parse($FechaCortePorEmpresa)->diffInDays(carbon::parse($ultima_fecha_pago)));
-                        log::info('Cant Dias: '.$cantidad);
-                        log::info('-----------------------------------------');
-                    }else{
-                            if($Inicio_moratorio>$FechaCortePorEmpresa){
-                                $cantidad=ceil(carbon::parse($FechaCortePorEmpresa)->diffInDays(carbon::parse($Inicio_moratorio)));
-                                $cantidad=0;
-                            }else{
-                                $cantidad=ceil(carbon::parse($FechaCortePorEmpresa)->diffInDays(carbon::parse($Inicio_moratorio)));     
-                            }                     
-                            log::info('Cantidad Dias: '.$cantidad);
-                            log::info('-----------------------------------------');
-                    }
-    
-    
-                    $meses=(($cantidad/365)*12);
-                    if($dato_tarifa===null){$meses_redondeado=0;}else{$meses_redondeado=round($meses,0);}
-                    $calculo_total_pago=$meses_redondeado*$tarifa;
-                    $calculo_total_mora=($calculo_total_mora+$calculo_total_pago);
-    
-                    /** Formatenado variables numericas */
-                    $calculo_total_pago_formateado=number_format(( $calculo_total_pago), 2, '.', ',');
-                    $calculo_total_mora_formateado=number_format(( $calculo_total_mora), 2, '.', ',');
-                    $tarifa_formateado=number_format(($tarifa), 2, '.', ',');
-    
-                    //** Modificando y creando nuevas variables */
-                    $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
-                    $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
-                    $dato->meses=$meses_redondeado;
-                    $dato->tarifaE=$tarifa_formateado.' '.'/ '.$año;
-                    $dato->total_pago=$calculo_total_pago_formateado;
-                    $dato->total_moraE=$calculo_total_mora_formateado;
-    
-                    $total_mora_final=$dato->total_moraE;
-            }//** FIn Foreach mora_empresas */
-                
-                log::info('Total Mora: $'.$calculo_total_mora_formateado);
-         }
-    
-        return [
-            'success' => 1,
-            'mora_empresas'=>$mora_empresas,
-            'total_mora_final'=>$total_mora_final,
-            ];
-    
+        <td align='right' colspan='7'>
+            <b>TOTAL: ". $total_cobros_empresas_formateado . "</b>
+        </td>
+
+    </tr>";
+
+        $tabla .= "</tbody></table>";
+
         }
 
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
+
+    }
+
+}//** Fin - Función */
 
 
 
+
+public function cobros_codigos_periodo(Request $request){
+    log::info($request->all());
+
+    if($request->global==='1'){
+
+        $fecha_inicial=$request->fecha_inicio;
+        $fecha_fin=$request->fecha_fin;
+
+        log::info('Consulta por período de cobros');
+        $lista_cobros=Cobros::join('empresa','cobros.id_empresa','=','empresa.id')
+        ->join('usuario','cobros.id_usuario','=','usuario.id')
+
+        ->select('cobros.id as id_cobros','cobros.cantidad_meses_cobro','cobros.impuesto_mora_32201',
+        'cobros.impuestos','cobros.codigo','cobros.intereses_moratorios_15302','cobros.monto_multa_balance_15313',
+        'cobros.monto_multaPE_15313','cobros.fondo_fiestasP_12114','cobros.pago_total','cobros.fecha_cobro',
+        'cobros.periodo_cobro_inicio','cobros.periodo_cobro_fin',
+        'empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+        'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+        'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.id_contribuyente',
+        'usuario.nombre as nombre_user','usuario.apellido','usuario.activo','usuario.usuario as user',
+        )
+        ->where('fecha_cobro','>=',$fecha_inicial)
+        ->where('fecha_cobro','<=',$fecha_fin)
+        ->get();
+
+    }else{
+        log::info('Consulta global de cobros');
+        $lista_cobros=Cobros::join('empresa','cobros.id_empresa','=','empresa.id')
+        ->join('usuario','cobros.id_usuario','=','usuario.id')
+
+        ->select('cobros.id as id_cobros','cobros.cantidad_meses_cobro','cobros.impuesto_mora_32201',
+        'cobros.impuestos','cobros.codigo','cobros.intereses_moratorios_15302','cobros.monto_multa_balance_15313',
+        'cobros.monto_multaPE_15313','cobros.fondo_fiestasP_12114','cobros.pago_total','cobros.fecha_cobro',
+        'cobros.periodo_cobro_inicio','cobros.periodo_cobro_fin',
+        'empresa.id as id_empresa','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+        'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+        'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.id_contribuyente',
+        'usuario.nombre as nombre_user','usuario.apellido','usuario.activo','usuario.usuario as user',
+        )
+        ->get();
+    }
+
+    //Variables para sumar totales de cobros y cobros según 
+    
+    $cobro_11801=0;
+    $cobro_11802=0;
+    $cobro_11803=0;
+    $cobro_11804=0;
+    $cobro_11806=0;
+    $cobro_11808=0;
+    $cobro_11809=0;
+    $cobro_11810=0;
+    $cobro_11813=0;
+    $cobro_11814=0;
+    $cobro_11815=0;
+    $cobro_11816=0;
+    $cobro_11899=0;
+    $cobro_15799=0;
+
+    $cobro_12114=0;
+    $cobro_12207=0;
+    $cobro_12210=0;
+    $cobro_12299=0;
+    $cobro_15302=0;
+    $cobro_15313=0;
+    $cobro_32201=0;
+
+    $total_pagos_empresas=0;
+    $cobro_por_empresa=0;
+    $total_cobros_empresas=0;
+
+
+    if(sizeof($lista_cobros)>0)
+    {
+        foreach($lista_cobros as $cobro)
+            {
+                $colsulta_contribuyente=Contribuyentes::where('id',$cobro->id_contribuyente)->first();
+
+                //Metodo 1 - por medio del campo pago_total
+                $total_pagos_empresas=$total_pagos_empresas+$cobro->pago_total;
+
+                //Metodo 2 - por medio de la sumatoria de todos los campos(códigos) del cobro sin tomar encuenta el pago_total
+                $cobro_por_empresa=($cobro->impuesto_mora_32201+$cobro->impuestos+$cobro->intereses_moratorios_15302+$cobro->monto_multa_balance_15313+$cobro->monto_multaPE_15313+$cobro->fondo_fiestasP_12114);
+                $total_cobros_empresas=$total_cobros_empresas+$cobro_por_empresa;
+
+                //Sumatoria de cobros por ordenados por código
+
+                     if ($cobro->codigo==11801) {$cobro_11801 = ($cobro_11801+$cobro->impuestos);}
+                else if ($cobro->codigo==11802) {$cobro_11802 = ($cobro_11802+$cobro->impuestos);}
+                else if ($cobro->codigo==11803) {$cobro_11803 = ($cobro_11803+$cobro->impuestos);}
+                else if ($cobro->codigo==11804) {$cobro_11804 = ($cobro_11804+$cobro->impuestos);}
+                else if ($cobro->codigo==11806) {$cobro_11806 = ($cobro_11806+$cobro->impuestos);}
+                else if ($cobro->codigo==11808) {$cobro_11808 = ($cobro_11808+$cobro->impuestos);}
+                else if ($cobro->codigo==11809) {$cobro_11809 = ($cobro_11809+$cobro->impuestos);}
+                else if ($cobro->codigo==11810) {$cobro_11810 = ($cobro_11810+$cobro->impuestos);}
+                else if ($cobro->codigo==11813) {$cobro_11813 = ($cobro_11813+$cobro->impuestos);}
+                else if ($cobro->codigo==11814) {$cobro_11814 = ($cobro_11814+$cobro->impuestos);}
+                else if ($cobro->codigo==11815) {$cobro_11815 = ($cobro_11815+$cobro->impuestos);}
+                else if ($cobro->codigo==11816) {$cobro_11816 = ($cobro_11816+$cobro->impuestos);}
+                else if ($cobro->codigo==11899) {$cobro_11899 = ($cobro_11899+$cobro->impuestos);}
+                else if ($cobro->codigo==15799) {$cobro_15799 = ($cobro_15799+$cobro->impuestos);}
+
+                $cobro_32201=$cobro_32201+$cobro->impuesto_mora_32201;
+                $cobro_15302=$cobro_15302+$cobro->intereses_moratorios_15302;
+                $cobro_15313=$cobro_15313+($cobro->monto_multa_balance_15313+$cobro->monto_multaPE_15313);
+
+                //log::info('pago cobro_32201: '.$cobro_32201);
+                /** Formatenado variables numericas */
+                $cobro_por_empresa_foormateado=number_format(($cobro_por_empresa), 2, '.', ',');
+                $total_pagos_empresas_foormateado=number_format(($total_pagos_empresas), 2, '.', ',');
+                $total_cobros_empresas_formateado=number_format(($total_cobros_empresas), 2, '.', ',');
+
+                //** Modificando y creando nuevas variables [Datos que se muestra en vista] */
+                $cobro->contribuyente=$colsulta_contribuyente->nombre.''.$colsulta_contribuyente->apellido;
+                $cobro->cobro_por_empresa=$cobro_por_empresa_foormateado;
+                $cobro->total_cobros_empresas=$total_cobros_empresas_formateado;
+                $cobro->apartir_de=carbon::parse($cobro->periodo_cobro_inicio)->format('d-m-Y');
+                $cobro->hasta=carbon::parse($cobro->periodo_cobro_fin)->format('d-m-Y');
+                $cobro->fecha_pago=carbon::parse($cobro->fecha_cobro)->format('d-m-Y');
+                // log::info('Empresa: '.$cobro->nombre.' Contribuyente: '.$cobro->contribuyente.' meses: '.$cobro->cantidad_meses_cobro.' Total pago: '.$cobro->pago_total);
+
+               
+            
+            }//** FIn Foreach lista_cobros */
+
+            $cobro_11801_formateado=number_format(($cobro_11801), 2, '.', ',');
+            $cobro_11802_formateado=number_format(($cobro_11802), 2, '.', ',');
+            $cobro_11803_formateado=number_format(($cobro_11803), 2, '.', ',');
+            $cobro_11804_formateado=number_format(($cobro_11804), 2, '.', ',');  
+            $cobro_11806_formateado=number_format(($cobro_11806), 2, '.', ',');
+            $cobro_11808_formateado=number_format(($cobro_11808), 2, '.', ',');
+            $cobro_11809_formateado=number_format(($cobro_11809), 2, '.', ',');
+            $cobro_11810_formateado=number_format(($cobro_11810), 2, '.', ',');
+            $cobro_11813_formateado=number_format(($cobro_11813), 2, '.', ',');
+            $cobro_11814_formateado=number_format(($cobro_11814), 2, '.', ',');
+            $cobro_11815_formateado=number_format(($cobro_11815), 2, '.', ',');
+            $cobro_11816_formateado=number_format(($cobro_11816), 2, '.', ',');
+            $cobro_11899_formateado=number_format(($cobro_11899), 2, '.', ',');
+            $cobro_15799_formateado=number_format(($cobro_15799), 2, '.', ',');
+
+            $cobro_32201_formateado=number_format(($cobro_32201), 2, '.', ',');
+            $cobro_15302_formateado=number_format(($cobro_15302), 2, '.', ',');
+            $cobro_15313_formateado=number_format(($cobro_15313), 2, '.', ',');
+
+            //log::info('Total de pagos cobro_32201: '.$cobro_32201);
+            // log::info('Total de pagos: '.$total_pagos_empresas_foormateado);
+            // log::info('Total de cobros: '.$total_cobros_empresas_formateado);
+            
+            return [
+                    'success' => 1,
+                    'lista_cobros'=>$lista_cobros,
+                    'total_cobros_empresas_formateado'=>$total_cobros_empresas_formateado,
+
+                    'cobro_11801_formateado'=>$cobro_11801_formateado,
+                    'cobro_11802_formateado'=>$cobro_11802_formateado,
+                    'cobro_11803_formateado'=>$cobro_11803_formateado,
+                    'cobro_11804_formateado'=>$cobro_11804_formateado,
+                    'cobro_11806_formateado'=>$cobro_11806_formateado,
+                    'cobro_11808_formateado'=>$cobro_11808_formateado,
+                    'cobro_11809_formateado'=>$cobro_11809_formateado,
+                    'cobro_11810_formateado'=>$cobro_11810_formateado,
+                    'cobro_11813_formateado'=>$cobro_11813_formateado,
+                    'cobro_11814_formateado'=>$cobro_11814_formateado,
+                    'cobro_11815_formateado'=>$cobro_11815_formateado,
+                    'cobro_11816_formateado'=>$cobro_11816_formateado,
+                    'cobro_11899_formateado'=>$cobro_11899_formateado,
+                    'cobro_15799_formateado'=>$cobro_15799_formateado,
+
+                    'cobro_32201_formateado'=>$cobro_32201_formateado,
+                    'cobro_15302_formateado'=>$cobro_15302_formateado,
+                    'cobro_15313_formateado'=>$cobro_15313_formateado,
+
+                    
+                    'cobro_11801'=>$cobro_11801,
+                    'cobro_11802'=>$cobro_11802,
+                    'cobro_11803'=>$cobro_11803,
+                    'cobro_11804'=>$cobro_11804,
+                    'cobro_11806'=>$cobro_11806,
+                    'cobro_11808'=>$cobro_11808,
+                    'cobro_11809'=>$cobro_11809,
+                    'cobro_11810'=>$cobro_11810,
+                    'cobro_11813'=>$cobro_11813,
+                    'cobro_11814'=>$cobro_11814,
+                    'cobro_11815'=>$cobro_11815,
+                    'cobro_11816'=>$cobro_11816,
+                    'cobro_11899'=>$cobro_11899,
+                    'cobro_15799'=>$cobro_15799,
+
+                    'cobro_32201'=>$cobro_32201,
+                    'cobro_15302'=>$cobro_15302,
+                    'cobro_15313'=>$cobro_15313,
+                ];
+
+    }else{
+            return [
+                    'success' => 2,
+                   ];
+         }
+
+   
+    
+
+    }//** Fin función */
 
 //** Fin de reportes controller */
 }

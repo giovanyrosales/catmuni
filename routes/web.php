@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
 use App\Http\Controllers\Backend\RotulosDetalle\RotulosDetalleController;
+use App\Http\Controllers\Backend\Reportes\reportesRotulosDetalleController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 use App\Http\Controllers\Backend\Buses\BusesController;
 use App\Http\Controllers\Backend\Reportes\reportesBusesController;
@@ -326,23 +327,28 @@ use App\Models\Empresas;
 
     Route::get('/admin/reporte/contribuyentes/index', [reportesController::class, 'indexReporteContribuyentes'])->name('admin.sidebar.reporte.contribuyentes');
     Route::get('/admin/pdf/reporte/contribuyentes/{id}', [reportesController::class, 'pdfReporteContribuyentes']);
+
+    Route::get('/admin/reporte/empresas/prueba/index', [reportesController::class, 'generarTablaEmpresaPrueba'])->name('admin.sidebar.reporte.empresas.prueba');
+    Route::get('/admin/pdf/reporte/empresas/prueba', [reportesController::class, 'pdfReporteEmpresasPrueba']);
     
     Route::get('/admin/reporte/mora_tributaria/index', [reportesController::class, 'indexReporteMoraTributaria'])->name('admin.sidebar.reporte.mora_tributaria');
     Route::get('/admin/reporte/mora_tributaria_periodica/index', [reportesController::class, 'indexReporteMoraTributariaPeriodica'])->name('admin.sidebar.reporte.mora_tributaria_periodica');
     Route::get('/admin/reporte/reporte_cobros/index', [reportesController::class, 'indexReporteCobros'])->name('admin.sidebar.reporte.reporte_cobros');
     Route::get('/admin/pdf/reporte/mora_tributaria', [reportesController::class, 'pdfReporteMoraTributaria']);
+    Route::get('/admin/pdf/reporte/cobros_global/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_global']);
     Route::post('/admin/calculo/mora', [reportesController::class, 'calculo_mora']);
     Route::post('/admin/calculo/mora_codigos', [reportesController::class, 'calculo_mora_codigos']);
     Route::post('/admin/calculo/mora_tasas', [reportesController::class, 'calculo_mora_tasas']);
     Route::post('/admin/calculo/mora_periodo', [reportesController::class, 'calculo_mora_periodo']);
     Route::post('/admin/calculo/mora_codigos_periodo', [reportesController::class, 'calculo_mora_codigos_periodo']);
+    Route::post('/admin/calculo/cobros_codigos_periodo', [reportesController::class, 'cobros_codigos_periodo']);
     Route::post('/admin/calculo/mora_tasas_periodo', [reportesController::class, 'calculo_mora_tasas_periodo']);
     Route::post('/admin/cobros/globales/periodo', [reportesController::class, 'cobros_globales_periodo']);
     
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
-
+    Route::get('/admin/generar/reporte/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'generar_reporte_rotulos']);
 
 
     //REPORTES BUSES
