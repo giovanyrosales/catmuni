@@ -709,7 +709,7 @@
                     <td align="right">$${mora_11806_formateado}</td>
                     </tr>
                     <tr>
-                    <td align="left">ROTULOS, TAXIS, MAQUINAS</td>
+                    <td align="left">ROTULOS, MAQUINAS</td>
                     <td align="center">12299</td>
                     <td align="right">$${mora_11808_formateado}</td>
                     </tr>

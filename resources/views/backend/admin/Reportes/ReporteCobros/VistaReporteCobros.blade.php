@@ -187,9 +187,9 @@
                             <table class="table" id="matriz_ver_cobros_codigos" style="border: 100px;" data-toggle="table">
                                 <thead style="background-color:#97999A; color: #FFFFFF;">
                                     <tr>  
-                                        <th style="width: 50%; text-align: left;font-weight: 700;">DESCRIPCION</th>
-                                        <th style="width: 25%; text-align: center;font-weight: 700;">CODIGO</th>
-                                        <th style="width: 25%; text-align: right;font-weight: 700;">MORA</th>       
+                                        <th style="width: 60%; text-align: left;font-weight: 700;">DESCRIPCIÓN</th>
+                                        <th style="width: 15%; text-align: center;font-weight: 700;">CÓDIGO</th>
+                                        <th style="width: 25%; text-align: right;font-weight: 700;">CANTIDAD</th>       
                                     </tr>
                                 </thead>
                                     <tbody style="font-size: 14px;padding: 8px;">
@@ -616,10 +616,14 @@
                     var cobro_11899 = response.data.cobro_11899;
                     var cobro_15799 = response.data.cobro_15799;
                     
+                    var cobro_12114 = response.data.cobro_12114;
+                    var cobro_12207 = response.data.cobro_12207;
                     var cobro_32201 = response.data.cobro_32201;
                     var cobro_15302 = response.data.cobro_15302;
                     var cobro_15313 = response.data.cobro_15313; 
-                    
+                    var cobro_12210 = response.data.cobro_12210;
+                    var cobro_12299 = response.data.cobro_12299;
+
                     var cobro_11801_formateado = response.data.cobro_11801_formateado;
                     var cobro_11802_formateado = response.data.cobro_11802_formateado;
                     var cobro_11803_formateado = response.data.cobro_11803_formateado;
@@ -635,11 +639,14 @@
                     var cobro_11899_formateado = response.data.cobro_11899_formateado;
                     var cobro_15799_formateado = response.data.cobro_15799_formateado;
                     
+                    var cobro_12114_formateado = response.data.cobro_12114_formateado;
+                    var cobro_12207_formateado = response.data.cobro_12207_formateado;
                     var cobro_32201_formateado = response.data.cobro_32201_formateado;
                     var cobro_15302_formateado = response.data.cobro_15302_formateado;
                     var cobro_15313_formateado = response.data.cobro_15313_formateado;
-                    
-     
+                    var cobro_12210_formateado = response.data.cobro_12210_formateado;
+                    var cobro_12299_formateado = response.data.cobro_12299_formateado;
+
                     var markup = `<tr>
                     <td align="left">COMERCIO</td>
                     <td align="center">11801</td>
@@ -701,7 +708,7 @@
                     <td align="right">$${cobro_11816_formateado}</td>
                     </tr>
                     <tr>
-                    <td align="left">MESAS DE BILLAR</td>
+                    <td align="left">IMPUESTOS MUNICIPALES DIVERSOS</td>
                     <td align="center">11899</td>
                     <td align="right">$${cobro_11899_formateado}</td>
                     </tr>
@@ -713,22 +720,22 @@
                     <tr>
                     <td align="left">FONDO FIESTA</td>
                     <td align="center">12114</td>
-                    <td align="right">$${cobro_11899_formateado}</td>
+                    <td align="right">$${cobro_12114_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">LICENCIAS</td>
                     <td align="center">12207</td>
-                    <td align="right">$${cobro_11899_formateado}</td>
+                    <td align="right">$${cobro_12207_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">MATRICULAS</td>
                     <td align="center">12210</td>
-                    <td align="right">$${cobro_11899_formateado}</td>
+                    <td align="right">$${cobro_12210_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">DERECHOS DIVERSOS</td>
                     <td align="center">12299</td>
-                    <td align="right">$${cobro_11899_formateado}</td>
+                    <td align="right">$${cobro_12299_formateado}</td>
                     </tr>
                     <tr>
                     <td align="left">INTERESES</td>
@@ -751,7 +758,7 @@
                     var markup2 = `<tr>
                     
                     <td align="right" colspan="7">
-                        <b>TOTAL: $ ${response.data.total_cobros_empresas_formateado}</b>
+                        <b>TOTAL: $ ${response.data.total_cobros_mixto_formateado}</b>
                     </td>
 
                     </tr>`;
@@ -762,37 +769,46 @@
                     const ctx = document.getElementById('myChart');
 
                      window.myChart = new Chart(ctx, {
-                        type: 'bar',
+                        type: 'doughnut',
                         data: {
                             
                             labels: ['11801', '11802', '11803', '11804', '11806', '11808','11809', 
                                      '11810', '11813', '11814', '11815', '11816', '11899','15799',
-                                     '15302', '15313', '32201',
+                                     '12114', '12207', '12210', '12299', '15302', '15313', '32201',
                                     ],
                             datasets: [{
                                 label: 'Cantidad por Actividad Económica',
                                 
                                 data: [cobro_11801, cobro_11802, cobro_11803, cobro_11804, cobro_11806, cobro_11808,
                                        cobro_11809, cobro_11810, cobro_11813, cobro_11814, cobro_11815, cobro_11816,
-                                       cobro_11899, cobro_15799, cobro_15302, cobro_15313, cobro_32201
+                                       cobro_11899, cobro_15799, 
+                                       cobro_12114, cobro_12207, cobro_12210, cobro_12299, cobro_15302, cobro_15313, cobro_32201
                                        ],
                                        
                                 backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
+                                    'rgba(255, 99, 132, 2)',
+                                    'rgba(54, 162, 235, 2)',
+                                    'rgba(255, 206, 86, 2)',
+                                    'rgba(75, 192, 192, 2)',
+                                    'rgba(153, 102, 255, 2)',
+                                    'rgba(255, 159, 64, 2)',
+                                    'rgba(146, 43, 33, 2)',
+                                    'rgba(118, 68, 138, 2)',
+                                    'rgba(108, 52, 131, 2)',
+                                    'rgba(31, 97, 141, 2)',
+                                    'rgba(23, 165, 137, 2)',
+                                    'rgba(34, 153, 84, 2)',
+                                    'rgba(183, 149, 11, 2)',
+                                    'rgba(243, 156, 18, 2)',
+                                    'rgba(211, 84, 0, 2)',
+                                    'rgba(208, 211, 212, 2)',
+                                    'rgba(98, 101, 103 ,2)',
+                                    'rgba(52, 73, 94 ,2)',
+                                    'rgba(208, 220, 230 ,2)',
+                                    'rgba(255, 2, 2 ,2)',
+                                    'rgba(247, 10, 107 ,2)'
                                 ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
-                                ],
+                
                                 borderWidth: 1
                             }]
                         },
