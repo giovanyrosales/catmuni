@@ -15,6 +15,14 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 
+<script>
+  function f1()
+  {
+    $('#btn_imprimirCalificacion').hide();
+  }
+
+  window.onload = f1;
+</script>
 
 
 
@@ -208,7 +216,7 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Registrar calificación a buses de &nbsp;<span class="badge badge-warning">&nbsp;&nbsp;</span></h5>
+            <h5 class="modal-title">Registrar calificación &nbsp;<span class="badge badge-warning">&nbsp;&nbsp;</span></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -252,7 +260,7 @@
               </div><!-- /.col-md-6 -->
               <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="text" class="form-control text-success" disabled value="{{$ficha}}"  id="nFicha" class="form-control" required >
+                        <input  type="text" class="form-control text-success" disabled value="{{$rotulos->num_ficha}}"  id="nFicha" class="form-control" required >
                   </div>
               </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -265,10 +273,10 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text"  value="" name="nombre" disabled id="nom_empresa" class="form-control" required >
-                        <input type="text" hidden value=""  disabled id="id_contribuyente" class="form-control" required >
-                        <input type="text" hidden value=""  disabled id="id_buses_detalle" class="form-control" required >
-                        <input type="text" hidden value=""  disabled id="nFicha" class="form-control" required >
+                        <input type="text"  value="{{$rotulos->nom_empresa}}" name="nombre" disabled id="nom_empresa" class="form-control" required >
+                        <input type="text" hidden value="{{$rotulos->id_contribuyente}}"  disabled id="id_contribuyente" class="form-control" required >
+                        <input type="text" hidden value="{{$rotulos->id_rotulos_detalle}}"  disabled id="id_rotulos_detalle" class="form-control" required >
+                        <input type="text" hidden value="{{$rotulos->num_ficha}}"  disabled id="nFicha" class="form-control" required >
                         
                      
                   </div>
@@ -282,7 +290,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-success" disabled value="" name="created_at" id="created_at" class="form-control" required >
+                        <input  type="date" class="form-control text-success" disabled value="{{$rotulos->fecha_apertura}}" name="created_at" id="created_at" class="form-control" required >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -295,7 +303,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input type="text" disabled value="" name="contribuyente" id="contribuyente" class="form-control" >
+                        <input type="text" disabled value="{{$rotulos->contribuyente}} {{$rotulos->apellido}}" name="contribuyente" id="contribuyente" class="form-control" >
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->     
@@ -319,7 +327,7 @@
         
             
           <div class="card border-success mb-3" id="Div_Rotulos"><!-- PanelVI. BUSES -->
-           <div class="card-header text-success"><label>VI. BUSES</label></div>
+           <div class="card-header text-success"><label>II. BUSES</label></div>
             <div class="card-body">
 
                <!-- /.form-group -->
@@ -328,28 +336,25 @@
                         
                   <table border="1" width:760px;>
                         <tr>
-                          <th align="center" scope="col">BUSES</th>
-                          <th align="center" scope="col">PLACA</th>
-                          <th align="center" scope="col">RUTA</th>
+                          <th align="center" scope="col">RÓTULOS</th>
+                          <th align="center" scope="col">TOTAL MEDIDAS</th>
+                          <th align="center" scope="col">CARAS</th>
                           <th align="center" scope="col">TARIFA</th> 
                           <th align="center" scope="col">EJERCICIO</th>
                         </tr>
 
                         <tr>
                   
-                  
-
-                        <td style="width: 150px;" align="center"></td>
-                        <td style="width: 150px;" align="center"></td>
-                        <td style="width: 150px;" align="center"></td>
-                        <td style="width: 150px;" align="center"></td>
+                    @foreach($rotulosEspecificos as $dato)
+                        <td style="width: 150px;" align="center">{{$dato->nombre}}</td>
+                        <td style="width: 150px;" align="center">{{$dato->total_medidas}}</td>
+                        <td style="width: 150px;" align="center">{{$dato->caras}}</td>
+                        <td style="width: 150px;" align="center">${{$dato->tarifa}}</td>
                         <td style="width: 150px;" align="center">2022</td>
 
                         </tr>
-                   
+                    @endforeach 
                         
-                      
-               
                         <tr>
                           <td> </td>
                           <td></td>
@@ -363,21 +368,21 @@
                           <td align="center"></td>
                           <td></td>
                           <td> </td>                         
-                          <td align="center" >$<label id= "tarifa_mensual"></label> <input type="hidden" id="tarifa_mensual"></td>                         
-                          <td align="center">$</td>
+                          <td align="center" >${{$suma_tarifa}}<label id= "tarifa_mensual"></label> <input type="hidden" id="tarifa_mensual"></td>                         
+                          <td align="center">${{ $tarifaaño}}</td>
                         </tr>                      
                           
                         <tr>
                           <td rowspan="2"></td>
                           <td colspan="2">Fondo Fiestas Patronales 5%</td>
-                          <td align="center">$ </td>
-                          <td align="center">$</td>
+                          <td align="center">${{$tarifa_total}} </td>
+                          <td align="center">${{$tarifat_sinF}}</td>
                         </tr>
 
                         <tr>
                           <td colspan="2">TOTAL IMPUESTO</td>
-                          <td align="center" ><strong>$</strong><label id= "total_impuesto"></label> <input type="hidden"  id="total_impuesto"></td>
-                          <td align="center"><strong>$</strong></td>
+                          <td align="center" ><strong>${{$tarifa_total}}</strong><label id= "total_impuesto"></label> <input type="hidden"  id="total_impuesto"></td>
+                          <td align="center"><strong>${{$tarifa_total_año}}</strong></td>
                         </tr>
                         
                       </table>
@@ -391,12 +396,20 @@
 
 
          <!-- /.card-body -->
-         <div class="card-footer">
-         <button type="button" class="btn btn-secondary" onclick="ImpimirCalificacion()"><i class="fa fa-print">
-         </i>&nbsp; Impimir Calificación&nbsp;</button>
-         <button type="button" class="btn btn-success float-right" onclick="nuevaCalificacion()"><i class="fas fa-edit">
-         </i> &nbsp;Registrar Calificación&nbsp;</button>
-         <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <div class="card-footer">
+
+          <button type="button" class="btn btn-secondary" onclick="ImprimirCalificacion()" id="btn_imprimirCalificacion">
+                <i class="fa fa-print"></i>&nbsp;Calificación&nbsp;
+          </button>
+
+          <button type="button" class="btn btn-success float-right" onclick="verificarCalificacion()"><i class="fas fa-edit">
+              </i> &nbsp;Registrar Calificación&nbsp;
+          </button>
+              <br><br>
+
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar
+          </button>
+
           </div>
          <!-- /.card-footer -->
          </div>
@@ -468,63 +481,127 @@
       
           var id_contribuyente = document.getElementById('id_contribuyente').value;
           var ficha = document.getElementById('nFicha').value;
-          var id_buses_detalle = document.getElementById('id_buses_detalle').value;       
+          var id_rotulos_detalle = document.getElementById('id_rotulos_detalle').value;       
           var estado_calificacion = document.getElementById('estado_calificacion').value;
           var fechacalificar = document.getElementById('fechacalificar').value;
 
         
           openLoading();
-          var formData = new FormData();
-          
+          var formData = new FormData();          
               formData.append('id_contribuyente', id_contribuyente);
-              formData.append('id_buses_detalle', id_buses_detalle);  
+              formData.append('id_rotulos_detalle', id_rotulos_detalle);  
               formData.append('ficha', ficha);           
               formData.append('estado_calificacion', estado_calificacion);
               formData.append('fechacalificar', fechacalificar);
             
           
 
-        axios.post('/admin/buses/calificacion/nueva', formData, {
+        axios.post('/admin/rotulos_detalle/calificacion/guardar', formData, {
         })
             .then((response) => {
               console.log(response)
                 closeLoading();
-                if(response.data.success === 0){
+                if(response.data.success === 0)
+                {
                     toastr.error(response.data.message);
                 }
-                if(response.data.success === 1){
-                  Swal.fire({
-                                position: 'top-end',
-                                icon: 'success',
-                                title: '¡Calificación registrada correctamente!',
-                                showConfirmButton: true,
-                          
-                              }).then((result) => {
-                              if (result.isConfirmed) {
-                                  $('#modalCalificacion').modal('hide');
-                                  // window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
-                                  }
-                              });
-                  }
+                if(response.data.success === 1)
+                {
+                    calificacion_registrada();
+                }
               
             })
             .catch((error) => {
-              Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: '¡Error al registrar la calificación!', 
-                                showConfirmButton: true,
-                              }).then((result) => {
-                              if (result.isConfirmed) {
-                                $('#modalCalificacion').modal('hide');
-                                          closeLoading();
-                                        }
-                              });
-            });
-          
+                  fallo('Error!', 'Error al registrar la calificación');                                    
 
+            });
+ 
 
       }
+    </script>
+
+    <script> 
+
+        function verificarCalificacion()
+        {
+            Swal.fire({
+                title: '¿Desea realizar la calificación?',
+                text: "",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Guardar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    nuevaCalificacion()
+                }
+            });
+        } 
+
+        function agregado()
+        {
+                Swal.fire({
+                    title: '¿Esta seguro de registrar la calificación?',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#28a745',
+                    closeOnClickOutside: false,
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                    
+                          
+                        
+                    }
+                });
+        }
+
+        function fallo(titulo, mensaje)
+        {
+                Swal.fire({
+                    title: titulo,
+                    text: mensaje,
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                    location.reload;
+                    }
+                });
+                
+                
+        }
+
+        function calificacion_registrada()
+        {
+              Swal.fire({
+              title: 'Calificación registrada correctamente',
+              //text: "Puede modificarla en la opción [Editar]",
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#28a745',
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                  if (result.isConfirmed) 
+                  {                 
+                      $('#btn_imprimirCalificacion').show();
+                  }
+                
+                        });
+        }
+
+        function imprimirCalificacion()
+        {
+          window.open();
+        }
+
     </script>
 
     @stop

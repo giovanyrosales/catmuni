@@ -112,6 +112,7 @@
         <div class="row">
     <div class="col-md-4 col-sm-8">
 
+    @if($detectorNull == '0')
         <a href="#" onclick="CrearCalificacion({{$rotulos->id_rotulos_detalle}})" >
                       <div class="widget stats-widget">
                         <div class="widget-body clearfix bg-info">
@@ -123,18 +124,20 @@
                     </div><!-- .widget -->
         </a>
      
- 
+      @elseif ($calificacionRotulos->estado_calificacion == 'calificado')
         <a href="#" onclick="">
             <div class="widget stats-widget">
                <div class="widget-body clearfix bg-info">
                   <div class="pull-left">
-                         <h3 class="widget-title text-white">Calificación realizada &nbsp; </span></h3>
+                         <h3 class="widget-title text-white">Calificación realizada &nbsp; {{$calificacionRotulos->fecha_calificacion}}
+
+                         </span></h3>
                   </div>
                   <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
                 </div>
             </div><!-- .widget -->
         </a>
-
+      @endif
   
     </div>
    
@@ -152,10 +155,11 @@
     </div>
 
   
+  @if($detectorNull == '0')
 
     <div class="col-md-4 col-sm-8">
-    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
-    <div class="widget stats-widget">
+      <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+            <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-green">
                     <div class="pull-left">
                         <h3 class="widget-title text-white">Registrar Cobro</h3>
@@ -165,28 +169,29 @@
             </div><!-- .widget -->
         </a>
     </div>
+       
+  @else
     
-   
-
     <div class="col-md-4 col-sm-8">
         <a href="#" onclick="CobrosB( )" >
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-green">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Cobros</h3>
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
                     </div>
                     <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>                   
                 </div>
             </div><!-- .widget -->
         </a>       
-    </div>
+    </div>  
+
+  @endif
   
-    
     <div class="col-md-4 col-sm-8">
 
-              <a href="#" onclick="Aldia()">      
+        <a href="#" onclick="Aldia()">      
  
-              <a href="#" onclick="reporteeAviso()">
+        <a href="#" onclick="reporteeAviso()">
                    
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
@@ -201,22 +206,21 @@
 
     <div class="col-md-4 col-sm-8">
              
-                 
-                  <a href="#" onclick="Aldia()">
+          <a href="#" onclick="Aldia()">
                   
-                  <a href="#" onclick="reporte_notificacion_bus()">
+          <a href="#" onclick="reporte_notificacion_bus()">
                  
-                  <div class="widget stats-widget">
-                    <div class="widget-body clearfix bg-purple">
-                     <div class="pull-left">
+              <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-purple">
+                  <div class="pull-left">
                      <h3 class="widget-title text-white">Generar notificación</h3>
                      <input type="hidden" id="fechahoy" value="" class="form-control" >
                         <input type="hidden" id="f1" value="" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
-                </div>
-                </a>
-                </a>
+              </div>
+          </a>
+          </a>
     </div>
     
 </div>

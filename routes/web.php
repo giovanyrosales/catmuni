@@ -276,6 +276,7 @@ use App\Models\Empresas;
     Route::get('/admin/rotulos_detalle/show/{rotulo}', [RotulosDetalleController::class, 'showRotulos']);
     Route::get('/admin/rotulos_detalle/calificacion/{rotulo}', [RotulosDetalleController::class, 'calificacionRotulo']);
     Route::get('/admin/rotulos_detalle/calificaciones/tablarotulo/{rotulo}', [RotulosDetalleController::class,'tablaCalificacionRotulo']);
+    Route::post('/admin/rotulos_detalle/calificacion/guardar' , [RotulosDetalleController::class, 'GuardarCalificacionRotulo']);
 
 
 
