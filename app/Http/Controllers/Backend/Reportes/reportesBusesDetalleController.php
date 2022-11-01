@@ -1169,13 +1169,14 @@ class reportesBusesDetalleController extends Controller
 
             //Configuracion de Reporte en MPDF
             $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-            $mpdf->SetTitle('Alcaldía Metapán | Solvencia');
+            $mpdf->SetTitle('Alcaldía Metapán | Reporte de Buses');
         
             // mostrar errores
             $mpdf->showImageErrors = false;
         
             $logoalcaldia = 'images/logo.png';
             $logoelsalvador = 'images/EscudoSV.png';
+            $linea = 'images/linea4.png';
             $LeyT = 'images/LeyT.png';
         
            
@@ -1209,109 +1210,111 @@ class reportesBusesDetalleController extends Controller
 
             log::info('Contribuyente: '.$contribuyente);
         
-            $tabla = "<div class='content'>
+            $tabla = "<header> <div class='row'> <div class='content'>
                     <img id='logo' src='$logoalcaldia'>
                     <img id='EscudoSV' src='$logoelsalvador'>
                     <h4>DATOS GENERALES DE LA EMPRESA <br>
                     ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A <br>
-                    UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL; TEL. 2402-7614</h4>
-                    <hr>
-            </div>";
+                    UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL; TEL. 2402-7614
+                    </h4>
+                    <img id='lineaimg' src='$linea'>
+                    </div></div></header>";
         
-            $tabla .= "<table border='0' align='center' style='width: 650px;'>
+            $tabla .= "<div id='content'>
+            <table border='0' align='center' style='width: 600px;margin-top: 10px'>
            
             <tr>
-                <td align='left' colspan='2'><strong><p style='font-size:11'>I. DATOS GENERALES DE LA EMPRESA</strong></td></td>
-            </tr>
-            <br>
-
-            <tr>
-                <td id='name'>NÚMERO DE FICHA</td>
-                <td id= 'name1' >$buses->nFicha</td>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>I. DATOS GENERALES DE LA EMPRESA</p></strong></td></td>
             </tr>
 
             <tr>
-                <td id='name'>NOMBRE DE LA EMPRESA</td>
-                <td id= 'name1' >$buses->nom_empresa</td>
+                <td id='uno'>NÚMERO DE FICHA</td>
+                <td id='dos'>$buses->nFicha</td>
             </tr>
 
             <tr>
-                <td id='name'>NIT</td>
-                <td id= 'name1' >$buses->nit_empresa</td>
+                <td id='uno'>NOMBRE DE LA EMPRESA</td>
+                <td id='dos'>$buses->nom_empresa</td>
             </tr>
 
             <tr>
-                <td id='name'>TELÉFONO</td>
-                <td id= 'name1' >$buses->tel_empresa</td>
+                <td id='uno'>NIT</td>
+                <td id='dos'>$buses->nit_empresa</td>
             </tr>
 
             <tr>
-                <td id='name'>REGISTRO COMERCIANTE</td>
-                <td id= 'name1' >$buses->r_comerciantes</td>
+                <td id='uno'>TELÉFONO</td>
+                <td id='dos'>$buses->tel_empresa</td>
             </tr>
 
             <tr>
-                <td id='name'>ESTADO</td>
-                <td id= 'name1' >$buses->estado</td>
+                <td id='uno'>REGISTRO COMERCIANTE</td>
+                <td id='dos'>$buses->r_comerciantes</td>
             </tr>
 
             <tr>
-                <td id='name'>CANTIDAD DE BUSES</td>
-                <td id= 'name1' >$buses->cantidad</td>
+                <td id='uno'>ESTADO</td>
+                <td id='dos'>$buses->estado</td>
+            </tr>
+
+            <tr>
+                <td id='uno'>CANTIDAD DE BUSES</td>
+                <td id='dos'>$buses->cantidad</td>
             </tr>
          
             <tr>
-                <td align='left' colspan='2'><strong><p style='font-size:11'>II. CONTRIBUYENTE</strong></td></td>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>II. CONTRIBUYENTE</p></strong></td></td>
             </tr> 
           
             <tr>
-                <td id='name'>NOMBRE</td>
-                <td id= 'name1'>$buses->contribuyente  $buses->apellido</td>
+                <td id='uno'>NOMBRE</td>
+                <td id='dos'>$buses->contribuyente  $buses->apellido</td>
             </tr>
 
             <tr>
-                <td id='name'>DUI</td>
-                <td id= 'name1'>$buses->dui</td>
+                <td id='uno'>DUI</td>
+                <td id='dos'>$buses->dui</td>
             </tr>
 
             <tr>
-                <td id='name'>NIT</td>
-                <td id= 'name1'>$buses->nit</td>
+                <td id='uno'>NIT</td>
+                <td id='dos'>$buses->nit</td>
             </tr>
 
             <tr>
-                <td id='name'>TELÉFONO</td>
-                <td id= 'name1'>$buses->telefono</td>
+                <td id='uno'>TELÉFONO</td>
+                <td id='dos'>$buses->telefono</td>
             </tr>
 
             <tr>
-                <td id='name'>DIRECCIÓN</td>
-                <td id= 'name1'>$buses->direccion</td>
+                <td id='uno'>DIRECCIÓN</td>
+                <td id='dos'>$buses->direccion</td>
             </tr>
 
             <tr>
-                <td id='name'>CORREO ELECTRÓNICO</td>
-                <td id= 'name1'>$buses->email</td>
+                <td id='uno'>CORREO ELECTRÓNICO</td>
+                <td id='dos'>$buses->email</td>
             </tr>
 
             <tr>
-                <td align='left' colspan='2'><strong><p style='font-size:11'>II. CALIFICACIÓN</strong></td></td>
+                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>II. CALIFICACIÓN</p></strong></td></td>
             </tr> 
 
             <tr>
-                <td id='name'>FECHA DE CALIFICACIÓN</td>
-                <td id= 'name1'>$ultimaCalificacionBus->fecha_calificacion</td>
+                <td id='uno'>FECHA DE CALIFICACIÓN</td>
+                <td id='dos'>$ultimaCalificacionBus->fecha_calificacion</td>
             </tr>
 
             <tr>
-                <td id='name'>TARIFA ACTUAL</td>
-                <td id= 'name1'>$ $ultimaCalificacionBus->pago_mensual</td>
+                <td id='uno'>TARIFA ACTUAL</td>
+                <td id='dos'>$ $ultimaCalificacionBus->pago_mensual</td>
             </tr>
 
-            </table>"; 
+            </table>
+            </div>"; 
             
         
-                $stylesheet = file_get_contents('css/cssconsolidado.css');
+                $stylesheet = file_get_contents('css/cssreportepdf.css');
                 $mpdf->WriteHTML($stylesheet,1);
                 $mpdf->SetMargins(0, 0, 10);
         

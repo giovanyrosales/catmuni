@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\ActividadEspecifica\ActividadEspecificaControll
 use App\Http\Controllers\Backend\MatriculasDetalle\MatriculasDetalleController;
 use App\Http\Controllers\Backend\Rotulos\RotulosController;
 use App\Http\Controllers\Backend\RotulosDetalle\RotulosDetalleController;
+use App\Http\Controllers\Backend\Reportes\reportesRotulosDetalleController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 use App\Http\Controllers\Backend\Buses\BusesController;
 use App\Http\Controllers\Backend\Reportes\reportesBusesController;
@@ -276,6 +277,7 @@ use App\Models\Empresas;
     Route::get('/admin/rotulos_detalle/show/{rotulo}', [RotulosDetalleController::class, 'showRotulos']);
     Route::get('/admin/rotulos_detalle/calificacion/{rotulo}', [RotulosDetalleController::class, 'calificacionRotulo']);
     Route::get('/admin/rotulos_detalle/calificaciones/tablarotulo/{rotulo}', [RotulosDetalleController::class,'tablaCalificacionRotulo']);
+    Route::post('/admin/rotulos_detalle/calificacion/guardar' , [RotulosDetalleController::class, 'GuardarCalificacionRotulo']);
 
 
 
@@ -300,7 +302,7 @@ use App\Models\Empresas;
     Route::get('/admin/traspaso_empresas_historico/pdf/{id}', [reportesController::class, 'traspaso_empresa_historico']);
     Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']);
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
-    Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);
+    Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);  Route::get('/admin/generar_reporte/datos_empresa/nuevo/pdf/{id}', [reportesController::class, 'reporte_datos_empresa_nuevo']);
     Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
 
     //REPORTES CONTRIBUYENTES
@@ -346,7 +348,7 @@ use App\Models\Empresas;
     //REPORTES RÓTULOS
     Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
-
+    Route::get('/admin/generar/reporte/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'generar_reporte_rotulos']);
 
 
     //REPORTES BUSES

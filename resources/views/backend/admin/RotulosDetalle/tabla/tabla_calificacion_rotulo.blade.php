@@ -19,9 +19,9 @@
                             @foreach($rotulosEspecificos as $dato)
                                 <tr>
                                     <td>{{$dato->ficha}}</td>
-                                    <td></td>
-                                    <td>$</td>
-                                    <td>$</td>                                   
+                                    <td>{{$dato->cantidad}}</td>
+                                    <td>${{$dato->tarifa}}</td>
+                                    <td>${{$dato->mensual}}</td>                                   
                                    
                                 </tr>
                             @endforeach
