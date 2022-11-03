@@ -402,8 +402,8 @@
 
     function Aldia()
     {
-      toastr.warning('Este bus se encuentra al día con sus pagos.');
-      return;
+        toastr.warning('Este bus se encuentra al día con sus pagos.');
+        return;
     }
     
     function CobrosB(id)
@@ -423,8 +423,8 @@
 
     function NoNotificar()
     {
-      toastr.warning('Esta empresa no es notificable.');
-      return;
+        toastr.warning('Esta empresa no es notificable.');
+        return;
     }
 
     function reporteeAviso(id)

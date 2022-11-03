@@ -398,7 +398,7 @@
          <!-- /.card-body -->
           <div class="card-footer">
 
-          <button type="button" class="btn btn-secondary" onclick="ImprimirCalificacion()" id="btn_imprimirCalificacion">
+          <button type="button" class="btn btn-secondary" onclick="imprimirCalificacion({{$rotulos->id_rotulos_detalle}})" id="btn_imprimirCalificacion">
                 <i class="fa fa-print"></i>&nbsp;Calificación&nbsp;
           </button>
 
@@ -597,11 +597,11 @@
                         });
         }
 
-        function imprimirCalificacion()
+        function imprimirCalificacion(id)
         {
-          window.open();
+            window.open("{{ URL::to('/admin/rotulos_detalle/reporte/calificacion/pdf') }}/" + id );
         }
-
+        
     </script>
 
     @stop
