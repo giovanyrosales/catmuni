@@ -996,7 +996,7 @@ public function calculo_cobroMesas(Request $request){
 
              $añoActual=carbon::now()->format('Y');
              $fecha_limiteMesas=Carbon::createFromDate($añoActual,03, 31);
-             $fechahoy=carbon::now();
+             $fechahoy=carbon::now()->format('Y-m-d');
 
                 /** Calculando las licencias*/
                 $Cantidad_matriculas=0;
@@ -1106,8 +1106,8 @@ public function calculo_cobroMesas(Request $request){
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
             $cobro->multa_matricula_15313 = $multa;
             $cobro->fondo_fiestasP_12114 = $fondoFPValor;
-            $cobro->tasas_servicio_mora_32201 =$impuestos_mora;
-            $cobro->tasas_servicio_12299 =$impuesto_año_actual;
+            $cobro->impuesto_mora_32201 =$impuestos_mora;
+            $cobro->impuestos =$impuesto_año_actual;
             $cobro->intereses_moratorios_15302 =$InteresTotal;
             $cobro->matricula_12210 =$monto_pago_matricula;
             $cobro->monto_multaPE_15313 =$totalMultaPagoExtemporaneo;
@@ -1124,7 +1124,7 @@ public function calculo_cobroMesas(Request $request){
                
                  }
             $cobro->tipo_cobro ='matricula';
-            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
+            $cobro->codigo = $empresa->codigo_atc_economica;
             $cobro->save();
         
             if($multa>0)
@@ -1189,7 +1189,7 @@ public function calculo_cobroMaquinas(Request $request){
     'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
     'estado_empresa.estado',
     'giro_comercial.nombre_giro',
-    'actividad_economica.rubro',
+    'actividad_economica.rubro','actividad_economica.codigo_atc_economica'
      )
     ->find($id_empresa);
 
@@ -1416,7 +1416,7 @@ public function calculo_cobroMaquinas(Request $request){
              
              $añoActual=carbon::now()->format('Y');
              $fecha_limiteMaquinas=Carbon::createFromDate($añoActual,03, 31);
-             $fechahoy=carbon::now();
+             $fechahoy=carbon::now()->format('Y-m-d');
 
                 /** Calculando las licencias*/
                 $Cantidad_matriculas=0;
@@ -1522,8 +1522,8 @@ public function calculo_cobroMaquinas(Request $request){
             $cobro->id_matriculas_detalle = $request->id_matriculadetalleMaquinas;
             $cobro->id_usuario = $idusuario;
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
-            $cobro->tasas_servicio_mora_32201 =$impuestos_mora;
-            $cobro->tasas_servicio_12299 =$impuesto_año_actual;
+            $cobro->impuesto_mora_32201 =$impuestos_mora;
+            $cobro->impuestos =$impuesto_año_actual;
             $cobro->intereses_moratorios_15302 =$InteresTotal;
             $cobro->matricula_12210 =$monto_pago_matricula;
             $cobro->fondo_fiestasP_12114 = $fondoFPValor;
@@ -1541,7 +1541,7 @@ public function calculo_cobroMaquinas(Request $request){
                 
                   }
             $cobro->tipo_cobro ='matricula';
-            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
+            $cobro->codigo = $empresa->codigo_atc_economica;
             $cobro->save();
 
        
@@ -1866,7 +1866,7 @@ public function calculo_cobroSinfonolas(Request $request){
 
                 $añoActual=carbon::now()->format('Y');
                 $fecha_limiteSinfonolas=Carbon::createFromDate($añoActual,03, 31);
-                $fechahoy=carbon::now();
+                $fechahoy=carbon::now()->format('Y-m-d');
 
                    /** Calculando las licencias*/
                    $Cantidad_matriculas=0;
@@ -1975,8 +1975,8 @@ public function calculo_cobroSinfonolas(Request $request){
             $cobro->cantidad_meses_cobro =$Cantidad_MesesTotal;
             $cobro->multa_matricula_15313 = $multa;
             $cobro->fondo_fiestasP_12114 = $fondoFPValor;
-            $cobro->tasas_servicio_mora_32201 =$impuestos_mora;
-            $cobro->tasas_servicio_12299 =$impuesto_año_actual;
+            $cobro->impuesto_mora_32201 =$impuestos_mora;
+            $cobro->impuestos =$impuesto_año_actual;
             $cobro->intereses_moratorios_15302 =$InteresTotal;
             $cobro->monto_multaPE_15313 =$totalMultaPagoExtemporaneo;
             $cobro->matricula_12210 =$monto_pago_matricula;
@@ -1993,7 +1993,7 @@ public function calculo_cobroSinfonolas(Request $request){
                
                  }
             $cobro->tipo_cobro ='matricula';
-            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
+            $cobro->codigo = $empresa->codigo_atc_economica;
             $cobro->save();
 
             if($multa>0)
@@ -2109,7 +2109,7 @@ public function calculo_cobroAparatos(Request $request){
                 $añoActual=carbon::now()->format('Y');
          
                 $fecha_limite=Carbon::createFromDate($añoActual,03, 31);
-                $fechahoy=carbon::now();
+                $fechahoy=carbon::now()->format('Y-m-d');
                 //$fechahoy='2022-02-17';
 
                  $Cantidad_matriculas=0;
@@ -2226,7 +2226,7 @@ public function calculo_cobroAparatos(Request $request){
             $cobro->periodo_cobro_inicio = $InicioPeriodo;
             $cobro->periodo_cobro_fin =$fechaPagaraAparatos;
             $cobro->tipo_cobro ='matricula';
-            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
+            $cobro->codigo = $empresa->codigo_atc_economica;
             $cobro->save();
         
             return ['success' => 2];

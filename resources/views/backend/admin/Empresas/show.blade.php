@@ -589,7 +589,10 @@
                             @if($pase_recalificacion_mat==1 or $detectorNull==1)
                               <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura('{{$empresa->id}}')"></a>
                             @endif  
-                              <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Empresa" onclick="reporteEmpresaDatos('{{$empresa->id}}')"></a>
+                              {{-- <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Empresa" onclick="reporteEmpresaDatos('{{$empresa->id}}')"></a> --}}
+                              {{-- Nuevo reporte de empresa con mpdf  --}}
+                              <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Nuevo Reporte Empresa" onclick="reporteEmpresaDatosNuevo('{{$empresa->id}}')"></a>
+                              {{-- Fin nuevo reporte de empresa --}}
                             </div>
                   <div class="btn-mas">
                       <label for="btn-mas" class="fa fa-plus"></label>
@@ -806,8 +809,13 @@ function reporteEmpresaDatos(id){
 
   window.open("{{ URL::to('/admin/generar_reporte/datos_empresa/pdf') }}/"+ id );
 
-
 }
+// Nuevo reporte de empresa con mpdf
+function reporteEmpresaDatosNuevo(id){
+  window.open("{{ URL::to('/admin/generar_reporte/datos_empresa/nuevo/pdf') }}/"+ id );
+}
+// Fin nuevo reporte de empresa
+
 function modalMensaje(titulo, mensaje){
             Swal.fire({
                 title: titulo,

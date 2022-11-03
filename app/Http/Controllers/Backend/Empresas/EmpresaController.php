@@ -1018,20 +1018,6 @@ public function show($id)
 
 
 
-
-
-
-
-                  
-
-
-
-
-
-
-
-
-
             //*Si es Mesas de billar o  Sinfonolas
             }else if($dato->id_matricula==1 or $dato->id_matricula==4)
             {
@@ -1806,11 +1792,11 @@ public function calculo_cobroLicor(Request $request)
             $cobro->id_usuario = $idusuario;
             $cobro->monto_multa_licencia_15313 = $multaTotalLicorDecimal;
             $cobro->monto_licencia_12207 = $monto_pago_licencia;
+            $cobro->codigo ='12207';
             $cobro->pago_total = $totalPagoValorDecimal;
             $cobro->fecha_cobro = $fechahoy;
             $cobro->periodo_cobro_inicio = $InicioPeriodo;
             $cobro->periodo_cobro_fin =$FechaPagara;
-            $cobro->cod_act_economica = $empresa->codigo_atc_economica;
             $cobro->tipo_cobro = 'licencia';
             $cobro->save();
         
@@ -2138,7 +2124,6 @@ public function nuevaEmpresa(Request $request){
                             $detalleE ->direccion= $request->direccionM[$i];                                               
                         }
                         $detalleE->save();
-                        log::info('llego hasta aqui');
                         if($detalleE->save())
                             {
                                 DB::commit();

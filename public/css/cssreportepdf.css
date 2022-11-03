@@ -79,15 +79,19 @@ footer img {
      padding: 0;
 }
 
+#cero{
+    height: 45px;
+}
+
 #uno{
-        font-size: 11px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+    font-size: 11.5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 #dos{
-    width: 60%;
-    font-size: 11px;
+    width: 61.5%;
+    font-size: 12px;
     border: 1px solid #ddd;
     padding: 0px;
     color: #1E1E1E;

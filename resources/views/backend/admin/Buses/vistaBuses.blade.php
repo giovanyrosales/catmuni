@@ -322,8 +322,10 @@
                           <div class="redes">
                          
                               <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa()"></a>
-                          
-                              <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura()"></a>
+                              
+                              @if ($detectorNull != '0' && $calificacion->estado_calificacion == 'calificado')
+                                <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura('{{$buses->id}}')"></a>
+                              @endif
                         
                               <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Buses" onclick="reporteBusesDatos('{{$buses->id}}')"></a>
                             </div>
@@ -487,13 +489,17 @@
               });
 
           }
+    
+    // FUNCIONES PARA REPORTES DEL BOTON +
+    function Imprimir_Resolucion_Apertura(id){
+      window.open("{{ URL::to('/admin/generar/resolucion_apertura/bus/pdf') }}/" + id );
+    }
 
-          function reporteBusesDatos(id)
-          {
+    function reporteBusesDatos(id){
+      window.open("{{ URL::to('/admin/generar/solvencia/bus/pdf') }}/"+ id );
+    }
+    // FIN FUNCIONES PARA REPORTES DEL BOTON +
 
-              window.open("{{ URL::to('/admin/generar/solvencia/bus/pdf') }}/"+ id );
-
-          }
     </script>
 
     <style>
