@@ -336,6 +336,7 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/reporte_cobros/index', [reportesController::class, 'indexReporteCobros'])->name('admin.sidebar.reporte.reporte_cobros');
     Route::get('/admin/pdf/reporte/mora_tributaria', [reportesController::class, 'pdfReporteMoraTributaria']);
     Route::get('/admin/pdf/reporte/cobros_global/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_global']);
+    Route::get('/admin/pdf/reporte/cobros_empresas/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_empresas']);
     Route::post('/admin/calculo/mora', [reportesController::class, 'calculo_mora']);
     Route::post('/admin/calculo/mora_codigos', [reportesController::class, 'calculo_mora_codigos']);
     Route::post('/admin/calculo/mora_tasas', [reportesController::class, 'calculo_mora_tasas']);
