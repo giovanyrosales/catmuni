@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Reportes;
 
+ini_set('max_execution_time', '300');
 
 use App\Models\BusesDetalle;
 use App\Models\Contribuyentes;
@@ -2588,7 +2589,9 @@ public function traspaso_empresa_historico($id){
     $diaApartirDe = $dias[(date('N', strtotime($fecha_ApartirDe))) - 1];
     /** FIN - Obtener la fecha y días en español y formato tradicional para fecha A partir del dia del traspaso*/
 
-    $view = View::make('backend.admin.Empresas.Reportes.Traspaso', compact([
+    /** REPORTE HISTORICO TRASPASO CON DOMPDDF **/
+
+    /* $view = View::make('backend.admin.Empresas.Reportes.Traspaso', compact([
 
                 'FechaDelDia',
                 'empresa',
@@ -2604,8 +2607,129 @@ public function traspaso_empresa_historico($id){
     $pdf->getDomPDF()->set_option("enable_php", true);
     $pdf->loadHTML($view)->setPaper('carta', 'portrait');
 
-    return $pdf->stream();
+    return $pdf->stream(); */
 
+    /** FIN REPORTE HISTORICO TRASPASO CON DOMPDF **/
+
+    /** REPORTE DE HISTORICO TRASPASO CON MPDFD **/
+    //Configuracion de Reporte en MPDF
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+    $mpdf->SetTitle('Alcaldía Metapán | Traspaso');
+    
+    // mostrar errores
+    $mpdf->showImageErrors = false;
+
+    $logoalcaldia = 'images/logo.png';
+    $logoelsalvador = 'images/EscudoSV.png';
+    $linea = 'images/linea4.png';
+    $LeyT = 'images/LeyT.png';
+    
+    $tabla = "<header> <div class='row'> <div class='content'>
+                <img id='logo' src='$logoalcaldia'>
+                <img id='EscudoSV' src='$logoelsalvador'>
+                <h4>ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
+                UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL<br>
+                RESOLUCIÓN DE TRASPASO
+                </h4>
+                <img id='lineaimg' src='$linea'>
+                </div></div></header>";
+
+    $tabla .= "<div id='content' >
+            <table border='0' align='center' style='width:600px;margin-top:15px;'>
+            <tr>
+                <td id='cero' align='left' style='word-spacing: 0.1em;'><strong><u>TRASPASO</u></strong></td>
+
+                <td id='cero' align='right'>
+                    RESOLUCION N°:&nbsp;<strong>$cant_resolucion</strong><br><br><br>
+                </td>
+            </tr>
+            <tr>
+                <td id='tres'>FECHA DE RESOLUCIÓN</td>
+                <td id='cuatro'>$dia,&nbsp;$FechaDelDia</td>
+            </tr>
+            <tr>
+                <td id='tres'>NÚMERO DE CUENTA CORRIENTE:</td>
+                <td id='cuatro'>$empresa->num_tarjeta</td>
+            </tr>
+            <tr>
+                <td id='tres'> <b>TRASPÁSESE:</b></td>
+                <td id='cuatro'>$empresa->nombre</td>
+            </tr>
+            <tr>
+                <td id='tres'>DIRECCIÓN:</td>
+                <td id='cuatro'>$empresa->direccion</td>
+            </tr>
+            <tr>
+                <td id='tres'>PROPIEDAD DE:</td>
+                <td id='cuatro'>$datos_traspaso->propietario_anterior</td>
+            </tr>
+            <tr>
+                <td id='tres'>GIRO ECONÓMICO:</td>
+                <td id='cuatro'>$empresa->nombre_giro</td>
+            </tr>
+            <tr>
+                <td id='tres'>A PARTIR DEL DIA:</td>
+                <td id='cuatro'>$diaApartirDe, &nbsp;$FechaDelDiaApartirDe</td>
+            </tr>
+            <tr>
+                <td id='tres'>A NOMBRE DE:</td>
+                <td id='cuatro'>$datos_traspaso->propietario_nuevo</td>
+            </tr>
+            <tr>
+                <td colspan='2' align='justify'>
+                    <p style='font-size:11.5'>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        LICDA. ROSA LISSETH ALDANA MERLOS<br>
+                        JEFE DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL
+
+                    </p>
+                    <hr style='height:2px;border:none;color:#333;background-color:#333;'>
+                    <p style='font-size:7;text-align: justify;'>
+                        <b>Ley General Tributaria Municipal:</b><br>
+                        <b>Art. 123.</b> -De la calificación de contribuyentes, de la determinación de tributos, 
+                            de la resolución del Alcalde en el procedimiento de repetición del pago de lo no 
+                            debido, y de la aplicación de sanciones hecha por la administración tributaria
+                            municipal, se admitirá recurso de apelación para ante el Concejo Municipal 
+                            respectivo, el cual deberá interponerse ante el funcionario que haya hecho la 
+                            calificación o pronunciada la resolución correspondiente, en el plazo de tres 
+                            días después de su notificación.
+                            <br>
+                            <br>
+                            
+                        <b>Art. 90.</b>-Los contribuyentes, responsables y terceros, estarán obligados al cumplimiento de los deberes formales que se establezcan en esta Ley, en leyes u ordenanzas de creación de tributos municipales, sus reglamentos y otras disposiciones normativas que dicten las administraciones tributarias municipales, y particularmente están obligados a: 
+                            <br>1º Inscribirse en los registros tributarios que establezcan dichas administraciones; proporcionarles los datos pertinentes y comunicarles oportunamente cualquier modificación al respecto; 
+                            <br>2º Solicitar, por escrito, a la Municipalidad respectiva, las licencias o permisos previos que se requieran para instalar establecimientos y locales comerciales e informar a la autoridad tributaria la fecha de inicio de las actividades, dentro de los treinta días siguientes a dicha fecha; 
+                            <br>3º Informar sobre los cambios de residencia y sobre cualquier otra circunstancia que modifique o pueda hacer desaparecer las obligaciones tributarias, dentro de los treinta días siguientes a la fecha de tales cambios; 
+                            <br>4º Permitir y facilitar las inspecciones, exámenes, comprobaciones o investigaciones ordenadas por la administración tributaria municipal y que realizará por medio de sus funcionarios delegados a tal efecto; (4) 
+                            <br>5º Presentar las declaraciones para la determinación de los tributos, con los anexos respectivos, cuando así se encuentre establecido, en los plazos y de acuerdo con las formalidades correspondientes; 
+                            <br>6º Concurrir a las oficinas municipales cuando fuere citado por autoridad tributaria; 
+                            <br>7º El contribuyente que ponga fin a su negocio o actividad, por cualquier causa, lo informará por escrito, a la autoridad tributaria municipal, dentro de los treinta días siguientes a la fecha de finalización de su negocio o actividad; presentará, al mismo tiempo, las declaraciones pertinentes, el balance o inventario final y efectuará el pago de los tributos adeudados sin perjuicio de que la autoridad tributaria pueda comprobar de oficio, en forma fehaciente, el cierre definitivo de cualquier establecimiento; 
+                            <br>8º Las personas jurídicas no domiciliadas en el país y que desarrollen actividades económicas en determinadas comprensiones municipales, deberán acreditar un representante ante la administración tributaria, municipal correspondiente y comunicarlo oportunamente. Si no lo comunicaren, se tendrá como tal a los gerentes o administradores de los establecimientos propiedad de tales personas jurídicas; 
+                            <br>9º A presentar o exhibir las declaraciones, balances, inventarios físicos, tanto los valuados como los registrados contablemente con los ajustes correspondientes si los hubiere, informes, documentos, activos, registros y demás informes relacionados con hechos generadores de los impuestos; (4) 
+                            <br> 10º A permitir que se examine la contabilidad, registros y documentos, determinar la base imponible, liquidar el impuesto que le corresponda, cerciorarse de que no existe de acuerdo a la ley la obligación de pago del impuesto, o verificar el adecuado cumplimiento de las obligaciones establecidas en esta Ley General o en las leyes tributarias respectivas; (4) 
+                            <br>11º En general, a dar las aclaraciones que le fueren solicitadas por aquélla, como también presentar o exhibir a requerimiento de la Administración Municipal dentro del plazo que para tal efecto le conceda, los libros o registros contables exigidos en esta Ley y a los demás que resulten obligados a llevar de conformidad a otras leyes especiales. (4)
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <img src='$LeyT' height='115px' width='595px'>
+                </td>
+            </tr>
+            </table>
+    </div>";
+    $stylesheet = file_get_contents('css/cssreportepdf.css');
+    $mpdf->WriteHTML($stylesheet, 1);
+    $mpdf->SetMargins(0, 0, 10);
+
+    $mpdf->WriteHTML($tabla, 2);
+    $mpdf->Output();
+
+    /** FIN REPORTE DE HISTORICO DE TRASPASO CON MPDF **/
 }
 
 public function cierre_empresa_historico($id){
