@@ -422,8 +422,15 @@ function OcultarhistorialCierres(){
         function resolucion_traspaso_historico(id){
             window.open("{{ URL::to('/admin/traspaso_empresas_historico/pdf')}}/"+ id)
         }
-        function resolucion_cierre_historico(id){
+        
+        /* RUTA CON EL DOMPDF*/
+        /* function resolucion_cierre_historico(id){
             window.open("{{ URL::to('/admin/cierres_empresas_historico/pdf')}}/"+ id)
+        } */
+        
+        /** RUTA CON EL MPDF      NOTA: comentar si se descomente el de Dompdf**/
+        function resolucion_cierre_historico(id){
+            window.open("{{ URL::to('/admin/cierres_empresas_historico/m/pdf')}}/"+ id)
         }
         
         function ImprimirTraspaso(id)
