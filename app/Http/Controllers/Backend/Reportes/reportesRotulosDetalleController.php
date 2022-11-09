@@ -33,6 +33,8 @@ use Facade\Ignition\Http\Controllers\ScriptController;
 use Illuminate\Support\MessageBag;
 use Spatie\Permission\Models\Role;
 
+
+
 class reportesRotulosDetalleController extends Controller
 {
     public function generar_reporte_rotulos($id) {
@@ -40,7 +42,7 @@ class reportesRotulosDetalleController extends Controller
 
             //Configuracion de Reporte en MPDF
             $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-            $mpdf->SetTitle('Alcaldía Metapán | Reporte de Rotulos');
+            $mpdf->SetTitle('Alcaldía Metapán | Solvencia');
         
             // mostrar errores
             $mpdf->showImageErrors = false;
@@ -77,7 +79,7 @@ class reportesRotulosDetalleController extends Controller
             <table border='0' align='center' style='width: 600px;margin-top: 10px'>
            
             <tr>
-                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>I. DATOS GENERALES DE LA EMPRESA</p></strong></td>
+                <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>I. DATOS GENERALES DE LA EMPRESA</p></strong></td>
             </tr>
 
             <tr>
@@ -116,7 +118,7 @@ class reportesRotulosDetalleController extends Controller
             </tr>
          
             <tr>
-                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>II. CONTRIBUYENTE</p></strong></td>
+                <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>II. CONTRIBUYENTE</p></strong></td>
             </tr> 
 
             <tr>
@@ -150,7 +152,7 @@ class reportesRotulosDetalleController extends Controller
             </tr>
 
             <tr>
-                <td id='cero' align='left' colspan='2'><strong><p style='font-size:11.5'>III. CALIFICACIÓN</p></strong></td>
+                <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>III. CALIFICACIÓN</p></strong></td>
             </tr> 
 
             <tr>
@@ -184,6 +186,9 @@ class reportesRotulosDetalleController extends Controller
     public function generarCalificacionImprimir ($id)
     {
 
+        log::info('id ' . $id);
+       
+        $FechaDelDia = carbon::now()->format('d-m-Y');
         //EMPIEZA CONFIGURACIÓN DE PDF
             $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
             $mpdf->SetTitle('Alcaldía Metapán | Solvencia');
@@ -230,32 +235,43 @@ class reportesRotulosDetalleController extends Controller
 
         $calificacionRotulos = CalificacionRotuloDetalle::join('rotulos_detalle','calificacion_rotulo_detalle.id_rotulos_detalle','rotulos_detalle.id')
                                                         ->join('contribuyente','calificacion_rotulo_detalle.id_contribuyente','contribuyente.id')
+                                                        ->join('rotulos_detalle_especifico','calificacion_rotulo_detalle.id_rotulos_detalle_especifico','rotulos_detalle_especifico.id')
 
-        ->select('calificacion_rotulo_detalle.id', 'calificacion_rotulo_detalle.fecha_calificacion','calificacion_rotulo_detalle.estado_calificacion',
+        ->select('calificacion_rotulo_detalle.id','calificacion_rotulo_detalle.id_rotulos_detalle', 'calificacion_rotulo_detalle.fecha_calificacion','calificacion_rotulo_detalle.estado_calificacion',
         'calificacion_rotulo_detalle.nFicha',
 
-        'rotulos_detalle.id as id_rotulos_detalle','rotulos_detalle.fecha_apertura as apertura','rotulos_detalle.nom_empresa as empresa',
-        'contribuyente.id as id_contribuyente', 'contribuyente.nombre as contribuyente','contribuyente.apellido')
-               
-        ->where('id_rotulos_detalle', $id)
-      
-        ->first();
-
+        'rotulos_detalle.id','rotulos_detalle.fecha_apertura','rotulos_detalle.nom_empresa',
+        'contribuyente.id as id_contribuyente', 'contribuyente.nombre as contribuyente','contribuyente.apellido',
         
+        'rotulos_detalle_especifico.id', 'rotulos_detalle_especifico.nombre','rotulos_detalle_especifico.medidas',
+        'rotulos_detalle_especifico.total_medidas','rotulos_detalle_especifico.caras','rotulos_detalle_especifico.tarifa',
+        'rotulos_detalle_especifico.total_tarifa','rotulos_detalle_especifico.coordenadas_geo','rotulos_detalle_especifico.foto_rotulo',)
 
-        $tabla = "<header> <div class='row'> <div class='content'>
-        <img id='logo' src='$logoalcaldia'>
-        <img id='EscudoSV' src='$logoelsalvador'>
-        <h4>CALIFICACION &nbsp; $rotulos->nom_empresa &nbsp; $calificacionRotulos->fecha_calificacion<br>
-        ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
-        UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL; TEL. 2402-7614            
-        </h4>
-        <img id='lineaimg' src='$linea'>
-        </div></div></header>";
+               
+        ->where('calificacion_rotulo_detalle.id_rotulos_detalle', $id)      
+        ->get();
+
+        log::info($calificacionRotulos);
+        //return;
+
+        $calificacion = CalificacionRotuloDetalle::where('id_rotulos_detalle', $id)->first();
 
 
-        $tabla .= "<div id='content'>
-            <table border='0' align='center' style='width: 600px;margin-top: 10px'>
+     
+        $tabla =" <div class='content'>
+                <img id='logo' src='$logoalcaldia'>
+                <img id='EscudoSV' src='$logoelsalvador'>
+                <h4>CALIFICACIÓN &nbsp;$calificacion->fecha_calificacion <br>
+                ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
+                UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL; TEL. 2402-7614            
+                </h4>
+                <hr>
+            </div>";
+    
+
+
+        $tabla .= "<div id='contentRotulo'>
+            <table border='0' align='center' style='width: 600px;'>
            
             <tr>
                 <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>I. DATOS GENERALES</p></strong></td>
@@ -263,98 +279,116 @@ class reportesRotulosDetalleController extends Controller
 
             <tr>
                 <td id='uno'>NÚMERO DE FICHA:</td>
-                <td id='dos' align='center'>$calificacionRotulos->nFicha</td>
+                <td id='dos'>$calificacion->nFicha</td>
             </tr>
 
             <tr>
                 <td id='uno'>FECHA DE APERTURA:</td>
-                <td id='dos' align='center'>$calificacionRotulos->apertura</td>
+                <td id='dos' >$rotulos->fecha_apertura</td>
             </tr>
 
             <tr>
                 <td id='uno'>NOMBRE DE LA EMPRESA:</td>
-                <td id='dos' align='center'>$calificacionRotulos->empresa</td>
+                <td id='dos'>$rotulos->nom_empresa</td>
             </tr>
 
             <tr>
                 <td id='uno'>REPRESENTANTE LEGAL:</td>
-                <td id='dos' align='center'>$calificacionRotulos->contribuyente&nbsp;$calificacionRotulos->apellido</td>
+                <td id='dos' >$rotulos->contribuyente</td>
             </tr>
          
             <tr>
                 <td id='uno'>FECHA DE CALIFICACIÓN:</td>
-                <td id='dos' align='center'>$calificacionRotulos->fecha_calificacion</td>
+                <td id='dos'>$calificacion->fecha_calificacion</td>
             </tr>
            
             <tr>
                 <td align='left' colspan='2' height='50px'><strong><p style='font-size:11'>II. BUSES</p></strong></td>
             </tr>
+            </div>
+            </table>";
+     
+            $tabla .=  " <table id='tablaR' align='center'>
+           
+                <tr>
+                   <th colspan='#' >RÓTULOS</th>
+                   <th scope='col' >TOTAL MEDIDAS</th>
+                   <th scope='col' >CARAS</th>
+                   <th scope='col' >TARIFA</th> 
+                   <th scope='col' >EJERCICIO</th>
+                </tr>";
 
-            <div id='content'  >
-            </tabla>";
-
-        $tabla .= 
-        
-                  <tr>
-                    <th >RÓTULOS</th>
-                    <th  >TOTAL MEDIDAS</th>
-                    <th  >CARAS</th>
-                    <th  >TARIFA</th> 
-                    <th >EJERCICIO</th>
-                  </tr>
-
-                  <tr>
-            
-              @foreach()
-                  <td style='width: 150px;' align='center'></td>
-                  <td style='width: 150px;' align='center'></td>
-                  <td style='width: 150px;' align='center'></td>
-                  <td style='width: 150px;' align='center'></td>
-                  <td style='width: 150px;' align='center'>2022</td>
-
-                  </tr>
-              @endforeach 
+                        
+            foreach($calificacionRotulos as $dato)
+            {
+                $tabla .=  "<tr  align='center'>           
+                <tr>     
+                <td style='font-size:11px; text-align: center' colspan='#'>" . $dato->nombre . "</td>
+                  <td>" . $dato->total_medidas . "</td>
+                  <td>" . $dato->caras . "</td>
+                  <td>$" .$dato->tarifa . "</td>
+                  <td>2022</td>
+                </tr>
+            }
                   
-                  <tr>
-                    <td> </td>
+                <tr>
+                    <td colspan='#'></td>
                     <td></td>
-                    <td>IMPUESTO:</td>
-                    <td align='center'>MENSUAL</td>
-                    <td align='center'>ANUAL</td>
-                  </tr>
+                    <td scope='row'>IMPUESTO:</td>
+                    <td scope='col'>MENSUAL</td>
+                    <td scope='col'>ANUAL</td>
+                </tr>
 
-                  <tr>
-             
-                    <td align='center'></td>
+                <tr>             
+                    <td colspan='#'align='center'></td>
                     <td></td>
                     <td> </td>                         
-                    <td align='center' ><label id= 'tarifa_mensual'></label> <input type='hidden' id='tarifa_mensual'></td>                         
+                    <td scope='col' align='center' style='font-size:13px;' >$<label id= 'tarifa_mensual'></label> <input type='hidden' id='tarifa_mensual'>$calificacion->monto</td>                         
                     <td align='center'></td>
-                  </tr>                      
+                </tr>                
                     
-                  <tr>
+                <tr>
                     <td rowspan='2'></td>
                     <td colspan='2'>Fondo Fiestas Patronales 5%</td>
-                    <td align='center'> </td>
+                    <td align='center' style='font-size:13px;'>$ $calificacion->pago_mensual</td>
                     <td align='center'></td>
-                  </tr>
+                </tr>
 
-                  <tr>
+                <tr>
                     <td colspan='2'>TOTAL IMPUESTO</td>
-                    <td align='center' ><strong></strong><label id= 'total_impuesto'></label> <input type='hidden'  id='total_impuesto'></td>
+                    <td align='center' style='font-size:13px;'>$<strong><label id= 'total_impuesto'></label> <input type='hidden'  id='total_impuesto'>$calificacion->pago_mensual</strong></td>
                     <td align='center'><strong></strong></td>
-                  </tr>
+                </tr>
                   
-                </table>
-                </div> <!-- /.ROW1 -->
-       
-    
-        </tabla>
-        </div>"; 
+                        
+                <tr>
+                    <td>
+                    <h4>Nombre de Calificador:<br>Lic. Rosa Lisseth Aldana</h4>
+
+                    <td><p style='text-align: justify; font-size: 6;'><b>Base Legal para el recurso de apelación respecto a esta
+                             NOTIFICACION DE CALIFICACION.</b> Ley General Tributaria Municipal, Art. 123. 
+                             -De la calificación de contribuyentes, de la determinación de tributos, 
+                             de la resolución del Alcalde en el procedimiento de repetición del pago 
+                             de lo no debido, y de la aplicación de sanciones hecha por la
+                              administración tributaria municipal, se admitirá recurso de apelación 
+                              para ante el Concejo Municipal respectivo, el cual deberá interponerse
+                              ante el funcionario que haya hecho la calificación o pronunciada la 
+                              resolución correspondiente, en el plazo de tres días después de su 
+                              notificación.</p>
+                        </td>
+                        Fecha:&nbsp;$FechaDelDia&nbsp;       
+                        </tr>
+                      <tr>
+                          <td colspan='2' id='uno'><b>Fecha:</b>&nbsp;$FechaDelDia&nbsp; </td>
+                      </tr>
+                
+                </td>                
+                </table>";
+             
         
     
-        // $stylesheet = file_get_contents('css/dataTables.bootstrap4.css');
-        $stylesheet = file_get_contents('css/cssreportepdf.css');
+            // $stylesheet = file_get_contents('css/dataTables.bootstrap4.css');
+            $stylesheet = file_get_contents('css/cssconsolidado.css');
             $mpdf->WriteHTML($stylesheet,1);
             $mpdf->SetMargins(0, 0, 10);
     
@@ -365,6 +399,5 @@ class reportesRotulosDetalleController extends Controller
             $mpdf->Output();
 
     }
-        
-                   
+}
 }

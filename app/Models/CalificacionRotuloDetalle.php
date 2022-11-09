@@ -18,6 +18,7 @@ class CalificacionRotuloDetalle extends Model
     protected $fillable = [
           'id',
           'id_rotulos_detalle',
+          'id_rotulos_detalle_especifico',
           'id_contribuyente',
           'fecha_calificacion',  
           'nFicha',       

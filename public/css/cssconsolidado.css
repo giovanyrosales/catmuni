@@ -88,6 +88,14 @@
             margin-right: auto;
 			display: block;
         }
+        .contentRotulo {
+            font-family: system-ui, system-ui, sans-serif;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
 
         .content img {
             margin-right: 15px;
@@ -159,11 +167,14 @@
             font-size: small;
         }
         #uno{
-                font-size: 10px;
+                font-size: 11px;
 
         }
         #dos{
-                font-size: 10px;
+                font-size: 11px;
+                border: 1px solid #ddd;
+                padding: 0px;
+                color: #1E1E1E;
         }
 
 
@@ -259,6 +270,13 @@
                 color: #1E1E1E;
         }
 
-        #tablaCRotulo th{
+        #tablaCRotulo{
             font-size: 5px;
+        }
+
+        #tablaR {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 90%;
+            text-align: center;
         }
