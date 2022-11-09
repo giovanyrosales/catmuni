@@ -300,9 +300,12 @@ use App\Models\Empresas;
     Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa']);
     Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa']);
     Route::get('/admin/traspaso_empresas_historico/pdf/{id}', [reportesController::class, 'traspaso_empresa_historico']);
-    Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']);
+    /** Reporte de cierre ruta**/
+    Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']); /** Con Dompdf **/
+    Route::get('/admin/cierres_empresas_historico/m/pdf/{id}', [reportesController::class, 'cierre_empresa_historico_nuevo']); /** Con Mpdf **/
+    /** Reporte de cierre ruta fin **/
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
-    Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);/** <-Viejo   ||   Nuevo-> **/  Route::get('/admin/generar_reporte/datos_empresa/nuevo/pdf/{id}', [reportesController::class, 'reporte_datos_empresa_nuevo']);
+    Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);/** <-Viejo*(Dompdf)   ||   (Mpdf)Nuevo-> **/  Route::get('/admin/generar_reporte/datos_empresa/nuevo/pdf/{id}', [reportesController::class, 'reporte_datos_empresa_nuevo']);
     Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
 
     //REPORTES CONTRIBUYENTES
@@ -336,6 +339,7 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/reporte_cobros/index', [reportesController::class, 'indexReporteCobros'])->name('admin.sidebar.reporte.reporte_cobros');
     Route::get('/admin/pdf/reporte/mora_tributaria', [reportesController::class, 'pdfReporteMoraTributaria']);
     Route::get('/admin/pdf/reporte/cobros_global/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_global']);
+    Route::get('/admin/pdf/reporte/cobros_empresas/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_empresas']);
     Route::post('/admin/calculo/mora', [reportesController::class, 'calculo_mora']);
     Route::post('/admin/calculo/mora_codigos', [reportesController::class, 'calculo_mora_codigos']);
     Route::post('/admin/calculo/mora_tasas', [reportesController::class, 'calculo_mora_tasas']);

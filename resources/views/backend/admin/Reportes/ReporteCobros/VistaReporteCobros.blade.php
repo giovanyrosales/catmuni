@@ -148,14 +148,14 @@
                     <div class="callout callout-info">
                         <table class="table" id="matriz_ver_cobros_global" style="border: 100px;" data-toggle="table">
                             <thead style="background-color:#94D913; color:white;">
-                                <tr>  
+                                <tr style="font-size:14px;">  
                                     <th style="width: 10%; text-align: center;font-weight: 700;">N° FICHA</th>
-                                    <th style="width: 20%; text-align: center;font-weight: 700;">EMPRESA O NEGOCIO</th>
+                                    <th style="width: 40%; text-align: center;font-weight: 700;">EMPRESA O NEGOCIO</th>
                                     <th style="width: 10%; text-align: center;font-weight: 700;">CÓDIGO</th>       
-                                    <th style="width: 15%; text-align: center;font-weight: 700;">A PARTIR DE</th>
-                                    <th style="width: 15%; text-align: center;font-weight: 700;">HASTA</th>
-                                    <th style="width: 15%; text-align: center;font-weight: 700;">FECHA DE PAGO</th>
-                                    <th style="width: 20%; text-align: center;font-weight: 700;">TOTAL PAGADO</th>
+                                    <th style="width: 10%; text-align: center;font-weight: 700;">A PARTIR DE</th>
+                                    <th style="width: 10%; text-align: center;font-weight: 700;">HASTA</th>
+                                    <th style="width: 10%; text-align: center;font-weight: 700;">FECHA DE PAGO</th>
+                                    <th style="width: 10%; text-align: right;font-weight: 700;">TOTAL PAGADO</th>
                                 </tr>
                             </thead>
                                 <tbody>
@@ -379,6 +379,44 @@
        
         }
 
+
+        function generarPdfCobrosEmpresas(){
+
+        //Validaciones
+        var f1 = document.getElementById("fecha_inicio_cobros_codigos").value;
+        var f2 = document.getElementById("fecha_fin_cobros_codigos").value; 
+        var g='';
+        //Validando SI se selecionado una fecha de ambos calendarios
+        if(f1!="" || f2!=""){
+
+            var g=1;
+
+            if(f1 == ""){
+                            $('#div_generar_cobros_codigos').hide();
+                            $('#contenido_img').show();
+                            modalMensaje('Fecha de inicio vacía', 'Debe selecionar una fecha de inicio.');
+                            return;
+                        }
+
+            if(f2 == ""){
+                            $('#div_generar_cobros_codigos').hide();
+                            $('#contenido_img').show();
+                            modalMensaje('Fecha de final vacía', 'Debe selecionar una fecha final.');
+                            return;
+                        }
+
+        }else{
+                
+                var f1 = 0;
+                var f2 = 0; 
+                var g=0;
+            }
+        //FIN - Validando SI se selecionado una fecha de ambos calendarios
+
+        window.open("{{ URL::to('admin/pdf/reporte/cobros_empresas') }}/"+ f1 + "/" + f2 + "/" + g );
+
+        }
+
         function generar_lista_cobros(){
 
                 openLoading();    
@@ -433,7 +471,7 @@
                         Swal.fire({
                             position:'top-end',
                             icon: 'success',
-                            title: '¡Cálculo realizado!',
+                            title: '¡Histórico de cobros generado!',
                             showConfirmButton: true,                     
                             })
                                 $('#btn_cobros_pdf').show();
@@ -456,7 +494,7 @@
                                 </td>
 
                                 <td align="center">
-                                ${infodetalle[i].codigo}
+                                <span class="badge badge-secondary">${infodetalle[i].codigo}</span>
                                 </td>
 
                                 <td align="center">
@@ -480,16 +518,98 @@
                                 $("#matriz_ver_cobros_global tbody").append(markup);
 
                                 }//*Cierre de for empresas
+
+                                var infodetalle = response.data.lista_cobros_licencias;
                             
-                                var markup2 = `<tr>
                                 
-                                <td align="right" colspan="7">
-                                    <b>TOTAL: $ ${response.data.total_cobros_empresas_formateado}</b>
+                                for (var i = 0; i < infodetalle.length; i++) {
+
+                                var markup2 = `<tr id="${infodetalle[i].id}">
+
+                                <td align="center">
+                                <span class="badge badge-pill badge-dark">${infodetalle[i].num_tarjeta}</span>
+                                </td>
+                                
+                                <td align="center">
+                                ${infodetalle[i].nombre}
+                                </td>
+
+                                <td align="center">
+                                <span class="badge badge-success">${infodetalle[i].codigo}</span>
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle[i].apartir_de}
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle[i].hasta}
+                                </td>
+
+                                <td align="center">
+                                ${infodetalle[i].fecha_pago}
+                                </td>
+
+                                <td align="right">
+                                $${infodetalle[i].cobro_por_empresa}
                                 </td>
 
                             </tr>`;
 
                                 $("#matriz_ver_cobros_global tbody").append(markup2);
+
+                                }//*Cierre de for licencia licor
+
+                            var infodetalle = response.data.lista_cobros_matriculas;            
+                                
+                            for (var i = 0; i < infodetalle.length; i++) {
+
+                            var markup3 = `<tr id="${infodetalle[i].id}">
+
+                            <td align="center">
+                            <span class="badge badge-pill badge-dark">${infodetalle[i].num_tarjeta}</span>
+                            </td>
+                            
+                            <td align="center">
+                            ${infodetalle[i].nombre}
+                            </td>
+
+                            <td align="center">
+                            <span class="badge badge-primary">${infodetalle[i].codigo}</span>
+                            </td>
+
+                            <td align="center">
+                            ${infodetalle[i].apartir_de}
+                            </td>
+
+                            <td align="center">
+                            ${infodetalle[i].hasta}
+                            </td>
+
+                            <td align="center">
+                            ${infodetalle[i].fecha_pago}
+                            </td>
+
+                            <td align="right">
+                            $${infodetalle[i].cobro_por_empresa}
+                            </td>
+
+                        </tr>`;
+
+                            $("#matriz_ver_cobros_global tbody").append(markup3);
+
+                            }//*Cierre de for matriculas
+                                                   
+                            
+                                var markup4 = `<tr>
+                                
+                                <td align="right" colspan="7">
+                                    <b>TOTAL: $ ${response.data.total_cobros_global_formateado}</b>
+                                </td>
+
+                            </tr>`;
+
+                                $("#matriz_ver_cobros_global tbody").append(markup4);
 
                     }
                     else if(response.data.success === 2){
@@ -794,7 +914,7 @@
                                     'rgba(255, 159, 64, 2)',
                                     'rgba(146, 43, 33, 2)',
                                     'rgba(118, 68, 138, 2)',
-                                    'rgba(108, 52, 131, 2)',
+                                    'rgba(88, 254, 10, 2)',
                                     'rgba(31, 97, 141, 2)',
                                     'rgba(23, 165, 137, 2)',
                                     'rgba(34, 153, 84, 2)',
@@ -804,7 +924,7 @@
                                     'rgba(208, 211, 212, 2)',
                                     'rgba(98, 101, 103 ,2)',
                                     'rgba(52, 73, 94 ,2)',
-                                    'rgba(208, 220, 230 ,2)',
+                                    'rgba(247, 247, 247 ,2)',
                                     'rgba(255, 2, 2 ,2)',
                                     'rgba(247, 10, 107 ,2)'
                                 ],
@@ -828,8 +948,14 @@
                                     title: 'Oops...',
                                     text: '¡No se encontró ningún cobro realizado en el período seleccionado!',   
                                     })
+                            
                                     $('#div_generar_reporte').hide();
+                                    $('#div_generar_cobros_codigos').hide();
+                                    $('#div_generar_cobros_tasas').hide();
                                     $('#contenido_img').show();
+                                    $('#btn_cobros_empresas_pdf').hide();
+                                    $("#matriz_ver_cobros_codigos tbody tr").remove();
+                                    window.imp_grafico_cobros_codigos=0;
 
                         }else{
                                 Swal.fire({
@@ -1087,5 +1213,49 @@
 
     </script>
 
+
+<script>
+
+    $(function () {
+        $("#matriz_ver_cobros_global").DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": false,
+            "pagingType": "full_numbers",
+            "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, "Todo"]],
+
+            "language": {
+
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            "responsive": true, "lengthChange": false, "autoWidth": true,
+        });
+    });
+
+</script>
 
 @endsection
