@@ -300,11 +300,20 @@ use App\Models\Empresas;
     Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa']);
     Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa']);
     Route::get('/admin/traspaso_empresas_historico/pdf/{id}', [reportesController::class, 'traspaso_empresa_historico']);
-    Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']);
+        /** Reporte de cierre ruta**/
+    Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']); /** Con Dompdf **/
+    Route::get('/admin/cierres_empresas_historico/m/pdf/{id}', [reportesController::class, 'cierre_empresa_historico_nuevo']); /** Con Mpdf **/
+        /** Reporte de cierre ruta fin **/
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
-    Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);/** <-Viejo   ||   Nuevo-> **/  Route::get('/admin/generar_reporte/datos_empresa/nuevo/pdf/{id}', [reportesController::class, 'reporte_datos_empresa_nuevo']);
+    Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);/** <-Viejo*(Dompdf)   ||   (Mpdf)Nuevo-> **/  Route::get('/admin/generar_reporte/datos_empresa/nuevo/pdf/{id}', [reportesController::class, 'reporte_datos_empresa_nuevo']);
     Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
-
+        /* reportes pdf historila de cobros en empresas */
+    Route::get('/admin/pdf//reporte/empresas/cobros/{id_empresa}', [reportesController::class, 'pdfReporteCobros']);
+    Route::get('/admin/pdf//reporte/matricula_detalles/maquinas/cobros/{id}', [reportesController::class, 'pdfReporteMaquinaCobros']);
+    Route::get('/admin/pdf//reporte/matricula_detalles/aparatos/cobros/{id}', [reportesController::class, 'pdfReporteAparatosCobros']);
+    Route::get('/admin/pdf//reporte/matricula_detalles/sinfonolas/cobros/{id}', [reportesController::class, 'pdfReporteSinfonolasCobros']);
+    Route::get('/admin/pdf//reporte/matricula_detalles/mesas/cobros/{id}', [reportesController::class, 'pdfReporteMesasCobros']);
+        /* Fin reportes pdf historila de cobros en empresa */
     //REPORTES CONTRIBUYENTES
     Route::get('/admin/generar/solvencia/pdf/{id}', [reportesController::class, 'generar_solvencia']);
     Route::get('/admin/generar/constancia/simple/pdf/{id}', [reportesController::class, 'generar_constancia_simple']);
