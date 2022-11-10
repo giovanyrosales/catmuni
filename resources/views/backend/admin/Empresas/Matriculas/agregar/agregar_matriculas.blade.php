@@ -1276,6 +1276,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                     closeLoading();
                     console.log(response);
                     if(response.data.success === 1){
+                    
                         if(response.data.listado.length!=0){//*** If para saber si la matrícula ya fue específicada */
 
                         $('#modalVerMatriculaEsp').css('overflow-y', 'auto');

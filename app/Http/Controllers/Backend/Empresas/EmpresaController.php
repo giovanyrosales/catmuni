@@ -832,19 +832,7 @@ public function show($id)
          }
 
 
-    //** Comprobando si la empresa esta al dia con sus pagos de impuestos de empresa */
-    if($ComprobandoPagoAlDia>=$fechahoy)
-    {   
-        //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
-        $NoNotificar=1;
-        log::info('NoNotificar:' .$NoNotificar);
-    }else
-            {
-                //** Si NoNotificar vale 0 entonces es permitido imprimir una notificación o avisos*/
-                $NoNotificar=0;
-                log::info('NoNotificar:' .$NoNotificar);
-            }
-    //* fin de comprobar */
+    
 
     $Consul_traspasos=Traspasos::latest()
     ->where('id_empresa',$id)
@@ -1104,6 +1092,20 @@ public function show($id)
                 Log::info('Cantidad de dias de interes moratorio: '.$DiasinteresMoratorio);
                 Log::info('Entro al else');
             }
+
+        //** Comprobando si la empresa SE LE DEBE NOTIFICAR(AVISOS Y NOTIFICACIONES) O NO */
+        if($FechaDeInicioMoratorio>=$fechahoy)
+        {   
+            //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
+            $NoNotificar=1;
+            log::info('NoNotificar:' .$NoNotificar);
+        }else
+                {
+                    //** Si NoNotificar vale 0 entonces es permitido imprimir una notificación o avisos*/
+                    $NoNotificar=0;
+                    log::info('NoNotificar:' .$NoNotificar);
+                }
+        //* fin de comprobar */ 
 
          if($MatriculasReg===1){
             Log::info('id empresa: '.$id);

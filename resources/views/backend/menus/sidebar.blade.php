@@ -245,7 +245,7 @@
 
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.actividad.economica') }}" target="frameprincipal" class="nav-link">
-                                    <i class="fas fa-sitemap nav-icon"></i>
+                                    <i class="fas fa-cubes nav-icon"></i>
                                     <p>Actividad Económica</p>
                                 </a>
                             </li>

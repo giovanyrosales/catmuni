@@ -3,7 +3,7 @@
     <title>Alcaldía Metapán | Panel</title>
     <style>
         body{
-            font-family: Arial;
+            font-family: 'Times New Roman', Times, serif;
         }
         @page {
             margin: 145px 25px;
@@ -83,7 +83,6 @@
 
 
         #tabla {
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 100%;
             margin-left: 20px;
@@ -142,7 +141,7 @@
             <img src="{{ asset('images/EscudoSV.png') }}" style="float: right" alt="" height="75px" width="75px">
             <h4>ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
             UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL<br>
-            RESOLUCIÓN DE TRASPASO
+            RESOLUCIÓN DE CIERRE
             </h4>
             <img src="{{ asset('images/linea4.png') }}"   alt="" height="5/3px" width="720px">
         </div>
