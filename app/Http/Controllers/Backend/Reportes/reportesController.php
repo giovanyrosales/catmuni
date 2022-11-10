@@ -52,6 +52,7 @@ use App\Models\Traspasos;
 use DateInterval;
 use DatePeriod;
 use Illuminate\Support\MessageBag;
+use Mpdf\Mpdf;
 use Spatie\Permission\Models\Role;
 
 class reportesController extends Controller
@@ -9152,8 +9153,407 @@ public function cobros_codigos_periodo(Request $request){
 
             }  
     
-        }//** Fin función */
-    
+        } //** Fin función */
 
+    /** FUNCIONES de Reporte de historial de cobros de empresa **/
+    //empresa
+    function pdfReporteCobros($id_empresa) {
+
+        $ListaCobros = Cobros::where('id_empresa', $id_empresa)
+        ->get();
+
+        $empresa = Empresas
+        ::select('empresa.nombre')
+        ->where('empresa.id', $id_empresa)
+        ->get();
+
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros');
+        
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+                </div>";
+
+        $tabla .= "<p>Reporte de historial de cobros:<strong> " . $empresa[0]['nombre'] . " </strong></p>";
+        $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
+                    <tbody>
+                        <tr>
+                            <th style='width: 15%; text-align: center'>Fecha pago</th>
+                            <th style='width: 8%; text-align: center'>Meses</th>
+                            <th style='width: 15%; text-align: center'>Impuestos Mora</th>
+                            <th style='width: 12%; text-align: center'>Impuestos</th>
+                            <th style='width: 12%; text-align: center'>Interes</th>
+                            <th style='width: 14%; text-align: center'>Multa Balance</th>
+                            <th style='width: 14%; text-align: center'>Multas</th>
+                            <th style='width: 10%; text-align: center'>Total</th>
+                        </tr>";
+
+        if (count($ListaCobros) > 0) {
+            foreach ($ListaCobros as $dato) {
+                $tabla .= "<tr>
+                                <td align='center'>" . $dato->fecha_cobro . "</td>
+                                <td align='center'>" . $dato->cantidad_meses_cobro . "</td>
+                                <td align='center'>$" . $dato->impuesto_mora_32201 . "</td>
+                                <td align='center'>$" . $dato->impuestos . "</td>
+                                <td align='center'>$" . $dato->intereses_moratorios_15302 . "</td>
+                                <td align='center'>$" . $dato->monto_multa_balance_15313 . "</td>
+                                <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>
+                                <td align='center'>$" . $dato->pago_total . "</td>
+                            </tr>";
+            }
+        } else {
+            $tabla .= "<tr>
+                            <td align='center' colspan='8'>No se encontraron datos disponibles</td>
+                        </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+    }
+
+    //maquina
+    function pdfReporteMaquinaCobros($id) {
+
+        $ListaCobrosMaquinas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+        $empresa = Empresas
+        ::join('matriculas_detalle', 'empresa.id', '=', 'matriculas_detalle.id_empresa')
+        ->select('empresa.nombre')
+        ->where('matriculas_detalle.id', $id)
+        ->get();
+
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros matricula');
+        
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+                </div>";
+
+        $tabla .= "<p>Reporte de historial de cobros matricula:<strong> " . $empresa[0]['nombre'] . " </strong></p>";
+        $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
+                    <tbody>
+                        <tr>
+                            <th style='width: 12%; text-align: center'>Fecha pago</th>
+                            <th style='width: 8%; text-align: center'>Meses</th>
+                            <th style='width: 13%; text-align: center'>Periodo Inicio</th>
+                            <th style='width: 12%; text-align: center'>Periodo Fin</th>
+                            <th style='width: 13%; text-align: center'>Tasas por Servicio Mora</th>
+                            <th style='width: 10%; text-align: center'>Tasas por Servicio</th>
+                            <th style='width: 10%; text-align: center'>Multa por Matricula</th>
+                            <th style='width: 10%; text-align: center'>Matricula</th>
+                            <th style='width: 12%; text-align: center'>Fondo Fiesta</th>
+                            <th style='width: 10%; text-align: center'>Total</th>
+                        </tr>";
+
+        if (count($ListaCobrosMaquinas) > 0) {
+            foreach ($ListaCobrosMaquinas as $dato) {
+                $tabla .= "<tr>
+                                <td align='center'>" . $dato->fecha_cobro . "</td>
+                                <td align='center'>" . $dato->cantidad_meses_cobro . "</td>";
+                if ($dato->periodo_cobro_inicio == null) {
+                    $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicioMatricula . "</td>
+                                <td align='center'> . $dato->periodo_cobro_finMatricula</td>";
+                } else {
+                    $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicio . "</td>
+                                <td align='center'> . $dato->periodo_cobro_fin</td>";
+                }
+                $tabla .= "<td align='center'>$" . $dato->tasas_servicio_mora_32201 . "</td>
+                            <td align='center'>$" . $dato->tasas_servicio_12299 . "</td>
+                            <td align='center'>$" . $dato->multa_matricula_15313 . "</td>
+                            <td align='center'>$" . $dato->matricula_12210 . "</td>
+                            <td align='center'>$" . $dato->fondo_fiestasP_12114 . "</td>
+                            <td align='center'>$" . $dato->pago_total . "</td>
+                        </tr>";
+            }
+        } else {
+            $tabla .= "<tr>
+                            <td align='center' colspan='10'>No se encontraron datos disponibles</td>
+                        </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+    }
+
+    //aparatos
+    function pdfReporteAparatosCobros($id){
+
+        $ListaCobrosMatriculas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+        $empresa = Empresas
+        ::join('matriculas_detalle', 'empresa.id', '=', 'matriculas_detalle.id_empresa')
+        ->select('empresa.nombre')
+        ->where('matriculas_detalle.id', $id)
+        ->get();
+
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros matricula');
+        
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+                </div>";
+
+        $tabla .= "<p>Reporte de historial de cobros matricula:<strong> " . $empresa[0]['nombre'] . " </strong></p>";
+        $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
+                    <tbody>
+                        <tr>
+                            <th style='width: 20%; text-align: center'>Fecha pago</th>
+                            <th style='width: 8%; text-align: center'>Meses</th>
+                            <th style='width: 15%; text-align: center'>Matricula</th>
+                            <th style='width: 20%; text-align: center'>Multa por Matricula</th>
+                            <th style='width: 15%; text-align: center'>Multas</th>
+                            <th style='width: 20%; text-align: center'>Fondo Fiestas</th>
+                            <th style='width: 10%; text-align: center'>Total</th>
+                        </tr>";
+
+        if (count($ListaCobrosMatriculas) > 0) {
+            foreach ($ListaCobrosMatriculas as $dato) {
+                $tabla .= "<tr>
+                                <td align='center'>" . $dato->fecha_cobro . "</td>
+                                <td align='center'>" . $dato->cantidad_meses_cobro . "</td>
+                                <td align='center'>$" . $dato->matricula_12210 . "</td>
+                                <td align='center'>$" . $dato->multa_matricula_15313 . "</td>
+                                <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>
+                                <td align='center'>$" . $dato->fondo_fiestasP_12114 . "</td>
+                                <td align='center'>$" . $dato->pago_total . "</td>
+                            </tr>";
+            }
+        } else {
+            $tabla .= "<tr>
+                            <td align='center' colspan='7'>No se encontraron datos disponibles</td>
+                        </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+    }
+
+    //sinfonolas
+    function pdfReporteSinfonolasCobros($id){
+
+        $ListaCobrosSinfonolas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+        $empresa = Empresas
+        ::join('matriculas_detalle', 'empresa.id', '=', 'matriculas_detalle.id_empresa')
+        ->select('empresa.nombre')
+        ->where('matriculas_detalle.id', $id)
+        ->get();
+
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros matricula');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+                </div>";
+
+        $tabla .= "<p>Reporte de historial de cobros matricula:<strong> " . $empresa[0]['nombre'] . " </strong></p>";
+        $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
+                    <tbody>
+                        <tr>
+                            <th style='width: 18%; text-align: center'>Fecha pago</th>
+                            <th style='width: 8%; text-align: center'>Meses</th>
+                            <th style='width: 13%; text-align: center'>Periodo Inicio</th>
+                            <th style='width: 13%; text-align: center'>Periodo Fin</th>
+                            <th style='width: 17%; text-align: center'>Multa por Matricula</th>
+                            <th style='width: 13%; text-align: center'>Multas</th>
+                            <th style='width: 15%; text-align: center'>Fondo Fiesta</th>
+                            <th style='width: 10%; text-align: center'>Total</th>
+                        </tr>";
+
+        if (count($ListaCobrosSinfonolas) > 0) {
+            foreach ($ListaCobrosSinfonolas as $dato) {
+                $tabla .= "<tr>
+                                <td align='center'>" . $dato->fecha_cobro . "</td>
+                                <td align='center'>" . $dato->cantidad_meses_cobro . "</td>";
+                if ($dato->periodo_cobro_inicio == null) {
+                    $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicioMatricula . "</td>
+                                <td align='center'> . $dato->periodo_cobro_finMatricula</td>";
+                } else {
+                    $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicio . "</td>
+                                <td align='center'> . $dato->periodo_cobro_fin</td>";
+                }
+                $tabla .= "<td align='center'>$" . $dato->multa_matricula_15313 . "</td>
+                            <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>
+                            <td align='center'>$" . $dato->fondo_fiestasP_12114 . "</td>
+                            <td align='center'>$" . $dato->pago_total . "</td>
+                        </tr>";
+            }
+        } else {
+            $tabla .= "<tr>
+                            <td align='center' colspan='8'>No se encontraron datos disponibles</td>
+                        </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+
+    }
+
+    //mesas
+    function pdfReporteMesasCobros($id){
+
+        $ListaCobrosSinfonolas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        ->get();
+
+        $empresa = Empresas
+        ::join('matriculas_detalle', 'empresa.id', '=', 'matriculas_detalle.id_empresa')
+        ->select('empresa.nombre')
+        ->where('matriculas_detalle.id', $id)
+        ->get();
+
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros matricula');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+                </div>";
+
+        $tabla .= "<p>Reporte de historial de cobros matricula:<strong> " . $empresa[0]['nombre'] . " </strong></p>";
+        $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
+                    <tbody>
+                        <tr>
+                            <th style='width: 18%; text-align: center'>Fecha pago</th>
+                            <th style='width: 8%; text-align: center'>Meses</th>
+                            <th style='width: 13%; text-align: center'>Periodo Inicio</th>
+                            <th style='width: 13%; text-align: center'>Periodo Fin</th>
+                            <th style='width: 17%; text-align: center'>Multa por Matricula</th>
+                            <th style='width: 13%; text-align: center'>Multas</th>
+                            <th style='width: 15%; text-align: center'>Fondo Fiesta</th>
+                            <th style='width: 10%; text-align: center'>Total</th>
+                        </tr>";
+
+        if (count($ListaCobrosSinfonolas) > 0) {
+            foreach ($ListaCobrosSinfonolas as $dato) {
+                $tabla .= "<tr>
+                                <td align='center'>" . $dato->fecha_cobro . "</td>
+                                <td align='center'>" . $dato->cantidad_meses_cobro . "</td>";
+                if ($dato->periodo_cobro_inicio == null) {
+                    $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicioMatricula . "</td>
+                                <td align='center'> . $dato->periodo_cobro_finMatricula</td>";
+                } else {
+                    $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicio . "</td>
+                                <td align='center'> . $dato->periodo_cobro_fin</td>";
+                }
+                $tabla .= "<td align='center'>$" . $dato->multa_matricula_15313 . "</td>
+                            <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>
+                            <td align='center'>$" . $dato->fondo_fiestasP_12114 . "</td>
+                            <td align='center'>$" . $dato->pago_total . "</td>
+                        </tr>";
+            }
+        } else {
+            $tabla .= "<tr>
+                            <td align='center' colspan='8'>No se encontraron datos disponibles</td>
+                        </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+
+    }
+
+    /** FIN reporte de historial de cobros de empresa **/
 //** Fin de reportes controller */
 }

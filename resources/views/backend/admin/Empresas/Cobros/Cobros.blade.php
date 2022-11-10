@@ -744,7 +744,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <form id="formulario_ver_historial_cobros_emp">        
                  <!-- /.card-header -->
                  <div>
-                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_emp()"  target="frameprincipal">
+                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_emp({{$empresa->id}})"  target="frameprincipal">
                     <i class="fas fa-print"></i>&nbsp; Imprimir</a>
                  </div>
                         
@@ -3001,6 +3001,33 @@ function abrir_modal()
     $('#modal_info_cali').css('overflow-y', 'auto');
     $('#modal_info_cali').modal({backdrop: 'fixed', keyboard: false})
 }
+
+/* Funciones para reportes en pdf de historiales de cobros*/
+function imp_historial_cobros_emp(id_empresa){
+  window.open("{{ URL::to('/admin/pdf//reporte/empresas/cobros/')}}/" + id_empresa);
+}
+
+function imp_historial_cobros_maquinas() {
+  var id = document.getElementById("id_matriculadetalle").value;
+  window.open("{{ URL::to('/admin/pdf//reporte/matricula_detalles/maquinas/cobros/')}}/" + id);
+
+}
+
+function imp_historial_cobros_aparatos() {
+  let id = document.getElementById("id_matriculadetalle").value;
+  window.open("{{ URL::to('/admin/pdf//reporte/matricula_detalles/aparatos/cobros/')}}/" + id);
+}
+
+function imp_historial_cobros_sinfonolas() {
+  var id = document.getElementById("id_matriculadetalle").value;
+  window.open("{{ URL::to('/admin/pdf//reporte/matricula_detalles/sinfonolas/cobros/')}}/" + id);
+}
+
+function imp_historial_cobros_mesas() {
+  var id = document.getElementById("id_matriculadetalle").value;
+  window.open("{{ URL::to('/admin/pdf//reporte/matricula_detalles/mesas/cobros/')}}/" + id);
+}
+/* FIn Funciones parar reportes en pdf de historiales de cobros*/
 
 
 
