@@ -354,6 +354,7 @@ use App\Models\Empresas;
     Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
     Route::get('/admin/generar/reporte/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'generar_reporte_rotulos']);
     Route::get('/admin/rotulos_detalle/reporte/calificacion/pdf/{id}', [reportesRotulosDetalleController::class, 'generarCalificacionImprimir']);
+    Route::get('/admin/generar/resolucion_apertura/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'resolucionAperturaRotulos']);
 
 
     //REPORTES BUSES

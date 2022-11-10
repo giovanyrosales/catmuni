@@ -303,19 +303,21 @@ class RotulosDetalleController extends Controller
             $tarifaaño = '';
             $tarifa_total_año = '';
             $tarifat_sinF = '';
+            $id_especifico = '';
 
                 foreach($rotulosEspecificos as $especifico)
                 {
                     $tarifaSinF = $especifico->tarifa;
                     $cantidad_rotulos = $especifico->cantidad_rotulos;
+                   
                 }
            
-        
-        $suma_tarifa = (round($tarifaSinF * $cantidad_rotulos,2));
-        $tarifaaño = (round($suma_tarifa * 12,2));
-        $tarifa_total = (round($suma_tarifa +( $suma_tarifa *$fondo_fiesta),2));
-        $tarifat_sinF = (round($tarifa_total * 12,2));
-        $tarifa_total_año = (round($tarifa_total * 12,2));
+                $id_especifico = $especifico->id;
+                $suma_tarifa = (round($tarifaSinF * $cantidad_rotulos,2));
+                $tarifaaño = (round($suma_tarifa * 12,2));
+                $tarifa_total = (round($suma_tarifa +( $suma_tarifa *$fondo_fiesta),2));
+                $tarifat_sinF = (round($tarifa_total * 12,2));
+                $tarifa_total_año = (round($tarifa_total * 12,2));
 
        }
         //log::info($rotulo);
@@ -324,7 +326,7 @@ class RotulosDetalleController extends Controller
 
         return view('backend.admin.RotulosDetalle.CalificacionRotulos', compact('rotulos','rotulosEspecificos','id_rotulos_detalle',
                                             'rotulo','suma_tarifa','tarifa_total','tarifaaño','tarifa_total_año',
-                                            'tarifat_sinF'
+                                            'tarifat_sinF','id_especifico',
                                         ));
 
     }
@@ -383,12 +385,15 @@ class RotulosDetalleController extends Controller
         $id_contribuyente = $request->id_contribuyente;
         $id_rotulos_detalle = $request->id_rotulos_detalle;
         $ficha = $request->ficha;
+        $id_rotulos_detalle_especifico = $request->id_rotulos_detalle_especifico;
 
         log::info('fecha calificacion ' . $fecha_calificacion);
         log::info('estado calificacion ' . $estado_calificacion);
         log::info('id contribuyente ' . $id_contribuyente);
         log::info('id rotulos detalle ' . $id_rotulos_detalle);
         log::info('ficha ' . $ficha);
+        log::info('id especificos ' . $id_rotulos_detalle_especifico);
+     
 
         $rotulos=RotulosDetalle::select('cantidad_rotulos','estado_especificacion')
         ->where('id', $id_rotulos_detalle)
@@ -405,6 +410,7 @@ class RotulosDetalleController extends Controller
     
         $dt = new CalificacionRotuloDetalle();
         $dt->id_rotulos_detalle = $request->id_rotulos_detalle;
+        $dt->id_rotulos_detalle_especifico = $request->id_rotulos_detalle_especifico;
         $dt->id_contribuyente = $request->id_contribuyente;
         $dt->fecha_calificacion = $request->fechacalificar; 
         $dt->nFicha = $request->ficha;          
@@ -419,6 +425,11 @@ class RotulosDetalleController extends Controller
             return ['success' => 1];    
         }
             return;
+    }
+
+    public function editarRotulos ()
+    {
+        
     }
 
 

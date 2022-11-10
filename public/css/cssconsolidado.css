@@ -88,15 +88,7 @@
             margin-right: auto;
 			display: block;
         }
-        .contentRotulo {
-            font-family: system-ui, system-ui, sans-serif;
-            padding: 20px;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
-
-
+        
         .content img {
             margin-right: 15px;
             float: center;
@@ -270,13 +262,72 @@
                 color: #1E1E1E;
         }
 
-        #tablaCRotulo{
-            font-size: 5px;
-        }
-
         #tablaR {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 90%;
             text-align: center;
         }
+
+        #tablaRotulo {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 90%;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #tablaRotulo td{
+            border: 1px solid #ddd;
+            padding: 0px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+
+        #tablaRotulo th {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            background-color: #f2f2f2;
+            color: #1E1E1E;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .contentRotulo {
+            font-family: system-ui, system-ui, sans-serif;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .contentRotulo img {
+            margin-right: 15px;
+            float: center;
+        }
+
+        .contentRotulo h3{
+            font-size: 20px;
+
+        }
+        
+		.contentRotulo h4{
+            font-size: 14px;
+			margin-left: 0 auto;
+			text-align: center;
+			margin-top: 0px important!
+        }
+
+        .contentRotulo hr{
+
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+     
+        
+        
