@@ -309,13 +309,14 @@
             }
 
   
-            $("#matriz_ver_mora tbody tr").remove();
+            $("#matriz_ver_mora tbody tr").remove();;
+            $("#matriz_ver_mora_codigos tbody tr").remove();
+            $("#matriz_ver_mora_tasas tbody tr").remove();
             $('#div_generar_reporte').hide();
             $('#div_generar_mora_tasas').hide();
             $('#btn_mora_pdf').hide();
             $('#contenido_img').hide();
 
-            $("#matriz_ver_mora_codigos tbody tr").remove();
             var formData = new FormData();
 
   
@@ -521,6 +522,8 @@
             }
 
             $("#matriz_ver_mora tbody tr").remove();
+            $("#matriz_ver_mora_codigos tbody tr").remove();
+            $("#matriz_ver_mora_tasas tbody tr").remove();
             $('#btn_mora_pdf').hide();
             $('#div_generar_reporte').hide();
             $('#div_generar_mora_codigos').hide();
@@ -639,6 +642,9 @@
             $('#div_generar_mora_codigos').hide();
             
             $("#matriz_ver_mora_tasas tbody tr").remove();
+            $("#matriz_ver_mora tbody tr").remove();
+            $("#matriz_ver_mora_codigos tbody tr").remove();
+
             var formData = new FormData();
 
   
