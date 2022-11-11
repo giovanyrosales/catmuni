@@ -628,11 +628,11 @@
 
                 }
                 else{
-               //       Swal.fire({
-                //                  icon: 'error',
-                 //                 title: 'Oops...',
-                 //                 text: 'Error al calcular la mora!',
-                 //               })
+                     Swal.fire({
+                                icon: 'error',
+                                 title: 'Oops...',
+                                 text: 'Error al calcular la mora!',
+                                })
                                 $('#div_generar_reporte').hide();
                                 $('#contenido_img').show();
                     }
