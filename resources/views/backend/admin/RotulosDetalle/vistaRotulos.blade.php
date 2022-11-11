@@ -310,9 +310,11 @@
                           <div class="redes">
                          
                               <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa()"></a>
-                          
+                          @if($detectorNull == '0')
+                              <a class="fa fa-file-import" hidden data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura({{$rotulos->id_rotulos_detalle}})"></a>
+                          @elseif($calificacionRotulos->estado_calificacion == 'calificado')
                           <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura({{$rotulos->id_rotulos_detalle}})"></a>
-                         
+                         @endif
                               <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Rotulos" onclick="reporteRotulosDatos({{$rotulos->id_rotulos_detalle}})"></a>
                             </div>
                   <div class="btn-mas">
