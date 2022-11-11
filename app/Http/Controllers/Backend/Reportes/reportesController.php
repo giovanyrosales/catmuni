@@ -7550,8 +7550,9 @@ public function calculo_mora_periodo(Request $request){
                 $tarifa_años_total='';
 
                 //** Inicia Foreach para cálculo por meses */
+               log::info('-----------------------------------');
                log::info('Tarifas encontradas:');
-               log::info('Empresa:'.$dato->nombre.' Inicio Periodo: '.$AñoInicio.' Fin periodo: '.$AñoFinal);
+               log::info('Inicio Periodo: '.$AñoInicio.' Fin periodo: '.$AñoFinal);
 
                     foreach ($periodo as $dt) 
                     {
@@ -7605,13 +7606,13 @@ public function calculo_mora_periodo(Request $request){
                         }
 
       
-                                if($dato_tarifa===null){$meses_redondeado=0;}else{$meses_redondeado=round($meses,0);}
+                                if($dato_tarifa===null){$meses_redondeado=0;}else{$meses_redondeado=round($meses_mora,0);}
                                 log::info('cantidad meses: '.$meses_redondeado);
                                 $mora_mes=$meses_redondeado*$tarifa;
                                 log::info('calculo_total_pago: '.$mora_mes);
                                 $total_por_Empresa=$total_por_Empresa+$mora_mes;
                                 log::info('total_por_Empresa: '.$total_por_Empresa);
-                                log::info('---------------------------------------');
+                                log::info('-----------------------------------');
                         
                                
 
@@ -7632,11 +7633,26 @@ public function calculo_mora_periodo(Request $request){
                     
                     
                 $calculo_total_mora=($calculo_total_mora+$total_por_Empresa);
-                log::info('------------------------------------------------------------');  
+
+                /** Formatenado variables numericas */
+                $calculo_total_pago_formateado=number_format(( $total_por_Empresa), 2, '.', ',');
+                $calculo_total_mora_formateado=number_format(( $calculo_total_mora), 2, '.', ',');
+                $tarifa_formateado=number_format(($tarifa), 2, '.', ',');
+
+                //** Modificando y creando nuevas variables */
+                $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
+                $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
+                $dato->meses=$meses_redondeado;
+                $dato->tarifaE=$tarifa_años_total;
+                $dato->total_pago=$calculo_total_pago_formateado;
+                $dato->total_moraE=$calculo_total_mora_formateado;
+
+                $total_mora_final=$dato->total_moraE;
+                log::info('_________________________________________________________________________');  
 
         }//** FIn Foreach mora_empresas */
 
-        return;
+        
             
             log::info('Total Mora: $'.$calculo_total_mora_formateado);
      }
