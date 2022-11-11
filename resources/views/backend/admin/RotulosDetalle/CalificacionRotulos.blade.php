@@ -277,6 +277,8 @@
                         <input type="text" hidden value="{{$rotulos->id_contribuyente}}"  disabled id="id_contribuyente" class="form-control" required >
                         <input type="text" hidden value="{{$rotulos->id_rotulos_detalle}}"  disabled id="id_rotulos_detalle" class="form-control" required >
                         <input type="text" hidden value="{{$rotulos->num_ficha}}"  disabled id="nFicha" class="form-control" required >
+                        <input type="text" hidden value="{{$id_especifico}}"  disabled id="id_rotulos_detalle_especifico" class="form-control" required >
+
                         
                      
                   </div>
@@ -398,7 +400,7 @@
          <!-- /.card-body -->
           <div class="card-footer">
 
-          <button type="button" class="btn btn-secondary" onclick="ImprimirCalificacion()" id="btn_imprimirCalificacion">
+          <button type="button" class="btn btn-secondary" onclick="imprimirCalificacion({{$rotulos->id_rotulos_detalle}})" id="btn_imprimirCalificacion">
                 <i class="fa fa-print"></i>&nbsp;Calificación&nbsp;
           </button>
 
@@ -481,7 +483,8 @@
       
           var id_contribuyente = document.getElementById('id_contribuyente').value;
           var ficha = document.getElementById('nFicha').value;
-          var id_rotulos_detalle = document.getElementById('id_rotulos_detalle').value;       
+          var id_rotulos_detalle = document.getElementById('id_rotulos_detalle').value;
+          var id_rotulos_detalle_especifico = document.getElementById('id_rotulos_detalle_especifico').value;       
           var estado_calificacion = document.getElementById('estado_calificacion').value;
           var fechacalificar = document.getElementById('fechacalificar').value;
 
@@ -490,10 +493,12 @@
           var formData = new FormData();          
               formData.append('id_contribuyente', id_contribuyente);
               formData.append('id_rotulos_detalle', id_rotulos_detalle);  
+              formData.append('id_rotulos_detalle_especifico', id_rotulos_detalle_especifico); 
               formData.append('ficha', ficha);           
               formData.append('estado_calificacion', estado_calificacion);
               formData.append('fechacalificar', fechacalificar);
             
+          console.log(id_rotulos_detalle_especifico)
           
 
         axios.post('/admin/rotulos_detalle/calificacion/guardar', formData, {
@@ -597,11 +602,11 @@
                         });
         }
 
-        function imprimirCalificacion()
+        function imprimirCalificacion(id)
         {
-          window.open();
+            window.open("{{ URL::to('/admin/rotulos_detalle/reporte/calificacion/pdf') }}/" + id );
         }
-
+        
     </script>
 
     @stop

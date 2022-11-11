@@ -311,8 +311,8 @@
                          
                               <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa()"></a>
                           
-                              <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura()"></a>
-                        
+                          <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura({{$rotulos->id_rotulos_detalle}})"></a>
+                         
                               <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Rotulos" onclick="reporteRotulosDatos({{$rotulos->id_rotulos_detalle}})"></a>
                             </div>
                   <div class="btn-mas">
@@ -402,8 +402,8 @@
 
     function Aldia()
     {
-      toastr.warning('Este bus se encuentra al día con sus pagos.');
-      return;
+        toastr.warning('Este bus se encuentra al día con sus pagos.');
+        return;
     }
     
     function CobrosB(id)
@@ -423,8 +423,8 @@
 
     function NoNotificar()
     {
-      toastr.warning('Esta empresa no es notificable.');
-      return;
+        toastr.warning('Esta empresa no es notificable.');
+        return;
     }
 
     function reporteeAviso(id)
@@ -480,10 +480,16 @@
 
           function reporteRotulosDatos(id)
           {
-
               window.open("{{ URL::to('/admin/generar/reporte/rotulos/pdf') }}/"+ id );
-
           }
+
+          function Imprimir_Resolucion_Apertura(id)
+          {
+            console.log(id)
+                     
+            window.open("{{ URL::to('/admin/generar/resolucion_apertura/rotulos/pdf') }}/"+ id );
+          }
+
     </script>
 
     <style>
