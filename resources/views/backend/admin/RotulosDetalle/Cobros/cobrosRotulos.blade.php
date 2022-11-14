@@ -93,9 +93,9 @@
 {
     /*Declaramos variables */
     var id_contribuyente = (document.getElementById('id_contribuyente').value);
-    var id_buses_detalle = (document.getElementById('id_buses_detalle').value);
+    var id_rotulos_detalle = (document.getElementById('id_rotulos_detalle').value);
     var fechaPagara=(document.getElementById('fecha_hasta_donde_pagara').value);
-    var nFicha = (document.getElementById('nFicha').value);
+    var num_ficha = (document.getElementById('num_ficha').value);
     var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
     var tasa_interes=(document.getElementById('select_interes').value);
     var fecha_interesMoratorio=(document.getElementById('fecha_interes_moratorio').value);
@@ -119,18 +119,18 @@
 
     formData.append('id', id);
     formData.append('id_contribuyente', id_contribuyente);
-    formData.append('id_buses_detalle', id_buses_detalle);
+    formData.append('id_rotulos_detalle', id_rotulos_detalle);
     formData.append('cobrar', valor);
-    formData.append('nFicha', nFicha);
+    formData.append('num_ficha', num_ficha);
     formData.append('fechaPagara', fechaPagara);
     formData.append('ultimo_cobro', ultimo_cobro);
     formData.append('tasa_interes', tasa_interes);
     formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
-    axios.post('/admin/buses/calcular-CobrosB', formData, {
+    axios.post('/admin/rotulos_detalle/calcular-CobrosR', formData, {
             })
             .then((response) => {
-                    console.log(response);
+                    console.log(response)
                         closeLoading();
                         if(response.data.success === 0){
                           toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
@@ -217,7 +217,7 @@
                     <td>${{ $dato-> intereses_moratorios_15302 }}</td>
                     <td>${{ $dato-> pago_total }}</td>                    
                 </tr>
-                    @endforeach  
+                    @endforeach                    
                     </tbody>            
             </table> 
             
@@ -262,7 +262,7 @@
 
         <div class="card card">
           <div class="card-header">
-          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de &nbsp;<span class="badge badge-warning">&nbsp;{{$calificaciones->nom_empresa}} &nbsp;</span></h5>
+          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de &nbsp;<span class="badge badge-warning">&nbsp;{{$rotulos->nom_empresa}} &nbsp;</span></h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -279,7 +279,7 @@
  
       <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">       
         <li class="nav-item">
-          <a class="nav-link active"  data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> &nbsp;Cobro de Buses</a>
+          <a class="nav-link active"  data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> &nbsp;Cobro de Rótulos</a>
         </li>
      
        
@@ -295,7 +295,7 @@
           <div class="card card">
           <div class="card-header text-success"><b>DATOS GENERALES</b>.
           <button type="button" class="btn btn-outline-success btn-sm float-right" 
-                  onclick="historial_cobros_empresa({{$buses->id}});" id="Historial_cobrosIMP" >
+                  onclick="historial_cobros_empresa();" id="Historial_cobrosIMP" >
                   <i class="fas fa-history"></i> Historial de cobros
                 </button> 
                 </div>
@@ -310,11 +310,11 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-3">
                   <div class="input-group mb-3">
-                        <input type="number" value="{{$buses->nFicha}}" name="" disabled id="nFicha" class="form-control" required >
-                        <input type="number" hidden  value="{{$calificacion->id}}" name="" disabled id="id_buses_detalle" class="form-control" required >                     
+                        <input type="number" value="{{$rotulos->num_ficha}}" name="" disabled id="num_ficha" class="form-control" required >
+                        <input type="number" hidden  value="{{$rotulos->id_rotulos_detalle}}" name="" disabled id="id_rotulos_detalle" class="form-control" required >                     
                         
                   </div>
-                  <input type="number" hidden value="{{$buses->id_contribuyente}}" name="" disabled id="id_contribuyente" class="form-control" required >
+                  <input type="number" hidden value="{{$rotulos->id_contribuyente}}" name="" disabled id="id_contribuyente" class="form-control" required >
                 
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -326,12 +326,12 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                <div class="input-group mb-3">
-               @if($detectorCobro=='0')
-                                <input  type="text" value="{{ $calificacion->fecha_calificacion }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+                    @if($detectorCobro=='0')     
+                                <input  type="text" value="{{ $calificacionRotulos->fecha_calificacion }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                                   </div>
-                                @else
+                            @else
                                 <input  type="text" value="{{ $ultimo_cobro->periodo_cobro_fin }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
@@ -377,7 +377,7 @@
                                  >
                                                         
                                 
-                                  @foreach($tasasDeInteres as $dato)
+                                 @foreach($tasasDeInteres as $dato)
                                   <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
                                   @endforeach 
                                 </select> 
@@ -427,7 +427,7 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                  <button type="button" class="btn btn-outline-danger btn-lg" onclick="calculo({{$calificaciones->id}},0)">
+                  <button type="button" class="btn btn-outline-danger btn-lg" onclick="calculo({{$calificacionRotulos->id_rotulos_detalle}},0)">
                       <i class="fas fa-envelope-open-text"></i>
                       &nbsp;Generar Cobro &nbsp;
                   </button>
@@ -445,7 +445,7 @@
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
             <button type="submit" class="btn btn-outline-success btn-sm float-right" 
-            onclick="reporte_buses({{$calificaciones->id}})" id="estado_de_cuentabuses" >
+            onclick="reporte_rotulos({{$calificacionRotulos->id_rotulos_detalle}})" id="estado_de_cuentabuses" >
               <i class="fas fa-print"></i> Estado cuenta
             </button>    
          </div>
@@ -566,16 +566,6 @@
             document.getElementById("divcontenedor").style.display = "block";
         });
     
-        function estado_cuenta_buses(id_empresa){
-
-        var ib=(document.getElementById('id_buses_detalle').value);
-        var f1=(document.getElementById('ultimo_cobro').value);
-        var f2=(document.getElementById('fecha_hasta_donde_pagara').value);
-        var ti=(document.getElementById('select_interes').value);
-
-        window.open("{{ URL::to('/admin/estado_cuenta/buses/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + ib + "/" + id_empresa );
-
-        }
         
         function verificar()
         {
@@ -591,7 +581,7 @@
             }).then((result) => {
                 if (result.isConfirmed) 
                 {
-                    calculo({{$calificaciones->id}},1);
+                    calculo({{$calificacionRotulos->id_rotulos_detalle}},1);
                 }
             });
         }
@@ -624,7 +614,7 @@
 
         <script>
 
-          function reporte_buses(id)
+          function reporte_rotulos(id_rotulos_detalle)
           {
 
               var f1=(document.getElementById('ultimo_cobro').value);
@@ -633,7 +623,7 @@
               var f3=(document.getElementById('fecha_interes_moratorio').value);
              
 
-              window.open("{{ URL::to('/admin/estado_cuenta/buses_detalle/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id );
+              window.open("{{ URL::to('/admin/estado_cuenta/rotulos_detalle/pdf') }}/" + f1 + "/" + f2 + "/" + ti + "/" + f3 + "/" + id_rotulos_detalle );
 
           }
 

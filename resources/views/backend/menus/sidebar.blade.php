@@ -165,6 +165,12 @@
                                 <p>Listar Rótulos</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.historico.bus.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-history nav-icon"></i>
+                                <p>Historial notificaciones</p>
+                                </a>
+                            </li>
                         </ul>
                     <!-- TERMINA NUEVO MÓDULO DE RÓTULOS DETALLE -->
 
@@ -191,7 +197,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.historico.bus.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-list-ul nav-icon"></i>
+                                <i class="fas fa-history nav-icon"></i>
                                 <p>Historial notificaciones</p>
                                 </a>
                             </li>

@@ -278,6 +278,9 @@ use App\Models\Empresas;
     Route::get('/admin/rotulos_detalle/calificacion/{rotulo}', [RotulosDetalleController::class, 'calificacionRotulo']);
     Route::get('/admin/rotulos_detalle/calificaciones/tablarotulo/{rotulo}', [RotulosDetalleController::class,'tablaCalificacionRotulo']);
     Route::post('/admin/rotulos_detalle/calificacion/guardar' , [RotulosDetalleController::class, 'GuardarCalificacionRotulo']);
+    Route::get('/admin/rotulos_detalle/cobros/{rotulos}', [RotulosDetalleController::class, 'cobrosRotulos']);
+    Route::post('/admin/rotulos_detalle/calcular-CobrosR', [RotulosDetalleController::class, 'calcularCobrosRotulo']);
+
 
 
 
@@ -356,8 +359,8 @@ use App\Models\Empresas;
     Route::post('/admin/cobros/globales/periodo', [reportesController::class, 'cobros_globales_periodo']);
     
     //REPORTES RÓTULOS
-    Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
-    Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
+    Route::get('/admin/estado_cuenta/rotulos_detalle/pdf/{f1}/{f2}/{ti}/{f3}/{id_rotulos_detalle}', [reportesRotulosDetalleController::class, 'estado_cuentas_rotulos']);
+    Route::get('/admin/generar_aviso/rotulos/pdf/{id_rotulos_detalle}', [reportesRotulosDetalleController::class, 'aviso_rotulos']);
     Route::get('/admin/generar/reporte/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'generar_reporte_rotulos']);
     Route::get('/admin/rotulos_detalle/reporte/calificacion/pdf/{id}', [reportesRotulosDetalleController::class, 'generarCalificacionImprimir']);
     Route::get('/admin/generar/resolucion_apertura/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'resolucionAperturaRotulos']);
