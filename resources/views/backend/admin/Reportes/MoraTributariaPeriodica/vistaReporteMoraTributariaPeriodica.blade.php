@@ -111,7 +111,7 @@
                                     <th style="width: 20%; text-align: center;font-weight: 700;">EMPRESA O NEGOCIO</th>       
                                     <th style="width: 15%; text-align: center;font-weight: 700;">ULTIMO PAGO</th>
                                     <th style="width: 10%; text-align: center;font-weight: 700;">MESES</th>
-                                    <th style="width: 20%; text-align: center;font-weight: 700;">TARIFA/AÑO</th>
+                                    <th style="width: 15%; text-align: center;font-weight: 700;">TARIFA/AÑO</th>
                                     <th style="width: 12%; text-align: right;font-weight: 700;">MORA</th>
                                 </tr>
                             </thead>

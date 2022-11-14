@@ -7410,6 +7410,7 @@ public function calculo_mora_periodo(Request $request){
     $fechahoy=Carbon::now();
     //$fechahoy='2022-12-31';
     $fechahoy=Carbon::parse($fechahoy);
+    log::info('******************************************************');
     log::info('Fecha hoy: '.$fechahoy);  
     log::info('fecha_inicio_mora: '.$fecha_inicio_mora);
     log::info('fecha_final_mora: '.$fecha_final_mora);
@@ -7501,38 +7502,7 @@ public function calculo_mora_periodo(Request $request){
                 $dias_entre_periodo=ceil($fecha_inicio_mora->diffInDays($fecha_final_mora));
 
 
-                //** Nuevo calculo */
-                $de_gracia=60;
-
-                if($fechahoy>$fecha_final_mora){$fecha_corte=$fecha_final_mora;}else{$fecha_corte=$fechahoy;};
-
-                if($fecha_corte>$ultima_fecha_pago){
-                    $dias_trans=ceil($fecha_corte->diffInDays($ultima_fecha_pago));
-                }else{
-                    $dias_trans=ceil($fecha_corte->diffInDays($ultima_fecha_pago));
-                    $dias_trans=(-$dias_trans);
-                };
-
-                $meses_trans=round(($dias_trans/365)*12);
-                $ini_fnl=round((ceil($fecha_inicio_mora->diffInDays($fecha_final_mora))/365)*12,0);
-                $f_corte=round((((ceil($fechahoy->diffInDays($fecha_inicio_mora))))/365)*12,0);
-                $en_mora=round((((ceil($fechahoy->diffInDays($fecha_inicio_mora)))-$de_gracia)/365)*12,0);
-                if($en_mora>$ini_fnl){$max_meses=$ini_fnl;}else{$max_meses=$en_mora;};
-                if($meses_trans>$max_meses){$meses=$max_meses;}else{$meses=$meses_trans;};
-                if($meses<=0){$meses_mora=0;}else{$meses_mora=$meses;};
-                //** Nuevo calculo */
-    
-                log::info($dato->nombre.' :::: -> Último pago: '.$ultima_fecha_pago);
-                log::info('Dias trans: '.$dias_trans);
-                log::info('Meses trans: '.$meses_trans);
-                log::info('Meses: '.$meses);
-                log::info('Meses en mora: '.$meses_mora);
-                log::info('*******');
-                log::info('D. GRACIA: '.$de_gracia);
-                log::info('INI-FNL: '.$ini_fnl);
-                log::info('F. CORTE: '.$f_corte);
-                log::info('EN MORA: '.$en_mora);
-                log::info('Max_MESES: '.$max_meses);
+                
                
                 /** Cálculo de la Mora */
 
@@ -7548,21 +7518,24 @@ public function calculo_mora_periodo(Request $request){
                 $años='';
                 $tarifa_años='';
                 $tarifa_años_total='';
+                $dias_trans=0;
+                $Total_meses_mora=0;
 
                 //** Inicia Foreach para cálculo por meses */
-               log::info('-----------------------------------');
+               log::info('******************************************************');
                log::info('Tarifas encontradas:');
                log::info('Inicio Periodo: '.$AñoInicio.' Fin periodo: '.$AñoFinal);
-
+               log::info('******************************************************');
                     foreach ($periodo as $dt) 
                     {
                         $Año =$dt->format('Y');
                         $FechaFinalAño=Carbon::createFromDate($Año, $monthFinal, $dayFinal);
+                        $FechaIncialAño=Carbon::createFromDate($Año, $monthInicio, $dayInicio);
                         //log::info('fecha corte por año:'.$FechaFinalAño);
                         
                         //** Sacando la ultima tarifa */
-                        if($dato->id_giro_comercial!=1){
-                            
+                        if($dato->id_giro_comercial!=1)
+                        {                           
                             $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$dato->id_empresa)
                             ->pluck('id')
                             ->first();
@@ -7572,87 +7545,132 @@ public function calculo_mora_periodo(Request $request){
                             ->where('año_calificacion',$Año)
                             ->first();
                             
-                            if($dato_tarifa===null){
-                                $tarifa=0.00;
-                                $año='Sin calificación';
-                                $año_real=Carbon::now()->format('Y');
-                            
-                            }else{
-                                    $tarifa=$dato_tarifa->pago_mensual;
-                                    $año=$dato_tarifa->año_calificacion;
-                                    $año_real=$dato_tarifa->año_calificacion;
-                                }
+                                if($dato_tarifa===null){
+                                    $tarifa=0.00;
+                                    $año='Sin calificación';
+                                    $año_real=Carbon::now()->format('Y');
+                                
+                                }else{
+                                        $tarifa=$dato_tarifa->pago_mensual;
+                                        $año=$dato_tarifa->año_calificacion;
+                                        $año_real=$dato_tarifa->año_calificacion;
+                                    }
                         
-
-                        }else{
-
-                            $dato_tarifa=calificacion::latest()
-                            ->where('id_empresa',$dato->id_empresa)
-                            ->where('año_calificacion',$Año)
-                            ->first();
-                            
-                            if($dato_tarifa===null){
-                                $tarifa=0.00;
-                                $año='Sin calificación';
-                                $año_real=Carbon::now()->format('Y');
-                                
                             }else{
-                                    $tarifa=$dato_tarifa->pago_mensual;
-                                    $año=$dato_tarifa->año_calificacion;
-                                    $año_real=$dato_tarifa->año_calificacion;
-                                }
+
+                                $dato_tarifa=calificacion::latest()
+                                ->where('id_empresa',$dato->id_empresa)
+                                ->where('año_calificacion',$Año)
+                                ->first();
                                 
-                                log::info('Año: '.$Año.' Tarifa: '.$tarifa);
+                                    if($dato_tarifa===null){
+
+                                            $tarifa=0.00;
+                                            $año='Sin calificación';
+                                            $año_real=Carbon::now()->format('Y');
+                                            
+                                    }else{
+                                            $tarifa=$dato_tarifa->pago_mensual;
+                                            $año=$dato_tarifa->año_calificacion;
+                                            $año_real=$dato_tarifa->año_calificacion;
+                                        }
+                                    log::info('---------------------------');
+                                    log::info('::::::::'.$dato->nombre.'::::::::');
+                                    log::info('Año: '.$Año.' Tarifa: '.$tarifa);
                         }
 
-      
-                                if($dato_tarifa===null){$meses_redondeado=0;}else{$meses_redondeado=round($meses_mora,0);}
-                                log::info('cantidad meses: '.$meses_redondeado);
-                                $mora_mes=$meses_redondeado*$tarifa;
-                                log::info('calculo_total_pago: '.$mora_mes);
-                                $total_por_Empresa=$total_por_Empresa+$mora_mes;
-                                log::info('total_por_Empresa: '.$total_por_Empresa);
-                                log::info('-----------------------------------');
-                        
-                               
+                            //** Nuevo calculo */
+                            
+                            $de_gracia=60;
+                            log::info('fechahoy: '.$fechahoy);
+                            if($fechahoy>$FechaFinalAño){$fecha_corte=$FechaFinalAño;}else{$fecha_corte=$fechahoy;};
+                            
+                            $fecha_corteParseada=Carbon::parse($fecha_corte)->format('Y-m-d');
+                            $ultima_fecha_pagoParseada=Carbon::parse($ultima_fecha_pago)->format('Y-m-d');
+                            
+                            if($fecha_corteParseada>$ultima_fecha_pagoParseada){
+                            if($año_ultimo_pago==$año_actual){
+                                    $dias_trans=ceil($fecha_corte->diffInDays($ultima_fecha_pago));
+                                }else{ 
+                                    $dias_trans=ceil($fecha_corte->diffInDays($FechaIncialAño));
+                                    log::info('1');
+                                }
+                            }else{
+                                $dias_trans=ceil($fecha_corte->diffInDays($ultima_fecha_pago));
+                                $dias_trans=(-$dias_trans);
+                                log::info('2');
+                            };
+                            log::info('FechaFinalAño: '.$FechaFinalAño);
+                            log::info('fecha_corte: '.$fecha_corte);
+                            $meses_trans=round(($dias_trans/365)*12);
+                            $ini_fnl=round((ceil($fecha_inicio_mora->diffInDays($FechaFinalAño))/365)*12,0);
+                            $f_corte=round((((ceil($fechahoy->diffInDays($fecha_inicio_mora))))/365)*12,0);
+                            $en_mora=round((((ceil($fechahoy->diffInDays($fecha_inicio_mora)))-$de_gracia)/365)*12,0);
+                            if($en_mora>$ini_fnl){$max_meses=$ini_fnl;}else{$max_meses=$en_mora;};
+                            if($meses_trans>$max_meses){$meses=$max_meses;}else{$meses=$meses_trans;};
+                            if($meses<=0){$meses_mora=0;}else{$meses_mora=$meses;};
+                            //** Nuevo calculo */
+                            
+                            log::info('Último pago: '.$ultima_fecha_pago);
+                            log::info('Dias trans: '.$dias_trans);
+                            log::info('Meses trans: '.$meses_trans);
+                            log::info('Meses: '.$meses);
+                            log::info('Meses en mora: '.$meses_mora);
+                            log::info('*******');
+                            log::info('D. GRACIA: '.$de_gracia);
+                            log::info('INI-FNL: '.$ini_fnl);
+                            log::info('F. CORTE: '.$f_corte);
+                            log::info('EN MORA: '.$en_mora);
+                            log::info('Max_MESES: '.$max_meses);
 
+                            //** Cálculando la mora por año y total final según su tarifa */
+                            //**NOTA: Si un año no tiene tarifa, su cantidad meses en mora pasa a ser de 0 **/
+                            if($dato_tarifa===null){$meses_redondeado=0;}else{$meses_redondeado=round($meses_mora,0);}
+                            $Total_meses_mora=$Total_meses_mora+$meses_redondeado;
+                            $calculo_mora_año=$meses_redondeado*$tarifa;
+                            log::info('calculo_mora_año: '.$calculo_mora_año);
+                            $total_por_Empresa=$total_por_Empresa+$calculo_mora_año;
+                            log::info('Cálculo total de mora de la Empresa: '.$total_por_Empresa);
+                            $tarifa=number_format(($tarifa), 2, '.', ',');
+
+                            //** Cambiando la presentación de las tarifas y años para la vista del usuario **/
                             $tarifas='$'.$tarifa;
                             $años='/'.$Año;
-                            if($tarifa=='0'){
-                                $tarifa_años='';
-                            }else{
-                                $tarifa_años='('.$tarifas.$años.')';
-                            }
-
-                            
+                            if($tarifa=='0'){$tarifa_años='';}else{$tarifa_años='('.$tarifas.$años.')';}
                             $tarifa_años_total=$tarifa_años_total.$tarifa_años.' ';
+
 
                     }//Foreach periodo
 
                     $fecha_inicio_mora=Carbon::parse($request->fecha_inicio_mora);
-                    
-                    
+                    log::info('Total_meses_mora: '.$Total_meses_mora);
+
+                //** Sumando el total de la mora calculada de cada empresa **/  
+                //** Total de todas las moras calculadas a cada empresa **/      
                 $calculo_total_mora=($calculo_total_mora+$total_por_Empresa);
 
                 /** Formatenado variables numericas */
                 $calculo_total_pago_formateado=number_format(( $total_por_Empresa), 2, '.', ',');
                 $calculo_total_mora_formateado=number_format(( $calculo_total_mora), 2, '.', ',');
-                $tarifa_formateado=number_format(($tarifa), 2, '.', ',');
+                
 
                 //** Modificando y creando nuevas variables */
                 $dato->ultima_fecha_pago=Carbon::parse($ultima_fecha_pago)->format('d-m-Y');
                 $dato->dato_contribuyente=$dato->contribuyente.$dato->apellido;
-                $dato->meses=$meses_redondeado;
+                $dato->meses=$Total_meses_mora;
                 $dato->tarifaE=$tarifa_años_total;
                 $dato->total_pago=$calculo_total_pago_formateado;
                 $dato->total_moraE=$calculo_total_mora_formateado;
 
                 $total_mora_final=$dato->total_moraE;
+    
+
+
                 log::info('_________________________________________________________________________');  
 
         }//** FIn Foreach mora_empresas */
 
-        
+       
             
             log::info('Total Mora: $'.$calculo_total_mora_formateado);
      }
