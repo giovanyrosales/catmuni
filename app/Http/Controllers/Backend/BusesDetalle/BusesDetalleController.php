@@ -538,7 +538,7 @@ class BusesDetalleController extends Controller
             ->first();
         //** Finaliza - Para obtener la tasa de interes más reciente */
 
-
+     
         if ($calificacion == null  )
         {
             $detectorNull = 0;
@@ -658,24 +658,61 @@ class BusesDetalleController extends Controller
                      }
             }
     
-    
-        //** Comprobando si la empresa esta al dia con sus pagos de impuestos de empresa */
-        if($ComprobandoPagoAlDiaBus >= $fechahoy)
-        {   
-          
-            //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
-            $NoNotificarBus = 1;
-            log::info('NoNotificar:' .$NoNotificarBus);
-
-        }else
-                {
-                    //** Si NoNotificar vale 0 entonces es permitido imprimir una notificación o avisos*/
-                    $NoNotificarBus = 0;
-                    log::info('NoNotificar:' .$NoNotificarBus);
-
-                }
             
-        //* fin de comprobar */
+            if($ComprobandoPagoAlDiaBus > 0) 
+            {
+                //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
+                $NoNotificarBus = 1;
+                log::info('NoNotificar:' .$NoNotificarBus);
+
+            }else{
+                //** Si NoNotificar vale 0 entonces es permitido imprimir una notificación o avisos*/
+                $NoNotificarBus = 0;
+                log::info('NoNotificar:' .$NoNotificarBus);
+            } 
+         
+
+
+           //******************* Determinando si una empresa esta en mora  *******************/
+
+           log::info('|°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°|');
+           $f3=carbon::now()->format('Y-m-d');
+           $f1=Carbon::parse($ComprobandoPagoAlDiaBus);
+           Log::info('f1 es el ultimo pago: '.$f1);
+           Log::info('f3 fecha actual: '.$f3);
+   
+           //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+           $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+           Log::info('UltimoDiaMes: '.$UltimoDiaMes);
+           $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
+   
+   
+           $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+           //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+           Log::info('inicio Moratorio aqui: '.$FechaDeInicioMoratorio);
+   
+           if($FechaDeInicioMoratorio->lt($f3)){
+                   $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+                   Log::info('Cantidad de dias de insteres moratorio: '.$DiasinteresMoratorio);
+                   Log::info('No entro al else');
+           }else{
+                   $DiasinteresMoratorio=0;
+                   Log::info('Cantidad de dias de interes moratorio: '.$DiasinteresMoratorio);
+                   Log::info('Entro al else');
+               }
+   
+                        if($DiasinteresMoratorio > 0) 
+                        {
+                           $estado_de_solvencia = 1;//Si es 1 esta en Mora
+                           
+                        }else{
+                            $estado_de_solvencia = 0;//Si es 0 esta Solvente
+                        } 
+                       Log::info('Era empresa y el estado de solvencia es: '.$estado_de_solvencia);
+           
+   
+   //******************* FIN - Determinando si una empresa o matricula esta en mora  *******************/
+   
         return view('backend.admin.Buses.vistaBuses', compact('id',                                                   
                                                     'calificacion',
                                                     'buses',
@@ -690,6 +727,8 @@ class BusesDetalleController extends Controller
                                                     'NoNotificarBus',
                                                     'Tasainteres',
                                                     'ultimoCobroBuses',
+                                                    'DiasinteresMoratorio',
+                                                    'estado_de_solvencia',
                                                     
                                                 
                                                 ));
@@ -1274,15 +1313,15 @@ class BusesDetalleController extends Controller
                 $cobro = new CobrosBuses();
                 $cobro->id_contribuyente = $request->id_contribuyente;
                 $cobro->id_buses_detalle = $request->id;
-                $cobro->nFicha = $request->nFicha;
                 $cobro->id_usuario = '1';
                 $cobro->cantidad_meses_cobro = $Cantidad_MesesTotal;
-                $cobro->impuesto_mora = $impuestos_mora;
-                $cobro->impuesto = $impuesto_año_actual;
-                $cobro->intereses_moratorios = $InteresTotal;
-                $cobro->fondo_fiestasP = $fondoFPValor;
+                $cobro->tasa_servicio_mora_32201 = $impuestos_mora;
+                $cobro->impuestos = $impuesto_año_actual;
+                $cobro->intereses_moratorios_15302 = $InteresTotal;
+                $cobro->fondo_fiestasP_12114 = $fondoFPValor;
                 $cobro->pago_total = $totalPagoValor;
                 $cobro->fecha_cobro = $request->fecha_interesMoratorio;
+                $cobro->tipo_cobro = 'tasas';
                 $cobro->periodo_cobro_inicio = $InicioPeriodo;
                 $cobro->periodo_cobro_fin =$PagoUltimoDiaMes;
 

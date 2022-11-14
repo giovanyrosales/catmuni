@@ -146,7 +146,7 @@
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Cierres y traspasos</h3>
+                        <h3 class="widget-title text-white">Cierres</h3>
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
@@ -154,44 +154,25 @@
         </a>
     </div>
 
-  
-  @if($detectorNull == '0')
-
     <div class="col-md-4 col-sm-8">
-      <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+        <a href="#" onclick="cierreytraspasoBus()" >
             <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-green">
+                <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                        <h3 class="widget-title text-white">Traspasos</h3>
                     </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
             </div><!-- .widget -->
         </a>
     </div>
-       
-  @else
-    
-    <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="CobrosB( )" >
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-green">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>                   
-                </div>
-            </div><!-- .widget -->
-        </a>       
-    </div>  
-
-  @endif
+ 
   
     <div class="col-md-4 col-sm-8">
 
         <a href="#" onclick="Aldia()">      
  
-        <a href="#" onclick="reporteeAviso()">
+        <a href="#" onclick="reporteeAviso({{$rotulos->id_rotulos_detalle}})">
                    
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
@@ -224,7 +205,40 @@
     </div>
     
 </div>
+@if($detectorNull == '0')
+
+    <div class="col-md-4 col-sm-8">
+      <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-green">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+    </div>
+       
+  @else
+    
+    <div class="col-md-4 col-sm-8">
+        <a href="#" onclick="CobrosRotulos({{$rotulos->id_rotulos_detalle}} )" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-green">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>                   
+                </div>
+            </div><!-- .widget -->
+        </a>       
+    </div>  
+
+  @endif
+  
 </div> 
+
     
 <!-- Cuadro para datos del rótulo inicia aquí ----------------------------------------------> 
 <!-- seccion frame -->
@@ -309,10 +323,11 @@
                               <input type="checkbox" id="btn-mas">
                           <div class="redes">
                          
-                              <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa()"></a>
-                          
+                          @if($detectorNull == '0')
+                              <a class="fa fa-file-import" hidden data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura({{$rotulos->id_rotulos_detalle}})"></a>
+                          @elseif($calificacionRotulos->estado_calificacion == 'calificado')
                           <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura({{$rotulos->id_rotulos_detalle}})"></a>
-                         
+                         @endif
                               <a class="fa fa-print" data-toggle="tooltip" data-placement="left" title="Reporte Rotulos" onclick="reporteRotulosDatos({{$rotulos->id_rotulos_detalle}})"></a>
                             </div>
                   <div class="btn-mas">
@@ -406,11 +421,13 @@
         return;
     }
     
-    function CobrosB(id)
+    function CobrosRotulos(id_rotulos_detalle)
     {
+      console.log(id_rotulos_detalle);
+   
         openLoading();
 
-        window.location.href="{{ url('/admin/buses/cobros') }}/"+id;
+        window.location.href="{{ url('/admin/rotulos_detalle/cobros') }}/"+id_rotulos_detalle;
     }
 
     function NoCobrar()
@@ -427,7 +444,7 @@
         return;
     }
 
-    function reporteeAviso(id)
+    function reporteeAviso(id_rotulos_detalle)
     {
         Swal.fire({
                 title: '¿Realmente desea generar un aviso para este contribuyente?',
@@ -439,7 +456,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                   location.reload();
-                  window.open("{{ URL::to('/admin/generar_aviso/buses/pdf') }}/" + id );
+                  window.open("{{ URL::to('/admin/generar_aviso/rotulos/pdf') }}/" + id_rotulos_detalle );
                   Swal.fire('Aviso generado con exito!', '', 'success')
                 }
             });

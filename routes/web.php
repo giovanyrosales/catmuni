@@ -278,6 +278,9 @@ use App\Models\Empresas;
     Route::get('/admin/rotulos_detalle/calificacion/{rotulo}', [RotulosDetalleController::class, 'calificacionRotulo']);
     Route::get('/admin/rotulos_detalle/calificaciones/tablarotulo/{rotulo}', [RotulosDetalleController::class,'tablaCalificacionRotulo']);
     Route::post('/admin/rotulos_detalle/calificacion/guardar' , [RotulosDetalleController::class, 'GuardarCalificacionRotulo']);
+    Route::get('/admin/rotulos_detalle/cobros/{rotulos}', [RotulosDetalleController::class, 'cobrosRotulos']);
+    Route::post('/admin/rotulos_detalle/calcular-CobrosR', [RotulosDetalleController::class, 'calcularCobrosRotulo']);
+
 
 
 
@@ -307,13 +310,14 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);/** <-Viejo*(Dompdf)   ||   (Mpdf)Nuevo-> **/  Route::get('/admin/generar_reporte/datos_empresa/nuevo/pdf/{id}', [reportesController::class, 'reporte_datos_empresa_nuevo']);
     Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
-        /* reportes pdf historila de cobros en empresas */
+        /* reportes pdf historila de cobros en empresas con mpdf*/
     Route::get('/admin/pdf//reporte/empresas/cobros/{id_empresa}', [reportesController::class, 'pdfReporteCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/maquinas/cobros/{id}', [reportesController::class, 'pdfReporteMaquinaCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/aparatos/cobros/{id}', [reportesController::class, 'pdfReporteAparatosCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/sinfonolas/cobros/{id}', [reportesController::class, 'pdfReporteSinfonolasCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/mesas/cobros/{id}', [reportesController::class, 'pdfReporteMesasCobros']);
-        /* Fin reportes pdf historila de cobros en empresa */
+    Route::get('/admin/pdf//reporte/licor/cobros/{id_empresa}', [reportesController::class, 'pdfReporteLicorCobros']);
+        /* Fin reportes pdf historila de cobros en empresa con mpdf */
     //REPORTES CONTRIBUYENTES
     Route::get('/admin/generar/solvencia/pdf/{id}', [reportesController::class, 'generar_solvencia']);
     Route::get('/admin/generar/constancia/simple/pdf/{id}', [reportesController::class, 'generar_constancia_simple']);
@@ -356,8 +360,8 @@ use App\Models\Empresas;
     Route::post('/admin/cobros/globales/periodo', [reportesController::class, 'cobros_globales_periodo']);
     
     //REPORTES RÓTULOS
-    Route::get('/admin/estado_cuenta/rotulos/pdf/{f1}/{f2}/{ti}/{ir}/{id_empresa}', [reportesRotulosController::class, 'estado_cuenta_rotulos']);
-    Route::get('/admin/estado_cuenta/buses/pdf/{f1}/{f2}/{ti}/{ib}/{id_empresa}', [reportesBusesController::class, 'estado_cuenta_buses']);
+    Route::get('/admin/estado_cuenta/rotulos_detalle/pdf/{f1}/{f2}/{ti}/{f3}/{id_rotulos_detalle}', [reportesRotulosDetalleController::class, 'estado_cuentas_rotulos']);
+    Route::get('/admin/generar_aviso/rotulos/pdf/{id_rotulos_detalle}', [reportesRotulosDetalleController::class, 'aviso_rotulos']);
     Route::get('/admin/generar/reporte/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'generar_reporte_rotulos']);
     Route::get('/admin/rotulos_detalle/reporte/calificacion/pdf/{id}', [reportesRotulosDetalleController::class, 'generarCalificacionImprimir']);
     Route::get('/admin/generar/resolucion_apertura/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'resolucionAperturaRotulos']);

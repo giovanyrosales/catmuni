@@ -51,11 +51,18 @@
     <div class="col-md-12">
         <div class="card card-green">
           <div class="card-header card-header-success">
-      @if($buses->nom_empresa == '')
-          <h5 class="card-category-">Buses del contribuyente <span class="badge badge-warning">&nbsp;{{$buses->contribuyente}} &nbsp;{{$buses->apellido}}</span>&nbsp; </h5>
-        @else
-          <h5 class="card-category-">Buses de la empresa <span class="badge badge-warning">&nbsp;{{$buses->nom_empresa}} &nbsp;</span>&nbsp; </h5>
-      @endif
+              <h5 class="card-category-">Buses de la empresa <span class="badge badge-warning">&nbsp;{{$buses->nom_empresa}}</span>
+    
+              @if($estado_de_solvencia==0)
+
+                  <img src="{{ asset('/images/solvente3.svg') }}"class="avatar">
+
+              @elseif($estado_de_solvencia==1)
+
+                  <img src="{{ asset('/images/mora2.svg') }}" class="avatar">
+
+              @endif
+              </h5>
           </div>
       <!--body-->
         </div>
@@ -139,8 +146,6 @@
             </div><!-- .widget -->
         </a>
       @endif
- 
-  
     </div>
    
     <div class="col-md-4 col-sm-8">
@@ -148,7 +153,7 @@
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Cierres y traspasos</h3>
+                        <h3 class="widget-title text-white">Cierres</h3>
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
@@ -156,36 +161,19 @@
         </a>
     </div>
 
-    @if($detectorNull== '0')
-
     <div class="col-md-4 col-sm-8">
-    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
-    <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-green">
+        <a href="#" onclick="cierreytraspasoBus({{$buses->id}})" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-dark">
                     <div class="pull-left">
-                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                        <h3 class="widget-title text-white">Traspasos</h3>
                     </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-people-arrows"></i>&nbsp;<i class="fas fa-building"></i></span>
                 </div>
             </div><!-- .widget -->
         </a>
     </div>
-    
-        @else
 
-    <div class="col-md-4 col-sm-8">
-        <a href="#" onclick="CobrosB({{$buses->id}} )" >
-            <div class="widget stats-widget">
-                <div class="widget-body clearfix bg-green">
-                    <div class="pull-left">
-                        <h3 class="widget-title text-white">Cobros</h3>
-                    </div>
-                    <span class="pull-right big-icon watermark"><i class="far fa-money-bill-alt"></i>&nbsp;<i class="fas fa-building"></i></span>                   
-                </div>
-            </div><!-- .widget -->
-        </a>       
-    </div>
-    @endif
  
     
     <div class="col-md-4 col-sm-8">
@@ -210,7 +198,7 @@
                     @if($NoNotificarBus== '1')
                   <a href="#" onclick="Aldia()">
                     @else 
-                  <a href="#" onclick="reporte_notificacion_bus({{$buses->id}})">
+                  <a href="#" onclick="reporte_notificacion_bus({{$buses->id}})">  </a>
                     @endif
                   <div class="widget stats-widget">
                     <div class="widget-body clearfix bg-purple">
@@ -220,14 +208,47 @@
                         <input type="hidden" id="f1" value="{{$ultimoCobroBuses}}" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
-                </div>
-                </a>
-                </a>
+                </div>             
     </div>
-    
+  </div> 
+        
+
+  <div class="col-md-4 col-sm-8">
+    @if($detectorNull== '0')
+
+    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+    <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-green">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Registrar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
+
+        @else
+        
+        <a href="#" onclick="CobrosB({{$buses->id}} )" >
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-green">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Cobros</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>                   
+                </div>
+            </div><!-- .widget -->
+        </a>       
+        
+        
+    @endif
+    </div>
+    </div>
+    </div>
 </div>
-</div> 
-    
+
+
+
 <!-- Cuadro para datos del rótulo inicia aquí ----------------------------------------------> 
 <!-- seccion frame -->
 <section class="content">
@@ -321,8 +342,6 @@
                               <input type="checkbox" id="btn-mas">
                           <div class="redes">
                          
-                              <a class="fas fa-file-alt" data-toggle="tooltip" data-placement="left" title="Solvencia de Empresa" onclick="Solvencia_empresa()"></a>
-                              
                               @if ($detectorNull != '0' && $calificacion->estado_calificacion == 'calificado')
                                 <a class="fa fa-file-import"  data-toggle="tooltip" data-placement="left" title="Resolución de Apertura" onclick="Imprimir_Resolucion_Apertura('{{$buses->id}}')"></a>
                               @endif
