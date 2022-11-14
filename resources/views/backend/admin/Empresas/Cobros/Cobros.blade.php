@@ -839,7 +839,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <form id="formulario_ver_historial_cobros_licor">        
                  <!-- /.card-header -->
                  <div>
-                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_licor()"  target="frameprincipal">
+                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_licor({{$empresa->id}})"  target="frameprincipal">
                     <i class="fas fa-print"></i>&nbsp; Imprimir</a>
                  </div>
                         
@@ -3026,6 +3026,10 @@ function imp_historial_cobros_sinfonolas() {
 function imp_historial_cobros_mesas() {
   var id = document.getElementById("id_matriculadetalle").value;
   window.open("{{ URL::to('/admin/pdf//reporte/matricula_detalles/mesas/cobros/')}}/" + id);
+}
+
+function imp_historial_cobros_licor(id_empresa) {
+  window.open("{{ URL::to('/admin/pdf//reporte/licor/cobros/')}}/" + id_empresa);
 }
 /* FIn Funciones parar reportes en pdf de historiales de cobros*/
 

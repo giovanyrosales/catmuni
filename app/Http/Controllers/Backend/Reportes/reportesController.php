@@ -9556,6 +9556,83 @@ public function cobros_codigos_periodo(Request $request){
 
     }
 
+    //licor
+    function pdfReporteLicorCobros($id_empresa) {
+
+        $ListaCobroslicor = CobrosLicenciaLicor::where('id_empresa', $id_empresa)
+        ->get();
+
+        foreach($ListaCobroslicor as $dato){
+            $dato->pago_total=number_format((float)$dato->pago_total, 2, '.', ',');
+            $dato->monto_multa_licencia_15313=number_format((float)$dato->monto_multa_licencia_15313, 2, '.', ',');
+            $dato->monto_licencia_12207=number_format((float)$dato->monto_licencia_12207, 2, '.', ',');  
+        }
+
+        $empresa = Empresas
+        ::select('empresa.nombre')
+        ->where('empresa.id', $id_empresa)
+        ->get();
+
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros');
+        
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+                </div>";
+
+        $tabla .= "<p>Reporte de historial de cobros:<strong> " . $empresa[0]['nombre'] . " </strong></p>";
+        $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
+                    <tbody>
+                        <tr>
+                            <th style='width: 25%; text-align: center'>Fecha pago</th>
+                            <th style='width: 20%; text-align: center'>Periodo inicio</th>
+                            <th style='width: 15%; text-align: center'>Periodo fin</th>
+                            <th style='width: 15%; text-align: center'>Licencia</th>
+                            <th style='width: 15%; text-align: center'>Multa Licencia</th>
+                            <th style='width: 10%; text-align: center'>Total</th>
+                        </tr>";
+
+        if (count($ListaCobroslicor) > 0) {
+            foreach ($ListaCobroslicor as $dato) {
+                $tabla .= "<tr>
+                                <td align='center'>" . $dato->fecha_cobro . "</td>
+                                <td align='center'>" . $dato->periodo_cobro_inicio . "</td>
+                                <td align='center'>" . $dato->periodo_cobro_fin . "</td>
+                                <td align='center'>$" . $dato->monto_licencia_12207 . "</td>
+                                <td align='center'>$" . $dato->monto_multa_licencia_15313 . "</td>
+                                <td align='center'>$" . $dato->pago_total . "</td>
+                            </tr>";
+            }
+        } else {
+            $tabla .= "<tr>
+                            <td align='center' colspan='8'>No se encontraron datos disponibles</td>
+                        </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+    }
+
     /** FIN reporte de historial de cobros de empresa **/
 //** Fin de reportes controller */
 }
