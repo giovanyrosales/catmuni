@@ -27,6 +27,7 @@ use App\Models\Rotulos;
 use App\Models\RotulosDetalle;
 use App\Models\RotulosDetalleEspecifico;
 use App\Models\CalificacionRotuloDetalle;
+use App\Models\CobrosRotulo;
 use App\Models\NotificacionesHistoricoRotulos;
 use App\Models\Traspasos;
 use DateInterval;
@@ -1258,7 +1259,462 @@ class reportesRotulosDetalleController extends Controller
                                   
     }
 
+    /* Reportes historial de cobros mpdf */
+    function pdfReporteRotulosCobros($id_rotulos_detalle) {
+        $ListarCobros = CobrosRotulo::where('id_rotulos_detalle', $id_rotulos_detalle)
+        ->get();
 
+        $rotulos_detalle = RotulosDetalle
+        ::select('rotulos_detalle.nom_empresa')
+        ->where('rotulos_detalle.id', $id_rotulos_detalle)
+        ->get();
 
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros');
+
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+        $tabla = "<div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                    UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                    DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                    <hr>
+                </div>";
+
+        $tabla .= "<p>Reporte e historial de cobros:<strong> " . $rotulos_detalle[0]['nom_empresa'] . "</strong></p>";
+        $tabla .= "<table id='tablaMora' style='width:100%;border-collapse: collapse;border: none;'>
+                    <tbody>
+                        <tr>
+                            <th style='width: 20%;text-align: center'>Fecha Pago</th>
+                            <th style='width: 10%;text-align: center'>Meses</th>
+                            <th style='width: 20%;text-align: center'>Impuestos Mora</th>
+                            <th style='width: 15%;text-align: center'>Impuestos</th>
+                            <th style='width: 15%;text-align: center'>Interes</th>
+                            <th style='width: 15%;text-align: center'>Total</th>
+                        </tr>";
+
+        if (count($ListarCobros) > 0) {
+            foreach ($ListarCobros as $dato) {
+                $tabla .= "<tr>
+                                <td align='center'>" . $dato->fecha_cobro . "</td>
+                                <td align='center'>" . $dato->cantidad_meses_cobro . "</td>
+                                <td align='center'>" . $dato->tasa_servicio_mora_32201 . "</td>
+                                <td align='center'>" . $dato->impuestos . "</td>
+                                <td align='center'>" . $dato->intereses_moratorios_15302 . "</td>
+                                <td align='center'>" . $dato->pago_total . "</td>
+                            </tr>";
+            }
+        } else {
+            $tabla .= "<tr>
+                            <td align='center' colspan='6'>no se encontraron datos disponibles</td>
+                        </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+        $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+    }
     
+    /* Reprote notificaciopn rotulos mpdf */
+    function reporte_notificacion_rotulos($f1, $f2, $ti, $id, $f3) {
+        log::info([$f1,$f2,$ti,$f3,$id]);
+
+        $f1_original = $f3;
+
+        $rotulos = RotulosDetalle
+        ::join('contribuyente','rotulos_detalle.id_contribuyente','=','contribuyente.id')
+        ->join('estado_rotulo','rotulos_detalle.id_estado_rotulo','=','estado_rotulo.id')
+
+        ->select('rotulos_detalle.id','rotulos_detalle.fecha_apertura','rotulos_detalle.num_ficha',
+                'rotulos_detalle.cantidad_rotulos','rotulos_detalle.estado_especificacion',
+                'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa',
+                'rotulos_detalle.tel_empresa','rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante',
+                'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.id as id_contribuyente',
+                'estado_rotulo.estado')
+        
+        ->find($id);
+
+        $calificacionRotulos = CalificacionRotuloDetalle::latest()
+        ->where('id_contribuyente', $rotulos->id_contribuyente)
+        ->first();
+
+        log::info($rotulos);
+
+        $fechahoy = Carbon::now()->format('d-m-Y');
+
+        /** Obtener la fecha y dias en español y formato tradicional */
+        $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $fechaF = Carbon::parse($fechahoy);
+        $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+        $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+        $dias = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');
+        $dia = $dias[(date('N', strtotime($fechaF))) - 1];
+        /** FIN - Obtener la fecha y dias en español y formato tradicional */
+
+        $año=carbon::now()->format('y');
+
+        $f1_original = $f1;
+        $fechaPagaraRotulos = $f2;
+        $id_rotulos_detalle = $id;
+        $tasa_interes = $ti;
+        $Message = 0;
+
+        $MesNumero = Carbon::createFromDate($f1)->format('d');
+
+        if ($MesNumero <= '15') {
+            $f1 = Carbon::parse($f1)->format('Y-m-01');
+            $f1 = Carbon::parse($f1);
+            $InicioPeriodo = Carbon::createFromDate($f1_original);
+            $InicioPeriodo = $InicioPeriodo->format('Y-m-d');
+        } else {
+            $f1=Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
+            $InicioPeriodo=Carbon::parse($f1_original)->format('Y-m-d');
+            log::info('f1_original: '.$f1_original);
+            log::info('InicioPeriodo: '.$InicioPeriodo);
+            log::info('fin de mes ');
+        }
+
+        $f2 = Carbon::parse($f2);
+        $f3 = Carbon::parse($f3);
+        $añoActual = Carbon::now()->format('Y');
+
+        //** Inicia - Para determinar el intervalo de años a pagar */
+        $monthInicio = '01';
+        $dayInicio = '01';
+        $monthFinal = '12';
+        $dayFinal = '31';
+        $AñoInicio = $f1->format('Y');
+        $AñoFinal = $f2->format('Y');
+        $FechaInicio = Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+        $FechaFinal = Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+        //** Finaliza - Para determinar el intervalo de años a pagar */
+
+        //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
+        $PagoUltimoDiaMes = Carbon::parse($f2)->endOfMonth()->format('Y-m-d');
+        //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+        Log::info('Pago ultimo dia del mes---->' .$PagoUltimoDiaMes);
+    
+        //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+        $UltimoDiaMes = Carbon::parse($f1)->endOfMonth();
+        Log::info('ultimo dia del mes---->' .$UltimoDiaMes);
+        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
+        Log::info($FechaDeInicioMoratorio);
+        
+        $FechaDeInicioMoratorio = Carbon::parse($FechaDeInicioMoratorio);
+        $DiasinteresMoratorio = $FechaDeInicioMoratorio->diffInDays($f3);
+        //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+        Log::info($DiasinteresMoratorio);
+
+        $calificaciones = CalificacionRotuloDetalle
+        ::select('calificacion_rotulo_detalle.id','calificacion_rotulo_detalle.cantidad_rotulos','calificacion_rotulo_detalle.monto',
+                'calificacion_rotulo_detalle.pago_mensual','calificacion_rotulo_detalle.fecha_calificacion','calificacion_rotulo_detalle.estado_calificacion')
+        
+        ->where('id_rotulos_detalle', $id)
+        ->latest()
+        ->first();
+        
+
+        if ($f1->lt($PagoUltimoDiaMes)) {
+            $intervalo = DateInterval::createFromDateString('1 Year');
+            $periodo = new DatePeriod($FechaInicio, $intervalo, $FechaFinal);
+
+            $Cantidad_MesesTotal = 0;
+            $impuestoTotal = 0;
+            $impuestos_mora = 0;
+            $impuesto_año_actual = 0;
+            $multaPagoExtemporaneo = 0;
+            $totalMultaPagoExtemporaneo = 0;
+
+            $tarifas = CalificacionRotuloDetalle::select('monto')
+            ->where('id_rotulos_detalle', $id)
+            ->get();
+
+            $tarifa_total = 0;
+            foreach ($tarifas as $dt) {
+                $tarifa = $dt->monto;
+                $tarifa_total = $tarifa_total + $tarifa;
+            }
+
+            //** Inicia Foreach para cálculo de impuesto por años */
+            foreach ($periodo as $dt) {
+                $AñoPago = $dt->format('Y');
+                $AñoSumado = Carbon::createFromDate($AñoPago, 12, 31);
+
+                log::info($tarifa_total);
+
+                //Stop para cambiar el resultado de la cantidad de meses en la última vuelta del foreach...
+                if ($AñoPago == $AñoFinal) {
+                    $CantidadMeses = ceil(($f1->floatDiffInRealMonths($PagoUltimoDiaMes)));
+                } else {
+                    $CantidadMeses = ceil(($f1->floatDiffInRealMonths($AñoSumado)));  
+                    $f1 = $f1->addYears(1)->month(1)->day(1);
+                }
+
+                //*** calculo */
+                $impuestosValor = (round($tarifa_total * $CantidadMeses, 2));
+                $impuestoTotal = $impuestoTotal + $impuestosValor;
+                $Cantidad_MesesTotal = $Cantidad_MesesTotal + $CantidadMeses;
+
+                if ($AñoPago == $AñoFinal and $AñoPago < $añoActual) {
+                    $impuestos_mora = $impuestos_mora + $impuestosValor;
+                    $impuesto_año_actual = $impuesto_año_actual;
+                } else if ($AñoPago == $AñoFinal and $AñoPago == $añoActual) {
+                    $impuestos_mora = $impuestos_mora;
+                    $impuesto_año_actual = $impuesto_año_actual + $impuestosValor;
+                } else {
+                    $impuestos_mora = $impuestos_mora + $impuestosValor;
+                    $impuesto_año_actual = $impuesto_año_actual;
+                }
+
+                $linea = "_____________________<<::>>";
+                $divisiondefila = ".....................";
+
+                Log::info($AñoPago);
+                Log::info($CantidadMeses);
+
+                Log::info($impuestosValor);
+                Log::info($impuestos_mora);
+                Log::info('año actual '. $impuesto_año_actual);                    
+                Log::info($AñoSumado);                    
+                Log::info($f2);
+                Log::info($divisiondefila);             
+                Log::info($linea);
+                
+            } //** Termina el foreach */
+
+            //** -------Inicia - Cálculo para intereses--------- */
+
+            $TasaInteresDiaria = ($tasa_interes / 365);
+            $InteresTotal = 0;
+            $MesDeInteres = Carbon::parse($FechaDeInicioMoratorio)->subDays(30);
+            $contador = 0;
+            $fechaFinMeses = $f2->addMonthsNoOverflow(1);
+            $intervalo2 = DateInterval::createFromDateString('1 Month');
+            $periodo2 = new DatePeriod ($MesDeInteres, $intervalo2, $fechaFinMeses);
+
+            //** -------Inicia - Cálculo para intereses--------- */
+            foreach ($periodo2 as $dt) {
+                $contador = $contador+1;
+                $divisiondefila = ".....................";
+
+                $Date1 = Carbon::parse($MesDeInteres)->day(1);
+                $Date2 = Carbon::parse($MesDeInteres)->endOfMonth();
+                
+                $MesDeInteresDiainicial = Carbon::parse($Date1)->format('Y-m-d'); 
+                $MesDeInteresDiaFinal = Carbon::parse($Date2)->format('Y-m-d'); 
+
+                $Fecha30Sumada=Carbon::parse($MesDeInteresDiaFinal)->addDays(30); 
+                Log::info($Fecha30Sumada);
+                Log::info($f3);
+
+                if ($f3 > $Fecha30Sumada) {
+                    $CantidaDiasMesInteres=ceil($Fecha30Sumada->diffInDays($f3));
+                } else {
+                    $CantidaDiasMesInteres=ceil($Fecha30Sumada->diffInDays($f3));
+                    $CantidaDiasMesInteres=-$CantidaDiasMesInteres;
+                }
+
+                Log::info($CantidaDiasMesInteres);
+
+                $MesDeInteres->addMonthsNoOverflow(1)->format('Y-M');
+
+                //** INICIO- Determinar Interes. */
+                if ($CantidaDiasMesInteres > 0) {
+                    $stop = "Avanza:interes";    
+
+                    //** INICIO-  Cálculando el interes. */
+                    $Interes = round((($TasaInteresDiaria * $CantidaDiasMesInteres) / 100 * $tarifa_total), 2);
+                    $InteresTotal = $InteresTotal + $Interes;
+                    //** FIN-  Cálculando el interes. */
+                } else {
+                    $Interes=0;
+                    $InteresTotal=$InteresTotal;
+                    $multaPagoExtemporaneo=$multaPagoExtemporaneo;
+                    $totalMultaPagoExtemporaneo=$totalMultaPagoExtemporaneo;
+                    $stop="Alto: Sin interes";
+                }
+                //** FIN-  Determinar multa por pago extemporaneo. */
+
+                Log::info($contador);
+                Log::info('Mes multa ' . $MesDeInteres);
+                Log::info($stop);
+                Log::info($MesDeInteresDiainicial);                   
+                Log::info($MesDeInteresDiaFinal);                 
+                Log::info($multaPagoExtemporaneo);
+                Log::info($totalMultaPagoExtemporaneo);
+                Log::info($Interes);
+                Log::info($InteresTotal);
+                Log::info($divisiondefila);
+            }
+
+            $fondoFPValor = round($impuestoTotal * 0.05,2);
+            $totalPagoValor= round($fondoFPValor + $impuestoTotal + $InteresTotal, 2);
+
+            //Le agregamos su signo de dollar para la vista al usuario
+            $fondoFP = "$" . $fondoFPValor;     
+            $totalPago = "$" . $totalPagoValor;
+            $impuestos_mora_Dollar = "$" . $impuestos_mora;
+            $impuesto_año_actual_Dollar = "$" . $impuesto_año_actual; 
+            $InteresTotalDollar = "$" . $InteresTotal;
+
+            $cantidad = 0;
+            $alerta_aviso_rotulos = alertas_detalle_rotulos::where('id_contribuyente', $rotulos->id_contribuyente)
+            ->where('id_alerta', '2')
+            ->pluck('cantidad')
+            ->first();
+
+            //** Guardando en el historico de avisos */
+            $dato = new NotificacionesHistoricoRotulos();
+            $dato->id_contribuyente = $rotulos->id_contribuyente;
+            $dato->id_alertas = '2';
+            $created_at = new Carbon();
+            $dato->created_at = $created_at->setTimezone('America/El_Salvador');
+            $dato->save();
+
+            if ($alerta_aviso_rotulos === null) {
+                $cantidad_avisos = $cantidad + 1;
+
+                $registro = new alertas_detalle_rotulos();
+                $registro->id_contribuyente = $rotulos->id_contribuyente;
+                $registro->id_alerta ='2';
+                $registro->cantidad = $cantidad_avisos;
+                $registro->save();
+            } else if ($alerta_aviso_rotulos == 0) {
+                $cantidad = $alerta_aviso_rotulos + 1;
+
+                alertas_detalle_rotulos::where('id_contribuyente', $rotulos->id_contribuyente)
+                ->where('id_alerta', '2')
+                ->update(['cantidad' => $cantidad,]);
+            } else if ($alerta_aviso_rotulos >= 2) {
+                $cantidad=0;
+
+                alertas_detalle_rotulos::where('id_contribuyente', $rotulos->id_contribuyente)
+                ->where('id_alerta','2')
+                ->update(['cantidad' => $cantidad,]);
+            } else {
+                $cantidad = $alerta_aviso_rotulos + 1;
+
+                alertas_detalle_rotulos::where('id_contribuyente', $rotulos->id_contribuyente)
+                ->where('id_alerta','2')
+                ->update(['cantidad' => $cantidad,]);
+            }
+
+            //Configuracion de Reporte en MPDF
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+            $mpdf->SetTitle('Alcaldía Metapán | Notificación');
+
+            // mostrar errores
+            $mpdf->showImageErrors = false;
+
+            $logoalcaldia = 'images/logo.png';
+            $logoelsalvador = 'images/EscudoSV.png';
+            $imgf1 = 'images/imgf1.png';
+
+            $tabla = "<div class='content'>
+                        <img id='logo' src='$logoalcaldia'>
+                        <img id='EscudoSV' src='$logoelsalvador'>
+                        <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                        UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                        DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                        <hr>
+                    </div>";
+           
+            $tabla .= "<table border='0' align='center' style='width: 650px;'>
+                        <tr>
+                            <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2' style='font-size:13;'>
+                                <p>Señor (a):&nbsp;$rotulos->contribuyente&nbsp;$rotulos->apellido<br>
+                                    Direccion:&nbsp;$rotulos->dire_empresa<br>
+                                    Cuenta Corriente N°:&nbsp;$rotulos->num_ficha<br>
+                                    Empresa o Negocio:&nbsp;$rotulos->nom_empresa<br>
+                                </p>
+                                <br>
+                                Estimado(a) señor(a):
+                                <p style='text-indent: 20px;'>En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                                    motivo de la presente es para manifestarle que su estado de cuenta en esta
+                                    Municipalidad es el siguiente:
+                                </p>
+                                <p>
+                                <br>
+                                    <strong>Tasas Municipales</strong><br>
+                                    Validez: <strong><u>$FechaDelDia</u></strong><br>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><hr></td>
+                            <td><hr></td>
+                        </tr>
+                        <tr>
+                            <th scope='col'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                            <th scope='col'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <td align='right'>TASAS POR SERVICIO</td>
+                            <td align='center'>$impuesto_año_actual_Dollar</td>
+                        </tr>
+                        <tr>
+                            <td align='right'>TASAS POR SERVICION MORA</td>
+                            <td align='center'>$impuestos_mora_Dollar
+                        </tr>
+                        <tr>
+                            <td align='right'>INTEREES MORATORIOS</td>
+                            <td align='center'>$InteresTotalDollar</td>
+                        </tr>
+                        <tr>
+                            <td align='right'>FONDO F. PATRONALES 5%</td>
+                            <td align='center'>$fondoFP</td>
+                        </tr>
+                        <tr>
+                            <th scope='row'>TOTAL ADECUADO</th>
+                            <th align='center'>$totalPago</th>
+                        </tr>
+                        <tr>
+                            <td><hr></td>
+                            <td><hr></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2' style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
+                                <p>
+                                Por lo que solicito para que comparezca ante esta Administración Tributaria Municipal, a saldar lo adeudado, o a
+                                solicitar un plan de pago, concediéndose un plazo de treinta días contados a partir de la notificación para que efectúe el
+                                pago correspondiente bajo la prevención, que de no hacerlo, obligara a esta Municipalidad a certificar su deuda
+                                pendiente, a fin de que sin tramite alguno, se proceda a iniciar las diligencias judiciales correspondientes. 
+                                <br><br>
+                                Agradeciendo su comprension y atención a esta notificación me suscribo de usted, muy cordialmente.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr align='center'>
+                            <td colspan='2' align'center'>
+                                <img id='imgf1' src='$imgf1'>
+                            </td>
+                        </tr>
+                    </table>";
+            
+            $stylesheet = file_get_contents('css/cssconsolidado.css');
+            $mpdf->WriteHTML($stylesheet,1);
+            $mpdf->SetMargins(0, 0, 5);
+
+
+            //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+        
+            $mpdf->WriteHTML($tabla,2);
+            $mpdf->Output();
+        }
+    }
 }
+

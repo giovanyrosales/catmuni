@@ -189,14 +189,14 @@
              
           <a href="#" onclick="Aldia()">
                   
-          <a href="#" onclick="reporte_notificacion_bus()">
+          <a href="#" onclick="reporte_notificacion_rotulos({{$rotulos->id_rotulos_detalle}})">
                  
               <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-purple">
                   <div class="pull-left">
                      <h3 class="widget-title text-white">Generar notificación</h3>
-                     <input type="hidden" id="fechahoy" value="" class="form-control" >
-                        <input type="hidden" id="f1" value="" class="form-control" >
+                     <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
+                        <input type="hidden" id="f1" value="{{$ultimoCobroRotulos}}" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
               </div>
@@ -463,7 +463,7 @@
           
     }
 
-    function reporte_notificacion_bus(id)
+    function reporte_notificacion_rotulos(id)
     {
       
       Swal.fire({
@@ -480,12 +480,12 @@
 
                   var f2=(document.getElementById('fechahoy').value);
 
-                  var ti="";
+                  var ti="{{$Tasainteres}}";
                 
                   var f3=(document.getElementById('fechahoy').value);
                  
                     //Si es Empresa
-                    window.open("{{ URL::to('/admin/generar_notificacion_bus/pdf') }}/" + f1 + "/" + f2 + "/" + ti  + "/" + id+ "/" + f3 );
+                    window.open("{{ URL::to('/admin/generar_notificacion_rotulos/pdf') }}/" + f1 + "/" + f2 + "/" + ti  + "/" + id+ "/" + f3 );
                   
                     Swal.fire('Notificación generada con exito!', '', 'success')
                console.log(id,);

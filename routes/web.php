@@ -365,6 +365,8 @@ use App\Models\Empresas;
     Route::get('/admin/generar/reporte/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'generar_reporte_rotulos']);
     Route::get('/admin/rotulos_detalle/reporte/calificacion/pdf/{id}', [reportesRotulosDetalleController::class, 'generarCalificacionImprimir']);
     Route::get('/admin/generar/resolucion_apertura/rotulos/pdf/{id}', [reportesRotulosDetalleController::class, 'resolucionAperturaRotulos']);
+    Route::get('/admin/pdf//reporte/rotulos/cobros/{id_rotulos_detalle}', [reportesRotulosDetalleController::class, 'pdfReporteRotulosCobros']);
+    Route::get('/admin/generar_notificacion_rotulos/pdf/{f1}/{f2}/{ti}/{id}/{f3}', [reportesRotulosDetalleController::class, 'reporte_notificacion_rotulos']);
 
 
     //REPORTES BUSES
