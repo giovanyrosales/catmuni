@@ -177,9 +177,9 @@
  
     
     <div class="col-md-4 col-sm-8">
-    @if($NoNotificarBus == '1')
+    @if($NoNotificar == '1')
               <a href="#" onclick="Aldia()">      
-              @else     
+              @else
               <a href="#" onclick="reporteeAviso({{$buses->id}})">
               @endif           
             <div class="widget stats-widget">
@@ -195,17 +195,17 @@
 
     <div class="col-md-4 col-sm-8">
              
-                    @if($NoNotificarBus== '1')
+            @if($NoNotificar == '1')
                   <a href="#" onclick="Aldia()">
-                    @else 
+                  @else  
                   <a href="#" onclick="reporte_notificacion_bus({{$buses->id}})">  </a>
-                    @endif
+            @endif
                   <div class="widget stats-widget">
                     <div class="widget-body clearfix bg-purple">
                      <div class="pull-left">
                      <h3 class="widget-title text-white">Generar notificación</h3>
                      <input type="hidden" id="fechahoy" value="{{$fechahoy}}" class="form-control" >
-                        <input type="hidden" id="f1" value="{{$ultimoCobroBuses}}" class="form-control" >
+                        <input type="hidden" id="f1" value="{{$ultimo_cobro}}" class="form-control" >
                     </div>
                     <span class="pull-right big-icon watermark"><i class="fas fa-bell"></i></span>
                 </div>             
@@ -282,7 +282,7 @@
                       </tr>
                       <tr>
                         <th>Último pago </th>
-                        <td>{{$ultimoCobroBuses}}</td>
+                        <td>{{$ComprobandoPagoAlDiaBus}}</td>
                       </tr>
             @if($buses->nom_empresa == '')
                       <tr>

@@ -188,7 +188,7 @@
                     <form id="formulario_ver_historial_cobros_emp">        
                  <!-- /.card-header -->
                  <div>
-                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_emp()"  target="frameprincipal">
+                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_bus({{$buses->id}})"  target="frameprincipal">
                     <i class="fas fa-print"></i>&nbsp; Imprimir</a>
                  </div>
                         
@@ -640,6 +640,11 @@
           function historial_cobros_empresa(id)
           {
             $('#historial_cobros_buses').modal('show');
+          }
+
+          function imp_historial_cobros_bus(id)
+          {
+            window.open("{{ URL::to('/admin/pdf/reporte/buses_detalle/cobros/')}}/" + id);
           }
 
 

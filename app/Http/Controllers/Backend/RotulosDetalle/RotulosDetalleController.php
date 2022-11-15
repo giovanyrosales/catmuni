@@ -157,6 +157,8 @@ class RotulosDetalleController extends Controller
 
             ->first();
 
+            
+            //return view('backend.admin.RotulosDetalle.EspecificarRotulos', compact('CantidadSeleccionada','rotulosEspecificos'));
           
             return  [
 
@@ -166,6 +168,7 @@ class RotulosDetalleController extends Controller
                         'rotulosEspecificos' =>$rotulosEspecificos,
                     
                     ];
+                    
 
     }
 

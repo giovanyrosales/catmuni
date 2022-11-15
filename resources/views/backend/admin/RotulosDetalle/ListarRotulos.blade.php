@@ -90,7 +90,7 @@
                         </button>
                 </div>
                 <!--Form del modal-->
-<!-----------------------------------Inicia Contenido ------------------------------------------->
+<!-----------------------------------Inicia Contenido -------------------------------------- ----->
             <div class="modal-body">
 
             <!-- LISTA DE MATRICULAS  -->
@@ -109,7 +109,7 @@
                             <th style="width: 11%; text-align: center">Tarifa</th>
                             <th style="width: 15%; text-align: center">Pago Mensual</th>
                             <th style="width: 19%; text-align: center">Coordenadas</th>
-                            <th style="width: 23%; text-align: center">Foto</th>
+                          
                         </tr>                        
                         </thead>
                             <tbody id="myTbodyRotulos">
@@ -225,8 +225,7 @@
             var tarifa = table.cells[4].children[0]; 
             var pago_mensual = table.cells[5].children[0];
             var coordenadas = table.cells[6].children[0]; 
-            var foto = table.cells[7].children[0]; 
-
+           
 
         }
 
@@ -274,10 +273,6 @@
                     "<textarea name='coordenadas_geo[]'  class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
                     "</td>"+
 
-                    "<td>"+
-                    "<input type='file' name ='foto_rotulo[]'  class='form-control' accept='image/jpeg, image/jpg, image/png'/>"+
-                    "</td>"+
-                  
                     "</tr>";
              
                 // $("tbody").append(markup);
@@ -295,7 +290,6 @@
         function GuardarRotulosEspecificos()
         {
 
-            
             var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
             var nombre = $("textarea[name='nombre[]']").map(function(){return $(this).val();}).get();
             var medidas = $("textarea[name='medidas[]']").map(function(){return $(this).val();}).get();
@@ -304,7 +298,6 @@
             var tarifa = $("textarea[name='tarifa[]']").map(function(){return $(this).val();}).get();
             var total_tarifa = $("textarea[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
             var coordenadas_geo = $("textarea[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
-            var foto_rotulo = $("input[name='foto_rotulo[]']").get();
           
             //**** Validar */
 
@@ -317,7 +310,6 @@
                     return;
             }
 
-            
           
             //**** Fin de validar */
 
@@ -346,12 +338,10 @@
                     formData.append('tarifa[]', tarifa[j]);
                     formData.append('total_tarifa[]', total_tarifa[j]);
                     formData.append('coordenadas_geo[]', coordenadas_geo[j]);   
-                    formData.append('foto_rotulo[]',foto_rotulo[j].files[0]);
-
+              
                     
-                    console.log(nombre[j],foto_rotulo[j]);
+                    console.log(nombre[j],);
                                
-                    
             }
 
                 formData.append('id_rotulos_detalle', id_rotulos_detalle);

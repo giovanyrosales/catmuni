@@ -373,3 +373,4 @@ use App\Models\Empresas;
     Route::get('/admin/generar_notificacion_bus/pdf/{f1}/{f2}/{ti}/{id}/{f3}', [reportesBusesDetalleController::class, 'reporte_notificacion_bus']);
     Route::get('/admin/generar/solvencia/bus/pdf/{id}', [reportesBusesDetalleController::class, 'generar_solvencia_buses']);
     Route::get('/admin/generar/resolucion_apertura/bus/pdf/{id}', [reportesBusesDetalleController::class, 'resolucion_apertura_buses']);
+    Route::get('/admin/pdf/reporte/buses_detalle/cobros/{id}', [reportesBusesDetalleController::class, 'pdfReporteCobrosBus']);

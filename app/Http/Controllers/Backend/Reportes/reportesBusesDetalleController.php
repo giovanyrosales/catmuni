@@ -45,6 +45,7 @@ use App\Models\BusesDetalleEspecifico;
 use App\Models\CalificacionBuses;
 use App\Models\CalificacionRotulo;
 use App\Models\CierresReaperturas;
+use App\Models\CobrosBuses;
 use App\Models\NotificacionesHistoricoBuses;
 use App\Models\Rotulos;
 use App\Models\Traspasos;
@@ -1518,6 +1519,94 @@ class reportesBusesDetalleController extends Controller
                 $mpdf->Output();
         
             }//Fin de if si se guardo...
+        
+
+            public function pdfReporteCobrosBus($id) 
+            {
+
+                    $ListaCobros = CobrosBuses::where('id_buses_detalle', $id)
+                    ->get();
+            
+                    $buses = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
+                    ->join('estado_buses','buses_detalle.id_estado_buses','=','estado_buses.id')
+            
+                    ->select('buses_detalle.id', 'buses_detalle.fecha_apertura','buses_detalle.nFicha',
+                    'buses_detalle.cantidad','buses_detalle.tarifa','buses_detalle.monto_pagar','buses_detalle.estado_especificacion',
+                    'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa',
+                    'buses_detalle.tel_empresa','buses_detalle.email_empresa','buses_detalle.r_comerciante',
+                    
+                    'contribuyente.nombre as contribuyente', 'contribuyente.apellido','contribuyente.telefono','contribuyente.direccion',
+                    'contribuyente.dui','contribuyente.nit','contribuyente.registro_comerciante','contribuyente.email',
+                    'contribuyente.id as id_contribuyente',
+                    'estado_buses.estado')
+                                    
+                    ->find($id);
+                
+            
+                    //Configuracion de Reporte en MPDF
+                    $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+                    $mpdf->SetTitle('Alcaldía Metapán | Historial de cobros');
+                    
+                    // mostrar errores
+                    $mpdf->showImageErrors = false;
+            
+                    $logoalcaldia = 'images/logo.png';
+                    $logoelsalvador = 'images/EscudoSV.png';
+            
+                    $tabla = "<div class='content'>
+                                <img id='logo' src='$logoalcaldia'>
+                                <img id='EscudoSV' src='$logoelsalvador'>
+                                <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
+                                UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
+                                DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
+                                <hr>
+                            </div>";
+            
+                    $tabla .= "<p>Reporte de historial de cobros:<strong> " . $buses->nom_empresa . " </strong></p>";
+                    $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
+                                <tbody>
+                                    <tr>
+                                        <th style='width: 15%; text-align: center'>Fecha pago</th>
+                                        <th style='width: 8%; text-align: center'>Meses</th>
+                                        <th style='width: 15%; text-align: center'>Impuestos Mora</th>
+                                        <th style='width: 12%; text-align: center'>Impuestos</th>
+                                        <th style='width: 12%; text-align: center'>Interes</th>
+                                        <th style='width: 14%; text-align: center'>Multa Balance</th>
+                                        <th style='width: 14%; text-align: center'>Multas</th>
+                                        <th style='width: 10%; text-align: center'>Total</th>
+                                    </tr>";
+            
+                    if (count($ListaCobros) > 0) {
+                        foreach ($ListaCobros as $dato) {
+                            $tabla .= "<tr>
+                                            <td align='center'>" . $dato->fecha_cobro . "</td>
+                                            <td align='center'>" . $dato->cantidad_meses_cobro . "</td>
+                                            <td align='center'>$" . $dato->impuesto_mora_32201 . "</td>
+                                            <td align='center'>$" . $dato->impuestos . "</td>
+                                            <td align='center'>$" . $dato->intereses_moratorios_15302 . "</td>
+                                            <td align='center'>$" . $dato->monto_multa_balance_15313 . "</td>
+                                            <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>
+                                            <td align='center'>$" . $dato->pago_total . "</td>
+                                        </tr>";
+                        }
+                    } else {
+                        $tabla .= "<tr>
+                                        <td align='center' colspan='8'>No se encontraron datos disponibles</td>
+                                    </tr>";
+                    }
+            
+                    $tabla .= "</tbody></table>";
+            
+                    $stylesheet = file_get_contents('css/cssconsolidado.css');
+                    $mpdf->WriteHTML($stylesheet, 1);
+                    $mpdf->SetMargins(0, 0, 5);
+            
+                    $mpdf->SetFooter("Pagina: " . '{PAGENO}' . "/" . '{nb}');
+            
+                    $mpdf->WriteHTML($tabla, 2);
+                    $mpdf->Output();
+
+            }
         
         
                    
