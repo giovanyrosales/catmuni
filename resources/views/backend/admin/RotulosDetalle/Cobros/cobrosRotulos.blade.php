@@ -632,6 +632,12 @@
             $('#historial_cobros_buses').modal('show');
           }
 
+          /* Funcion reportes historial de cobros rotulos */
+          function imp_historial_cobros_emp() {
+            let id_rotulos_detalle = (document.getElementById('id_rotulos_detalle').value)
+            window.open("{{ URL::to('/admin/pdf//reporte/rotulos/cobros/')}}/" + id_rotulos_detalle);
+          }
+          /* Fin funcion reportes historial de cobros rotulos */
 
           </script>
 
