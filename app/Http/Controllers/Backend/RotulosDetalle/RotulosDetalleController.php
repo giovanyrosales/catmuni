@@ -18,6 +18,7 @@ use SebastianBergmann\Environment\Console;
 use App\Models\Contribuyentes;
 use App\Models\RotulosDetalle;
 use App\Models\Interes;
+use App\Models\TarifaRotulo;
 use App\Models\RotulosDetalleEspecifico;
 use App\Models\Usuario;
 use Carbon\Carbon;
@@ -116,9 +117,64 @@ class RotulosDetalleController extends Controller
     public function listarRotulos()
     {   
         $contribuyentes = Contribuyentes::ALL();
+        
              
         return view('backend.admin.RotulosDetalle.ListarRotulos', compact('contribuyentes'));
     }
+
+    //Nuevo intento de especificar rótulos
+    public function especificar($id_rotulos_detalle)
+    {
+
+        //log::info($id_rotulos_detalle);
+       // $id_rotulos_detalle = $request->id_rotulos_detalle;          
+
+       //log::info($request->all());
+
+            //$id_rotulos_detalle = $request->id_rotulos_detalle;
+          
+            $CantidadSeleccionada = RotulosDetalle::
+
+            join('contribuyente', 'rotulos_detalle.id_contribuyente','=','contribuyente.id')
+            ->join('estado_rotulo', 'rotulos_detalle.id_estado_rotulo','=', 'estado_rotulo.id')
+
+            ->select('rotulos_detalle.id','rotulos_detalle.num_ficha','rotulos_detalle.fecha_apertura','rotulos_detalle.cantidad_rotulos',
+            'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa',
+            'rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante','rotulos_detalle.estado_especificacion',
+            
+            'contribuyente.nombre as contribuyente', 'contribuyente.apellido as apellido','contribuyente.id',
+            'estado_rotulo.estado','estado_rotulo.id')
+
+            ->where('rotulos_detalle.id', $id_rotulos_detalle)                 
+            ->first();
+
+            $rotulosEspecificos = RotulosDetalleEspecifico::join('rotulos_detalle','rotulos_detalle_especifico.id_rotulos_detalle','rotulos_detalle.id')
+
+            ->select('rotulos_detalle_especifico.id','rotulos_detalle_especifico.id_rotulos_detalle', 'rotulos_detalle_especifico.nombre','rotulos_detalle_especifico.medidas',
+            'rotulos_detalle_especifico.total_medidas','rotulos_detalle_especifico.caras','rotulos_detalle_especifico.tarifa',
+            'rotulos_detalle_especifico.total_tarifa','rotulos_detalle_especifico.coordenadas_geo','rotulos_detalle_especifico.foto_rotulo',
+            
+            'rotulos_detalle.id','rotulos_detalle.num_ficha','rotulos_detalle.fecha_apertura','rotulos_detalle.cantidad_rotulos',
+            'rotulos_detalle.nom_empresa','rotulos_detalle.dire_empresa','rotulos_detalle.nit_empresa','rotulos_detalle.tel_empresa',
+            'rotulos_detalle.email_empresa','rotulos_detalle.reg_comerciante','rotulos_detalle.estado_especificacion',)
+
+            ->where('rotulos_detalle_especifico.id_rotulos_detalle', $id_rotulos_detalle)
+            ->first();
+
+        return view('backend.admin.RotulosDetalle.EspecificarRotulos', compact('rotulosEspecificos','CantidadSeleccionada',));
+/*
+            return  [
+
+                        'success' => 1,
+                         'cantidad_rotulos' =>$CantidadSeleccionada->cantidad_rotulos,
+                        'id_rotulos_detalle' =>$id_rotulos_detalle,
+                        'rotulosEspecificos' =>$rotulosEspecificos,
+                    
+                         ];
+           */
+    }
+
+    //Termina intento de especificar rótulos
 
     public function especificarRotulos(Request $request)
     {
@@ -157,8 +213,6 @@ class RotulosDetalleController extends Controller
 
             ->first();
 
-            
-            //return view('backend.admin.RotulosDetalle.EspecificarRotulos', compact('CantidadSeleccionada','rotulosEspecificos'));
           
             return  [
 
@@ -168,33 +222,29 @@ class RotulosDetalleController extends Controller
                         'rotulosEspecificos' =>$rotulosEspecificos,
                     
                     ];
-                    
 
     }
 
     public function agregar_rotulos_detalle_especifico(Request $request)
     {
+        log::info($request->all());
         $especificada="especificada";
-       
-        for ($i = 0; $i < count ((array)$request->nombre) ; $i++){
-
-            if (($request->foto_rotulo[$i] )) {
-               
-         
-                $cadena = Str::random(15);
-                $tiempo = microtime();
-                $union = $cadena.$tiempo;
-                $nombre = str_replace(' ', '_', $union);
-              
-                  
-                $extension = '.'.$request->foto_rotulo[$i];
-                $avatar = $request->file('foto_rotulo');
-                $extension = '.'.$request->file('foto_rotulo')->getClientOriginalExtension();
-                $file = $nombre.strtolower($extension);
-                
-                $estado = Storage::disk('images')->put($file, \File::get($avatar));
-               
-             
+    
+        $rules = array(
+            'id_rotulos_detalle' => 'required',
+        );
+    
+        $validator = Validator::make($request->all(), $rules);
+    
+        if ( $validator->fails()){
+            return ['success' => 0];
+        }
+    
+        
+        if($request->nombre != null) {
+          
+            for ($i = 0; $i < isset($request->placa); $i++)  
+            {
 
                     $Bd = new RotulosDetalleEspecifico();                 
                     $Bd->id_rotulos_detalle = $request->id_rotulos_detalle;               
@@ -205,9 +255,8 @@ class RotulosDetalleController extends Controller
                     $Bd->tarifa = $request->tarifa[$i];
                     $Bd->total_tarifa = $request->total_tarifa[$i];
                     $Bd->coordenadas_geo = $request->coordenadas_geo[$i];
-                    $Bd->foto_rotulo = $request->$file[$i];
+                  
 
-                    
                        
                     RotulosDetalle::where('id', $request->id_rotulos_detalle)
                     ->update([
@@ -216,8 +265,7 @@ class RotulosDetalleController extends Controller
                      
                     return ['success' => 1];
     
-            }else{return ['success' => 2];}
-       
+            }
         }
              
     } 
@@ -266,15 +314,15 @@ class RotulosDetalleController extends Controller
             }
         
     
-            $ultimo_cobro_rotulo = CobrosRotulo::latest()
-            ->where('id_contribuyente', $rotulos->id_contribuyente)
+            $ultimo_cobro = CobrosRotulo::latest()
+            ->where('id_rotulos_detalle',$id_rotulos_detalle)
             ->first();
             
-                if( $ultimo_cobro_rotulo==null)
+                if( $ultimo_cobro==null)
                 {
-                    $ultimoCobroRotulos= $rotulos->fecha_apertura;
+                    $ultimoCobroRotulos=$rotulos->fecha_apertura;
                 }else{
-                    $ultimoCobroRotulos = $ultimo_cobro_rotulo->periodo_cobro_fin;
+                    $ultimoCobroRotulos=$ultimo_cobro->periodo_cobro_fin;
                 }
 
 
@@ -284,14 +332,14 @@ class RotulosDetalleController extends Controller
             ->pluck('periodo_cobro_fin')
                 ->first();
 
-        if($ComprobandoPagoAlDiaRotulos == null){
-            
-           
-                        if($ComprobandoPagoAlDiaRotulos == null){
-                            $ComprobandoPagoAlDiaRotulos = $rotulos->fecha_apertura;
+        if($ComprobandoPagoAlDiaRotulos == null)
+        {
                        
+                if($ComprobandoPagoAlDiaRotulos == null)
+                {
+                        $ComprobandoPagoAlDiaRotulos = $rotulos->fecha_apertura;                       
                     
-            }else{
+                }else{
                         $ComprobandoPagoAlDiaRotulos = $rotulos->fecha_apertura;
                         
                 }
@@ -348,7 +396,7 @@ class RotulosDetalleController extends Controller
     
                 }else{
                          $alerta_notificacion_bus = $alerta_notificacion_rotulo;
-                     }
+                    }
             }
     
             
@@ -416,6 +464,8 @@ class RotulosDetalleController extends Controller
                                             'NoNotificarRotulo',
                                             'Tasainteres',
                                             'ultimoCobroRotulos',
+                                            'ultimo_cobro',
+                                          
                                             'DiasinteresMoratorio',
                                             'estado_de_solvencia',
                                             ));
@@ -442,8 +492,8 @@ class RotulosDetalleController extends Controller
         ->where('id_rotulos_detalle', $id_rotulos_detalle) 
         ->get();
 
-        //log::info($rotulosEspecificos);
-     
+        log::info('especifico' . $rotulosEspecificos);
+ 
 
         $rotulos = RotulosDetalle::join('contribuyente', 'rotulos_detalle.id_contribuyente','contribuyente.id')
         ->join('estado_rotulo', 'rotulos_detalle.id_estado_rotulo', 'estado_rotulo.id')
@@ -636,8 +686,30 @@ class RotulosDetalleController extends Controller
         ->get();
 
         $ultimo_cobro = CobrosRotulo::latest()
-        ->where('id_rotulos_detalle', $id_rotulos_detalle)
+        ->where('id_contribuyente', $rotulos->id_contribuyente)
         ->first();
+        
+        if($ultimo_cobro !=null){
+            $ultimo_cobro_rotulos =Carbon::parse($ultimo_cobro->periodo_cobro_fin)->format('d-m-Y');
+        }else{
+    
+                $ultimo_cobro_rotulos=Carbon::parse($rotulos->fecha_apertura)->format('d-m-Y');
+                $ultima_fecha_pago_original=$ultimo_cobro_rotulos;
+    
+                //** Revisando que la ultima fecha sea el final o inicio de mes */
+                $MesNumero=Carbon::createFromDate($ultimo_cobro_rotulos)->format('d');
+    
+                if($MesNumero<='15')
+                {
+                    $ultimo_cobro_rotulos = Carbon::parse($ultima_fecha_pago_original)->subMonthNoOverflow(1)->lastOfMonth()->format('d-m-Y');
+                }
+                else
+                    {
+                        $ultimo_cobro_rotulos = Carbon::parse($ultima_fecha_pago_original)->lastOfMonth()->format('d-m-Y');
+                    }
+                //** Fin - Revisando que la ultima fecha sea el final o inicio de mes */          
+                
+            }
 
         $ListarCobros = CobrosRotulo::latest()
         ->get();
@@ -657,7 +729,7 @@ class RotulosDetalleController extends Controller
             {
                 $detectorNull=0;
                 $detectorCobro=0;
-                return view('backend.admin.RotulosDetalle.Cobros.cobrosRotulos', compact('rotulos','rotulo','detectorNull','detectorCobro','calificacionRotulos','ListarCobros'));
+                return view('backend.admin.RotulosDetalle.Cobros.cobrosRotulos', compact('rotulos','rotulo','ultimo_cobro_rotulos','detectorNull','detectorCobro','calificacionRotulos','ListarCobros'));
             }
         }
         else
@@ -667,14 +739,14 @@ class RotulosDetalleController extends Controller
             {
              $detectorNull=0;
              $detectorCobro=0;
-            return view('backend.admin.RotulosDetalle.Cobros.cobrosRotulos', compact('rotulos','rotulo','calificacionRotulos','rotulosEspecificos','tasasDeInteres','date','detectorNull','detectorCobro','ListarCobros'));
+            return view('backend.admin.RotulosDetalle.Cobros.cobrosRotulos', compact('rotulos','rotulo','ultimo_cobro_rotulos','calificacionRotulos','rotulosEspecificos','tasasDeInteres','date','detectorNull','detectorCobro','ListarCobros'));
             }
             else
             {
                 $detectorNull=1;
                 $detectorCobro=1;
                   
-            return view('backend.admin.RotulosDetalle.Cobros.cobrosRotulos', compact('rotulos','rotulo','calificacionRotulos','rotulosEspecificos','tasasDeInteres','date','detectorNull','detectorCobro','ultimo_cobro','ListarCobros'));
+            return view('backend.admin.RotulosDetalle.Cobros.cobrosRotulos', compact('rotulos','rotulo','ultimo_cobro_rotulos','calificacionRotulos','rotulosEspecificos','tasasDeInteres','date','detectorNull','detectorCobro','ultimo_cobro','ListarCobros'));
             }
           
         }    

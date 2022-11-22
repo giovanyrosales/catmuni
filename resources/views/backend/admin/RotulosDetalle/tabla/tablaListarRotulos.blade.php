@@ -28,7 +28,7 @@
                                             <i class="fas fa-check-circle"></i>&nbsp;Rótulos Específicado
                                         </button>
                                     @else
-                                        <button type="button" class="btn btn-dark btn-xs" onclick="EspecificarRotulo({{$dato->id_rotulos_detalle}})">
+                                        <button type="button" class="btn btn-dark btn-xs" onclick="Especificar({{$dato->id_rotulos_detalle}})">
                                             <i class="fas fa-layer-group"></i>&nbsp; Específicar Rótulos
                                         </button>
                                     @endif

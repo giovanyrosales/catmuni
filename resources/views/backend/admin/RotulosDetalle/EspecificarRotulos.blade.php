@@ -15,25 +15,27 @@
         table-layout:fixed;
     }
 </style>
+
+<div class="content-wrapper" style="display: none" id="divcontenedor">
+
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h4><i class="far fa-plus-square"></i>&nbsp;Agregar Rótulos</h4>
+                <h4><i class="far fa-plus-square"></i>&nbsp;Especificar Rótulos</h4>
             </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                        <li class="breadcrumb-item active">Rótulos</li>
+                        <li class="breadcrumb-item active">Especificar Rótulos</li>
                         </ol>
                     </div>
         </div>
     </div>
 </section>
 
-                <form>
-                        <div class="card-body">
-                <input  id='id_rotulos_detalle' type='hidden'/>
+
+            
                 <table class="table" id="matrizRotulos" style="border: 100px" data-toggle="table">
                         <thead>
                         <tr>                           
@@ -44,14 +46,15 @@
                             <th style="width: 11%; text-align: center">Tarifa</th>
                             <th style="width: 15%; text-align: center">Pago Mensual</th>
                             <th style="width: 19%; text-align: center">Coordenadas</th>
-                            <th style="width: 23%; text-align: center">Foto</th>
+                          
                         </tr>                        
                         </thead>
                             <tbody id="myTbodyRotulos">
                             </tbody>
                         </table>
                             <br>
-                                <button type="button"  class="btn btn-block btn-success" id="btnAddrotuloEspecifico"><i class="far fa-plus-square"></i> &nbsp; Específicar nuevo bus</button>               
+                                <button type="button"  class="btn btn-block btn-success" id=" "><i class="far fa-plus-square"></i> &nbsp; Específicar nuevo bus</button>               
+                              
                             <br>
                         </div>
                         </form>
@@ -60,14 +63,9 @@
                                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
                                 <button type="button" onclick="GuardarRotulosEspecificos()" class="btn btn-success float-right">Guardar</button>
                             </div>
-                </div>
-           </div>
-        </div>
-</div>
-</div>
+       
+<!--Finaliza Modal Especificar Bus-->
 
-
-         
 
 @extends('backend.menus.footerjs')
 @section('archivos-js')
@@ -83,70 +81,21 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
  
-    <script src="sweetalert2.all.min.js"></script>
-    <script src="sweetalert2.min.js"></script>
-
-    
+  
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
     
-    
-<script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function(){
-            var ruta = "{{ url('/admin/rotulo-detalle/tabla') }}";
-            $('#tablaDatatable').load(ruta);
+        //var id_rotulos_detalle = {{$id_rotulos_detalle}};
+           var ruta = "{{ url('/admin/rotulo-detalle/tabla') }}" 
+           $('#tablaDatatable').load(ruta);
             document.getElementById("divcontenedor").style.display = "block";
         });
-</script>
+    </script>
 
 <script>
-
-        function EspecificarRotulo(id_rotulos_detalle)
-        {
-           
-            var formData = new FormData();
-                formData.append('id_rotulos_detalle', id_rotulos_detalle);
-
-                
-            axios.post('/admin/rotulo_detalle/especifico', formData, {
-            })
-           
-                .then((response) => {
-            
-                    closeLoading()
-
-                    if (response.data.success === 1) 
-                    { 
-                        console.log(response);
-
-                        if(response.data.rotulosEspecificos!=null)
-                        {
-                            toastr.warning('El rótulo ya fue específicada');
-                            return;
-                        }else{
-
-                                $('#contenedor').css('overflow-y','auto');
-                                $('#contenedor').modal({backdrop:'static',keyboard:false});
-                                $("#matrizRotulos tbody tr").remove();
-                                document.getElementById('id_rotulos_detalle').value=response.data.id_rotulos_detalle;
-                                window.cantidadRotulo = response.data.cantidad_rotulos;
-                            }
-                        
-                    }
-                    else 
-                        {
-                            toastMensaje('Error');
-                            $('#contenedor').modal('hide');
-                            recargar();
-                        }
-                })
-                .catch((error) => {
-                    closeLoading()
-                    toastMensaje('error', 'Error');
-                });
-            
-        }
 
         function rotulos_especificos(e)
         {
@@ -160,20 +109,18 @@
             var tarifa = table.cells[4].children[0]; 
             var pago_mensual = table.cells[5].children[0];
             var coordenadas = table.cells[6].children[0]; 
-            var foto = table.cells[7].children[0]; 
+           
 
-
-        }
-
+        } 
+        
         // filas de la tabla Agrega Buses Específicos
         $(document).ready(function () {
         $("#btnAddrotuloEspecifico").on("click", function () {
 
-            //agrega las filas dinamicamente
-            
+            //agrega las filas dinamicamente            
                 if(cantidadRotulo == 0)
                 {
-                    modalMensaje('¡Limite de Buses!', 'La cantidad de buses detallados llegó a su limite');
+                    modalMensaje('¡Limite de Rótulos!', 'La cantidad de rótulos detallados llegó a su limite');
                 }//cierra if
                 
             while(cantidadRotulo > 0)
@@ -182,37 +129,33 @@
                 var markup = "<tr>"+
            
                     "<td>"+
-                    "<textarea name='nombre[]'  class='form-control' rows='2' min='1' style='max-width: 120px' type='text'></textarea>"+                   
+                    "<textarea name='nombre[]' id= 'nombre' class='form-control' rows='2' min='1' style='max-width: 120px' type='text'></textarea>"+                   
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='medidas[]'  class='form-control' rows = '2' min='2' style='max-width: 170px' type='text'></textarea>"+
+                    "<textarea name='medidas[]' id = 'medidas' class='form-control' rows = '2' min='2' style='max-width: 170px' type='text'></textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='total_medidas[]'  class='form-control'  min='2' style='max-width: 100px' type='number'>m²</textarea>"+
+                    "<textarea name='total_medidas[]' id= 'total_medidas'  class='form-control'  min='2' style='max-width: 100px' type='number'>m²</textarea>"+
                     "</td>"+
              
                     "<td>"+
-                    "<textarea name='caras[]'  class='form-control' rows= '2' min='2' style='max-width: 100px' type='text'></textarea>"+
+                    "<textarea name='caras[]' id = 'caras' class='form-control' rows= '2' min='2' style='max-width: 100px' type='text'></textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='tarifa[]'  class='form-control' rows = '2'  min='2' style='max-width: 100px' type='text'>$</textarea>"+
+                    "<textarea name='tarifa[]' id= 'tarifa' class='form-control' rows = '2'  min='2' style='max-width: 100px' type='text'>$</textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='total_tarifa[]'  class='form-control' rows = '2' min='2' style='max-width: 100px' type='text'>$</textarea>"+
+                    "<textarea name='total_tarifa[]' id='total_tarifa' class='form-control' rows = '2' min='2' style='max-width: 100px' type='text'>$</textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='coordenadas_geo[]'  class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
+                    "<textarea name='coordenadas_geo[]' id='coordenadas_geo class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
                     "</td>"+
 
-                    "<td>"+
-                    "<input type='file' name ='foto_rotulo[]'  class='form-control' accept='image/jpeg, image/jpg, image/png'/>"+
-                    "</td>"+
-                  
                     "</tr>";
              
                 // $("tbody").append(markup);
@@ -225,6 +168,8 @@
             
             });
         });
+            
+    </script>
 
-        
-</script>
+
+@stop

@@ -281,6 +281,9 @@ use App\Models\Empresas;
     Route::get('/admin/rotulos_detalle/cobros/{rotulos}', [RotulosDetalleController::class, 'cobrosRotulos']);
     Route::post('/admin/rotulos_detalle/calcular-CobrosR', [RotulosDetalleController::class, 'calcularCobrosRotulo']);
 
+    //especificar rotulos
+    Route::post('/admin/rotulo/especifico/', [RotulosDetalleController::class, 'especificar']);
+    //termina especificar rotulos
 
 
 
