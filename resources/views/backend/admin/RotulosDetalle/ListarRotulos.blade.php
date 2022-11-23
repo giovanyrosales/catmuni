@@ -77,8 +77,7 @@
     </section>
 </div><!--Termina Contenido Frame Principal -->
 
- <!--Inicia Modal Especificar Bus-->
-    
+ <!--Inicia Modal Especificar Bus-->    
  <div class="modal" id="modalEspecificarRotulo">
         <div class="modal-fullscreen-xxl-down">
             <div class="modal-content">
@@ -90,7 +89,7 @@
                         </button>
                 </div>
                 <!--Form del modal-->
-<!-----------------------------------Inicia Contenido -------------------------------------- ----->
+<!-----------------------------------Inicia Contenido ------------------------------------------->
             <div class="modal-body">
 
             <!-- LISTA DE MATRICULAS  -->
@@ -117,6 +116,7 @@
                         </table>
                             <br>
                                 <button type="button"  class="btn btn-block btn-success" id="btnAddrotuloEspecifico"><i class="far fa-plus-square"></i> &nbsp; Específicar nuevo bus</button>               
+
                             <br>
                         </div>
                         </form>
@@ -167,9 +167,22 @@
 
 <script>
 
+    function calculo()
+    {
+        var fondo_fiesta = 0.05;
+        var tarifa_sin_fondo = '';
+        var pago_mensual = '';
+
+        var total_medidas = document.getElementById('total_medidas').value;
+        var caras = document.getElementById('caras').value;
+      
+
+    }
+
         function EspecificarRotulo(id_rotulos_detalle)
         {
-           
+            console.log(id_rotulos_detalle)
+
             var formData = new FormData();
                 formData.append('id_rotulos_detalle', id_rotulos_detalle);
 
@@ -197,14 +210,7 @@
                                 document.getElementById('id_rotulos_detalle').value=response.data.id_rotulos_detalle;
                                 window.cantidadRotulo = response.data.cantidad_rotulos;
                             }
-                        
                     }
-                    else 
-                        {
-                            toastMensaje('Error');
-                            $('#modalEspecificarRotulo').modal('hide');
-                            recargar();
-                        }
                 })
                 .catch((error) => {
                     closeLoading()
@@ -246,31 +252,31 @@
                 var markup = "<tr>"+
            
                     "<td>"+
-                    "<textarea name='nombre[]'  class='form-control' rows='2' min='1' style='max-width: 120px' type='text'></textarea>"+                   
+                    "<textarea name='nombre[]' id= 'nombre' class='form-control' rows='2' min='1' style='max-width: 120px' type='text'></textarea>"+                   
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='medidas[]'  class='form-control' rows = '2' min='2' style='max-width: 170px' type='text'></textarea>"+
+                    "<textarea name='medidas[]' id = 'medidas' class='form-control' rows = '2' min='2' style='max-width: 170px' type='text'></textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='total_medidas[]'  class='form-control'  min='2' style='max-width: 100px' type='number'>m²</textarea>"+
+                    "<textarea name='total_medidas[]' id= 'total_medidas'  class='form-control'  min='2' style='max-width: 100px' type='number'>m²</textarea>"+
                     "</td>"+
              
                     "<td>"+
-                    "<textarea name='caras[]'  class='form-control' rows= '2' min='2' style='max-width: 100px' type='text'></textarea>"+
+                    "<textarea name='caras[]' id = 'caras' class='form-control' rows= '2' min='2' style='max-width: 100px' type='text'></textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='tarifa[]'  class='form-control' rows = '2'  min='2' style='max-width: 100px' type='text'>$</textarea>"+
+                    "<textarea name='tarifa[]' id= 'tarifa' class='form-control' rows = '2'  min='2' style='max-width: 100px' type='text'>$</textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='total_tarifa[]'  class='form-control' rows = '2' min='2' style='max-width: 100px' type='text'>$</textarea>"+
+                    "<textarea name='total_tarifa[]' id='total_tarifa' class='form-control' rows = '2' min='2' style='max-width: 100px' type='text'>$</textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='coordenadas_geo[]'  class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
+                    "<textarea name='coordenadas_geo[]' id= 'coordenadas_geo class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
                     "</td>"+
 
                     "</tr>";
@@ -320,17 +326,7 @@
             for(var j = 0; j < nombre.length; j++)
             {
 
-                if(foto_rotulo[j].files[0] && foto_rotulo[j].files[0].length)
-                { // si trae doc
-                    if (!foto_rotulo[j].files[0].type.match('image/jpeg|image/jpeg|image/png'))
-                    {
-                        toastr.error('formato de documento permitido: .png .jpg .jpeg');
-                        return;
-                       
-                    }
-
-                
-                }                  
+               
                     formData.append('nombre[]', nombre[j]);  
                     formData.append('medidas[]', medidas[j]);
                     formData.append('total_medidas[]', total_medidas[j]);
@@ -338,9 +334,7 @@
                     formData.append('tarifa[]', tarifa[j]);
                     formData.append('total_tarifa[]', total_tarifa[j]);
                     formData.append('coordenadas_geo[]', coordenadas_geo[j]);   
-              
-                    
-                    console.log(nombre[j],);
+      
                                
             }
 
@@ -349,6 +343,7 @@
                     axios.post('/admin/rotulos_detalle_especifico/agregar', formData, {
                     })
                     .then((response) => {
+                       console.log(response)
                        
                 if(response.data.success === 1)
                 {                             
@@ -442,4 +437,50 @@
 
         }
     </script>
+
+    <script>
+        function Especificar()
+        {
+            //console.log(id_rotulos_detalle);
+
+
+            var formData = new FormData();
+                formData.append('id_rotulos_detalle', id_rotulos_detalle);
+
+            axios.post('/admin/rotulo/especifico',  formData, {
+            })
+           
+                .then((response) => {
+            
+                    closeLoading()
+
+                    if (response.data.success === 1) 
+                    { 
+                        console.log(response);
+
+                        if(response.data.rotulosEspecificos!=null)
+                        {
+                            toastr.warning('El rótulo ya fue específicada');
+                            return;
+                        }
+                        
+                        else{
+
+                            openLoading();
+                                window.location.href="{{ url('/admin/rotulo_detalle/especifico') }}/"+id_rotulos_detalle;
+
+                              
+                            }
+                        }
+                })
+                .catch((error) => {
+                    closeLoading()
+                    toastMensaje('error', 'Error');
+                });
+            
+            
+        }
+
+
+        </script>
 @stop
