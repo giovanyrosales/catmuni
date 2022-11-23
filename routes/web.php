@@ -310,14 +310,14 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/calificacion/pdf/{id}', [reportesController::class, 'reporte_calificacion']);
     Route::get('/admin/generar_reporte/datos_empresa/pdf/{id}', [reportesController::class, 'reporte_datos_empresa']);/** <-Viejo*(Dompdf)   ||   (Mpdf)Nuevo-> **/  Route::get('/admin/generar_reporte/datos_empresa/nuevo/pdf/{id}', [reportesController::class, 'reporte_datos_empresa_nuevo']);
     Route::get('/admin/reporte/resolucion_apertura/pdf/{id}', [reportesController::class, 'resolucion_apertura']);
-        /* reportes pdf historila de cobros en empresas con mpdf*/
+        /* reportes pdf historial de cobros en empresas con mpdf*/
     Route::get('/admin/pdf//reporte/empresas/cobros/{id_empresa}', [reportesController::class, 'pdfReporteCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/maquinas/cobros/{id}', [reportesController::class, 'pdfReporteMaquinaCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/aparatos/cobros/{id}', [reportesController::class, 'pdfReporteAparatosCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/sinfonolas/cobros/{id}', [reportesController::class, 'pdfReporteSinfonolasCobros']);
     Route::get('/admin/pdf//reporte/matricula_detalles/mesas/cobros/{id}', [reportesController::class, 'pdfReporteMesasCobros']);
     Route::get('/admin/pdf//reporte/licor/cobros/{id_empresa}', [reportesController::class, 'pdfReporteLicorCobros']);
-        /* Fin reportes pdf historila de cobros en empresa con mpdf */
+        /* Fin reportes pdf historial de cobros en empresa con mpdf */
     //REPORTES CONTRIBUYENTES
     Route::get('/admin/generar/solvencia/pdf/{id}', [reportesController::class, 'generar_solvencia']);
     Route::get('/admin/generar/constancia/simple/pdf/{id}', [reportesController::class, 'generar_constancia_simple']);
@@ -347,6 +347,8 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/mora_tributaria/index', [reportesController::class, 'indexReporteMoraTributaria'])->name('admin.sidebar.reporte.mora_tributaria');
     Route::get('/admin/reporte/mora_tributaria_periodica/index', [reportesController::class, 'indexReporteMoraTributariaPeriodica'])->name('admin.sidebar.reporte.mora_tributaria_periodica');
     Route::get('/admin/reporte/reporte_cobros/index', [reportesController::class, 'indexReporteCobros'])->name('admin.sidebar.reporte.reporte_cobros');
+    Route::get('/admin/reporte/reporte_cobros_diarios/index', [reportesController::class, 'indexReporteCobros_diarios'])->name('admin.sidebar.reporte.cobros_diarios');
+    Route::get('/admin/reporte/reporte_cobros_diarios/pdf', [reportesController::class, 'pdfReporteCobros_diarios']);
     Route::get('/admin/pdf/reporte/mora_tributaria', [reportesController::class, 'pdfReporteMoraTributaria']);
     Route::get('/admin/pdf/reporte/cobros_global/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_global']);
     Route::get('/admin/pdf/reporte/cobros_empresas/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_empresas']);

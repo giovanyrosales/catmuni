@@ -28,8 +28,8 @@
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-global-tab" role="tab" aria-selected="true" style="color:#727370;"> <i class="fas fa-hand-holding-usd"></i> Cobros global</a>
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-empresas" role="tab" aria-selected="false" style="color:#727370;"><i class="fas fa-city"></i> Por empresas</a>
-                            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-tasas" role="tab"  aria-selected="false" style="color:#727370;"><i class="fas fa-coins"></i> Por tasas</a>
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-empresas" role="tab" aria-selected="false" style="color:#727370;"><i class="fas fa-city"></i> Ingresos por empresas</a>
+                            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" onclick="reset_cobros_global();" href="#nav-cobros-tasas" role="tab"  aria-selected="false" style="color:#727370;"><i class="fas fa-coins"></i> Ingresos por tasas</a>
                         </div>
                     </nav>
                         <div class="tab-content" id="nav-tabContent"> 

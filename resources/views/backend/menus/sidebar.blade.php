@@ -228,31 +228,38 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.reporte_cobros') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-file-invoice-dollar nav-icon"></i>
-                                <p>Reporte de cobros</p>
+                                <p>Ingresos global</p>
                                 </a>
                             </li>
 
+                            <li class="nav-item">
+                                <a href="{{ route('admin.sidebar.reporte.cobros_diarios') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-funnel-dollar nav-icon"></i>
+                                <p>Cobros diarios</p>
+                                </a>
+                            </li>
+                        <!-- 
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.actividad.economica') }}" target="frameprincipal" class="nav-link">
                                     <i class="fas fa-cubes nav-icon"></i>
                                     <p>Actividad Económica</p>
                                 </a>
                             </li>
-
+                        -->
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.contribuyentes') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-id-badge nav-icon"></i>
                                     <p>Contribuyentes</p>
                                 </a>
                             </li>
-                            
+                       <!--     
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.empresas.prueba') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-hotel nav-icon"></i>
                                     <p>Empresas Prueba</p>
                                 </a>
                             </li>
-
+                        -->
                         </ul>
                 <!-- Finaliza Grupo Rótulos -->
 

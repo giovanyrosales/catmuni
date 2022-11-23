@@ -238,9 +238,9 @@
             </div>
 
             <!--Tarjeta para Buses-->
-            <div class="card border-success mb-3" id="tarjeta_buses_registradas">
-                    <div class="card-header bg-transparent border-success">
-                        <h5><span class="badge badge-pill badge-success"><i class="fas fa-bus"></i>&nbsp;</span>&nbsp;<b>Buses registrados</b></h5>
+            <div class="card mb-3" id="tarjeta_buses_registradas">
+                    <div class="card-header bg-success">
+                        <h5><span class="badge badge-pill badge-light"><i class="fas fa-bus"></i>&nbsp;</span>&nbsp;<b>Buses registrados</b></h5>
                     </div>
                       <div class="card-body">
                           <!--Tabla 12-->

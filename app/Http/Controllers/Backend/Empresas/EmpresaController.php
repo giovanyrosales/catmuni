@@ -1614,7 +1614,7 @@ public function calculo_cobroLicor(Request $request)
     $f2=Carbon::parse($request->fechaPagara);
     $FechaPagara=Carbon::parse($request->fechaPagara)->format('Y-12-31');
     $añoActual=Carbon::now()->format('Y');
-    $fechahoy=carbon::now();
+    $fechahoy=carbon::now()->format('Y-m-d'); 
    
     //** Inicia - Para determinar el intervalo de años a pagar */
     $monthInicio='01';
@@ -2706,9 +2706,9 @@ if($calificacion_anterior==null and $consulta_detalle_matricula!=null)
     $dato->estado_calificacion = 'Recalificado';
     $dato->tipo_tarifa = $calificacionesM->tipo_tarifa;
     $dato->codigo_tarifa = $calificacionesM->codigo_tarifa;
-    $dato->giro_empresarial = $calificacionesM->giro_empresarial;
+    $dato->id_giro_empresarial = $calificacionesM->id_giro_empresarial;
     $dato->save();
-
+    
     return ['success' => 1];
 
  
@@ -2771,13 +2771,15 @@ if($calificacion_anterior==null and $consulta_detalle_matricula!=null)
             log::info($multabalance);
             log::info($f1);
             log::info($f2);
-
-
+            log::info($calificacion_anterior->id_giro_empresarial);
+            
+           
             $dato = new calificacion();
             $dato->id_empresa = $request->id_empresa;
             $dato->id_estado_licencia_licor ='2';
             $dato->id_multa =$calificacion_anterior->id_multa;
             $dato->id_estado_multa ='2';
+            $dato->id_giro_empresarial = $calificacion_anterior->id_giro_empresarial;
             $dato->fecha_calificacion = $fechahoy;
             $dato->tipo_tarifa = $calificacion_anterior->tipo_tarifa;
             $dato->estado_calificacion = $EstadoCalificacion;
@@ -2799,10 +2801,9 @@ if($calificacion_anterior==null and $consulta_detalle_matricula!=null)
             $dato->total_impuesto = $calificacion_anterior->total_impuesto;
             $dato->total_impuesto_anual = $calificacion_anterior->total_impuesto_anual;
             $dato->multa_balance = $multabalance;
-            $dato->codigo_tarifa = $calificacion_anterior->codigo_tarifa;
-            $dato->giro_empresarial = $calificacion_anterior->giro_empresarial;
+            $dato->codigo_tarifa = $calificacion_anterior->codigo_tarifa;           
             $dato->save();
-
+  
             return ['success' => 1];
 
             }//Fin else...
