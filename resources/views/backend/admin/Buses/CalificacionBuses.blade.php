@@ -15,8 +15,14 @@
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 
+  <script>
+    function f1()
+    {
+      $('#btn_imprimirCalificacion').hide();
+    }
 
-
+    window.onload = f1;
+  </script>
 
 @stop
 <div class="content-wrapper" style="display: none" id="divcontenedor">
@@ -180,7 +186,7 @@
        
 
             <div class="card border-info mb-3"><!-- Panel Datos generales de la empresa -->
-            <div class="card-header text-info"><label>III. DESCRIPCIÓN DE RÓTULO O VALLA PUBLICITARIAS</label></div>
+            <div class="card-header text-info"><label>III. DESCRIPCIÓN DE BUSES</label></div>
             <div class="card-body"><!-- Card-body -->
             <div class="row"><!-- /.ROW1 -->
          
@@ -394,13 +400,16 @@
 
 
          <!-- /.card-body -->
-         <div class="card-footer">
-         <button type="button" class="btn btn-secondary" onclick="ImpimirCalificacion()"><i class="fa fa-print">
-         </i>&nbsp; Impimir Calificación&nbsp;</button>
-         <button type="button" class="btn btn-success float-right" onclick="nuevaCalificacion()"><i class="fas fa-edit">
-         </i> &nbsp;Registrar Calificación&nbsp;</button>
-         <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-          </div>
+          <div class="card-footer">
+          <button type="button" class="btn btn-secondary" onclick="imprimirCalificacion({{$buses->id_buses_detalle}})" id="btn_imprimirCalificacion">
+                <i class="fa fa-print"></i>&nbsp;Calificación&nbsp;
+          </button>
+
+          <button type="button" class="btn btn-success float-right" onclick="verificarCalificacion()"><i class="fas fa-edit">
+              </i> &nbsp;Registrar Calificación&nbsp;
+          </button>
+          <br><br><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
          <!-- /.card-footer -->
          </div>
         </div>
@@ -464,6 +473,24 @@
 
       
     }
+
+        function verificarCalificacion()
+        {
+            Swal.fire({
+                title: '¿Desea realizar la calificación?',
+                text: "",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Guardar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    nuevaCalificacion()
+                }
+            });
+        } 
     
 
       function nuevaCalificacion()
@@ -495,20 +522,11 @@
                 if(response.data.success === 0){
                     toastr.error(response.data.message);
                 }
-                if(response.data.success === 1){
-                  Swal.fire({
-                                position: 'top-end',
-                                icon: 'success',
-                                title: '¡Calificación registrada correctamente!',
-                                showConfirmButton: true,
-                          
-                              }).then((result) => {
-                              if (result.isConfirmed) {
-                                  $('#modalCalificacion').modal('hide');
-                                  // window.location.href="{{ url('/admin/nuevo/empresa/listar') }}/";
-                                  }
-                              });
-                  }
+                if(response.data.success === 1)
+                {
+                    calificacion_registrada();
+                }
+              
               
             })
             .catch((error) => {
@@ -528,6 +546,26 @@
 
 
       }
+
+        function calificacion_registrada()
+        {
+              Swal.fire({
+              title: 'Calificación registrada correctamente',
+              //text: "Puede modificarla en la opción [Editar]",
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#28a745',
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                  if (result.isConfirmed) 
+                  {                 
+                      $('#btn_imprimirCalificacion').show();
+                  }
+                
+                        });
+        }
     </script>
 
     @stop

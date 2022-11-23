@@ -34,7 +34,7 @@
         <br>
         <button type="button"onclick="location.href='{{ url('/admin/nuevo/buses/Crear') }}'" class="btn btn-success btn-sm" >
                 <i class="fas fa-pencil-alt"></i>
-                Nuevo rótulo
+                Nuevo bus
             </button>
       </div>
     </section>

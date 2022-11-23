@@ -262,7 +262,7 @@
 
         <div class="card card">
           <div class="card-header">
-          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a buses de &nbsp;<span class="badge badge-warning">&nbsp;{{$rotulos->nom_empresa}} &nbsp;</span></h5>
+          <h5 class="modal-title"><i class="far fa-edit">&nbsp;</i>Registrar cobro a rótulos &nbsp;<span class="badge badge-warning">&nbsp;{{$rotulos->nom_empresa}} &nbsp;</span></h5>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -326,17 +326,11 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                <div class="input-group mb-3">
-                    @if($detectorCobro=='0')     
-                                <input  type="text" value="{{ $calificacionRotulos->fecha_calificacion }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
-                                  <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                                  </div>
-                            @else
-                                <input  type="text" value="{{ $ultimo_cobro->periodo_cobro_fin }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
-                                  <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                                  </div>
-                    @endif
+                      <input  type="text" value="{{ $ultimo_cobro_rotulos }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                        </div>
+                          
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -632,6 +626,12 @@
             $('#historial_cobros_buses').modal('show');
           }
 
+          /* Funcion reportes historial de cobros rotulos */
+          function imp_historial_cobros_emp() {
+            let id_rotulos_detalle = (document.getElementById('id_rotulos_detalle').value)
+            window.open("{{ URL::to('/admin/pdf//reporte/rotulos/cobros/')}}/" + id_rotulos_detalle);
+          }
+          /* Fin funcion reportes historial de cobros rotulos */
 
           </script>
 

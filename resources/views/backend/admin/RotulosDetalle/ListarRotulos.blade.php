@@ -77,8 +77,7 @@
     </section>
 </div><!--Termina Contenido Frame Principal -->
 
- <!--Inicia Modal Especificar Bus-->
-    
+ <!--Inicia Modal Especificar Bus-->    
  <div class="modal" id="modalEspecificarRotulo">
         <div class="modal-fullscreen-xxl-down">
             <div class="modal-content">
@@ -109,7 +108,7 @@
                             <th style="width: 11%; text-align: center">Tarifa</th>
                             <th style="width: 15%; text-align: center">Pago Mensual</th>
                             <th style="width: 19%; text-align: center">Coordenadas</th>
-                            <th style="width: 23%; text-align: center">Foto</th>
+                          
                         </tr>                        
                         </thead>
                             <tbody id="myTbodyRotulos">
@@ -117,6 +116,7 @@
                         </table>
                             <br>
                                 <button type="button"  class="btn btn-block btn-success" id="btnAddrotuloEspecifico"><i class="far fa-plus-square"></i> &nbsp; Específicar nuevo bus</button>               
+
                             <br>
                         </div>
                         </form>
@@ -167,9 +167,22 @@
 
 <script>
 
+    function calculo()
+    {
+        var fondo_fiesta = 0.05;
+        var tarifa_sin_fondo = '';
+        var pago_mensual = '';
+
+        var total_medidas = document.getElementById('total_medidas').value;
+        var caras = document.getElementById('caras').value;
+      
+
+    }
+
         function EspecificarRotulo(id_rotulos_detalle)
         {
-           
+            console.log(id_rotulos_detalle)
+
             var formData = new FormData();
                 formData.append('id_rotulos_detalle', id_rotulos_detalle);
 
@@ -197,14 +210,7 @@
                                 document.getElementById('id_rotulos_detalle').value=response.data.id_rotulos_detalle;
                                 window.cantidadRotulo = response.data.cantidad_rotulos;
                             }
-                        
                     }
-                    else 
-                        {
-                            toastMensaje('Error');
-                            $('#modalEspecificarRotulo').modal('hide');
-                            recargar();
-                        }
                 })
                 .catch((error) => {
                     closeLoading()
@@ -225,8 +231,7 @@
             var tarifa = table.cells[4].children[0]; 
             var pago_mensual = table.cells[5].children[0];
             var coordenadas = table.cells[6].children[0]; 
-            var foto = table.cells[7].children[0]; 
-
+           
 
         }
 
@@ -247,37 +252,33 @@
                 var markup = "<tr>"+
            
                     "<td>"+
-                    "<textarea name='nombre[]'  class='form-control' rows='2' min='1' style='max-width: 120px' type='text'></textarea>"+                   
+                    "<textarea name='nombre[]' id= 'nombre' class='form-control' rows='2' min='1' style='max-width: 120px' type='text'></textarea>"+                   
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='medidas[]'  class='form-control' rows = '2' min='2' style='max-width: 170px' type='text'></textarea>"+
+                    "<textarea name='medidas[]' id = 'medidas' class='form-control' rows = '2' min='2' style='max-width: 170px' type='text'></textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='total_medidas[]'  class='form-control'  min='2' style='max-width: 100px' type='number'>m²</textarea>"+
+                    "<textarea name='total_medidas[]' id= 'total_medidas'  class='form-control'  min='2' style='max-width: 100px' type='number'>m²</textarea>"+
                     "</td>"+
              
                     "<td>"+
-                    "<textarea name='caras[]'  class='form-control' rows= '2' min='2' style='max-width: 100px' type='text'></textarea>"+
+                    "<textarea name='caras[]' id = 'caras' class='form-control' rows= '2' min='2' style='max-width: 100px' type='text'></textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='tarifa[]'  class='form-control' rows = '2'  min='2' style='max-width: 100px' type='text'>$</textarea>"+
+                    "<textarea name='tarifa[]' id= 'tarifa' class='form-control' rows = '2'  min='2' style='max-width: 100px' type='text'>$</textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='total_tarifa[]'  class='form-control' rows = '2' min='2' style='max-width: 100px' type='text'>$</textarea>"+
+                    "<textarea name='total_tarifa[]' id='total_tarifa' class='form-control' rows = '2' min='2' style='max-width: 100px' type='text'>$</textarea>"+
                     "</td>"+
 
                     "<td>"+
-                    "<textarea name='coordenadas_geo[]'  class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
+                    "<textarea name='coordenadas_geo[]' id= 'coordenadas_geo class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
                     "</td>"+
 
-                    "<td>"+
-                    "<input type='file' name ='foto_rotulo[]'  class='form-control' accept='image/jpeg, image/jpg, image/png'/>"+
-                    "</td>"+
-                  
                     "</tr>";
              
                 // $("tbody").append(markup);
@@ -295,7 +296,6 @@
         function GuardarRotulosEspecificos()
         {
 
-            
             var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
             var nombre = $("textarea[name='nombre[]']").map(function(){return $(this).val();}).get();
             var medidas = $("textarea[name='medidas[]']").map(function(){return $(this).val();}).get();
@@ -304,7 +304,6 @@
             var tarifa = $("textarea[name='tarifa[]']").map(function(){return $(this).val();}).get();
             var total_tarifa = $("textarea[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
             var coordenadas_geo = $("textarea[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
-            var foto_rotulo = $("input[name='foto_rotulo[]']").get();
           
             //**** Validar */
 
@@ -317,7 +316,6 @@
                     return;
             }
 
-            
           
             //**** Fin de validar */
 
@@ -328,17 +326,7 @@
             for(var j = 0; j < nombre.length; j++)
             {
 
-                if(foto_rotulo[j].files[0] && foto_rotulo[j].files[0].length)
-                { // si trae doc
-                    if (!foto_rotulo[j].files[0].type.match('image/jpeg|image/jpeg|image/png'))
-                    {
-                        toastr.error('formato de documento permitido: .png .jpg .jpeg');
-                        return;
-                       
-                    }
-
-                
-                }                  
+               
                     formData.append('nombre[]', nombre[j]);  
                     formData.append('medidas[]', medidas[j]);
                     formData.append('total_medidas[]', total_medidas[j]);
@@ -346,12 +334,8 @@
                     formData.append('tarifa[]', tarifa[j]);
                     formData.append('total_tarifa[]', total_tarifa[j]);
                     formData.append('coordenadas_geo[]', coordenadas_geo[j]);   
-                    formData.append('foto_rotulo[]',foto_rotulo[j].files[0]);
-
-                    
-                    console.log(nombre[j],foto_rotulo[j]);
+      
                                
-                    
             }
 
                 formData.append('id_rotulos_detalle', id_rotulos_detalle);
@@ -359,6 +343,7 @@
                     axios.post('/admin/rotulos_detalle_especifico/agregar', formData, {
                     })
                     .then((response) => {
+                       console.log(response)
                        
                 if(response.data.success === 1)
                 {                             
@@ -452,4 +437,50 @@
 
         }
     </script>
+
+    <script>
+        function Especificar()
+        {
+            //console.log(id_rotulos_detalle);
+
+
+            var formData = new FormData();
+                formData.append('id_rotulos_detalle', id_rotulos_detalle);
+
+            axios.post('/admin/rotulo/especifico',  formData, {
+            })
+           
+                .then((response) => {
+            
+                    closeLoading()
+
+                    if (response.data.success === 1) 
+                    { 
+                        console.log(response);
+
+                        if(response.data.rotulosEspecificos!=null)
+                        {
+                            toastr.warning('El rótulo ya fue específicada');
+                            return;
+                        }
+                        
+                        else{
+
+                            openLoading();
+                                window.location.href="{{ url('/admin/rotulo_detalle/especifico') }}/"+id_rotulos_detalle;
+
+                              
+                            }
+                        }
+                })
+                .catch((error) => {
+                    closeLoading()
+                    toastMensaje('error', 'Error');
+                });
+            
+            
+        }
+
+
+        </script>
 @stop
