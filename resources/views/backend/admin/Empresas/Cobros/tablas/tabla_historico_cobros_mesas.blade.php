@@ -14,8 +14,10 @@
 </style>
 
 <div>
-     <a class="btn btn-info float-left" onclick="imp_historial_cobros_mesas()"  target="frameprincipal">
-     <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+    @if (count($ListaCobrosMesas) > 0)
+        <a class="btn btn-info float-left" onclick="imp_historial_cobros_mesas()"  target="frameprincipal">
+        <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+    @endif
 </div>
 
 <table id="tab_historico_cobros_mesas" class="table table-bordered table-hover" > 

@@ -14,8 +14,10 @@
 </style>
 
 <div>
-     <a class="btn btn-danger float-left" onclick="imp_historial_cobros_sinfonolas()"  target="frameprincipal">
-     <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+    @if (count($ListaCobrosSinfonolas) > 0)
+        <a class="btn btn-danger float-left" onclick="imp_historial_cobros_sinfonolas()"  target="frameprincipal">
+        <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+    @endif
 </div>
 <table id="tab_historial_cobros_sinfonolas" class="table table-bordered table-hover" > 
               <thead>             
