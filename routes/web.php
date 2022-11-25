@@ -290,7 +290,7 @@ use App\Models\Empresas;
     //TERMINA NUEVO MÓDULO RÓTULOS
 
     //REPORTES EMPRESAS
-    Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta']); //Borrar el 2 para funcion con Dompdf
+    Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta2']); //Borrar el 2 para funcion con Dompdf
     Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso']);
     Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion']);
     Route::get('/admin/generar_notificacion/maquinas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_maquinas']);
@@ -298,7 +298,7 @@ use App\Models\Empresas;
     Route::get('/admin/generar_notificacion/aparatos/pdf/{f1}/{f2}/{id}', [reportesController::class, 'notificacion_aparatos']);
     Route::get('/admin/generar_notificacion/sinfonolas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_sinfonolas']);
 
-    Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor']);
+    Route::get('/admin/estado_cuenta_licor/pdf/{f1}/{f2}/{id}', [reportesController::class, 'estado_cuenta_licor2']); //Borrar el 2 para funcion con Dompdf
     Route::get('/admin/estado_cuenta_aparatos/pdf/{f1}/{f2}/{ap}/{id}', [reportesController::class, 'estado_cuenta_aparatos2']); //Borrar el 2 para funcion con Dompdf
     Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas2']); //Borrar el 2 para funcion con Dompdf
     Route::get('/admin/estado_cuenta_maquinas/pdf/{f1}/{f2}/{im}/{ti}/{id}', [reportesController::class, 'estado_cuenta_maquinas2']); //Borrar el 2 para funcion con Dompf

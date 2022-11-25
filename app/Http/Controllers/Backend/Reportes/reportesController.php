@@ -783,16 +783,16 @@ class reportesController extends Controller
                              </td>
                          </tr>
                          <tr>
-                             <td colspan='2' style='line-height: 18.6px;word-spacing: -0.5px;padding-top:13px'>
-                                 <p style='font-size:12.5'>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                             <td colspan='2' style='line-height: 17px;word-spacing: -0.1px;padding-top:10px'>
+                                 <p style='font-size:13'>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
                                      Dirección:&nbsp;$empresa->direccion<br>
                                      Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
                                      Empresa o Negocio:&nbsp;$empresa->nombre<br><br>
  
                                      Estimado(a) señor (a): </p><br>
-                                 <p style='font-size:12.5'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                                 <p style='font-size:13'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                                      motivo de la presente es para manifestarle que su estado de cuenta en esta
-                                     Municipalidad es el siguiente:<br></p>
+                                     Municipalidad es el siguiente:<br><br></p>
                                  <p style='font-size:12.5'><strong>Impuestos Municipales</strong><br>
                                     <strong>$act_especifica</strong></p>
                              </td>
@@ -801,60 +801,63 @@ class reportesController extends Controller
                              <td colspan='2' style='line-height: 35px;word-spacing: -0.5px;'><p style='font-size:11.7;'>*Intereses cálculados con base a tabla proporcionados por el banco nacional de reserva.</p><br></td>
                          </tr>
                          <tr>
-                             <th scope='col' style='background-color: #ddd;border: 1px solid #ddd;color: #1E1E1E;padding-left: 8px;padding-top: 4px;padding-bottom: 4px;font-size: 13.8;word-spacing: -0.7px;'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
-                             <th scope='col' style='background-color: #ddd;border: 1px solid #ddd;color: #1E1E1E;padding-left: 9px;padding-top: 4px;padding-bottom: 4px;font-size: 13.8;word-spacing: -0.7px' width='56.6%'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>
+                            <td colspan='2'><hr style='height:1.5px;border:none;color:#333;background-color:#333;margin-top: 12px;margin-bottom: 7px'></td>
+                        </tr>
+                         <tr>
+                             <th scope='col' style='background-color: #ddd;border: 1px solid #ddd;color: #1E1E1E;padding-left: 6px;padding-top: 4px;padding-bottom: 4px;font-size: 13.7;word-spacing: -0.7px;'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                             <th scope='col' style='background-color: #ddd;border: 1px solid #ddd;color: #1E1E1E;padding-left: 7px;padding-top: 4px;padding-bottom: 4px;font-size: 13.7;word-spacing: -0.7px' width='55.5%'>&nbsp;&nbsp;hasta&nbsp; $PagoUltimoDiaMes&nbsp;</th>
                          </tr>
                          <tr>
                             <td align='right' id='cinco'>IMPUESTOS</td>
-                            <td align='center' id='seis'>$" . $impuesto_año_actual . "</td>
+                            <td align='center' id='seis'>" . $impuesto_año_actual . "</td>
                          </tr>
                          <tr>
                              <td align='right' id='cinco'>IMPUESTO MORA</td>
-                             <td align='center' id='seis'>$" . $impuestos_mora . "</td>
+                             <td align='center' id='seis'>" . $impuestos_mora . "</td>
                          </tr>
                          <tr>
                              <td align='right' id='cinco'>INTERESES MORATORIOS</td>
-                             <td align='center' id='seis'>$" . $InteresTotal . "</td>
+                             <td align='center' id='seis'>" . $InteresTotal . "</td>
                          </tr>
                          <tr>
-                             <td align='right' id='cinco'>MULTAS POR BALANCE $Cantidad_multas</td>
-                             <td align='center' id='seis'>$" . $monto_pago_multaBalance . "</td>
+                             <td align='right' id='cinco'>MULTAS POR BALANCE ($Cantidad_multas)</td>
+                             <td align='center' id='seis'>" . $monto_pago_multaBalance . "</td>
                          </tr>
                          <tr>
                              <td align='right' id='cinco'>MULTAS P. EXTEMPORANEOS</td>
-                             <td align='center' id='seis'>$" . $totalMultaPagoExtemporaneo . "</td>
+                             <td align='center' id='seis'>" . $totalMultaPagoExtemporaneo . "</td>
                          </tr>
                          <tr>
                              <td align='right' id='cinco'>FONDO F. PATRONALES 5%</td>
-                             <td align='center' id='seis'>$" . $fondoFPValor . "</td>
+                             <td align='center' id='seis'>" . $fondoFPValor . "</td>
                          </tr>
                          <tr>
-                             <th scope='row' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.8;word-spacing: -0.8px'>Total de Impuestos Adeudados</th>
-                             <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.8;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
+                             <th scope='row' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 2px;font-size: 13.8;word-spacing: -0.8px'>Total de Impuestos Adeudados</th>
+                             <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 2px;font-size: 13.5;word-spacing: -0.8px'>" . $totalPagoValor . "</th>
                          </tr>
                          <tr>
                              <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 7px'></td>
                              <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 7px'></td>
                          </tr>
                          <tr>
-                             <td colspan='2' style='line-height: 18px;word-spacing: -0.5px;font-size: 14.1px'>
+                             <td colspan='2' style='line-height: 17px;word-spacing: -0.5px;font-size: 14px'>
                                  Validez: <strong><u>$FechaDelDia</u></strong><br><br>
-                                 <p style='font-size:14.1'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agradeciendo su comprension y atención a este estado de cuenta me suscribo de
+                                 <p style='font-size:12.9'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agradeciendo su comprension y atención a este estado de cuenta me suscribo de
                                      usted, muy cordialmente</p>
                              </td>
                          </tr>
                          <tr >
-                             <td colspan='2' align='center' style='word-spacing: -0.5px'>
+                             <td colspan='2' align='center' style='word-spacing: -0.5px;'>
                                  <br>
-                                 <p style='font-size:14.3px'>Lic. Rosa Lisseth Aldana <br>
+                                 <p style='font-size:13.2px'>Lic. Rosa Lisseth Aldana <br>
                                  Unidad de Administración Tributaria Municipal</p>
-                                 <br><br>
+                                 <br><br><br>
                              </td>
                          </tr>
                      </table>
                  </div>";
 
-        $tabla .= "<footer style='margin-top: 15px'>
+        $tabla .= "<footer style='margin-top: 9px'>
                      <table width='100%'>
                          <tr>
                              <td>
@@ -1560,6 +1563,321 @@ public function estado_cuenta_licor($f1,$f2,$id){
 
     }
 
+    // Funcion de estado de cuenta licor con mpdf
+
+    public function estado_cuenta_licor2($f1, $f2, $id) {
+
+        $f1_original = $f1;
+        $idusuario = Auth::id();
+        $MesNumero = Carbon::createFromDate($f1)->format('d');
+        //log::info($MesNumero);
+
+        if ($MesNumero <= '15') {
+            $f1 = Carbon::parse($f1)->format('Y-m-01');
+            $f1 = Carbon::parse($f1);
+            $InicioPeriodo = Carbon::createFromDate($f1);
+            $InicioPeriodo = $InicioPeriodo->format('Y-01-01');
+            //log::info('inicio de mes');
+        } else {
+            $f1 = Carbon::parse($f1)->addMonthsNoOverflow(1)->day(1);
+            $InicioPeriodo = Carbon::parse($f1_original)->format('Y-01-01');
+            // log::info('fin de mes ');
+        }
+
+
+        $f2 = Carbon::parse($f2);
+        $FechaPagara = Carbon::parse($f2)->format('Y-12-31');
+        $añoActual = Carbon::now()->format('Y');
+        $fechahoy = carbon::now();
+
+        //** Inicia - Para determinar el intervalo de años a pagar */
+        $monthInicio = '01';
+        $dayInicio = '01';
+        $monthFinal = '12';
+        $dayFinal = '31';
+        $AñoInicio = $f1->format('Y');
+        $AñoFinal = $f2->format('Y');
+        $FechaInicio = Carbon::createFromDate($AñoInicio, $monthInicio, $dayInicio);
+        $FechaFinal = Carbon::createFromDate($AñoFinal, $monthFinal, $dayFinal);
+        //** Finaliza - Para determinar el intervalo de años a pagar */
+
+
+
+        //** INICIO - Para obtener SIEMPRE el último día del mes que selecciono el usuario */
+        $PagoUltimoDiaMes = Carbon::parse($f2)->endOfMonth()->format('Y-m-d');
+        //** FIN - Para obtener SIEMPRE el último día del mes que selecioino el usuario */
+        Log::info('Pago ultimo dia del mes---->' . $PagoUltimoDiaMes);
+
+
+        $UltimoDiaMes = Carbon::parse($f1)->endOfMonth();
+        Log::info('ultimo dia del mes---->' . $UltimoDiaMes);
+
+
+        $empresa = Empresas
+        ::join('contribuyente', 'empresa.id_contribuyente', '=', 'contribuyente.id')
+        ->join('estado_empresa', 'empresa.id_estado_empresa', '=', 'estado_empresa.id')
+        ->join('giro_comercial', 'empresa.id_giro_comercial', '=', 'giro_comercial.id')
+        ->join('actividad_economica', 'empresa.id_actividad_economica', '=', 'actividad_economica.id')
+
+
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
+                'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui',
+                'contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax',
+                'contribuyente.direccion as direccionCont','estado_empresa.estado','giro_comercial.nombre_giro','actividad_economica.rubro',
+        )
+        ->find($id);
+        $nombre_empresa = $empresa->nombre;
+
+
+        $intervalo = DateInterval::createFromDateString('1 Year');
+        $periodo = new DatePeriod($FechaInicio, $intervalo, $FechaFinal);
+        $multa = 0;
+        $multaTotalLicor = 0;
+
+        /** Calculando las licencias*/
+        $Cantidad_licencias = 0;
+        $monto_pago_licencia = 0;
+        $fila = '------------------';
+        $fila2 = '_______________________';
+        foreach ($periodo as $dt) {
+
+
+            $AñoCancelar = $dt->format('Y');
+            $AñoSumadoLicencia = Carbon::createFromDate($AñoCancelar, 12, 31);
+            $monto_licencia = calificacion::where('año_calificacion', '=', $AñoCancelar)
+            ->where('id_empresa', '=', $id)
+                ->pluck('licencia')
+                ->first();
+
+            $año_calificacion = calificacion::where('año_calificacion', '=', $AñoCancelar)
+            ->where('id_empresa', '=', $id)
+                ->pluck('año_calificacion')
+                ->first();
+
+            $id_estado_licencia = calificacion::where('año_calificacion', '=', $AñoCancelar)
+            ->where('id_empresa', '=', $id)
+                ->pluck('id_estado_licencia_licor')
+                ->first();
+
+            log::info($año_calificacion);
+            log::info($id_estado_licencia);
+            log::info($monto_licencia);
+            log::info($fila);
+            $FechaLimiteVariable = Carbon::parse($dt)->month(1)->day(15);
+
+            if ($id_estado_licencia == '2' and $año_calificacion < $añoActual) {
+                $monto_pago_licencia = $monto_pago_licencia + $monto_licencia;
+                $Cantidad_licencias = $Cantidad_licencias + 1;
+
+                Log::info($monto_pago_licencia);
+                Log::info($Cantidad_licencias);
+
+                $Cantidadsemanas = ceil(($FechaLimiteVariable->floatDiffInRealWeeks($AñoSumadoLicencia)));
+                $multa = $Cantidadsemanas * $monto_licencia;
+                $multaTotalLicor = $multaTotalLicor + $multa;
+                log::info($FechaLimiteVariable);
+                log::info($AñoSumadoLicencia);
+                Log::info('IF1- Con Multa');
+                log::info($multa);
+                log::info($Cantidadsemanas);
+                log::info($fila2);
+            } else if ($id_estado_licencia == '2' and $año_calificacion == $añoActual) {
+                if ($fechahoy > $FechaLimiteVariable) {
+
+                    $monto_pago_licencia = $monto_pago_licencia + $monto_licencia;
+                    $Cantidad_licencias = $Cantidad_licencias + 1;
+
+                    Log::info($monto_pago_licencia);
+                    Log::info($Cantidad_licencias);
+
+                    $Cantidadsemanas = ceil(($FechaLimiteVariable->floatDiffInRealWeeks($fechahoy)));
+
+                    $multa = $Cantidadsemanas * $monto_licencia;
+                    $multaTotalLicor = $multaTotalLicor + $multa;
+                    log::info($FechaLimiteVariable);
+                    log::info($fechahoy);
+                    Log::info('IF2- Con Multa');
+                    log::info($multa);
+                    log::info($Cantidadsemanas);
+                    log::info($fila2);
+                } else {
+                    $monto_pago_licencia = $monto_pago_licencia + $monto_licencia;
+                    $Cantidad_licencias = $Cantidad_licencias + 1;
+
+                    Log::info($monto_pago_licencia);
+                    Log::info($Cantidad_licencias);
+                    $multaTotalLicor = $multaTotalLicor;
+                    Log::info('IF3 - Sin Multa');
+                    log::info($multa);
+                    log::info($fila2);
+                }
+            }
+        } //** Temrtmina foreach */
+
+
+        //** Fin- Determinar si el permiso de una licencia ya fue pagada*/
+
+
+        $totalPagoValor = round($multaTotalLicor + $monto_pago_licencia, 2);
+
+        //Dando formato a las cantidades finales
+        $multa = number_format($multa, 2, '.', ',');
+        $multaTotalLicorDecimal = round($multaTotalLicor, 2);
+        $totalPagoValorDecimal = round($totalPagoValor, 2);
+        $multaTotalLicor = number_format($multaTotalLicor, 2, '.', ',');
+        $totalPagoValor = number_format($totalPagoValor, 2, '.', ',');
+
+
+        //** Finaliza calculo de cobro licencia licor **/
+
+        $mesesEspañol = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $fechaF = Carbon::parse(Carbon::now());
+        $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+        $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+
+        /* $view = View::make('backend.admin.Empresas.Reportes.Estado_cuenta_licor', compact([
+
+            'FechaDelDia',
+            'empresa',
+            'FechaPagara',
+            'InicioPeriodo',
+            'multaTotalLicor',
+            'monto_pago_licencia',
+            'totalPagoValor',
+
+        ]))->render();
+
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+
+        return $pdf->stream(); */
+
+        //Configuracion de Reporte en MPDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Estado de cuenta');
+
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldiaIMP = 'images/logoIMP.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+        $linea3 = 'images/linea3.png';
+
+        $tabla = "<header style=''>
+                    <div class='row'>
+                        <div class='content'>
+                            <img id='logo2' src='$logoalcaldiaIMP' style='float: left;margin-top: 10px;margin-bottom: -50px;' alt='' height='78px' width='78px'>
+                            <img id='EscudoSv2' src='$logoelsalvador' style='float: right;margin-top: 10px;margin-right: 15px;margin-bottom: -50px;' alt='' height='78px' width='78px'>
+                            <h3 style='font-size: 19px;padding-left: 10px;padding-top: -5px;word-spacing: 1px'>ALCALDIA MUNICIPAL DE METAPAN</h3>
+                            <h3 style='font-size: 17.5px;word-spacing: 1px'>Santa Ana, El Salvador, C.A.</h3>
+                            <img src='$linea3' alt='' height='30px' width='720px' style='margin-top: -1px;margin-left: -5px'>
+                        </div>
+                    </div>
+                </header>";
+
+        $tabla .= "<div id='content' style='margin-top: -9px;'>
+                    <h4 align='center' style='font-size: 15px;word-spacing: 1px;'><u>ESTADO DE CUENTA</u></h4>
+                    <table border='0' align='center' style='width: 600px;'>
+                        <tr>
+                            <td></td>
+                            <td align='right' width='60%' style='font-size: 14px;line-height: 30px;word-spacing: -2px;'>
+                                <strong>Metapán, $FechaDelDia</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='2' style='line-height: 18.3px;word-spacing: -1.1px;padding-top:13px'>
+                                <p style='font-size:14.3'>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                                    Dirección:&nbsp;$empresa->direccionCont<br>
+                                    Cuenta Corriente N°:&nbsp;$empresa->num_tarjeta<br>
+                                    Empresa o Negocio:&nbsp;$empresa->nombre/Licencia Licor<br><br><br>
+
+                                    Estimado(a) señor (a): </p><br>
+                                <p style='font-size:14.3'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
+                                    motivo de la presente es para manifestarle que su estado de cuenta en esta
+                                    Municipalidad es el siguiente:<br><br></p>
+                                <p style='font-size:13.8'><strong>Impuestos Municipales</strong></p><br><br>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'><hr style='height:1.5px;border:none;color:#333;background-color:#333;margin-top: 3px;margin-bottom: 7px'></td>
+                        </tr>
+                        <tr>
+                            <th scope='col' style='background-color: #ddd;border: 1px solid #ddd;color: #1E1E1E;padding-left: 3px;padding-top: 4px;padding-bottom: 3px;font-size: 13.6;word-spacing: -0.7px;'>Periodo: &nbsp;&nbsp;desde&nbsp; $InicioPeriodo&nbsp;</th>
+                            <th scope='col' style='background-color: #ddd;border: 1px solid #ddd;color: #1E1E1E;padding-left: 5px;padding-top: 4px;padding-bottom: 3px;font-size: 13.6;word-spacing: -0.7px' width='58%'>&nbsp;&nbsp;hasta&nbsp; $FechaPagara&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <td align='right' id='cinco'>LICENCIAS</td>
+                            <td align='center' id='seis'>$" . $monto_pago_licencia . "</td>
+                        </tr>
+                        <tr>
+                            <td align='right' id='cinco'>MULTAS POR LICENCIA</td>
+                            <td align='center' id='seis'>$" . $multaTotalLicor . "</td>
+                        </tr>
+                        <tr>
+                            <th scope='row' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.6;word-spacing: -0.8px'>Total de Impuestos Adeudados</th>
+                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.5;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
+                        </tr>
+                        <tr>
+                            <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 7px'></td>
+                            <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 7px'></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2' style='line-height: 18px;word-spacing: -0.5px;font-size: 14.1px'>
+                                Validez: <strong><u>$FechaDelDia</u></strong><br><br>
+                                <p style='font-size:14.1'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agradeciendo su comprension y atención a este estado de cuenta me suscribo de
+                                    usted, muy cordialmente</p>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td colspan='2' align='center' style='word-spacing: -1px'>
+                                <br>
+                                <p style='font-size:14.5px'>Lic. Rosa Lisseth Aldana <br>
+                                Unidad de Administración Tributaria Municipal</p>
+                                <br><br><br><br><br><br><br>
+                            </td>
+                        </tr>
+                    </table>
+                </div>";
+
+        $tabla .= "<footer style='margin-top: 15px'>
+                    <table width='100%'>
+                        <tr>
+                            <td>
+                                <p class='izq'>
+                                </p>
+                            </td>
+                            <td style='word-spacing: -1px;'>
+                                <img src='$linea3' alt='' height='28px' width='700px' style='margin-left: -15px;margin-top: -12px'>
+                                <br>
+                                <br>
+                                <p class='page' style='color: #A9A8A7;font-size: 14.5;'>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avenida Benjamín Estrada Valiente y Calle Poniente, Barrio San Pedro, Metapán.<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tel.:2402-7615 - 2402-7601 - Fax: 2402-7616 <br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>www.alcaldiademetapan.org</strong>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    </footer>";
+
+        $stylesheet = file_get_contents('css/cssreportepdf.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->SetMargins(0, 0, 5);
+
+
+        //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+    }
+
+    // FIN Funcion de estado cuenta licor con mpdf
+
 
     public function estado_cuenta_aparatos($f1,$f2,$ap,$id){
 
@@ -1935,7 +2253,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
                                 <p style='font-size:14.3'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                                     motivo de la presente es para manifestarle que su estado de cuenta en esta
                                     Municipalidad es el siguiente:<br><br></p>
-                                <p style='font-size:13.8'><strong>Impuestos Municipales</strong></p><br><br>
+                                <p style='font-size:13.7'><strong>Impuestos Municipales</strong></p><br><br>
                                 
                             </td>
                         </tr>
@@ -1960,7 +2278,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
                         </tr>
                         <tr>
                             <th scope='row' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.6;word-spacing: -0.8px'>Total de Impuestos Adeudados</th>
-                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.6;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
+                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.5;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
                         </tr>
                         <tr>
                             <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 7px'></td>
@@ -1976,7 +2294,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
                         <tr >
                             <td colspan='2' align='center' style='word-spacing: -0.5px'>
                                 <br>
-                                <p style='font-size:14.3px'>Lic. Rosa Lisseth Aldana <br>
+                                <p style='font-size:14.5px'>Lic. Rosa Lisseth Aldana <br>
                                 Unidad de Administración Tributaria Municipal</p>
                                 <br><br><br><br><br><br>
                             </td>
@@ -2821,8 +3139,8 @@ public function estado_cuenta_licor($f1,$f2,$id){
                                     Estimado(a) señor (a): </p><br>
                                 <p style='font-size:14.1'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                                     motivo de la presente es para manifestarle que su estado de cuenta en esta
-                                    Municipalidad es el siguiente:<br>
-                                    <strong>Impuestos Municipales</strong></p>
+                                    Municipalidad es el siguiente:<br></p>
+                                    <p style='font-size:13.7'><strong>Impuestos Municipales</strong></p>
                                 
                             </td>
                         </tr>
@@ -2863,7 +3181,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
                         </tr>
                         <tr>
                             <th scope='row' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.8;word-spacing: -0.8px'>Total de Impuestos Adeudados</th>
-                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.8;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
+                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.5;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
                         </tr>
                         <tr>
                             <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 7px'></td>
@@ -2879,7 +3197,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
                         <tr >
                             <td colspan='2' align='center' style='word-spacing: -0.5px'>
                                 <br>
-                                <p style='font-size:14.3px'>Lic. Rosa Lisseth Aldana <br>
+                                <p style='font-size:14.4px'>Lic. Rosa Lisseth Aldana <br>
                                 Unidad de Administración Tributaria Municipal</p>
                                 <br><br>
                             </td>
@@ -3278,8 +3596,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
             }
 
     // Funcion esdato de cuenta maquinas con mpdf
-    public function estado_cuenta_maquinas2($f1, $f2, $im, $ti, $id)
-    {
+    public function estado_cuenta_maquinas2($f1, $f2, $im, $ti, $id) {
         $f1_original = $f1;
         $fechaPagaraMaquinas = $f2;
         $id_matriculadetalleMaquinas = $im;
@@ -3663,8 +3980,8 @@ public function estado_cuenta_licor($f1,$f2,$id){
                                     Estimado(a) señor (a): </p><br>
                                 <p style='font-size:14.1'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En nombre del Concejo Municipal, reciba un afectuoso saludo y deseos de éxito. El
                                     motivo de la presente es para manifestarle que su estado de cuenta en esta
-                                    Municipalidad es el siguiente:<br>
-                                    <strong>Impuestos Municipales</strong></p>
+                                    Municipalidad es el siguiente:<br></p>
+                                    <p style='font-size:13.7'><strong>Impuestos Municipales</strong></p>
                                 
                             </td>
                         </tr>
@@ -3701,7 +4018,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
                         </tr>
                         <tr>
                             <th scope='row' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.8;word-spacing: -0.8px'>Total de Impuestos Adeudados</th>
-                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.8;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
+                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.5;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
                         </tr>
                         <tr>
                             <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 7px'></td>
@@ -3717,7 +4034,7 @@ public function estado_cuenta_licor($f1,$f2,$id){
                         <tr >
                             <td colspan='2' align='center' style='word-spacing: -0.5px'>
                                 <br>
-                                <p style='font-size:14.3px'>Lic. Rosa Lisseth Aldana <br>
+                                <p style='font-size:14.5px'>Lic. Rosa Lisseth Aldana <br>
                                 Unidad de Administración Tributaria Municipal</p>
                                 <br><br><br>
                             </td>
@@ -4600,7 +4917,7 @@ public function estado_cuenta_mesas($f1,$f2,$ime,$ti,$id){
                         </tr>
                         <tr>
                             <th scope='row' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.6;word-spacing: -0.8px'>Total de Impuestos Adeudados</th>
-                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.6;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
+                            <th align='center' style='background-color: #ddd;border: 2px solid #ddd;color: #1E1E1E;padding: 3px;font-size: 13.5;word-spacing: -0.8px'>$" . $totalPagoValor . "</th>
                         </tr>
                         <tr>
                             <td><hr style='height:2px;border:none;color:#333;background-color:#333;margin-top: 6px;margin-bottom: 6px'></td>
@@ -4616,7 +4933,7 @@ public function estado_cuenta_mesas($f1,$f2,$ime,$ti,$id){
                         <tr >
                             <td colspan='2' align='center' style='word-spacing: -0.5px'>
                                 <br>
-                                <p style='font-size:14.3px'>Lic. Rosa Lisseth Aldana <br>
+                                <p style='font-size:14.5px'>Lic. Rosa Lisseth Aldana <br>
                                 Unidad de Administración Tributaria Municipal</p>
                                 <br><br>
                             </td>
