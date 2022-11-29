@@ -735,20 +735,6 @@ class reportesController extends Controller
         $mes = $mesesEspañol[($fechaF->format('n')) - 1];
         $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
 
-
-        /* $view = View::make('backend.admin.Empresas.EstadoCuenta.Estado_cuenta', compact([
-            'FechaDelDia',
-            'empresa', 'impuestos_mora', 'fondoFPValor', 'totalPagoValor', 'impuesto_año_actual',
-            'monto_pago_multaBalance', 'InteresTotal', 'totalMultaPagoExtemporaneo', 'PagoUltimoDiaMes',
-            'InicioPeriodo', 'Cantidad_multas', 'act_especifica'
-
-        ]))->render();
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadHTML($view)->setPaper('carta', 'portrait');
-
-        return $pdf->stream(); */
-
         //Configuracion de Reporte en MPDF
         $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
         $mpdf->SetTitle('Alcaldía Metapán | Estado de cuenta');
@@ -987,6 +973,208 @@ public function aviso($id)
             return $pdf->stream();
         }
     }
+
+    /** Funcion de aviso con mpdf **/
+
+    public function aviso2($id) {
+        $mesesEspañol = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $fechaF = Carbon::parse(Carbon::now());
+        $mes = $mesesEspañol[($fechaF->format('n')) - 1];
+        $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
+
+        $cantidad = 0;
+        $alerta_aviso = alertas_detalle::where('id_empresa', $id)
+        ->where('id_alerta', '1')
+        ->pluck('cantidad')
+        ->first();
+
+        $empresa = Empresas
+            ::join('contribuyente', 'empresa.id_contribuyente', '=', 'contribuyente.id')
+            ->join('estado_empresa', 'empresa.id_estado_empresa', '=', 'estado_empresa.id')
+            ->join('giro_comercial', 'empresa.id_giro_comercial', '=', 'giro_comercial.id')
+            ->join('actividad_economica', 'empresa.id_actividad_economica', '=', 'actividad_economica.id')
+
+
+            ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral',
+                'empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+                'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui',
+                'contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax',
+                'contribuyente.direccion as direccionCont','estado_empresa.estado','giro_comercial.nombre_giro','actividad_economica.rubro',
+                'actividad_economica.id as id_act_economica',
+            )
+            ->find($id);
+
+        //** Guardando en el historico de avisos */
+        $dato = new NotificacionesHistorico();
+        $dato->id_empresa = $id;
+        $dato->id_alertas = '1';
+        $created_at = new Carbon();
+        $dato->created_at = $created_at->setTimezone('America/El_Salvador');
+        $dato->save();
+
+        if ($dato->save()) {
+
+            if ($alerta_aviso === null) {
+
+                $cantidad_avisos = $cantidad + 1;
+
+                $registro = new alertas_detalle();
+                $registro->id_empresa = $id;
+                $registro->id_alerta = '1';
+                $registro->cantidad = $cantidad_avisos;
+                $registro->save();
+            } else if ($alerta_aviso == 0) {
+
+                $cantidad = $alerta_aviso + 1;
+
+                alertas_detalle::where('id_empresa', $id)
+                ->where('id_alerta', '1')
+                ->update([
+                    'cantidad' => $cantidad,
+                ]);
+            } else if ($alerta_aviso >= 2) {
+
+                $cantidad = 0;
+
+                alertas_detalle::where('id_empresa', $id)
+                ->where('id_alerta', '1')
+                ->update([
+                    'cantidad' => $cantidad,
+                ]);
+            } else {
+                $cantidad = $alerta_aviso + 1;
+
+                alertas_detalle::where('id_empresa', $id)
+                ->where('id_alerta', '1')
+                ->update([
+                    'cantidad' => $cantidad,
+                ]);
+            }
+
+            //CREANDO PDF
+
+            //Configuracion de Reporte en MPDF
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+            $mpdf->SetTitle('Alcaldía Metapán | Aviso');
+
+
+            // mostrar errores
+            $mpdf->showImageErrors = false;
+
+            $logoalcaldia = 'images/logo.png';
+            $logoelsalvador = 'images/EscudoSV.png';
+            $linea3 = 'images/linea3.png';
+            $LeyT = 'images/LeyT.png';
+
+            $tabla = "<header style=''>
+                            <div class='row'>
+                                <div class='content'>
+                                    <img id='logo2' src='$logoalcaldia' style='float: left;margin-top: 10px;margin-bottom: -50px;' alt='' height='78px' width='78px'>
+                                    <img id='EscudoSv2' src='$logoelsalvador' style='float: right;margin-top: 10px;margin-right: 15px;margin-bottom: -50px;' alt='' height='78px' width='78px'>
+                                    <h3 style='color: #1E1E1E;font-size: 12.4px;padding-left: 10px;padding-top: -5px;word-spacing: 3px'>ALCALDIA MUNICIPAL DE METAPAN</h3>
+                                    <h3 style='color: #1E1E1E;font-size: 12.4px;word-spacing: 2px'>Santa Ana, El Salvador, C.A.</h3>
+                                    <h3 style='color: #1E1E1E;font-size: 12.4px;word-spacing: 3px'>UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL, TEL 2402-7614</h3>
+                                    <img src='$linea3' alt='' height='30px' width='720px' style='margin-top: -1px;margin-left: -5px'>
+                                </div>
+                            </div>
+                        </header>";
+
+            $tabla .= "<div id='content' style='margin-top: -19px;'>
+                        <h4 align='center' style='font-size: 15px;word-spacing: 1px;'><u>AVISO</u></h4>
+                        <table border='0' align='center' style='width: 600px;'>
+                            <tr>
+                                <td></td>
+                                <td align='right' style='line-height: 20px;'>
+                                    <b style='font-size: 14.1px'>EXP.&nbsp;$empresa->num_tarjeta<br>
+                                    <strong>Metapán, $FechaDelDia</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='2' style='line-height: 17px;padding-top: -4px;'>
+                                    <br>
+                                    <p style='font-size: 12px;'><b>Señor (a):&nbsp;$empresa->contribuyente&nbsp;$empresa->apellido<br>
+                                    Presente.</b></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align='justify' colspan='2' style='line-height: 17px;padding-top: -5px;'>
+                                    <br>
+                                    <p style='font-size: 11.9px;word-spacing: 0.3px'>Aprovecho la oportunidad para saludarle y a la vez informarle que la falta de pago de los tributos
+                                    municipales en el plazo o fecha límite correspondiente, coloca al sujeto pasivo en situación de mora, sin necesidad de requerimiento 
+                                    de parte de la administración tributaria municipal y sin tomar en consideración, las causas o motivos de esa falta de pago. Art. 45 
+                                    (Ley General Tributaria).
+                                    <br>
+                                    <br>
+                                    Nombre del Negocio o Empresa en Mora:&nbsp; <strong>$empresa->nombre</strong><br>
+                                    Direccion: &nbsp;<strong>$empresa->direccion</strong></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align='justify' colspan='2' style='line-height: 16.5px;padding-top: -7px;'>
+                                    <br>
+                                    <p style='font-size: 11.9px;word-spacing: 0.3px'>La mora del sujeto pasivo producirá, entre otros, los siguientes efectos: 1º Hace exigible la deuda
+                                    tributaria, 2º Da lugar al devengo de intereses moratorios, 3º Da lugar a la aplicación de multas, por
+                                    configurar dicha mora, una infracción tributaria. Los intereses moratorios se aplicarán desde el
+                                    vencimiento de plazo en que debió pagarse el tributo hasta el día de la extinción total de la obligación
+                                    tributaria. Art. 46 (Ley General Tributaria), Por tanto, es necesario que se acerque al Departamento
+                                    de Catastro Tributario de esta Municipalidad a la mayor brevedad posible, para cancelar la deuda o
+                                    solicitar de manera escrita un plan de pago.
+                                    <br>
+                                    Agradecemos de antemano la atención prestada a esta nota, y esperamos la disposición necesaria
+                                    para solventar su situación. 
+                                    </p>
+                                    <br>
+                                    <img src='$LeyT' height='115px' width='595px' style='margin-top: 16px;margin-bottom: 1px'>
+                                    <br><br>
+                                    <p style='font-size: 13.7px'>Atentamente.</p>
+                                    <br><br><br>
+                                </td>
+                            </tr>
+                            <tr align='center'>
+                                <td align='center' colspan='2' style='line-height: 18px'>
+                                    <p style='font-size: 14.2px'>Sr. José Roberto Solito<br>
+                                    Delegado de Cobro.</p>
+                                    <br><br><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>";
+
+            $tabla .= "<footer style='margin-top: 0px'>
+                        <table width='100%'>
+                            <tr>
+                                <td>
+                                    <p class='izq'>
+                                    </p>
+                                </td>
+                                <td style='word-spacing: -1px;line-height: 20px'>
+                                    <img src='$linea3' alt='' height='28px' width='700px' style='margin-left: -15px;margin-top: -13px;margin-bottom: -5px'>
+                                    <br>
+                                    <br>
+                                    <p class='page' style='color: #A9A8A7;font-size: 14.2;'>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avenida Benjamín Estrada Valiente y Calle Poniente, Barrio San Pedro, Metapán.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tel.:2402-7615 - 2402-7601 - Fax: 2402-7616 <br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>www.alcaldiademetapan.org</strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </footer>";
+
+            $stylesheet = file_get_contents('css/cssreportepdf.css');
+            $mpdf->WriteHTML($stylesheet, 1);
+            $mpdf->SetMargins(0, 0, 5);
+
+
+            //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+            $mpdf->WriteHTML($tabla, 2);
+            $mpdf->Output();
+            //TERMINA CREANDO PDF
+        }
+    }
+
+    /** FIN Funcion de aviso con mpdf **/
 
     public function notificacion($f1,$f2,$ti,$f3,$id)
         {
@@ -1736,25 +1924,6 @@ public function estado_cuenta_licor($f1,$f2,$id){
         $mes = $mesesEspañol[($fechaF->format('n')) - 1];
         $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
 
-
-        /* $view = View::make('backend.admin.Empresas.Reportes.Estado_cuenta_licor', compact([
-
-            'FechaDelDia',
-            'empresa',
-            'FechaPagara',
-            'InicioPeriodo',
-            'multaTotalLicor',
-            'monto_pago_licencia',
-            'totalPagoValor',
-
-        ]))->render();
-
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadHTML($view)->setPaper('carta', 'portrait');
-
-        return $pdf->stream(); */
-
         //Configuracion de Reporte en MPDF
         $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
         $mpdf->SetTitle('Alcaldía Metapán | Estado de cuenta');
@@ -2189,25 +2358,6 @@ public function estado_cuenta_licor($f1,$f2,$id){
         $mes = $mesesEspañol[($fechaF->format('n')) - 1];
         $FechaDelDia = $fechaF->format('d') . ' de ' . $mes . ' de ' . $fechaF->format('Y');
 
-
-        /* $view = View::make('backend.admin.Empresas.Reportes.Estado_cuenta_aparatos', compact([
-
-                    'FechaDelDia',
-                    'empresa',
-                    'fechaPagaraAparatos',
-                    'InicioPeriodo',
-                    'fondoFPValor',
-                    'monto_pago_matricula',
-                    'multa',
-                    'totalPagoValor',
-
-        ]))->render();
-
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadHTML($view)->setPaper('carta', 'portrait');
-
-        return $pdf->stream(); */
 
         //Configuracion de Reporte en MPDF
         $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);

@@ -291,7 +291,7 @@ use App\Models\Empresas;
 
     //REPORTES EMPRESAS
     Route::get('/admin/estado_cuenta/pdf/{f1}/{f2}/{t1}/{f3}/{tf}/{id}', [reportesController::class, 'estado_cuenta2']); //Borrar el 2 para funcion con Dompdf
-    Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso']);
+    Route::get('/admin/generar_aviso/pdf/{id}', [reportesController::class, 'aviso2']); //Borrar el 2 para funcion con Dompdf
     Route::get('/admin/generar_notificacion/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion']);
     Route::get('/admin/generar_notificacion/maquinas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_maquinas']);
     Route::get('/admin/generar_notificacion/mesas/pdf/{f1}/{f2}/{t1}/{f3}/{id}', [reportesController::class, 'notificacion_mesas']);
