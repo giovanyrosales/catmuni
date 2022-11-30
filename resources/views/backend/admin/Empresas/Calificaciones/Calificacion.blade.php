@@ -455,17 +455,9 @@ function calculo_calificacion_matricula()
                 </div>
               </div><!-- /.col-md-6 -->
               <div class="col-md-2">
-                <div class="form-group">  
-                <select name="año_calificacion" id="año_calificacion" 
-                    class="selectpicker"
-                    data-style="btn-success"
-                    data-width="auto"
-                    data-show-subtext="true" 
-                    data-live-search="true" 
-                    title="-- Seleccione el año --"
-                    >       
-                    </select>
-                      </div>
+                    <div class="form-group">  
+                      <input name="año_calificacion" id="año_calificacion" class="form-control" disabled >
+                    </div>
               </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
                 
@@ -1252,6 +1244,14 @@ function calculo_calificacion_matricula()
                 $("#Div_Rotulos").hide();
           }
           $('#actividad-especificaDIV').hide();
+
+          var primer_año_calificar='{{$primer_año_calificar}}';
+          var ultimo_año_calificado='{{$ultimo_año_calificado}}';
+          var consulta_calificacion='{{$consulta_calificacion}}';
+          var año_a_calificar ='{{$año_a_calificar}}';
+
+          $("#año_calificacion").val(año_a_calificar);
+
         });
 
 
@@ -1327,7 +1327,9 @@ function GenerarCalificacion(){
             var tarifaAplicada_imp=(document.getElementById('tarifaAplicada').value);
             var año_calificacion=(document.getElementById('año_calificacion').value);
           
-            
+        
+
+
             if(fecha_pres_balance === ''){
                     toastr.error('La fecha que presenta el balance es requerida.');
                     deseleccionarCheck()

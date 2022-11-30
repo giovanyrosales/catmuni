@@ -67,10 +67,6 @@ function verhistorialCalificaciones(){
                 $('#Div_historico_calificaciones').hide();
                 $('#btnOcultarCali').hide();
 
-                //**** Para llenar el select de año de calificación *****//
-                var n = (new Date()).getFullYear()
-                var select = document.getElementById("año_calificacion");
-                for(var i = n; i>=1900; i--)select.options.add(new Option(i,i)); 
 
                
 }
@@ -119,7 +115,7 @@ function calculo()
     var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
     var año_calificacion=(document.getElementById('año_calificacion').value);
 
-        
+    
 
 
     if(id_giro_empresarial === ''){
@@ -423,13 +419,38 @@ function calculo_calificacion_matricula()
           </form>
         </div><!-- /.Cierre de la card -->
 
+   <!-- Inicia Contenido IMG-->
+   <div class="card" style="margin: 0 auto;width: 100%;" id="contenido_img">
+      <div class="progress" style="margin: 0 auto;width: 100%;height:5px;">
+        <div class="progress-bar bg-secondary" role="progressbar" style="width:10%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        </div>
+      </div>
+        <div class="card-body">
+        <!-- Inicia contenido--> 
 
-        <div class="card card-info">
+        <div class="col-auto  p-5 text-center">
+         <img src="{{ asset('/img/check.png') }}" id="sin_registros" style="display: block;margin: 0px auto;width: 15%; height:15%;" >
+            <h5>Ya se encuentra al día con las calificaciones...</h5>
+        </div>
+
+        <!-- /.card-body -->
+        <!-- Finaliza contenido-->
+        </div>
+          <div class="card-footer">
+                <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}} )"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
+          </div>
+        <!-- /.card-footer -->
+    </div>
+    
+<!-- Finaliza Contenido IMG-->
+
+        <div class="card card-info" id="div_contenido_principal">
           <div class="card-header">
             <h5 class="modal-title">Registrar recalificación a empresa&nbsp;<span class="badge badge-warning">&nbsp; {{$empresa->nombre}}&nbsp;</span></h5>
             <input type="hidden" disabled id="id_matriculadetalle">
           </div>
           <!-- /.card-header -->
+          
           
           <div class="card-body">
             
@@ -521,16 +542,8 @@ function calculo_calificacion_matricula()
               </div><!-- /.col-md-6 -->
               <div class="col-md-2">
                 <div class="form-group">  
-                <select name="año_calificacion" id="año_calificacion" 
-                    class="selectpicker"
-                    data-style="btn-info"
-                    data-width="auto"
-                    data-show-subtext="true" 
-                    data-live-search="true" 
-                    title="-- Seleccione el año --"
-                    >       
-                    </select>
-                      </div>
+                  <input name="año_calificacion" id="año_calificacion" class="form-control" disabled >       
+                </div>
               </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
                 
@@ -796,6 +809,8 @@ function calculo_calificacion_matricula()
     <!-- /.container-fluid -->
     </section>
 <!-- Finaliza Formulario Calificar Empresa-->
+
+
 
 <!--Inicia Modal Registrar Calificación--------------------------------------------------------------->
 
@@ -1309,6 +1324,8 @@ function calculo_calificacion_matricula()
     </div>
   <!--Finaliza Modal Borrar calificación-->
 
+ 
+
 @extends('backend.menus.footerjs')
 
 @section('archivos-js')
@@ -1333,20 +1350,42 @@ function calculo_calificacion_matricula()
         $(document).ready(function(){
             
           document.getElementById("divcontenedor").style.display = "block";
+
           //**Para tabla calificaciones historico */
+
             var id='{{$empresa->id}}';
             var ruta = "{{ url('/admin/empresas/calificaciones/tablaCalificaciones/') }}/"+id;
             $('#tabla_Calificaciones').load(ruta);
 
-          var MatriculasReg="{{$MatriculasReg}}";
-          if(MatriculasReg=='1')
-          {  
-                $("#Div_Variable").hide();
-                $("#Div_Rotulos").hide();
+            var MatriculasReg="{{$MatriculasReg}}";
+            if(MatriculasReg=='1')
+            {  
+                  $("#Div_Variable").hide();
+                  $("#Div_Rotulos").hide();
+            }
 
-          }
           $('#actividad-especificaDIV').hide();
 
+
+          var primer_año_calificar='{{$primer_año_calificar}}';
+          var ultimo_año_calificado='{{$ultimo_año_calificado}}';
+          var consulta_calificacion='{{$consulta_calificacion}}';
+          var año_a_calificar ='{{$año_a_calificar}}';
+
+          document.getElementById('año_calificacion').value=año_a_calificar;
+          //$("#año_calificacion option[value="+ año_a_calificar +"]"). attr("selected",true);
+
+          var anio_actual=(document.getElementById('anio_actual').value);
+
+            //Validación anclaaa
+            if(año_a_calificar>anio_actual){
+               $("#contenido_img").show();
+               $("#div_contenido_principal").hide();                     
+             }else{
+              $("#contenido_img").hide();
+               $("#div_contenido_principal").show();      
+             }
+         
         });
 
 
@@ -1420,7 +1459,14 @@ function GenerarCalificacionMatricula(){
   var selected = sel.options[sel.selectedIndex];
   var rubro=selected.getAttribute('data-actividad');
 
+  var anio_actual=(document.getElementById('anio_actual').value);
+
   //Validación
+  if(año_calificacion>anio_actual){
+                   
+                   modalMensaje('Aviso', 'No puede calificar un año mayor que el actual');
+                   return;
+               }
 
   if(giro_empresarial == ""){
                   modalMensaje('Aviso', 'El giro empresarial es requerido');
@@ -1480,7 +1526,14 @@ function GenerarCalificacion(){
             var deducciones=(document.getElementById('deducciones').value);
             var tarifaAplicada_imp=(document.getElementById('tarifaAplicada').value);
             var año_calificacion=(document.getElementById('año_calificacion').value);
+            var anio_actual=(document.getElementById('anio_actual').value);
           
+            if(año_calificacion>anio_actual){
+                   
+                    modalMensaje('Aviso', 'No puede calificar un año mayor que el actual');
+                    deseleccionarCheck()
+                    return;
+                }
             
             if(fecha_pres_balance === ''){
                     toastr.error('La fecha que presenta el balance es requerida.');
@@ -1538,7 +1591,7 @@ function Registrar_Calificacion_matricula(){
   var año_calificacion=(document.getElementById('año_calificacion').value);
   var fecha_pres_balance=(document.getElementById('fecha_pres_balance').value);
   var id_giro_empresarial =document.getElementById('rubro').value;
-//ancla1
+
               
   var fondofp = document.getElementById('fondoFMValor_imp').value;
   var pago_anual=(document.getElementById('PagoAnualPermisos_imp').value);
@@ -1814,11 +1867,10 @@ function modalMensaje(titulo, mensaje){
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
-
+               
                 }
-            });
-            
-        }
+            });           
+}//Fin- Modal Mensaje. 
 
 function recargarTabla(){
   var id='{{$empresa->id}}';

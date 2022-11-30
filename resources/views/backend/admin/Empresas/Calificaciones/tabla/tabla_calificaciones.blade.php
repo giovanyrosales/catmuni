@@ -14,7 +14,7 @@
 </style>
 
 <div>
-    <button type='button' class='btn btn-block btn-primary' onclick='AgregarTarifaAnterior()'>
+    <button type='button' class='btn btn-block btn-primary' onclick='AgregarTarifaAnterior()' id="btn_asignar_tarifa_Anterior">
         <span class="badge badge-pill badge-light"><i class="fas fa-plus"></i></span>
         &nbsp;Agregar tarifa anterior
         <i class="fas fa-hand-holding-usd"></i>
@@ -84,6 +84,22 @@
             </tbody>
             </table>
 @endif
+<script type="text/javascript">
+
+        $(document).ready(function(){
+           
+          var año_a_calificar ='{{$año_a_calificar}}';
+          var anio_actual ='{{$anio_actual}}';
+
+            //Validación anclaaa
+            if(año_a_calificar>anio_actual){
+                $("#btn_asignar_tarifa_Anterior").hide();        
+             }
+
+
+        });
+
+    </script>
 
 <script>
 $(function () {

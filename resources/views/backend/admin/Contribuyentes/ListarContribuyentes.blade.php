@@ -430,7 +430,7 @@
                     {
                       Swal.fire({
                           icon: 'success',
-                          title: '!Contribuyente actualizado correctamente!',
+                          title: '¡Contribuyente actualizado correctamente!',
                           showConfirmButton: true,
                       }).then((result) => {
                         if (result.isConfirmed) {
@@ -446,7 +446,7 @@
                         Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Error al actualizar!', 
+                          text: '¡Error al actualizar!', 
                         })
                         $('#modalEditar').modal('hide');
                                recargar();
@@ -484,7 +484,7 @@
                     if(response.data.success === 1){
                       Swal.fire({
                           icon: 'success',
-                          title: '!Contribuyente eliminado correctamente!',
+                          title: '¡Contribuyente eliminado correctamente!',
                           showConfirmButton: true,
                       }).then((result) => {
                         if (result.isConfirmed) {
@@ -492,12 +492,12 @@
                                  recargar();
                         }
                       });
-                    }else{
+                    }else if(response.data.success===2){
                        
                       Swal.fire({
                           icon: 'error',
-                          title: 'Oops...',
-                          text: 'Error al actualizar contribuyente!', 
+                          title: 'Petición denegada!',
+                          text: 'El contribuyente tiene obligaciones tributarias y no se puede eliminar mientras no se desligue de ellas.', 
                           showConfirmButton: true,
                         }).then((result) => {
                         if (result.isConfirmed) 

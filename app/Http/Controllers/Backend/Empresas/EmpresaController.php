@@ -446,6 +446,7 @@ public function calificacion($id)
     $girosempresariales = GiroEmpresarial::All();
     $calificaciones = calificacion::All();
 
+
     $tarifa_fijas= TarifaFija::join('giro_empresarial','tarifa_fija.id_giro_empresarial','=','giro_empresarial.id')
     ->join('actividad_especifica','tarifa_fija.id_actividad_especifica','=','actividad_especifica.id')
 
@@ -527,9 +528,63 @@ public function calificacion($id)
 
         $monto = number_format((float)$monto, 2, '.', ',');
         $montoMatriculaValor='$'. $monto;
+
+
+    //** Detectando si ya hay una calificación */
+    $consulta_calificacion=calificacion::latest()
+    ->where('id_empresa',$id)
+    ->first();
+
+    if($consulta_calificacion==null){
         
-    return view('backend.admin.Empresas.Calificaciones.Calificacion', compact('id','empresa','giroscomerciales', 'monto', 'contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','MatriculasReg','matriculas','montoMatriculaValor',
-        'matriculasRegistradas','girosempresariales'));
+            $id_detalle_matricula=MatriculasDetalle::select('id')->where('id_empresa', $id)->first();
+            $consulta_calificacion=CalificacionMatriculas::latest()->where('id_matriculas_detalle',$id_detalle_matricula)->first();
+            
+            if($consulta_calificacion==null)
+            {
+                $consulta_calificacion=0;
+            }
+    }
+    log::info('consulta_calificacion: '.$consulta_calificacion);
+
+    //** Detectando que año se debe calificar y el orden */
+
+    $primer_año_calificar=Carbon::parse($empresa->inicio_operaciones)->format('Y');
+    log::info('primer_año_calificar: '.$primer_año_calificar);
+    if($consulta_calificacion=='0'){
+        $año_a_calificar=$primer_año_calificar;
+        $ultimo_año_calificado=0;
+    }else{
+      $ultimo_año_calificado=$consulta_calificacion->año_calificacion;
+      $año_a_calificar=$ultimo_año_calificado+1;
+    }
+    log::info('año_a_calificar: '.$año_a_calificar);
+
+        
+        
+    return view('backend.admin.Empresas.Calificaciones.Calificacion', 
+    compact('id',
+            'empresa',
+            'giroscomerciales',
+            'monto',
+            'contribuyentes',
+            'estadoempresas',
+            'actividadeseconomicas',
+            'calificaciones',
+            'tarifa_fijas',
+            'licencia',
+            'matricula',
+            'MatriculasReg',
+            'matriculas',
+            'montoMatriculaValor',
+            'matriculasRegistradas',
+            'girosempresariales',
+            //** Variables para saber que año debe calificar el usuario */
+            'primer_año_calificar',
+            'ultimo_año_calificado',
+            'consulta_calificacion',
+            'año_a_calificar'
+        ));
     
 }
 
@@ -661,7 +716,63 @@ public function Recalificacion($id)
             ->first();
         }
 
-    return view('backend.admin.Empresas.Calificaciones.Recalificacion', compact('monto','montoMatriculaValor','detectorNull','empresa','giroscomerciales','contribuyentes','estadoempresas','actividadeseconomicas','calificaciones','tarifa_fijas','licencia','matricula','matriculas','cali_lista','anio_actual','MatriculasReg','matriculasRegistradas','girosempresariales'));
+          //** Detectando si ya hay una calificación */
+          $consulta_calificacion=calificacion::latest()
+          ->where('id_empresa',$id)
+          ->first();
+  
+          if($consulta_calificacion==null){
+              
+
+                  $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$id)->pluck('id')->first();
+                  $consulta_calificacion=CalificacionMatriculas::latest()->where('id_matriculas_detalle',$id_matriculadetalle)->first();
+                  if($consulta_calificacion==null)
+                  {
+                      $consulta_calificacion=0;
+                  }
+          }
+          log::info('consulta_calificacion: '.$consulta_calificacion);
+      
+          //** Detectando que año se debe calificar y el orden */
+          $primer_año_calificar=Carbon::parse($empresa->inicio_operaciones)->format('Y');
+          log::info('primer_año_calificar: '.$primer_año_calificar);
+          if($consulta_calificacion=='0'){
+                $año_a_calificar=$primer_año_calificar;
+                $ultimo_año_calificado=0;
+          }else{
+            $ultimo_año_calificado=$consulta_calificacion->año_calificacion;
+            $año_a_calificar=$ultimo_año_calificado+1;
+          }
+          log::info('ultimo_año_calificado: '.$ultimo_año_calificado);
+          log::info('año_a_calificar: '.$año_a_calificar);
+
+    return view('backend.admin.Empresas.Calificaciones.Recalificacion', 
+    compact(
+                'monto',
+                'montoMatriculaValor',
+                'detectorNull',
+                'empresa',
+                'giroscomerciales',
+                'contribuyentes',
+                'estadoempresas',
+                'actividadeseconomicas',
+                'calificaciones',
+                'tarifa_fijas',
+                'licencia',
+                'matricula',
+                'matriculas',
+                'cali_lista',
+                'anio_actual',
+                'MatriculasReg',
+                'matriculasRegistradas',
+                'girosempresariales',
+                //** Variables para saber que año debe calificar el usuario */
+                'primer_año_calificar',
+                'ultimo_año_calificado',
+                'consulta_calificacion',
+                'año_a_calificar'
+
+            ));
     
 }
 
@@ -2213,6 +2324,8 @@ public function nuevaEmpresa(Request $request){
 //Calcular fechas menores a los primeros 3 meses del año...
 public function calculo_calificacion(Request $request)
 {
+
+
     log::info($request->all());
 
    $deducciones= $request->deducciones;
@@ -2238,6 +2351,7 @@ public function calculo_calificacion(Request $request)
    $CantMesesMulta=0;
    $f1=Carbon::parse($fecha_pres_balance);
    $f2=Carbon::createFromDate($Year, $month, $day);
+
 
 
 
@@ -2498,7 +2612,7 @@ public function calculo_calificacion(Request $request)
                         'millar'=> $millar,
                         'excedente'=>$excedente,
                         'id_actividad_economica'=>$id_actividad_economica,
-                        '$id_giro_empresarial'=>$id_giro_empresarial,
+                       // '$id_giro_empresarial'=>$id_giro_empresarial,
                         'actividad_economica'=>$actividad_economica,
                         'ImpuestoAnualVariableColones'=>$ImpuestoAnualVariableColones,
                         'ImpuestoMensualVariableColones'=>$ImpuestoMensualVariableColones,
@@ -3114,6 +3228,20 @@ public function infoTraspaso(Request $request)
     }
 
     public function tablaCalificaciones($id){
+        
+        $empresa= Empresas
+        ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
+        ->join('estado_empresa','empresa.id_estado_empresa','=','estado_empresa.id')
+        ->join('giro_comercial','empresa.id_giro_comercial','=','giro_comercial.id')
+        ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
+
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+        'estado_empresa.estado',
+        'giro_comercial.nombre_giro',
+        'actividad_economica.rubro','actividad_economica.id as id_act_economica',
+        )
+        ->find($id);
 
         $consulta_detalle_matricula=MatriculasDetalle::select('id')
         ->where('id_empresa', "=", $id) 
@@ -3131,8 +3259,33 @@ public function infoTraspaso(Request $request)
         }else{
             $calificacionesM=0;
         }
+
+        //** Detectando si ya hay una calificación */
+        $consulta_calificacion=calificacion::latest()
+        ->where('id_empresa',$id)
+        ->first();
+
+        if($consulta_calificacion==null){       
+                $id_matriculadetalle=MatriculasDetalle::where('id_empresa',$id)->pluck('id')->first();
+                $consulta_calificacion=CalificacionMatriculas::latest()->where('id_matriculas_detalle',$id_matriculadetalle)->first();
+                if($consulta_calificacion==null)
+                {
+                    $consulta_calificacion=0;
+                }
+        }
+
+        //** Detectando que año se debe calificar y el orden */
+        $anio_actual=carbon::now()->format('Y');
+        $primer_año_calificar=Carbon::parse($empresa->inicio_operaciones)->format('Y');
+        if($consulta_calificacion=='0'){
+              $año_a_calificar=$primer_año_calificar;
+              $ultimo_año_calificado=0;
+        }else{
+          $ultimo_año_calificado=$consulta_calificacion->año_calificacion;
+          $año_a_calificar=$ultimo_año_calificado+1;
+        }
                     
-        return view('backend.admin.Empresas.Calificaciones.tabla.tabla_calificaciones', compact('calificaciones','calificacionesM'));
+        return view('backend.admin.Empresas.Calificaciones.tabla.tabla_calificaciones', compact('calificaciones','calificacionesM','año_a_calificar','anio_actual'));
     }
 
         //Función para eliminar calificaciones
@@ -3218,7 +3371,7 @@ public function tablahistoricoavisos(){
     'alertas.id as id_alertas','alertas.tipo_alerta',
      )
     ->where('id_alertas','1')
-    ->orderby('id','desc')
+    ->orderby('created_at','desc')
     ->get();
 
     foreach($historico_avisos as $dato){
