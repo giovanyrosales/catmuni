@@ -481,7 +481,7 @@ class reportesBusesDetalleController extends Controller
        
         //Configuracion de Reporte en MPDF
         $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-        $mpdf->SetTitle('Alcaldía Metapán | Resolución de Apertura');
+        $mpdf->SetTitle('Alcaldía Metapán | Aviso');
 
                  
         // mostrar errores
@@ -489,7 +489,9 @@ class reportesBusesDetalleController extends Controller
 
         $logoalcaldia = 'images/logo.png';
         $logoelsalvador = 'images/EscudoSV.png';
+        $linea3 = 'images/linea3.png';
         $imgf1 = 'images/imgf1.png';
+        $LeyT = 'images/LeyT.png';
          
 
         $mesesEspañol = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -576,118 +578,104 @@ class reportesBusesDetalleController extends Controller
 
                 //CREANDO PDF
               
-                $tabla = "<div class='content'>
-                               <img id='logo' src='$logoalcaldia'>
-                               <img id='EscudoSV' src='$logoelsalvador'>
-                               <h4>ALCALDIA MUNICIPAL DE METAPAN<br>
-                               UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL<br>
-                               DEPARTAMENTO DE SANTA ANA, EL SALVADOR C.A</h4>
-                               <hr>
-                       </div>";
+                $tabla = "<header style=''>
+                            <div class='row'>
+                                <div class='content'>
+                                    <img id='logo2' src='$logoalcaldia' style='float: left;margin-top: 10px;margin-bottom: -50px;' alt='' height='78px' width='78px'>
+                                    <img id='EscudoSv2' src='$logoelsalvador' style='float: right;margin-top: 10px;margin-right: 15px;margin-bottom: -50px;' alt='' height='78px' width='78px'>
+                                    <h3 style='color: #1E1E1E;font-size: 12.4px;padding-left: 10px;padding-top: -5px;word-spacing: 3px'>ALCALDIA MUNICIPAL DE METAPAN</h3>
+                                    <h3 style='color: #1E1E1E;font-size: 12.4px;word-spacing: 2px'>Santa Ana, El Salvador, C.A.</h3>
+                                    <h3 style='color: #1E1E1E;font-size: 12.4px;word-spacing: 3px'>UNIDAD DE ADMINISTRACION TRIBUTARIA MUNICIPAL, TEL 2402-7614</h3>
+                                    <img src='$linea3' alt='' height='30px' width='720px' style='margin-top: -1px;margin-left: -5px'>
+                                </div>
+                            </div>
+                        </header>";
 
-                $tabla .= "<table border='0' align='center' style='width: 650px;'>
-                       <tr>
-                       <td align='right' colspan='2'>
-                            <strong><u> EXP.</u></strong> &nbsp; <strong><u> 1606 </u></strong><br>
-                          <h5> <strong>Fecha,&nbsp; $FechaDelDia</strong></h3>
-                       </td>
-                       </tr>
-                       <br>
+                    $tabla .= "<div id='content' style='margin-top: -19px;'>
+                        <h4 align='center' style='font-size: 15px;word-spacing: 1px;'><u>AVISO</u></h4>
+                        <table border='0' align='center' style='width: 600px;'>
+                            <tr>
+                                <td></td>
+                                <td align='right' style='line-height: 20px;'>
+                                    <b style='font-size: 14.1px'>EXP.&nbsp;1606<br>
+                                    <strong>Metapán, $FechaDelDia</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='2' style='line-height: 17px;padding-top: -4px;'>
+                                    <br>
+                                    <p style='font-size: 12px;'><b>Señor (a):&nbsp;$buses->contribuyente&nbsp;$buses->apellido<br>
+                                    Presente.</b></p>
+                                    <p style='font-size: 12px;'><b>Cantidad de buses: &nbsp;$buses->cantidad</b></p><br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align='justify' colspan='2' style='line-height: 17px;padding-top: -5px;'>
+                                    <p style='font-size: 11.9px;word-spacing: 0.3px'>Aprovecho la oportunidad para saludarle y a la vez informarle que la falta de pago de los tributos
+                                    municipales en el plazo o fecha límite correspondiente, coloca al sujeto pasivo en situación de mora, sin necesidad de requerimiento 
+                                    de parte de la administración tributaria municipal y sin tomar en consideración, las causas o motivos de esa falta de pago. Art. 45 
+                                    (Ley General Tributaria).
+                                    <br>
+                                    <br>
+                                    Nombre del Negocio o Empresa en Mora:&nbsp; <strong>$buses->nom_empresa</strong><br>
+                                    Direccion: &nbsp;<strong>$buses->dir_empresa</strong></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align='justify' colspan='2' style='line-height: 16.5px;padding-top: -7px;'>
+                                    <br>
+                                    <p style='font-size: 11.9px;word-spacing: 0.3px'>La mora del sujeto pasivo producirá, entre otros, los siguientes efectos: 1º Hace exigible la deuda
+                                    tributaria, 2º Da lugar al devengo de intereses moratorios, 3º Da lugar a la aplicación de multas, por
+                                    configurar dicha mora, una infracción tributaria. Los intereses moratorios se aplicarán desde el
+                                    vencimiento de plazo en que debió pagarse el tributo hasta el día de la extinción total de la obligación
+                                    tributaria. Art. 46 (Ley General Tributaria), Por tanto, es necesario que se acerque al Departamento
+                                    de Catastro Tributario de esta Municipalidad a la mayor brevedad posible, para cancelar la deuda o
+                                    solicitar de manera escrita un plan de pago.
+                                    <br>
+                                    Agradecemos de antemano la atención prestada a esta nota, y esperamos la disposición necesaria
+                                    para solventar su situación. 
+                                    </p>
+                                    <br>
+                                    <img src='$LeyT' height='115px' width='595px' style='margin-top: 16px;margin-bottom: 1px'>
+                                    <br><br>
+                                    <p style='font-size: 13.7px'>Atentamente.</p>
+                                    <br><br><br>
+                                </td>
+                            </tr>
+                            <tr align='center'>
+                                <td align='center' colspan='2' style='line-height: 18px'>
+                                    <p style='font-size: 14.2px'>Sr. José Roberto Solito<br>
+                                    Delegado de Cobro.</p>
+                                    <br><br><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>";
 
-                       <tr>
-                       <td colspan='2' style='font-size: 13;'>
-                           <h3><p><strong>Sr/a. &nbsp;&nbsp;$buses->contribuyente&nbsp;$buses->apellido</strong><br>
-                            <strong>Presente</strong><br>
-                            <strong>Cantidad de buses: &nbsp;$buses->cantidad &nbsp;<strong>
-                           </p>
+                    $tabla .= "<footer style='margin-top: 0px'>
+                        <table width='100%'>
+                            <tr>
+                                <td>
+                                    <p class='izq'>
+                                    </p>
+                                </td>
+                                <td style='word-spacing: -1px;line-height: 20px'>
+                                    <img src='$linea3' alt='' height='28px' width='700px' style='margin-left: -15px;margin-top: -13px;margin-bottom: -5px'>
+                                    <br>
+                                    <br>
+                                    <p class='page' style='color: #A9A8A7;font-size: 14.2;'>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avenida Benjamín Estrada Valiente y Calle Poniente, Barrio San Pedro, Metapán.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tel.:2402-7615 - 2402-7601 - Fax: 2402-7616 <br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>www.alcaldiademetapan.org</strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </footer>";
 
-                           &nbsp;
-                           &nbsp;
-                           &nbsp;
 
-                           <tr>
-                           <td colspan='2' align='center'><strong><u>A V I S O</u></strong></td>
-                           </tr>
-                    </td>
 
-                    <br>
-                    <br>
-                    <br>
-
-                    <tr>                    
-                    <td colspan='2'  style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                        <p>
-                        Aprovecho la oportunidad para saludarle y a la vez informarle que la falta de pago de los tributos
-                        municipales en el plazo o fecha límite correspondiente, coloca al sujeto pasivo en situación de mora, 
-                        sin necesidad de requerimiento de parte de la administración tributaria municipal y sin tomar en
-                        consideración, las causas o motivos de esa falta de pago. Art. 45 (Ley General Tributaria).  
-                        <br><br>
-
-                        </p>
-                        <br>
-                        <br>
-                        <br>
-                    </td>
-                    
-                    
-                    </tr>
-
-               
-                    <tr>
-                    <td colspan='2' style='font-size: 13;'>
-                           <p>Nombre del Negocio o Empresa en Mora:<strong> &nbsp;&nbsp;$buses->nom_empresa </strong><br>
-                           <br>
-                            Direccion: <strong> &nbsp;$buses->dir_empresa &nbsp; </strong>
-                           </p>
-                         
-                    </td>
-                    </tr>
-
-                    <br>
-                    <br>
-                    <br>
-
-                    <tr>                    
-                    <td colspan='2'  style='text-indent: 20px;font-family: Arial; text-align: justify;font-size: 13;'>
-                        <p>
-
-                    La mora del sujeto pasivo producirá, entre otros, los siguientes efectos: 1º Hace exigible la deuda
-                    tributaria, 2º Da lugar al devengo de intereses moratorios, 3º Da lugar a la aplicación de multas, por
-                    configurar dicha mora, una infracción tributaria. Los intereses moratorios se aplicarán desde el
-                    vencimiento de plazo en que debió pagarse el tributo hasta el día de la extinción total de la obligación
-                    tributaria. Art. 46 (Ley General Tributaria), Por tanto, es necesario que se acerque al Departamento
-                    de Catastro Tributario de esta Municipalidad a la mayor brevedad posible, para cancelar la deuda o
-                    solicitar de manera escrita un plan de pago. 
-
-                        <br><br><br>
-
-                    Agradecemos de antemano la atención prestada a esta nota, y esperamos la disposición necesaria
-                    para solventar su situación. 
-
-                        <br><br>
-                    
-                    Atentamente.
-
-                        </p>
-
-                            <br>
-                            <br>
-                            <br>
-                    </td>
-                    <tr>
-
-                    <td colspan='2'  style='text-indent: 20px;font-family: Arial; text-align: center;font-size: 16;'>
-                    <p>
-
-                    Sr. José Roberto Solito<br>
-                    Delegado de cobro
-                    </td>
-
-                    </tr>
-            
-                    </table>";
-
-                       $stylesheet = file_get_contents('css/cssconsolidado.css');
+                       $stylesheet = file_get_contents('css/cssreportepdf.css');
                        $mpdf->WriteHTML($stylesheet,1);
                        $mpdf->SetMargins(0, 0, 5);
            

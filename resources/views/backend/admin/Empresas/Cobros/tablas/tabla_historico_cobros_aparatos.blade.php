@@ -13,8 +13,10 @@
         
 </style>
 <div>
-     <a class="btn btn-info float-left" onclick="imp_historial_cobros_aparatos()"  target="frameprincipal">
-    <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+    @if (count($ListaCobrosMatriculas) > 0)
+        <a class="btn btn-info float-left" onclick="imp_historial_cobros_aparatos()"  target="frameprincipal">
+        <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+    @endif
 </div>
 <table id="tab_historial_cobros_aparatos" class="table table-bordered table-hover" > 
               <thead>             

@@ -744,8 +744,10 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <form id="formulario_ver_historial_cobros_emp">        
                  <!-- /.card-header -->
                  <div>
-                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_emp({{$empresa->id}})"  target="frameprincipal">
-                    <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+                    @if (count($ListaCobros) > 0)
+                      <a class="btn btn-success float-left" onclick="imp_historial_cobros_emp({{$empresa->id}})"  target="frameprincipal">
+                      <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+                    @endif
                  </div>
                         
   
@@ -839,8 +841,10 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <form id="formulario_ver_historial_cobros_licor">        
                  <!-- /.card-header -->
                  <div>
-                    <a class="btn btn-success float-left" onclick="imp_historial_cobros_licor({{$empresa->id}})"  target="frameprincipal">
-                    <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+                    @if (count($ListaCobroslicor) > 0)
+                      <a class="btn btn-success float-left" onclick="imp_historial_cobros_licor({{$empresa->id}})"  target="frameprincipal">
+                      <i class="fas fa-print"></i>&nbsp; Imprimir</a>
+                    @endif
                  </div>
                         
   
