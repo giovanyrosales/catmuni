@@ -9201,7 +9201,7 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 public function indexReporteActividadEconomica(){
     $girosempresarial = GiroEmpresarial::orderBy('nombre_giro_empresarial')->get();
 
-    return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('infoEmpresa','girosempresarial'));
+    return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('girosempresarial'));
 }
 
 
