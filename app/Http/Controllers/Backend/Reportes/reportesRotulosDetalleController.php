@@ -1623,9 +1623,14 @@ class reportesRotulosDetalleController extends Controller
                             <td colspan='2' align='center'><strong><u>N O T I F I C A C I O N</u></strong></td>
                         </tr>
                         <tr>
+                            <td align='right' colspan='2'>
+                            <strong>Metapán, $FechaDelDia</strong>
+                            </td>
+                        </tr>
+                        <tr>
                             <td colspan='2' style='font-size:13;'>
                                 <p>Señor (a):&nbsp;$rotulos->contribuyente&nbsp;$rotulos->apellido<br>
-                                    Direccion:&nbsp;$rotulos->dire_empresa<br>
+                                    Dirección:&nbsp;$rotulos->dire_empresa<br>
                                     Cuenta Corriente N°:&nbsp;$rotulos->num_ficha<br>
                                     Empresa o Negocio:&nbsp;$rotulos->nom_empresa<br>
                                 </p>
