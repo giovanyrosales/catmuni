@@ -9198,40 +9198,10 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 }
 
 
-public function indexReporteActividadEconomica($id){
-    // viene ID de giro_empresarial
+public function indexReporteActividadEconomica(){
+    $girosempresarial = GiroEmpresarial::orderBy('nombre_giro_empresarial')->get();
 
-    $infoGiro = GiroComercial::where('id', $id)->first();
-
-    $infoEmpresa = Empresas::where('id_giro_comercial', $id)
-        ->orderBy('nombre', 'ASC')
-        ->get();
-
-    foreach ($infoEmpresa as $dd){
-
-        $nombreEstado = '';
-        $inicioOpe = '';
-
-        if($dd->inicio_operaciones != null){
-            $inicioOpe = date("d-m-Y", strtotime($dd->inicio_operaciones));
-        }
-
-        $dd->iniciooperaciones = $inicioOpe;
-
-        if($infoEstado = EstadoEmpresas::where('id', $dd->id_estado_empresa)->first()){
-            $nombreEstado = $infoEstado->estado;
-        }
-
-        $dd->nombreestado = $nombreEstado;
-
-        $nombreContribuyente = '';
-        if($infoContri = Contribuyentes::where('id', $dd->id_contribuyente)->first()){
-            $nombreContribuyente = $infoContri->nombre;
-        }
-
-        $dd->nombrecontribuyente = $nombreContribuyente;
-    }
-    return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('infoEmpresa','infoGiro'));
+    return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('infoEmpresa','girosempresarial'));
 }
 
 
