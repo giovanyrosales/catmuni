@@ -238,14 +238,14 @@
                                 <p>Cobros diarios</p>
                                 </a>
                             </li>
-                        <!-- 
+                       
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.actividad.economica') }}" target="frameprincipal" class="nav-link">
                                     <i class="fas fa-cubes nav-icon"></i>
                                     <p>Actividad Económica</p>
                                 </a>
                             </li>
-                        -->
+                        
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.contribuyentes') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-id-badge nav-icon"></i>

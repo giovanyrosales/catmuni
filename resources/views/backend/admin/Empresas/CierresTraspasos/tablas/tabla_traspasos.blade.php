@@ -1,9 +1,9 @@
-<table id="tab_traspasos_empresas" class="table table-bordered table-hover">
+<table id="tab_traspasos_empresas" class="table table-bordered table-hover" style='font-size:14px;'>
         <thead>             
-            <tr>
+            <tr >
                 <th style="width: 20%;">Anterior</th>   
                 <th style="width: 20%;">Nuevo</th>   
-                <th style="width: 20%;">Fecha</th>                          
+                <th style="width: 15%;">Fecha</th>                          
                 <th style="width: 30%;">Resoluciones</th>                           
             </tr>
         </thead>

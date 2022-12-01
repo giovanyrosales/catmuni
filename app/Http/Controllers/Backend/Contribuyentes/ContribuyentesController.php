@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Backend\Contribuyentes;
 use App\Models\Contribuyentes;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BusesDetalle;
 use App\Models\ConstanciasHistorico;
+use App\Models\Empresas;
+use App\Models\RotulosDetalle;
 use Carbon\Carbon;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Arr;
@@ -62,11 +65,12 @@ class ContribuyentesController extends Controller
         'contribuyente.direccion as direccionCont',
          )
         ->where('tipo_constancia','Simple')
+        ->orderby('created_at','desc')
         ->get();
 
         foreach($constancias_cs as $dato){
             $dato->año=carbon::parse($dato->created_at)->format('y');
-            $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));  
+            $dato->fecha_registro=date("d-m-Y H:i:s A", strtotime($dato->created_at));  
     
         }
  
@@ -76,7 +80,6 @@ class ContribuyentesController extends Controller
 
     public function tablahistoricocg(){
 
-        
 
         $constancias_cg= ConstanciasHistorico::join('contribuyente','constancias_historico.id_contribuyente','=','contribuyente.id')
 
@@ -88,11 +91,12 @@ class ContribuyentesController extends Controller
         'contribuyente.direccion as direccionCont',
          )
         ->where('tipo_constancia','Global')
+        ->orderby('created_at','desc')
         ->get();
 
         foreach($constancias_cg as $dato){
             $dato->año=carbon::parse($dato->created_at)->format('y');
-            $dato->fecha_registro=date("d-m-Y h:m:s A", strtotime($dato->created_at));
+            $dato->fecha_registro=date("d-m-Y H:i:s A", strtotime($dato->created_at));
         }
  
         return view('backend.admin.Contribuyentes.tabla.tablahistoricocg', compact('constancias_cg'));
@@ -225,11 +229,27 @@ class ContribuyentesController extends Controller
         public function eliminarContribuyentes(Request $request)
             {
 
-                // buscamos el contribuyente el cual queremos eliminar
-                $contribuyente = Contribuyentes::find($request->id);
-                $contribuyente->delete();
-             
-                return ['success' => 1];
+                $lista_empresas=Empresas::where('id_contribuyente',$request->id)->get();
+                $lista_rotulos=RotulosDetalle::where('id_contribuyente',$request->id)->get();
+                $lista_buses=BusesDetalle::where('id_contribuyente',$request->id)->get();
+
+                if(sizeof($lista_empresas)>0 or sizeof($lista_rotulos)>0 or sizeof($lista_buses)>0)
+                {   
+                    //** [ El contribuyente tiene obligaciones tributarias por lo         **//
+                    //**   tanto no se puede eliminar mientras no se desligue de ellas.   ] **//
+
+                    return ['success' => 2];
+
+                }else{
+
+                        // buscamos el contribuyente el cual queremos eliminar
+                        $contribuyente = Contribuyentes::find($request->id);
+                        $contribuyente->delete();
+
+                        return ['success' => 1];
+
+                }
+
             }
 
       //     public function borrarContribuyente(Request $request)

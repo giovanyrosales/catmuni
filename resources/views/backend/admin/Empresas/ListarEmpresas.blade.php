@@ -552,15 +552,6 @@ function editar(){
             axios.post('/admin/empresas/editar', formData, {
             })
             .then((response) => {
-            //* codigo de Vanessa y esta maloo no sabemos que hace.... 
-            //*   var actividad_economica = document.getElementById("select-actividad_economica");
-            //*    for (i = 0; i < Object.keys(resp.data).length; i++) {
-            //*      var option = document.createElement('option');
-            //*     option.value = resp.data[i].id;
-            //*      option.text = resp.data[i].apeynom;
-            //*      actividad_economica.appendChild(option);
-            //*  }
-            //.codigo de Vanessa y esta maloo no sabemos que hace.... 
 
                 closeLoading();
                 if(response.data.success === 0){

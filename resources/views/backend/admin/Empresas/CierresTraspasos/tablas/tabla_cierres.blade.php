@@ -1,4 +1,4 @@
-<table id="tab_cierres_empresas" class="table table-bordered table-hover">
+<table id="tab_cierres_empresas" class="table table-bordered table-hover" style='font-size:14px;'>
    <thead>             
      <tr>  
         <th style="width: 30%;">Fecha</th>   

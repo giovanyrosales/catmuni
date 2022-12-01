@@ -289,7 +289,7 @@
           
             Swal.fire({
                           icon: 'success',
-                          title: '!Contribuyente registrado correctamente!',
+                          title: '¡Contribuyente registrado correctamente!',
                           showConfirmButton: true,
             }).then((result) => {
                         if (result.isConfirmed) {
@@ -304,7 +304,7 @@
             Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Error al registrar contribuyente!', 
+                          text: '¡Error al registrar contribuyente!', 
                           showConfirmButton: true,
                         }).then((result) => {
                         if (result.isConfirmed) 
