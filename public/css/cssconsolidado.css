@@ -1,0 +1,333 @@
+		#logo{
+			  float: left;
+			  height:60px;
+			  width:60px;
+			 }
+		#EscudoSV{
+			  float: right;
+			  height:60px;
+			  width:62px;
+			 }
+		#LeyT{
+			  width:650px;
+			  height:120px;
+			 }
+		#PLeyT{
+				 font-size:7;
+				 text-align:justify;
+				}
+
+        #imgf1{
+                width:600px;
+                height:195px; 
+               }
+        #interlineado{
+
+            line-height:5px;
+        }
+
+		body{
+            font-family: Arial;
+        }
+
+        header { position: fixed;
+            left: 0px;
+            top: -160px;
+            right: 0px;
+            height: 100px;
+            text-align: center;
+            font-size: 12px;
+        }
+        header h1{
+            margin: 10px 0;
+        }
+        header h2{
+            margin: 0 0 10px 0;
+
+        }
+        header h3{
+            margin: 5px 0;
+            color: #1E1E1E;
+        }
+
+        header p{
+            margin-left: 15px;
+            display: block;
+            margin: 2px 0 0 0;
+            font: size 5px;
+        }
+        footer {
+            position: fixed;
+            left: 0px;
+            bottom: -10px;
+            right: 0px;
+            height: 10px;
+            /* border-bottom: 2px solid #ddd;*/
+        }
+
+        footer table {
+            width: 100%;
+        }
+        footer p {
+            text-align: center;
+            color: #A9A8A7;
+        }
+        footer .izq {
+            margin-top: 20px; !important;
+            margin-left: 20px;
+            text-align: left;
+        }
+        footer img {
+            text-align: center;
+        }
+        .content {
+			font-family: system-ui, system-ui, sans-serif;
+			font-size: 81.25%;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+			display: block;
+        }
+        
+        .content img {
+            margin-right: 15px;
+            float: center;
+        }
+
+        .content h3{
+            font-size: 20px;
+
+        }
+		.content h4{
+            font-size: 14px;
+			margin-left: 0 auto;
+			text-align: center;
+			margin-top: 0px important!
+        }
+
+        .content hr{
+
+             border: none;
+             margin: 0;
+             padding: 0;
+         }
+
+
+        #tabla {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 35px;
+            text-align: center;
+        }
+
+        #tabla td{
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        th{
+            border: 0px solid #ddd;
+            padding: 3px;
+            text-align: center;
+            background-color: #ddd;
+            color: #1E1E1E;
+        }
+
+        #tabla th {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            background-color: #1E1E1E;
+            color: #1E1E1E;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .fecha{
+            font-size: 16px;
+            margin-left: 17px;
+            text-align: justify;
+        }
+        .texto{
+            margin-left: 15px;
+            display: block;
+            margin: 2px 0 0 0;
+            font-size: small;
+        }
+        #uno{
+                font-size: 11px;
+
+        }
+        #dos{
+                font-size: 11px;
+                border: 1px solid #ddd;
+                padding: 0px;
+                color: #1E1E1E;
+        }
+
+
+        tablaFor {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 35px;
+            text-align: center;
+        }
+
+        #tablaFor td{
+            border: 1px solid #1E1E1E;
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #tablaFor th {
+            border: 1px solid #1E1E1E;
+            padding: 8px;
+            text-align: center;
+        }
+
+        #tablaFor th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            color: #1E1E1E;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        /* CSS para tabla Mora*/
+        tablaMora {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 35px;
+            text-align: center;
+        }
+
+        #tablaMora td{
+            border: 1px solid #1E1E1E;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        #tablaMora th {
+            border: 1px solid #1E1E1E;
+            padding: 8px;
+            text-align: center;
+        }
+
+        #tablaMora th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            color: #1E1E1E;
+            text-align: left;
+            font-size: 10px;
+        }
+        /* FIN -CSS para tabla Mora*/
+        
+        #bus{
+              
+            height: 2px;
+            width: 90%;
+            background-color: black;
+            text-align: left;
+
+        } 
+
+        #texto{
+            margin: 10px 0;
+            color: #A9A8A7;
+            font-size: 18px;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        }
+
+        #name{
+            font-size: 12px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        #name1{
+                font-size: 13px;
+                border: 1px solid #ddd;
+                padding: 0px;
+                color: #1E1E1E;
+        }
+
+        #tablaR {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 90%;
+            text-align: center;
+        }
+
+        #tablaRotulo {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 90%;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #tablaRotulo td{
+            border: 1px solid #ddd;
+            padding: 0px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+
+        #tablaRotulo th {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            background-color: #f2f2f2;
+            color: #1E1E1E;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .contentRotulo {
+            font-family: system-ui, system-ui, sans-serif;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .contentRotulo img {
+            margin-right: 15px;
+            float: center;
+        }
+
+        .contentRotulo h3{
+            font-size: 20px;
+
+        }
+        
+		.contentRotulo h4{
+            font-size: 14px;
+			margin-left: 0 auto;
+			text-align: center;
+			margin-top: 0px important!
+        }
+
+        .contentRotulo hr{
+
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+     
+        
+        
