@@ -9239,7 +9239,7 @@ public function indexReporteActividadEconomica(){
 
             $nombreContribuyente = '';
             if($infoContri = Contribuyentes::where('id', $dd->id_contribuyente)->first()){
-                $nombreContribuyente = $infoContri->nombre;
+                $nombreContribuyente = $infoContri->nombre . " " . $infoContri->apellido;
             }
 
             $dd->nombrecontribuyente = $nombreContribuyente;
@@ -9275,11 +9275,11 @@ public function indexReporteActividadEconomica(){
         <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
         <tbody>
         <tr>
-            <th style='text-align: center; font-size:13px; width: 12%'>NOMBRE EMPRESA</th>
+            <th style='text-align: center; font-size:13px; width: 35%'>NOMBRE EMPRESA</th>
             <th style='text-align: center; font-size:13px; width: 20%'>CONTRIBUYENTE</th>
-            <th style='text-align: center; font-size:13px; width: 9%'>ESTADO</th>
-            <th style='text-align: center; font-size:13px; width: 10%'>N. FICHA</th>
-            <th style='text-align: center; font-size:13px; width: 9%'>INICIO OPERACIONES</th>
+            <th style='text-align: center; font-size:13px; width: 10%'>ESTADO</th>
+            <th style='text-align: center; font-size:13px; width: 15%'>N. FICHA</th>
+            <th style='text-align: center; font-size:13px; width: 20%'>INICIO OPERACIONES</th>
         </tr>";
 
         foreach ($infoEmpresa as $dd) {
@@ -9315,7 +9315,7 @@ public function indexReporteActividadEconomica(){
     public function pdfReporteContribuyentes($id){
 
         $infoContribuyente = Contribuyentes::where('id', $id)->first();
-        $persona = $infoContribuyente->nombre;
+        $persona = $infoContribuyente->nombre . " " . $infoContribuyente->apellido;
 
         $arrayEmpresas = Empresas::where('id_contribuyente', $id)->get();
         $arrayBuses = BusesDetalle::where('id_contribuyente', $id)->get();
@@ -9394,11 +9394,11 @@ public function indexReporteActividadEconomica(){
         <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
         <tbody>
         <tr>
-            <th style='text-align: center; font-size:13px; width: 12%'>NOMBRE EMPRESA</th>
-            <th style='text-align: center; font-size:13px; width: 20%'>CATEGORÍA</th>
-            <th style='text-align: center; font-size:13px; width: 9%'>ESTADO</th>
-            <th style='text-align: center; font-size:13px; width: 10%'>NUM. TARJETA</th>
-            <th style='text-align: center; font-size:13px; width: 9%'>INICIO OPERACIONES</th>
+            <th style='text-align: center; font-size:13px; width: 40%'>NOMBRE EMPRESA</th>
+            <th style='text-align: center; font-size:13px; width: 15%'>CATEGORÍA</th>
+            <th style='text-align: center; font-size:13px; width: 12%'>ESTADO</th>
+            <th style='text-align: center; font-size:13px; width: 13%'>N. FICHA</th>
+            <th style='text-align: center; font-size:13px; width: 20%'>INICIO OPERACIONES</th>
         </tr>";
 
             foreach ($arrayEmpresas as $dd) {
@@ -9426,7 +9426,7 @@ public function indexReporteActividadEconomica(){
         <tr>
             <th style='text-align: center; font-size:13px; width: 12%'>CANTIDAD</th>
             <th style='text-align: center; font-size:13px; width: 20%'>ESTADO</th>
-            <th style='text-align: center; font-size:13px; width: 9%'># FICHA</th>
+            <th style='text-align: center; font-size:13px; width: 9%'>N. FICHA</th>
             <th style='text-align: center; font-size:13px; width: 10%'>TARIFA</th>
             <th style='text-align: center; font-size:13px; width: 9%'>MONTO PAGAR</th>
         </tr>";
@@ -9454,8 +9454,8 @@ public function indexReporteActividadEconomica(){
         <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
         <tbody>
         <tr>
-            <th style='text-align: center; font-size:13px; width: 20%'>EMPRESA</th>
-            <th style='text-align: center; font-size:13px; width: 15%'># FICHA</th>
+            <th style='text-align: center; font-size:13px; width: 30%'>EMPRESA</th>
+            <th style='text-align: center; font-size:13px; width: 15%'>N. FICHA</th>
             <th style='text-align: center; font-size:13px; width: 10%'>ESTADO</th>
             <th style='text-align: center; font-size:13px; width: 10%'>FECHA APERTURA</th>
         </tr>";
