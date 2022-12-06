@@ -9199,21 +9199,24 @@ public function notificacion_sinfonolas($f1,$f2,$ti,$f3,$id){
 
 
 public function indexReporteActividadEconomica(){
-    $girosempresarial = GiroEmpresarial::orderBy('nombre_giro_empresarial')->get();
 
-    return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('girosempresarial'));
+    $actividadEconomica = ActividadEconomica::where('categoria', 'Empresas')
+        ->orderBy('rubro')
+        ->get();
+
+    $infoEmpresa = Empresas::get();
+
+    return view('backend.admin.Reportes.ActividadEconomica.vistaReporteActividadEconomica', compact('actividadEconomica', 'infoEmpresa'));
 }
-
-
-
-
 
  public function pdfReporteActividadEconomica($id){
         // viene ID de giro_empresarial
 
-        $infoGiro = GiroComercial::where('id', $id)->first();
+        //$infoGiro = GiroComercial::where('id', $id)->first();
+        $infoActividadEconomica = ActividadEconomica::where('id', $id)->first();
 
-        $infoEmpresa = Empresas::where('id_giro_comercial', $id)
+        // $infoEmpresa = Empresas::where('id_giro_comercial', $id)
+        $infoEmpresa = Empresas::where('id_actividad_economica', $id)
             ->orderBy('nombre', 'ASC')
             ->get();
 
@@ -9263,8 +9266,10 @@ public function indexReporteActividadEconomica(){
                     <hr>
             </div>";
 
-         $tabla .= "<p>Giro Comercial: <strong>$infoGiro->nombre_giro</strong></p>";
-         $tabla .= "<p>Matrícula: <strong>$infoGiro->matricula</strong></p>";
+        // $tabla .= "<p>Giro Comercial: <strong>$infoGiro->nombre_giro</strong></p>";
+        // $tabla .= "<p>Matrícula: <strong>$infoGiro->matricula</strong></p>";
+
+        $tabla .= "<p>Giro Comercial: <strong>$infoActividadEconomica->rubro</strong></p>";
 
         $tabla .= "
         <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>

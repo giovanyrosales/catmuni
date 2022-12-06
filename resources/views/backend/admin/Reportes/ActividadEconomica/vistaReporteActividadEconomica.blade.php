@@ -32,16 +32,16 @@
                                             <div class="info-box shadow">
                                                 <span class="info-box-icon bg-transparent"><i class="far fa-building"></i></span>
                                                 <div class="info-box-content">
-                                                    <label>Seleccionar Estado</label>
+                                                    <label>Seleccionar Actividad Economica</label>
                                                     <select class="form-control" id="select-giro" style="width: 50%">
-                                                        @foreach($girosempresarial as $item)
-                                                            <option value="{{$item->id}}">{{$item->nombre_giro_empresarial}}</option>
+                                                        @foreach($actividadEconomica as $item)
+                                                            <option value="{{$item->id}}">{{$item->rubro}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <button type="button" onclick="generarPdfGiroComercial()" class="btn" style="margin-left: 15px; border-color: black; border-radius: 0.1px;">
+                                            <button type="button" onclick="generarPdfGiroComercial({{$infoEmpresa}})" class="btn" style="margin-left: 15px; border-color: black; border-radius: 0.1px;">
                                                 <img src="{{ asset('images/logopdf.png') }}" width="48px" height="55px">
                                                 Generar PDF
                                             </button>
@@ -103,9 +103,14 @@
 
     <script>
 
-        function generarPdfGiroComercial(){
+        function generarPdfGiroComercial(infoEmpresa){
             var id = document.getElementById('select-giro').value;
-            window.open("{{ URL::to('admin/pdf/reporte/actividad/economica') }}/" + id);
+
+            if (infoEmpresa.find(element => element.id_actividad_economica == id)) {
+                window.open("{{ URL::to('admin/pdf/reporte/actividad/economica') }}/" + id);
+            } else {
+                Swal.fire('No se encontro empresas asociadas a la actividad economica!', '', 'error')
+            }
         }
 
     </script>
