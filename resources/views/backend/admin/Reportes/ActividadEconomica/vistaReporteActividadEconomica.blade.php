@@ -109,7 +109,7 @@
             if (infoEmpresa.find(element => element.id_actividad_economica == id)) {
                 window.open("{{ URL::to('admin/pdf/reporte/actividad/economica') }}/" + id);
             } else {
-                Swal.fire('No se encontro empresas asociadas a la actividad economica!', '', 'error')
+                Swal.fire('¡No se encontro empresas asociadas a la actividad seleccionada!', '', 'error')
             }
         }
 

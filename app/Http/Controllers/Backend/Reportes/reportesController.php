@@ -9269,7 +9269,7 @@ public function indexReporteActividadEconomica(){
         // $tabla .= "<p>Giro Comercial: <strong>$infoGiro->nombre_giro</strong></p>";
         // $tabla .= "<p>Matrícula: <strong>$infoGiro->matricula</strong></p>";
 
-        $tabla .= "<p>Giro Comercial: <strong>$infoActividadEconomica->rubro</strong></p>";
+        $tabla .= "<p>Actividad Economica: <strong>$infoActividadEconomica->rubro</strong></p>";
 
         $tabla .= "
         <table id='tablaFor' style='width: 100%; border-collapse:collapse; border: none;'>
@@ -9278,7 +9278,7 @@ public function indexReporteActividadEconomica(){
             <th style='text-align: center; font-size:13px; width: 12%'>NOMBRE EMPRESA</th>
             <th style='text-align: center; font-size:13px; width: 20%'>CONTRIBUYENTE</th>
             <th style='text-align: center; font-size:13px; width: 9%'>ESTADO</th>
-            <th style='text-align: center; font-size:13px; width: 10%'>NUM. TARJETA</th>
+            <th style='text-align: center; font-size:13px; width: 10%'>N. FICHA</th>
             <th style='text-align: center; font-size:13px; width: 9%'>INICIO OPERACIONES</th>
         </tr>";
 
