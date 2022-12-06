@@ -352,6 +352,15 @@
        
         }
 
+        function generarPdfMoraTributaria_codigos(){
+
+            var f1 = document.getElementById("fecha_inicio_moraCod").value;
+            var f2 = document.getElementById("fecha_fin_moraCod").value; 
+
+            window.open("{{ URL::to('admin/pdf/reporte/mora_tributaria_periodica/codigos') }}/"+ f1 + "/" + f2 );
+
+            }
+
         function mora_codigos_periodica(){
             if (window.imp_grafico_mora_codigos=='1') {
                 window.myChart.clear();
