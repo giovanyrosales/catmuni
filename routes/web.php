@@ -355,6 +355,7 @@ use App\Models\Empresas;
     Route::get('/admin/reporte/reporte_cobros_diarios/pdf', [reportesController::class, 'pdfReporteCobros_diarios']);
     Route::get('/admin/pdf/reporte/mora_tributaria_global', [reportesController::class, 'pdfReporteMoraTributariaGlobal']);
     Route::get('/admin/pdf/reporte/mora_tributaria/{f1}/{f2}', [reportesController::class, 'pdfReporteMoraTributariaPeriodica']);
+    Route::get('/admin/pdf/reporte/mora_tributaria_periodica/codigos/{f1}/{f2}', [reportesController::class, 'pdfReporteMoraTributariaPeriodica_codigos']);
     Route::get('/admin/pdf/reporte/cobros_global/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_global']);
     Route::get('/admin/pdf/reporte/cobros_empresas/{f1}/{f2}/{g}/', [reportesController::class, 'pdfReportecobros_empresas']);
     Route::post('/admin/calculo/mora', [reportesController::class, 'calculo_mora']);
