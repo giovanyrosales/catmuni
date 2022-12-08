@@ -1595,7 +1595,180 @@ class reportesBusesDetalleController extends Controller
                     $mpdf->Output();
 
             }
-        
-        
+
+    public function generarCalificacionImprimir($id) {
+        log::info('id ' . $id);
+
+        $FechaDelDia = carbon::now()->format('d-m-Y');
+
+        //EMPIEZA CONFIGURACION DE PDF
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Alcaldía Metapán | Calficación');
+    
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+    
+        $logoalcaldia = 'images/logo.png';
+        $logoelsalvador = 'images/EscudoSV.png';
+
+
+        $buses = BusesDetalle::join('contribuyente', 'buses_detalle.id_contribuyente', 'contribuyente.id')
+            ->join('estado_buses', 'buses_detalle.id_estado_buses', 'estado_buses.id')
+
+            ->select('buses_detalle.id as id_buses_detalle','buses_detalle.nFicha','buses_detalle.fecha_apertura','buses_detalle.cantidad',
+                    'buses_detalle.nom_empresa','buses_detalle.dir_empresa','buses_detalle.nit_empresa','buses_detalle.tel_empresa','buses_detalle.email_empresa',
+                    'buses_detalle.r_comerciante','buses_detalle.estado_especificacion',
+                    'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente','contribuyente.apellido',
+                    'estado_buses.id as id_estado_buses','estado_buses.estado'
+            )
+
+            ->find($id);
+
+        /* $calificacionBuses = CalificacionBuses::join('buses_detalle', 'calificacion_buses.id_buses_detalle', 'buses_detalle.id')
+        ->join('contribuyente', 'calificacion_buses.id_contribuyente', 'contribuyente.id')
+        ->join('buses_detalle_especifico', 'calificacion_buses.id_buses_detalle_especifico', 'buses_detalle_especifico.id')
+
+        ->select('calificacion_buses.id','calificacion_buses.id_buses_detalle','calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion','calificacion_buses.nFicha',
+                'buses_detalle.id','buses_detalle.fecha_apertura','buses_detalle.nom_empresa',
+                'contribuyente.id as id_contribuyente','contribuyente.nombre  as contribuyente','contribuyente.apellido',
+                'buses_detalle_especifico.id','buses_detalle_especifico.nombre','buses_detalle_especifico.medidas','buses_detalle_especifico.total_medidas',
+                'buses_detalle_especifico.caras','buses_detalle_especifico.tarifa','buses_detalle_especifico.total_tarifa','buses_detalle_especifico.coordenadas_geo',
+                'buses_detalle_especifico.foto_bus'
+        )
+
+        ->where('calificacion_buses_detalle.id_buses_detalle', $id)
+        ->get();
+
+        log::info($calificacionBuses);*/
+
+        $calificacion = CalificacionBuses::where('id_buses_detalle', $id)->first(); 
+
+
+        $tabla =" <div class='content'>
+                    <img id='logo' src='$logoalcaldia'>
+                    <img id='EscudoSV' src='$logoelsalvador'>
+                    <h4>CALIFICACIÓN &nbsp;$calificacion->fecha_calificacion <br>
+                    ALCALDIA MUNICIPAL DE METAPÁN, SANTA ANA, EL SALVADOR C.A<br>
+                    UNIDAD DE ADMINISTRACIÓN TRIBUTARIA MUNICIPAL; TEL. 2402-7614            
+                    </h4>
+                    <hr>
+            </div>";
+    
+
+        $tabla .= "<div id='contentRotulo'>
+                    <table border='0' align='center' style='width: 600px;'>
+                        <tr>
+                            <td align='left' colspan='2'><strong><p style='font-size:15'>I. DATOS GENERALES</p></strong></td>
+                        </tr>
+                        <tr>
+                            <td id='name'>NÚMERO DE FICHA:</td><br>
+                            <td id='name1'>$calificacion->nFicha</td><br>
+                        </tr>
+                        <tr>
+                            <td id='name'>FECHA DE APERTURA:</td><br>
+                            <td id='name1'>$buses->fecha_apertura</td><br>
+                        </tr>
+                        <tr>
+                            <td id='name'>NOMBRE DE LA EMPRESA:</td><br>
+                            <td id='name1'>$buses->nom_empresa</td><br>
+                        </tr>
+                        <tr>
+                            <td id='name'>REPRESENTANTE LEGAL:</td><br>
+                            <td id='name1' >$buses->contribuyente</td><br>
+                        </tr>
+                        <tr>
+                            <td id='name'>FECHA DE CALIFICACIÓN:</td><br>
+                            <td id='name1'>$calificacion->fecha_calificacion</td><br>
+                        </tr>
+                        <tr>
+                            <td align='left' colspan='2'><strong><p style='font-size:15'>II. BUSES</p></strong></td>
+                        </tr>
+                    </table>";
+     
+            $tabla .= " <table id='tablaRotulo' align='center'>
+                        <tr>
+                            <th scope='col' >RÓTULOS</th>
+                            <th scope='col' >TOTAL MEDIDAS</th>
+                            <th scope='col' >CARAS</th>
+                            <th scope='col' >TARIFA</th> 
+                            <th scope='col' >EJERCICIO</th>
+                        </tr>";
+
+                        
+            /* foreach($calificacionRotulos as $dato) {
+                $tabla .= "<tr>           
+                            <tr>     
+                                <td>" . $dato->nombre . "</td>
+                                <td>" . $dato->total_medidas . "</td>
+                                <td>" . $dato->caras . "</td>
+                                <td>$" .$dato->tarifa . "</td>
+                                <td>2022</td>
+                            </tr>";
+            } */
+                    
+            $tabla .= "<tr>   
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td scope='row'>IMPUESTO:</td>
+                            <td scope='col'>MENSUAL</td>
+                            <td scope='col'>ANUAL</td>
+                        </tr>
+                        <tr>             
+                            <td colspan='#'align='center'></td>
+                            <td></td>
+                            <td></td>                         
+                            <td scope='col' align='center' style='font-size:13px;' >$<label id= 'tarifa_mensual'></label> <input type='hidden' id='tarifa_mensual'>$calificacion->monto</td>                         
+                            <td align='center'></td>
+                        </tr>                
+                        <tr>
+                            <td rowspan='2'></td>
+                            <td colspan='2'>Fondo Fiestas Patronales 5%</td>
+                            <td align='center' style='font-size:13px;'>$ $calificacion->pago_mensual</td>
+                            <td align='center'></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>TOTAL IMPUESTO</td>
+                            <td align='center' style='font-size:13px;'>$<strong><label id= 'total_impuesto'></label> <input type='hidden' id='total_impuesto'>$calificacion->pago_mensual</strong></td>
+                            <td align='center'><strong></strong></td>
+                        </tr>
+                </table>";
+
+            $tabla .= " <table id='tablaRotulo' align='center'>
+                        <tr>
+                            <th colspan='2'><br>
+                                <h4>Nombre de Calificador:<br>Lic. Rosa Lisseth Aldana</h4>
+                            </th>
+                            <td><p style='text-align: justify; font-size: 8;'><b>Base Legal para el recurso de apelación respecto a esta
+                                    NOTIFICACION DE CALIFICACION.</b> Ley General Tributaria Municipal, Art. 123. 
+                                    -De la calificación de contribuyentes, de la determinación de tributos, 
+                                    de la resolución del Alcalde en el procedimiento de repetición del pago 
+                                    de lo no debido, y de la aplicación de sanciones hecha por la
+                                    administración tributaria municipal, se admitirá recurso de apelación 
+                                    para ante el Concejo Municipal respectivo, el cual deberá interponerse
+                                    ante el funcionario que haya hecho la calificación o pronunciada la 
+                                    resolución correspondiente, en el plazo de tres días después de su 
+                                    notificación.</p>
+                            </td>
+                            Fecha:&nbsp;$FechaDelDia&nbsp;     
+                        </tr>
+                        <tr>
+                            <td colspan='2' id='uno'><b>Fecha:</b>&nbsp;$FechaDelDia&nbsp; </td>
+                        </tr>
+                        </tr>                
+                    </table>
+                </div>";
+
+            // $stylesheet = file_get_contents('css/dataTables.bootstrap4.css');
+            $stylesheet = file_get_contents('css/cssconsolidado.css');
+            $mpdf->WriteHTML($stylesheet,1);
+            $mpdf->SetMargins(0, 0, 10);
+    
+    
+            //$mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+    
+            $mpdf->WriteHTML($tabla,2);
+            $mpdf->Output();
+    }
                    
 }

@@ -384,3 +384,4 @@ use App\Models\Empresas;
     Route::get('/admin/generar/solvencia/bus/pdf/{id}', [reportesBusesDetalleController::class, 'generar_solvencia_buses']);
     Route::get('/admin/generar/resolucion_apertura/bus/pdf/{id}', [reportesBusesDetalleController::class, 'resolucion_apertura_buses']);
     Route::get('/admin/pdf/reporte/buses_detalle/cobros/{id}', [reportesBusesDetalleController::class, 'pdfReporteCobrosBus']);
+    Route::get('/admin/buses_detalle/reporte/calificacion/pdf/{id}', [reportesBusesDetalleController::class, 'generarCalificacionImprimir']);
