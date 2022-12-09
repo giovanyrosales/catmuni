@@ -593,8 +593,7 @@ public function calificacion($id)
     ->first();
 
     if($consulta_calificacion==null){
-        
-            $id_detalle_matricula=MatriculasDetalle::select('id')->where('id_empresa', $id)->first();
+            $id_detalle_matricula=MatriculasDetalle::where('id_empresa',$id)->pluck('id')->first();
             $consulta_calificacion=CalificacionMatriculas::latest()->where('id_matriculas_detalle',$id_detalle_matricula)->first();
             
             if($consulta_calificacion==null)

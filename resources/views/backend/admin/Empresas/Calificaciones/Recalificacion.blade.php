@@ -429,7 +429,7 @@ function calculo_calificacion_matricula()
         <!-- Inicia contenido--> 
 
         <div class="col-auto  p-5 text-center">
-         <img src="{{ asset('/img/check.png') }}" id="sin_registros" style="display: block;margin: 0px auto;width: 15%; height:15%;" >
+         <img src="{{ asset('/img/check.png') }}" id="al_dia" style="display: block;margin: 0px auto;width: 15%; height:15%;" >
             <h5>Ya se encuentra al día con las calificaciones...</h5>
         </div>
 
@@ -1469,7 +1469,7 @@ function GenerarCalificacionMatricula(){
                }
 
   if(giro_empresarial == ""){
-                  modalMensaje('Aviso', 'El giro empresarial es requerido');
+                  modalMensaje('Aviso', 'El rubro es requerido');
                   return;
               }
 
