@@ -14543,14 +14543,14 @@ public function cobros_codigos_periodo(Request $request){
         $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
                     <tbody>
                         <tr>
-                            <th style='width: 15%; text-align: center'>Fecha pago</th>
-                            <th style='width: 8%; text-align: center'>Meses</th>
-                            <th style='width: 15%; text-align: center'>Impuestos Mora</th>
-                            <th style='width: 12%; text-align: center'>Impuestos</th>
-                            <th style='width: 12%; text-align: center'>Interes</th>
-                            <th style='width: 14%; text-align: center'>Multa Balance</th>
-                            <th style='width: 14%; text-align: center'>Multas</th>
-                            <th style='width: 10%; text-align: center'>Total</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Fecha pago</th>
+                            <th style='font-size: 11px;width: 8%; text-align: center'>Meses</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Impuestos Mora</th>
+                            <th style='font-size: 11px;width: 12%; text-align: center'>Impuestos</th>
+                            <th style='font-size: 11px;width: 12%; text-align: center'>Intereses</th>
+                            <th style='font-size: 11px;width: 14%; text-align: center'>Multa Balance</th>
+                            <th style='font-size: 11px;width: 14%; text-align: center'>Multas</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Total</th>
                         </tr>";
 
         if (count($ListaCobros) > 0) {
@@ -14619,16 +14619,16 @@ public function cobros_codigos_periodo(Request $request){
         $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
                     <tbody>
                         <tr>
-                            <th style='width: 12%; text-align: center'>Fecha pago</th>
-                            <th style='width: 8%; text-align: center'>Meses</th>
-                            <th style='width: 13%; text-align: center'>Periodo Inicio</th>
-                            <th style='width: 12%; text-align: center'>Periodo Fin</th>
-                            <th style='width: 13%; text-align: center'>Tasas por Servicio Mora</th>
-                            <th style='width: 10%; text-align: center'>Tasas por Servicio</th>
-                            <th style='width: 10%; text-align: center'>Multa por Matricula</th>
-                            <th style='width: 10%; text-align: center'>Matricula</th>
-                            <th style='width: 12%; text-align: center'>Fondo Fiesta</th>
-                            <th style='width: 10%; text-align: center'>Total</th>
+                            <th style='font-size: 11px;width: 12%; text-align: center'>Fecha pago</th>
+                            <th style='font-size: 11px;width: 8%; text-align: center'>Meses</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Periodo Inicio</th>
+                            <th style='font-size: 11px;width: 12%; text-align: center'>Periodo Fin</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Tasas por Servicio Mora</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Tasas por Servicio</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Multa por Matricula</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Matricula</th>
+                            <th style='font-size: 11px;width: 12%; text-align: center'>Fondo Fiesta</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Total</th>
                         </tr>";
 
         if (count($ListaCobrosMaquinas) > 0) {
@@ -14643,8 +14643,8 @@ public function cobros_codigos_periodo(Request $request){
                     $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicio . "</td>
                                 <td align='center'> . $dato->periodo_cobro_fin</td>";
                 }
-                $tabla .= "<td align='center'>$" . $dato->tasas_servicio_mora_32201 . "</td>
-                            <td align='center'>$" . $dato->tasas_servicio_12299 . "</td>
+                $tabla .= "<td align='center'>$" . $dato->impuesto_mora_32201 . "</td>
+                            <td align='center'>$" . $dato->impuestos . "</td>
                             <td align='center'>$" . $dato->multa_matricula_15313 . "</td>
                             <td align='center'>$" . $dato->matricula_12210 . "</td>
                             <td align='center'>$" . $dato->fondo_fiestasP_12114 . "</td>
@@ -14675,8 +14675,7 @@ public function cobros_codigos_periodo(Request $request){
         $ListaCobrosMatriculas = CobrosMatriculas::where('id_matriculas_detalle', $id)
         ->get();
 
-        $empresa = Empresas
-        ::join('matriculas_detalle', 'empresa.id', '=', 'matriculas_detalle.id_empresa')
+        $empresa = Empresas::join('matriculas_detalle', 'empresa.id', '=', 'matriculas_detalle.id_empresa')
         ->select('empresa.nombre')
         ->where('matriculas_detalle.id', $id)
         ->get();
@@ -14704,13 +14703,14 @@ public function cobros_codigos_periodo(Request $request){
         $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
                     <tbody>
                         <tr>
-                            <th style='width: 20%; text-align: center'>Fecha pago</th>
-                            <th style='width: 8%; text-align: center'>Meses</th>
-                            <th style='width: 15%; text-align: center'>Matricula</th>
-                            <th style='width: 20%; text-align: center'>Multa por Matricula</th>
-                            <th style='width: 15%; text-align: center'>Multas</th>
-                            <th style='width: 20%; text-align: center'>Fondo Fiestas</th>
-                            <th style='width: 10%; text-align: center'>Total</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Fecha pago</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Meses</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Matricula</th>
+                            <th style='font-size: 11px;width: 20%; text-align: center'>Multa por Matricula</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Periodo Inicio</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Periodo Fin</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Fondo Fiestas</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Total</th>
                         </tr>";
 
         if (count($ListaCobrosMatriculas) > 0) {
@@ -14720,7 +14720,8 @@ public function cobros_codigos_periodo(Request $request){
                                 <td align='center'>" . $dato->cantidad_meses_cobro . "</td>
                                 <td align='center'>$" . $dato->matricula_12210 . "</td>
                                 <td align='center'>$" . $dato->multa_matricula_15313 . "</td>
-                                <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>
+                                <td align='center'>" . $dato->periodo_cobro_inicio . "</td>
+                                <td align='center'>" . $dato->periodo_cobro_fin . "</td>
                                 <td align='center'>$" . $dato->fondo_fiestasP_12114 . "</td>
                                 <td align='center'>$" . $dato->pago_total . "</td>
                             </tr>";
@@ -14778,14 +14779,14 @@ public function cobros_codigos_periodo(Request $request){
         $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
                     <tbody>
                         <tr>
-                            <th style='width: 18%; text-align: center'>Fecha pago</th>
-                            <th style='width: 8%; text-align: center'>Meses</th>
-                            <th style='width: 13%; text-align: center'>Periodo Inicio</th>
-                            <th style='width: 13%; text-align: center'>Periodo Fin</th>
-                            <th style='width: 17%; text-align: center'>Multa por Matricula</th>
-                            <th style='width: 13%; text-align: center'>Multas</th>
-                            <th style='width: 15%; text-align: center'>Fondo Fiesta</th>
-                            <th style='width: 10%; text-align: center'>Total</th>
+                            <th style='font-size: 11px;width: 18%; text-align: center'>Fecha pago</th>
+                            <th style='font-size: 11px;width: 8%; text-align: center'>Meses</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Periodo Inicio</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Periodo Fin</th>
+                            <th style='font-size: 11px;width: 17%; text-align: center'>Multa por Matricula</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Multas</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Fondo Fiesta</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Total</th>
                         </tr>";
 
         if (count($ListaCobrosSinfonolas) > 0) {
@@ -14828,7 +14829,7 @@ public function cobros_codigos_periodo(Request $request){
     //mesas
     function pdfReporteMesasCobros($id){
 
-        $ListaCobrosSinfonolas = CobrosMatriculas::where('id_matriculas_detalle', $id)
+        $ListaCobrosMesas = CobrosMatriculas::where('id_matriculas_detalle', $id)
         ->get();
 
         $empresa = Empresas
@@ -14860,27 +14861,27 @@ public function cobros_codigos_periodo(Request $request){
         $tabla .= "<table id='tablaMora' style='width: 100%;border-collapse: collapse;border: none;'>
                     <tbody>
                         <tr>
-                            <th style='width: 18%; text-align: center'>Fecha pago</th>
-                            <th style='width: 8%; text-align: center'>Meses</th>
-                            <th style='width: 13%; text-align: center'>Periodo Inicio</th>
-                            <th style='width: 13%; text-align: center'>Periodo Fin</th>
-                            <th style='width: 17%; text-align: center'>Multa por Matricula</th>
-                            <th style='width: 13%; text-align: center'>Multas</th>
-                            <th style='width: 15%; text-align: center'>Fondo Fiesta</th>
-                            <th style='width: 10%; text-align: center'>Total</th>
+                            <th style='font-size: 11px;width: 18%; text-align: center'>Fecha pago</th>
+                            <th style='font-size: 11px;width: 8%; text-align: center'>Meses</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Periodo Inicio</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Periodo Fin</th>
+                            <th style='font-size: 11px;width: 17%; text-align: center'>Multa por Matricula</th>
+                            <th style='font-size: 11px;width: 13%; text-align: center'>Multas</th>
+                            <th style='font-size: 11px;width: 15%; text-align: center'>Fondo Fiesta</th>
+                            <th style='font-size: 11px;width: 10%; text-align: center'>Total</th>
                         </tr>";
 
-        if (count($ListaCobrosSinfonolas) > 0) {
-            foreach ($ListaCobrosSinfonolas as $dato) {
+        if (count($ListaCobrosMesas) > 0) {
+            foreach ($ListaCobrosMesas as $dato) {
                 $tabla .= "<tr>
                                 <td align='center'>" . $dato->fecha_cobro . "</td>
                                 <td align='center'>" . $dato->cantidad_meses_cobro . "</td>";
                 if ($dato->periodo_cobro_inicio == null) {
                     $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicioMatricula . "</td>
-                                <td align='center'> . $dato->periodo_cobro_finMatricula</td>";
+                                <td align='center'>" . $dato->periodo_cobro_finMatricula . "</td>";
                 } else {
                     $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicio . "</td>
-                                <td align='center'> . $dato->periodo_cobro_fin</td>";
+                                <td align='center'>" . $dato->periodo_cobro_fin . "</td>";
                 }
                 $tabla .= "<td align='center'>$" . $dato->multa_matricula_15313 . "</td>
                             <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>
