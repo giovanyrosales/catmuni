@@ -109,7 +109,7 @@
                                   data-live-search="true"   
                                   id="select-actividad_economica" 
                                   title="-- Selecione la actividad --"
-                                  onchange="excepciones_especificas()"
+                                  onchange="excepciones_especificas(),resetmatriz()"
                                   >
                                     @foreach($actividadeseconomicas as $actEc)
                                     <option value="{{ $actEc->id }}" data-actividad="{{ $actEc->codigo_atc_economica }}"> {{ $actEc->rubro }} ({{ $actEc->codigo_atc_economica }})</option>
@@ -369,6 +369,19 @@
           
     $("#btnAddmatriculaEspecifica").on("click", function () {
 
+      var select_actividad_economica=document.getElementById("select-actividad_economica").value;
+      var sel = document.getElementById("select-actividad_economica");  
+      var selected = sel.options[sel.selectedIndex];
+      var act_ec_matriculas=selected.getAttribute('data-actividad');
+            
+      if(select_actividad_economica == "")
+      {
+          modalMensaje('Aviso', 'No ha selecionado una actividad económica');
+          return;
+
+      }
+
+
               //agrega las filas dinamicamente
 
               var markup = "<tr>"+
@@ -378,10 +391,9 @@
                   "</td>"+
 
                   "<td>"+
-                  "<input name='codigo[]'  class='form-control'  min='1' style='max-width: 150px' type='number' value=''/>"+
+                  "<input name='codigo[]'  class='form-control' disabled min='1' style='max-width: 150px' type='number' value='"+ act_ec_matriculas +"' />"+
                   "</td>"+
 
-                  
                   "<td>"+
                   "<input name='num_serie[]'  class='form-control'  min='1' style='max-width: 200px' type='text' value=''/>"+
                   "</td>"+
@@ -398,7 +410,7 @@
 
                     // $("tbody").append(markup);
                     $("#matrizMatriculas tbody").append(markup);
-
+                    
                     cantidadMatricula=cantidadMatricula+1;
 
                     $('#cantidad').val(cantidadMatricula);
@@ -543,6 +555,8 @@ function excepciones_especificas(){
                 }
 
 }
+
+
 function nuevo(){
   
 

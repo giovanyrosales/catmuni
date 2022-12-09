@@ -99,7 +99,10 @@ use App\Models\Empresas;
 
     //OBLIGACIONES TRIBUTARIAS
     Route::get('/admin/nuevo/empresa/vista_cobro_general', [EmpresaController::class,'vista_cobro_general'])->name('admin.cobrar.empresa.index');
+    Route::get('/admin/nuevo/empresa/vista_cobros', [EmpresaController::class,'vista_cobros'])->name('admin.cobros.empresa.index');
     Route::post('/admin/buscar/obligaciones_tributarias', [EmpresaController::class,'buscar_obligaciones_tributarias']);
+    Route::post('/admin/buscar/obligaciones_tributarias/calificadas', [EmpresaController::class,'buscar_ob_tributarias_calificadas']);
+    
 
     // --- TRASPASO Y CIERRE EMPRESA
     Route::post('/admin/empresas/show/traspaso', [EmpresaController::class,'nuevoTraspaso']);
@@ -190,7 +193,6 @@ use App\Models\Empresas;
     Route::post('/admin/matriculas_detalle/eliminar', [MatriculasDetalleController::class, 'eliminarM']);
     Route::post('/admin/matriculas_detalle/informacion', [MatriculasDetalleController::class, 'informacionMatricula']);
     Route::post('/admin/matriculas_detalle/editar', [MatriculasDetalleController::class, 'editarMatricula']);
-    Route::post('/admin/matriculas_detalle/agregar', [MatriculasDetalleController::class,'agregar_matriculas']);
     Route::post('/admin/empresas/info_cobro_matriculas', [MatriculasDetalleController::class, 'info_cobroMatriculas']);
     Route::post('/admin/empresas/calculo_cobros_mesas', [MatriculasDetalleController::class, 'calculo_cobroMesas']);
     Route::post('/admin/empresas/calculo_cobros_maquinas', [MatriculasDetalleController::class, 'calculo_cobroMaquinas']);

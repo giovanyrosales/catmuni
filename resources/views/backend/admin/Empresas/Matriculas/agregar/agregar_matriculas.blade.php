@@ -89,9 +89,11 @@ function ocultarAdd(){
                         <tbody>
                             <td>
                             <select class='form-control seleccion' onchange='multiplicar(this)' style='max-width: 300px' id='select_matriculas'  >
-                                <option value='0'> --  Seleccione el tipo matrícula  -- </option>
+                               <!-- <option value='0'> --  Seleccione el tipo matrícula  -- </option> -->
                                 @foreach($matriculas as $data)
-                                <option value='{{ $data->id }}' data-matricula='{{ $data->monto }}' data-pagoM='{{ $data->tarifa }}'> {{ $data->nombre }}</option>
+                                  
+                                        <option value='{{ $data->id }}' data-matricula='{{ $data->monto }}' data-pagoM='{{ $data->tarifa }}'> {{ $data->nombre }}</option>
+                                    
                                 @endforeach>
                    
                             </select>

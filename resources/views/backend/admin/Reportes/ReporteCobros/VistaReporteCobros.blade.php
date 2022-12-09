@@ -130,7 +130,15 @@
                         <!-- Finaliza NAV 2-->
                         <!--Contenido 3 NAV -->
                         <div class="tab-pane fade" id="nav-cobros-tasas" role="tabpanel" >
-                            k
+                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    
+                                                                No disponible.                                                                                                                                  
+
+                                                </div>
+                                            </div>
+                                        </div>
                         </div>
                         <!-- Finaliza NAV 3-->
 

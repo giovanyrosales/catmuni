@@ -54,11 +54,10 @@
                 $('#cerrarcalificacion2').hide();
 
                 //**** Para llenar el select de año de calificación *****//
-                var n = (new Date()).getFullYear()
-                var select = document.getElementById("año_calificacion");
-                for(var i = n; i>=1900; i--)select.options.add(new Option(i,i)); 
+                //var n = (new Date()).getFullYear()
+                //var select = document.getElementById("año_calificacion");
+                //for(var i = n; i>=1900; i--)select.options.add(new Option(i,i)); 
 
-               
 }
  
 window.onload = f1;

@@ -87,6 +87,63 @@ class EmpresaController extends Controller
                                                                         'tasasDeInteres'
                                                                     ));
     }
+    public function buscar_ob_tributarias_calificadas(Request $request){
+
+        //** Detectando si ya hay una calificación */
+        $consulta_calificacion=calificacion::latest()
+        ->where('id_empresa',$request->id)
+        ->first();
+
+        if($consulta_calificacion==null)
+            {
+                $id_detalle_matricula=MatriculasDetalle::where('id_empresa', $request->id)->pluck('id')->first();
+                $consulta_calificacion=CalificacionMatriculas::latest()->where('id_matriculas_detalle',$id_detalle_matricula)->first();
+  
+                if($consulta_calificacion==null)
+                {
+                    $consulta_calificacion=0;
+
+                    return  [
+                                'success' => 2,
+                            ];
+                }else{
+                        return  [
+                                    'success' => 1,
+                                ];
+                     }
+                
+            }else{
+                    return  [
+                                'success' => 1,
+                            ];
+                 }
+
+ 
+    }
+
+    public function vista_cobros(){
+        
+        $idusuario = Auth::id();
+        $infouser = Usuario::where('id', $idusuario)->first();
+        $estadoempresas = EstadoEmpresas::All();
+        $contribuyentes = Contribuyentes::All();
+        $giroscomerciales = GiroComercial::All();
+        $actividadeseconomicas = ActividadEconomica::All();
+        $ConsultaEmpresa = Empresas::All();
+        $actividadespecifica = ActividadEspecifica::ALL();
+        $tasasDeInteres = Interes::select('monto_interes')
+        ->orderby('id','desc')
+        ->get();
+
+        return view('backend.admin.Empresas.Vista_cobros',  compact(    'contribuyentes',
+                                                                        'estadoempresas',
+                                                                        'giroscomerciales',
+                                                                        'actividadeseconomicas',
+                                                                        'ConsultaEmpresa',
+                                                                        'actividadespecifica',
+                                                                        'tasasDeInteres'
+                                                                    ));
+    }
 
     public function buscar_obligaciones_tributarias(Request $request){
     
@@ -984,15 +1041,20 @@ public function show($id)
             }
 
     }else{
-            $ultimo_cobro = CobrosMatriculas::latest()
-            ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
-            ->first();
+        if($consulta_detalle_matricula!=null){
+                    $ultimo_cobro = CobrosMatriculas::latest()
+                    ->where('id_matriculas_detalle',$consulta_detalle_matricula->id)
+                    ->first();
 
-            if( $ultimo_cobro==null)
-            {
-                $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+                    if( $ultimo_cobro==null)
+                    {
+                        $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+                    }else{
+                        $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
+                    }
             }else{
-                $ultimoCobroEmpresa=$ultimo_cobro->periodo_cobro_fin;
+                $ultimoCobroEmpresa=$empresa->inicio_operaciones;
+                $ultimo_cobro='';
             }
          }
 
@@ -1939,8 +2001,7 @@ public function calculo_cobroLicor(Request $request)
 //** Vista_Cobros */
 public function cobros($id)
 {
-    
-
+  
     $contribuyentes = Contribuyentes::All();
     $estadoempresas = EstadoEmpresas::All();
     $giroscomerciales = GiroComercial::All();
@@ -2234,9 +2295,10 @@ public function nuevaEmpresa(Request $request){
                             $detalleE ->cod_municipal= $request->cod_municipal[$i];
                             $detalleE ->codigo= $request->codigo[$i];
                             $detalleE ->num_serie= $request->num_serie[$i];
-                            $detalleE ->direccion= $request->direccionM[$i];                                               
+                            $detalleE ->direccion= $request->direccionM[$i]; 
+                            $detalleE->save();                                              
                         }
-                        $detalleE->save();
+                        
                         if($detalleE->save())
                             {
                                 DB::commit();

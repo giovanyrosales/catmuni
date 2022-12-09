@@ -23,55 +23,55 @@
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
                         <a href="{{ route('admin.roles.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-user-friends"></i>
+                            <i class="fas fa-user-friends nav-icon"></i>
                             <p>Roles</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="{{ route('admin.permisos.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-user-shield"></i>
+                            <i class="fas fa-user-shield nav-icon"></i>
                             <p>Permisos y usuarios</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="{{ route('admin.ActividadEspecifica.index') }}" target="frameprincipal" class="nav-link">
-                        <i class="fas fa-network-wired"></i>
+                        <i class="fas fa-network-wired nav-icon"></i>
                             <p>Actividades específicas</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="{{ route('admin.listarTarifaVariable.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-donate"></i>
+                            <i class="fas fa-donate nav-icon"></i>
                             <p>Tarifa variable</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="{{ route('admin.TarifaFija.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-percent"></i>
+                            <i class="fas fa-percent nav-icon"></i>
                             <p>Tarifas fijas</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="{{ route('admin.LicenciaMatricula.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="far fa-credit-card"></i>
+                            <i class="far fa-credit-card nav-icon"></i>
                             <p>Licencia y matriculas</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="{{ route('admin.Multas.index') }}" target="frameprincipal" class="nav-link">
-                             <i class="fas fa-exclamation-triangle"></i>
+                             <i class="fas fa-exclamation-triangle nav-icon"></i>
                             <p>Multas</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('admin.TasaInteres.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-hand-holding-usd"></i>
+                            <i class="fas fa-hand-holding-usd nav-icon"></i>
                             <p>Tasas de interés</p>
                         </a>
                     </li>
@@ -80,11 +80,11 @@
 
 
                 <!-- Grupo Contribuyentes -->
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                <i class="fas fa-people-arrows"></i>
-                                <p>Contribuyentes <i class="right fas fa-angle-left"></i></p>
-                                </a>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                            <i class="fas fa-people-arrows"></i>
+                            <p>Contribuyentes <i class="right fas fa-angle-left"></i></p>
+                            </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('admin.crear.contribuyentes.index') }}" target="frameprincipal" class="nav-link">
@@ -115,12 +115,12 @@
 
                 <!-- Grupo Empresas -->
                 <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="fas fa-building"></i>
-                                    <p>Empresas
-                                    <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-building"></i>
+                            <p>Empresas
+                            <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                 <a href="{{ route('admin.crear.empresa.index') }}" target="frameprincipal" class="nav-link">
@@ -133,13 +133,18 @@
                                     <i class="fas fa-list-ol nav-icon"></i>
                                     <p>Listar empresas</p>
                                 </a>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.cobros.empresa.index') }}" target="frameprincipal" class="nav-link">
+                                    <i class="fas fa-coins nav-icon"></i>
+                                    <p>Cobros</p>
+                                </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('admin.historico.avisos.index') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-history nav-icon"></i>
-                                <p>Historial notificaciones</p>
+                                    <a href="{{ route('admin.historico.avisos.index') }}" target="frameprincipal" class="nav-link">
+                                    <i class="fas fa-history nav-icon"></i>
+                                    <p>Historial notificaciones</p>
                                 </a>
-                            </li>
+                                </li>
                             </ul>
                 <!-- Finaliza Grupo Empresas -->
 

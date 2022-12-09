@@ -32,9 +32,7 @@ class MatriculasDetalleController extends Controller
    
     public function index($id)
     { 
-        $matriculas= LicenciaMatricula::
-        where('tipo_permiso', "Matrícula")
-        ->get();
+       
                  
         $empresa= Empresas
         ::join('contribuyente','empresa.id_contribuyente','=','contribuyente.id')
@@ -43,14 +41,23 @@ class MatriculasDetalleController extends Controller
         ->join('actividad_economica','empresa.id_actividad_economica','=','actividad_economica.id')
         
         
-        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit','empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones','empresa.direccion','empresa.num_tarjeta','empresa.telefono',
-        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 'contribuyente.direccion as direccionCont',
+        ->select('empresa.id','empresa.nombre','empresa.matricula_comercio','empresa.nit',
+        'empresa.referencia_catastral','empresa.tipo_comerciante','empresa.inicio_operaciones',
+        'empresa.direccion','empresa.num_tarjeta','empresa.telefono','empresa.excepciones_especificas',
+        'contribuyente.nombre as contribuyente','contribuyente.apellido','contribuyente.telefono as tel',
+        'contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont',
+        'contribuyente.registro_comerciante',
+        'contribuyente.fax', 'contribuyente.direccion as direccionCont',
         'estado_empresa.estado',
-        'giro_comercial.nombre_giro',
+        'giro_comercial.nombre_giro','giro_comercial.id as id_giro','giro_comercial.slug',
         'actividad_economica.rubro',
-         )
-        ->find($id);   
-        
+        )
+        ->find($id);
+
+        $matriculas= LicenciaMatricula::where('tipo_permiso', "Matrícula")
+        ->where('slug', $empresa->slug)
+        ->get();
+
         $matriculasRegistradas=MatriculasDetalle
         ::join('empresa','matriculas_detalle.id_empresa','=','empresa.id')
         ->join('matriculas','matriculas_detalle.id_matriculas','=','matriculas.id')
@@ -70,7 +77,7 @@ class MatriculasDetalleController extends Controller
                 $detectorNull=0;
              }
 
-        return view('backend.admin.Empresas.Matriculas.agregar.agregar_matriculas', compact('id','matriculas','empresa','detectorNull',));
+        return view('backend.admin.Empresas.Matriculas.agregar.agregar_matriculas', compact('id','matriculas','empresa','detectorNull'));
 
     }
 

@@ -182,7 +182,7 @@
   
         <div class="col-md-4 col-sm-8">
       @if($pase_recalificacion_mat=='1')
-      <a href="#" onclick="CrearRecalificacion({{$empresa->id}} )" >
+      <a href="#" onclick="CrearRecalificacion({{$empresa->id}})" >
                       <div class="widget stats-widget">
                           <div class="widget-body clearfix bg-info">
                               <div class="pull-left">
@@ -207,16 +207,22 @@
                         </a>
           @else              
               @if($detectorNull== '0')
-                        <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
-                            <div class="widget stats-widget">
-                              <div class="widget-body clearfix" style="background-color:#066287; color: #FFFFFF;">
-                                  <div class="pull-left">
-                                      <h3 class="widget-title text-white">Registrar Calificación</h3>
+
+                        @if($MatriculasReg=='0' && $id_giro_comercial!='1')
+                          <a href="#" onclick="NoCalificarMatricula({{$empresa->id}} )" >
+                        @else
+                          <a href="#" onclick="CrearCalificacion({{$empresa->id}} )" >
+                          
+                        @endif
+                                <div class="widget stats-widget">
+                                  <div class="widget-body clearfix" style="background-color:#066287; color: #FFFFFF;">
+                                      <div class="pull-left">
+                                          <h3 class="widget-title text-white">Registrar Calificación</h3>
+                                      </div>
+                                      <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
                                   </div>
-                                  <span class="pull-right big-icon watermark"><i class="fas fa-edit"></i>&nbsp;<i class="fas fa-star-half"></i></span>
-                              </div>
-                          </div><!-- .widget -->
-                        </a>
+                              </div><!-- .widget -->
+                            </a>
                     @else 
                       
                       <a href="#" onclick="CrearRecalificacion({{$empresa->id}} )" >
@@ -683,6 +689,7 @@ function ListarEmpresas(){
 
         }
 
+
 function CrearCalificacion(id){
   openLoading();
               window.location.href="{{ url('/admin/empresas/calificacion') }}/"+id;
@@ -698,6 +705,11 @@ function CalificacionCreada(){
 
 toastr.success('La calificación ya fue creada.');
 return;
+}
+function NoCalificarMatricula(){
+  modalMensaje(
+                'Aviso', 'Esta empresa no posee ninguna matrícula, registre una primero, en la sección [Matrículas], para poder calificarla.');
+                return;
 }
 
 function NoCobrar(){
