@@ -209,14 +209,16 @@ class RotulosDetalleController extends Controller
             ->where('rotulos_detalle_especifico.id_rotulos_detalle', $id_rotulos_detalle)
             ->first();
 
-          
+
+        
             return  [
 
                         'success' => 1,
                         'cantidad_rotulos' =>$CantidadSeleccionada->cantidad_rotulos,
                         'id_rotulos_detalle' =>$request->id_rotulos_detalle,
                         'rotulosEspecificos' =>$rotulosEspecificos,
-                    
+                       
+                        
                     ];
 
     }

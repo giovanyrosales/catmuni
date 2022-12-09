@@ -188,6 +188,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Nombre:</label>
+                    <input  id='id_rotulos_detalle' type='hidden'/>
                     <input class="form-control" id="rotulo_nombre" name="rotulo_nombre[]">
                    
                 </div>
@@ -212,7 +213,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Caras:</label>
-                    <input class="form-control" id="caras_rotulo" name="caras_rotulo[]">
+                    <input class="form-control" id="caras_rotulo" onchange="calculo(this)" name="caras_rotulo[]">
                 </div>
             </div>
         </div>
@@ -221,7 +222,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Tarifa:</label>
-                    <input class="form-control" id="tarifa_rotulo" name="tarifa_rotulo[]">
+                    <input class="form-control" id="tarifa_rotulo" value="" name="tarifa_rotulo[]">
                 </div>
             </div>
       
@@ -545,70 +546,12 @@
             $("#btnCopiarEspecificos").on("click", function () 
             {
 
-                
-                    
-                       
-                for (var i = 0; i < cantidadRotulo.length; i++) {
-
-                            while(cantidadRotulo>0){
-
-                    var markup = "<tr>"+
-                    
-                                "<td>"+
-                                "<input name='nombre_rotulos[]'  id= 'nombre_rotulos' class='form-control' style='max-width: 200px' type='text' autocomplete='off' disabled>"+                   
-                                "</td>"+
-
-                                "<td>"+
-                                "<input name='rotulos_medidas[]' id = 'rotulos_medidas' class='form-control' style='max-width: 230px' type='text' autocomplete='off' disabled>"+
-                                "</td>"+
-
-                                "<td>"+
-                                "<input name='total_medidas[]' id= 'total_medidas'  class='form-control'  style='max-width: 135px' type='text' autocomplete='off' disabled>"+
-                                "</td>"+
-                        
-                                "<td>"+
-                                "<input name='caras[]' id = 'caras' class='form-control' style='max-width: 135x' type='text' autocomplete='off' disabled>"+
-                                "</td>"+
-
-                                "<td>"+
-                                "<input name='tarifa[]' id= 'tarifa' class='form-control' style='max-width: 120px' type='text' autocomplete='off' disabled>"+
-                                "</td>"+
-
-                                "<td>"+
-                                "<input name='total_tarifa[]' id='total_tarifa' class='form-control'  style='max-width: 120px' type='text' autocomplete='off' disabled>"+
-                                "</td>"+
-
-                                "<td>"+
-                                "<input name='coordenadas_geo[]' id= 'coordenadas_geo' class='form-control'  style='max-width: 250px' type='text' autocomplete='off' disabled>"+
-                                "</td>"+
-
-                                "<td>"+
-                                "<input  name='foto_rotulo[]' id= 'coordenadas_geo' class='form-control-file'  style='max-width: 270px' type='file' disabled>"+
-                                "</td>"+
-
-                                "</tr>";        
-                                
-
-
-                            // $("tbody").append(markup);
-                            $("#matrizRotulos tbody").append(markup);
-                            cantidadRotulo = cantidadRotulo - 1;
-                        
-                           // console.log(cantidadRotulo);
-                   
-           
-   
-                        var rotulo_nombre = $("input[name='rotulo_nombre[]']").map(function(){return $(this).val();}).get();
-                        var medidas_rotulo = $("input[name='medidas_rotulo[]']").map(function(){return $(this).val();}).get();
-                        var total_medidas_rotulo = $("input[name='total_medidas_rotulo[]']").map(function(){return $(this).val();}).get();
-                        var caras_rotulo = $("input[name='caras_rotulo[]']").map(function(){return $(this).val();}).get();
-                        var tarifa_rotulo = $("input[name='tarifa_rotulo[]']").map(function(){return $(this).val();}).get();
-                        var pago_mensual_rotulo = $("input[name='pago_mensual_rotulo[]']").map(function(){return $(this).val();}).get();
-                        var coordenadas_rotulo = $("input[name='coordenadas_rotulo[]']").map(function(){return $(this).val();}).get();
-                
-
-                /* 
-                       
+                        if(cantidadRotulo > 0)
+                        {
+                            
+                            console.log(cantidadRotulo);
+                             
+                     
                             var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
                             var rotulo_nombre = document.getElementById('rotulo_nombre').value;
                             var medidas_rotulo = document.getElementById('medidas_rotulo').value;
@@ -618,9 +561,10 @@
                             var pago_mensual_rotulo = document.getElementById('pago_mensual_rotulo').value;
                             var coordenadas_rotulo = document.getElementById('coordenadas_rotulo').value;
 
-                        //console.log(id_rotulos_detalle);
-               */       
-                        /*
+                        ///console.log(rotulo_nombre);
+                      
+                     
+                        
                             if(rotulo_nombre === '')
                             {
                                 toastr.error('El campo nombre es obligatorio');
@@ -654,33 +598,54 @@
                             if (pago_mensual_rotulo === '')
                             {
                                 toastr.error('El pago mensual es obligatorio')
-                                return;
+                                return; 
                             }
                 
-                        */    
+             
+                var markup = "<tr>"+
+                    
+                            "<td>"+
+                            "<input name='nombre_rotulos[]' id= 'nombre_rotulos' value="+ rotulo_nombre +" class='form-control' style='max-width: 200px' type='text' autocomplete='off' disabled>"+                   
+                            "</td>"+
 
-                            $('#nombre_rotulos').val(rotulo_nombre[i]);
-                            $('#rotulos_medidas').val(medidas_rotulo[i]);
-                            $('#total_medidas').val(total_medidas_rotulo[i]);
-                            $('#caras').val(caras_rotulo[i]);
-                            $('#tarifa').val(tarifa_rotulo[i]);
-                            $('#total_tarifa').val(pago_mensual_rotulo[i]);
-                            $('#coordenadas_geo').val(coordenadas_rotulo[i]);
- }//cierra while 
-                        /*  
-                            $('#nombre_rotulos').val(rotulo_nombre);
-                            $('#rotulos_medidas').val(medidas_rotulo);
-                            $('#total_medidas').val(total_medidas_rotulo);
-                            $('#caras').val(caras_rotulo);
-                            $('#tarifa').val(tarifa_rotulo);
-                            $('#total_tarifa').val(pago_mensual_rotulo);
-                            $('#coordenadas_geo').val(coordenadas_rotulo);
-                      */
+                            "<td>"+
+                            "<input name='rotulos_medidas[]' id = 'rotulos_medidas' value="+ medidas_rotulo +" class='form-control' style='max-width: 230px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
 
-                        cantidadRotulo = cantidadRotulo - 1;
-                             
-                    }
+                            "<td>"+
+                            "<input name='total_medidas[]' id= 'total_medidas' value="+ total_medidas_rotulo +" class='form-control'  style='max-width: 135px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+                    
+                            "<td>"+
+                            "<input name='caras[]' id = 'caras' class='form-control' value="+ caras_rotulo +" style='max-width: 135x'type='text' autocomplete='off' disabled>"+
+                            "</td>"+
 
+                            "<td>"+
+                            "<input name='tarifa[]' id= 'tarifa' class='form-control' value="+ tarifa_rotulo +" style='max-width: 120px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+
+                            "<td>"+
+                            "<input name='total_tarifa[]' id='total_tarifa' class='form-control' value="+ pago_mensual_rotulo +"  style='max-width: 120px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+
+                            "<td>"+
+                            "<input name='coordenadas_geo[]' id= 'coordenadas_geo' class='form-control' value="+ coordenadas_rotulo +" style='max-width: 250px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+                              
+                            "<td>"+ 
+                            "<input  name='foto_rotulo[]' id= 'coordenadas_geo' class='form-control-file'  style='max-width: 270px' type='file' disabled>"+
+                            "</td>"+
+
+                            "</tr>";                                        
+
+
+                    // $("tbody").append(markup);
+                    $("#matrizRotulos tbody").append(markup);
+                    cantidadRotulo = cantidadRotulo - 1;       
+            
+                   // $('#modalEspecificar').hide();
+            }//cierra if
+             
                         document.getElementById('rotulo_nombre').value = "";
                         document.getElementById('medidas_rotulo').value = "";
                         document.getElementById('total_medidas_rotulo').value = "";
@@ -689,12 +654,10 @@
                         document.getElementById('pago_mensual_rotulo').value = "";
                         document.getElementById('coordenadas_rotulo').value = "";
                      
-                      
-                                
+                   
                     });
+                  
         });
-     
-
      
 /*
         function limpiar()
@@ -712,11 +675,24 @@
             var tarifa_sin_fondo = '';
             var pago_mensual = '';
 
-            var total_medidas = document.getElementById('total_medidas').value;
-            var caras = document.getElementById('caras').value;
+            var total_medidas = document.getElementById("total_medidas_rotulo").value;
+            var caras = document.getElementById("caras_rotulo").value;
 
-            var tarifa_sin_fondo
+                    if(total_medidas >= 2)
+                    {
+                        var tarifa_sin_fondo = total_medidas * caras;
+                    }elseif(total_medidas >= 2.01 && total_medidas <= 8.0)
+                    {
+                        var tarifa_
+                    }
+              
+                var tarifa_total = tarifa_sin_fondo + (tarifa_sin_fondo * fondo_fiesta);
+            
+
+            document.getElementById('tarifa_rotulo').value=tarifa_sin_fondo; 
+            document.getElementById('pago_mensual_rotulo').value=tarifa_total; 
         
+    
 
         }
 //CÓDIGO PARA NUEVA FORMA DE ESPECIFICAR RÓTULOS--TERMINA
