@@ -35,7 +35,7 @@
                                                     <label>Seleccionar Contribuyente</label>
                                                     <select class="form-control" id="select-contribuyente" style="width: 75%">
                                                         @foreach($contribuyentes as $item)
-                                                            <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                            <option value="{{$item->id}}">{{$item->nombre}} {{$item->apellido}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
