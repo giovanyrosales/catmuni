@@ -326,11 +326,17 @@
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                <div class="input-group mb-3">
-                      <input  type="text" value="{{ $ultimo_cobro_rotulos }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                        </div>
-                          
+               @if($detectorCobro=='0')
+                                <input  type="text" value="{{ $calificacionRotulos->fecha_calificacion }}" disabled  name="ultimo_cobro" id="ultimo_cobro" class="form-control" required >
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                  </div>
+                                @else
+                                <input  type="text" value="{{ $ultimo_cobro->periodo_cobro_fin }}" disabled id="ultimo_cobro" name="ultimo_cobro" class="form-control text-success" required >
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                  </div>
+                    @endif                          
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->

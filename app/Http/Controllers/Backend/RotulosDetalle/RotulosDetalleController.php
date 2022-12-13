@@ -304,21 +304,22 @@ class RotulosDetalleController extends Controller
         }
     
         
-        if($request->nombre != null) {
+        if($request->nombre_rotulos != null) {
           
-            for ($i = 0; $i < isset($request->placa); $i++)  
+            for ($i = 0; $i < count($request->total_medidas); $i++) 
             {
 
                     $Bd = new RotulosDetalleEspecifico();                 
                     $Bd->id_rotulos_detalle = $request->id_rotulos_detalle;               
-                    $Bd->nombre = $request->nombre[$i];
-                    $Bd->medidas = $request->medidas[$i];
+                    $Bd->nombre = $request->nombre_rotulos[$i];
+                    $Bd->medidas = $request->rotulos_medidas[$i];
                     $Bd->total_medidas=$request->total_medidas[$i];
                     $Bd->caras = $request->caras[$i];
                     $Bd->tarifa = $request->tarifa[$i];
                     $Bd->total_tarifa = $request->total_tarifa[$i];
                     $Bd->coordenadas_geo = $request->coordenadas_geo[$i];
-                  
+                    $Bd->save();
+        }     
 
                        
                     RotulosDetalle::where('id', $request->id_rotulos_detalle)
@@ -328,7 +329,7 @@ class RotulosDetalleController extends Controller
                      
                     return ['success' => 1];
     
-            }
+         
         }
              
     } 
@@ -351,65 +352,107 @@ class RotulosDetalleController extends Controller
 
 
         $calificacionRotulos = CalificacionRotuloDetalle::
-        select('calificacion_rotulo_detalle.id', 'calificacion_rotulo_detalle.fecha_calificacion','calificacion_rotulo_detalle.estado_calificacion','calificacion_rotulo_detalle.id_rotulos_detalle')
+        select('calificacion_rotulo_detalle.id', 'calificacion_rotulo_detalle.fecha_calificacion','calificacion_rotulo_detalle.estado_calificacion')
            
         ->where('id_rotulos_detalle', $id_rotulos_detalle)
         ->latest()
         ->first();
 
-        $ListarCobros = CobrosRotulo::latest()
-        ->get();
+    log::info($calificacionRotulos);
 
-          //** Inicia - Para obtener la tasa de interes más reciente */
-          $Tasainteres=Interes::latest()
-          ->pluck('monto_interes')
-              ->first();
-          //** Finaliza - Para obtener la tasa de interes más reciente */
-  
-
-        if ($calificacionRotulos == null)
-        {
-           $detectorNull = 0;
-        }
-            else
-            {
-                $detectorNull = 1;
-            }
-        
-    
-            $ultimo_cobro = CobrosRotulo::latest()
-            ->where('id_rotulos_detalle',$id_rotulos_detalle)
+            $ultimaEsp = RotulosDetalle::latest()      
+            ->where('id', $id_rotulos_detalle)
             ->first();
-            
-                if( $ultimo_cobro==null)
-                {
-                    $ultimoCobroRotulos=$rotulos->fecha_apertura;
-                }else{
-                    $ultimoCobroRotulos=$ultimo_cobro->periodo_cobro_fin;
-                }
 
+            //** Inicia - Para obtener la tasa de interes más reciente */
+            $Tasainteres=Interes::latest()
+            ->pluck('monto_interes')
+                ->first();
+            //** Finaliza - Para obtener la tasa de interes más reciente */
+
+            //Comprobando el último cobro
+            $ComprobandoPagoAlDiaRotulo = CobrosRotulo::latest()
+            ->where('id', $id_rotulos_detalle)
+            ->first();
+            //Finaliza el último cobro
+
+            if($ComprobandoPagoAlDiaRotulo == null)
+            { 
+                $ComprobandoPagoAlDiaRotulo = $rotulos->fecha_apertura;
+            }else{
+                $ComprobandoPagoAlDiaRotulo = $ComprobandoPagoAlDiaRotulo->periodo_cobro_fin;
+            }
+
+               //log::info('comprobacion de pago:' .$ComprobandoPagoAlDiaBus);
 
         //** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
-            $ComprobandoPagoAlDiaRotulos = CobrosRotulo::latest()
-            ->where('id_contribuyente', $rotulos->id_contribuyente)
-            ->pluck('periodo_cobro_fin')
-                ->first();
 
-        if($ComprobandoPagoAlDiaRotulos == null)
-        {
-                       
-                if($ComprobandoPagoAlDiaRotulos == null)
-                {
-                        $ComprobandoPagoAlDiaRotulos = $rotulos->fecha_apertura;                       
-                    
-                }else{
-                        $ComprobandoPagoAlDiaRotulos = $rotulos->fecha_apertura;
-                        
+        $alerta_notificacion_rotulo = alertas_detalle_rotulos::where('id_contribuyente',$rotulos->id_contribuyente)
+        ->where('id_alerta','2')
+        ->pluck('cantidad')
+        ->first();
+
+        $alerta_aviso_rotulo = alertas_detalle_rotulos::where('id_contribuyente',$rotulos->id_contribuyente)
+        ->where('id_alerta','1')
+        ->pluck('cantidad')
+        ->first();
+
+
+        if($alerta_aviso_rotulo ==null)
+        {           
+            $alerta_aviso_rotulo =0;
+
+        }else{
+            if($ComprobandoPagoAlDiaRotulo>=$fechahoy)  
+            {
+                   
+                    $alerta_aviso_rotulo =0;
+                    alertas_detalle_rotulos::where('id_contribuyente',$rotulos->id_contribuyente)
+                    ->where('id_alerta','1')
+                    ->update([
+                                'cantidad' =>$alerta_aviso_rotulo,              
+                            ]);   
+
+            }else{
+                $alerta_aviso_rotulo = $alerta_aviso_rotulo;
                 }
 
-        }//** Comprobación de pago al dia se hace para reinciar las alertas avisos y notificaciones */
+            }
 
-        log::info('comprobacion de pago:' .$ComprobandoPagoAlDiaRotulos);
+
+            if($alerta_notificacion_rotulo == null)
+            {
+                $alerta_notificacion_rotulo = 0;
+
+            }else{
+                    if($ComprobandoPagoAlDiaRotulo >= $fechahoy)  
+                    {
+                        $alerta_notificacion_rotulo =0;
+                        alertas_detalle_rotulos::where('id_contribuyente',$rotulos->id_contribuyente)
+                        ->where('id_alerta','2')
+                        ->update([
+                                    'cantidad' =>$alerta_notificacion_rotulo,              
+                                ]); 
+        
+                    }else{
+                            $alerta_notificacion_rotulo =$alerta_notificacion_rotulo;
+                         }
+                }
+
+
+                $ultimo_cobro = CobrosRotulo::latest()
+                ->where('id',$id_rotulos_detalle)
+                ->first();
+        
+                    if( $ultimo_cobro==null)
+                    {
+                        $ultimoCobroRotulos = $rotulos->fecha_apertura;
+
+                    }else{
+
+                        $ultimoCobroRotulos = $ultimo_cobro->periodo_cobro_fin;
+                    }
+                log::info('comprobacion de pago:' .$ComprobandoPagoAlDiaRotulo);
 
         $alerta_notificacion_rotulo = alertas_detalle_rotulos::where('id_contribuyente', $rotulos->id_contribuyente)
         ->where('id_alerta','2')
@@ -421,110 +464,90 @@ class RotulosDetalleController extends Controller
         ->pluck('cantidad')
         ->first();
     
-        if($alerta_aviso_rotulo == null)
-        {           
-                $alerta_aviso_rotulo = 0;
 
-            }else{
-    
-                    if($ComprobandoPagoAlDiaRotulos >= $fechahoy)  
-                    {
-                       
-                        $alerta_aviso_rotulo=0;
 
-                        alertas_detalle_rotulos::where('id_contribuyente', $rotulos->id_contribuyente)
-                        ->where('id_alerta','1')
-                        ->update([
-                                    'cantidad' => $alerta_aviso_rotulo,              
-                                ]);   
-    
-                    }else{
-                            $alerta_aviso_rotulo = $alerta_aviso_rotulo;
-                        }
-                }
-    
-        if($alerta_notificacion_rotulo == null)
+
+        //******************* Determinando si una empresa esta en mora  *******************/
+
+        log::info('|°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°|');
+        $f3=carbon::now()->format('Y-m-d');
+        $f1=Carbon::parse($ComprobandoPagoAlDiaRotulo);
+        Log::info('f1 es el ultimo pago: '.$f1);
+        Log::info('f3 fecha actual: '.$f3);
+
+        //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
+        $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
+        Log::info('UltimoDiaMes: '.$UltimoDiaMes);
+        $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(30)->format('Y-m-d');
+
+
+        $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
+        //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
+        Log::info('inicio Moratorio aqui: '.$FechaDeInicioMoratorio);
+
+        if($FechaDeInicioMoratorio->lt($f3)){
+                $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
+                Log::info('Cantidad de dias de insteres moratorio: '.$DiasinteresMoratorio);
+                Log::info('No entro al else');
+        }else{
+                $DiasinteresMoratorio=0;
+                Log::info('Cantidad de dias de interes moratorio: '.$DiasinteresMoratorio);
+                Log::info('Entro al else');
+            }
+
+//** Comprobando si la empresa SE LE DEBE NOTIFICAR(AVISOS Y NOTIFICACIONES) O NO */
+        if($FechaDeInicioMoratorio>= $fechahoy)
+        {   
+            //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
+            $NoNotificar=1;
+            log::info('NoNotificar:' .$NoNotificar);
+        }else
         {
-            $alerta_notificacion_rotulo = 0;
+            //** Si NoNotificar vale 0 entonces es permitido imprimir una notificación o avisos*/
+            $NoNotificar=0;
+            log::info('NoNotificar:' .$NoNotificar);
+        }
+        //* fin de comprobar */ 
+
+                    if($DiasinteresMoratorio>0)
+                    {
+                        $estado_de_solvencia=1;//Si es 1 esta en Mora
+                        
+                    }else{
+                        $estado_de_solvencia=0;//Si es 0 esta Solvente
+                    } 
+                    Log::info('El estado de solvencia es: '.$estado_de_solvencia);
+          
+
+//******************* FIN - Determinando si una empresa o matricula esta en mora  *******************/
+
+   
+        if ($calificacionRotulos == null)
+        { 
+            $detectorNull=0;
 
         }else{
-                if($ComprobandoPagoAlDiaRotulos >= $fechahoy)  
-                {
-                    $alerta_notificacion_rotulo=0;
-                    alertas_detalle_rotulos::where('id_contribuyente', $rotulos->id_contribuyente)
-                    ->where('id_alerta','2')
-                    ->update([
-                                'cantidad' => $alerta_notificacion_rotulo,              
-                            ]); 
-    
-                }else{
-                         $alerta_notificacion_bus = $alerta_notificacion_rotulo;
-                    }
+                $detectorNull=1;
             }
-    
-            
-            if($ComprobandoPagoAlDiaRotulos > 0) 
-            {
-                //** Si NoNotificar vale 1 entonces NO SE DEBE imprimir una notificación ni avisos*/Esta al dia
-                $NoNotificarRotulo = 1;
-                log::info('NoNotificar:' .$NoNotificarRotulo);
 
-            }else{  
-                //** Si NoNotificar vale 0 entonces es permitido imprimir una notificación o avisos*/
-                $NoNotificarRotulo = 0;
-                log::info('NoNotificar:' .$NoNotificarRotulo);
-            } 
-         
+            if ($ultimo_cobro == null)
+            {  
+                $detectorCobro=0;
 
+            }else
+                {
+                    $detectorCobro=1;
+                }
 
-           //******************* Determinando si una empresa esta en mora  *******************/
-
-           log::info('|°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°|');
-           $f3=carbon::now()->format('Y-m-d');
-           $f1=Carbon::parse($ComprobandoPagoAlDiaRotulos);
-           Log::info('f1 es el ultimo pago: '.$f1);
-           Log::info('f3 fecha actual: '.$f3);
-   
-           //** INICIO- Determinar la cantidad de dias despues del primer pago y dias en interes moratorio. */
-           $UltimoDiaMes=Carbon::parse($f1)->endOfMonth();
-           Log::info('UltimoDiaMes: '.$UltimoDiaMes);
-           $FechaDeInicioMoratorio=$UltimoDiaMes->addDays(60)->format('Y-m-d');
-   
-   
-           $FechaDeInicioMoratorio=Carbon::parse($FechaDeInicioMoratorio);
-           //** FIN-  Determinar la cantidad de dias despues del primer pago y dias en interes moratorio.. */
-           Log::info('inicio Moratorio aqui: '.$FechaDeInicioMoratorio);
-   
-           if($FechaDeInicioMoratorio->lt($f3)){
-                   $DiasinteresMoratorio=$FechaDeInicioMoratorio->diffInDays($f3);
-                   Log::info('Cantidad de dias de insteres moratorio: '.$DiasinteresMoratorio);
-                   Log::info('No entro al else');
-           }else{
-                   $DiasinteresMoratorio=0;
-                   Log::info('Cantidad de dias de interes moratorio: '.$DiasinteresMoratorio);
-                   Log::info('Entro al else');
-               }
-   
-                        if($DiasinteresMoratorio > 0) 
-                        {
-                           $estado_de_solvencia = 1;//Si es 1 esta en Mora
-                           
-                        }else{
-                            $estado_de_solvencia = 0;//Si es 0 esta Solvente
-                        } 
-                       Log::info('Era empresa y el estado de solvencia es: '.$estado_de_solvencia);
-           
-   
-   //******************* FIN - Determinando si una empresa o matricula esta en mora  *******************/
    
 
         return view('backend.admin.RotulosDetalle.vistaRotulos', compact('rotulos','id_rotulos_detalle',
                                             'calificacionRotulos',
                                             'detectorNull','fechahoy',
-                                          
+                                            'NoNotificar',
                                             'alerta_aviso_rotulo',                                                        
                                             'alerta_notificacion_rotulo', 
-                                            'NoNotificarRotulo',
+                                            
                                             'Tasainteres',
                                             'ultimoCobroRotulos',
                                             'ultimo_cobro',

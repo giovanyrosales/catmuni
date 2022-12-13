@@ -529,7 +529,8 @@ class BusesDetalleController extends Controller
         ->where('id_buses_detalle', $id) 
         ->latest()
         ->first();
-
+        log::info($calificacion);
+    
       
         $ultimaEsp = BusesDetalle::latest()      
         ->where('id', $id)

@@ -350,13 +350,13 @@
         {
 
             var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
-            var rotulo_nombre = $("input[name='nombre_rotulo[]']").map(function(){return $(this).val();}).get();
-            var medidas_rotulo = $("input[name='medidas_rotulo[]']").map(function(){return $(this).val();}).get();
-            var total_medidas_rotulo = $("input[name='total_medidas_rotulo[]']").map(function(){return $(this).val();}).get();
-            var caras_rotulo = $("input[name='caras_rotulo[]']").map(function(){return $(this).val();}).get();
-            var tarifa_rotulo = $("input[name='tarifa_rotulo[]']").map(function(){return $(this).val();}).get();
-            var pago_mensual_rotulo = $("input[name='pago_mensual_rotulo[]']").map(function(){return $(this).val();}).get();
-            var coordenadas_rotulo = $("input[name='coordenadas_rotulo[]']").map(function(){return $(this).val();}).get();
+            var nombre_rotulos = $("input[name='nombre_rotulos[]']").map(function(){return $(this).val();}).get();
+            var rotulos_medidas = $("input[name='rotulos_medidas[]']").map(function(){return $(this).val();}).get();
+            var total_medidas = $("input[name='total_medidas[]']").map(function(){return $(this).val();}).get();
+            var caras = $("input[name='caras[]']").map(function(){return $(this).val();}).get();
+            var tarifa = $("input[name='tarifa[]']").map(function(){return $(this).val();}).get();
+            var total_tarifa = $("input[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
+            var coordenadas_geo = $("input[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
                     
             //**** Validar */
 
@@ -371,16 +371,16 @@
 
             let formData = new FormData();                       
             // llenar array para enviar
-            for(var j = 0; j < rotulo_nombre.length; j++)
+            for(var j = 0; j < nombre_rotulos.length; j++)
             {
                
-                    formData.append('rotulo_nombre[]', rotulo_nombre[j]);  
-                    formData.append('medidas_rotulo[]', medidas_rotulo[j]);
-                    formData.append('total_medidas_rotulo[]', total_medidas_rotulo[j]);
-                    formData.append('caras_rotulo[]', caras_rotulo[j]);
-                    formData.append('tarifa_rotulo[]', tarifa_rotulo[j]);
-                    formData.append('pago_mensual_rotulo[]', pago_mensual_rotulo[j]);
-                    formData.append('coordenadas_rotulo[]', coordenadas_rotulo[j]);         
+                    formData.append('nombre_rotulos[]', nombre_rotulos[j]);  
+                    formData.append('rotulos_medidas[]', rotulos_medidas[j]);
+                    formData.append('total_medidas[]', total_medidas[j]);
+                    formData.append('caras[]', caras[j]);
+                    formData.append('tarifa[]', tarifa[j]);
+                    formData.append('total_tarifa[]', total_tarifa[j]);
+                    formData.append('coordenadas_geo[]', coordenadas_geo[j]);         
                                
             }
 
