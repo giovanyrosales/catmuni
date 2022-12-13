@@ -146,8 +146,7 @@
                                 <th style="width: 10%; text-align: center">Caras</th>
                                 <th style="width: 10%; text-align: center">Tarifa</th>
                                 <th style="width: 10%; text-align: center">Pago Mensual</th>
-                                <th style="width: 20%; text-align: center">Coordenadas</th>
-                                <th style="width: 20%; text-align: center">Foto</th>                            
+                                <th style="width: 20%; text-align: center">Coordenadas</th>                                                  
                             </tr>                        
                         </thead>
                             <tbody id="myTbodyRotulos"></tbody>
@@ -240,14 +239,7 @@
                     <label>Coordenadas:</label>
                     <input class="form-control" id="coordenadas_rotulo" name="coordenadas_rotulo[]">
                 </div>
-            </div>
-      
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Foto:</label>
-                    <input type="file" class="form-control-file" id="foto_rotulo" name="foto_rotulo">
-                </div>
-            </div>
+            </div>            
         </div>
     </div>
         </form> 
@@ -348,7 +340,7 @@
             var tarifa = table.cells[4].children[0]; 
             var pago_mensual = table.cells[5].children[0];
             var coordenadas = table.cells[6].children[0]; 
-            var foto_rotulo = table.cells[7].children[0]; 
+        //    var foto_rotulo = table.cells[7].children[0]; 
            
 
         }
@@ -358,15 +350,14 @@
         {
 
             var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
-            var nombre = $("textarea[name='nombre[]']").map(function(){return $(this).val();}).get();
-            var medidas = $("textarea[name='medidas[]']").map(function(){return $(this).val();}).get();
-            var total_medidas = $("textarea[name='total_medidas[]']").map(function(){return $(this).val();}).get();
-            var caras = $("textarea[name='caras[]']").map(function(){return $(this).val();}).get();
-            var tarifa = $("textarea[name='tarifa[]']").map(function(){return $(this).val();}).get();
-            var total_tarifa = $("textarea[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
-            var coordenadas_geo = $("textarea[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
-            var foto_rotulo = $("textarea[name='coordenadas_geo[]']").get();
-          
+            var rotulo_nombre = $("input[name='nombre_rotulo[]']").map(function(){return $(this).val();}).get();
+            var medidas_rotulo = $("input[name='medidas_rotulo[]']").map(function(){return $(this).val();}).get();
+            var total_medidas_rotulo = $("input[name='total_medidas_rotulo[]']").map(function(){return $(this).val();}).get();
+            var caras_rotulo = $("input[name='caras_rotulo[]']").map(function(){return $(this).val();}).get();
+            var tarifa_rotulo = $("input[name='tarifa_rotulo[]']").map(function(){return $(this).val();}).get();
+            var pago_mensual_rotulo = $("input[name='pago_mensual_rotulo[]']").map(function(){return $(this).val();}).get();
+            var coordenadas_rotulo = $("input[name='coordenadas_rotulo[]']").map(function(){return $(this).val();}).get();
+                    
             //**** Validar */
 
             var nRegistro = $('#matrizRotulos >tbody >tr').length;
@@ -380,16 +371,16 @@
 
             let formData = new FormData();                       
             // llenar array para enviar
-            for(var j = 0; j < nombre.length; j++)
+            for(var j = 0; j < rotulo_nombre.length; j++)
             {
                
-                    formData.append('nombre[]', nombre[j]);  
-                    formData.append('medidas[]', medidas[j]);
-                    formData.append('total_medidas[]', total_medidas[j]);
-                    formData.append('caras[]', caras[j]);
-                    formData.append('tarifa[]', tarifa[j]);
-                    formData.append('total_tarifa[]', total_tarifa[j]);
-                    formData.append('coordenadas_geo[]', coordenadas_geo[j]);         
+                    formData.append('rotulo_nombre[]', rotulo_nombre[j]);  
+                    formData.append('medidas_rotulo[]', medidas_rotulo[j]);
+                    formData.append('total_medidas_rotulo[]', total_medidas_rotulo[j]);
+                    formData.append('caras_rotulo[]', caras_rotulo[j]);
+                    formData.append('tarifa_rotulo[]', tarifa_rotulo[j]);
+                    formData.append('pago_mensual_rotulo[]', pago_mensual_rotulo[j]);
+                    formData.append('coordenadas_rotulo[]', coordenadas_rotulo[j]);         
                                
             }
 
@@ -494,45 +485,6 @@
     </script>
 
     <script>
-        function Especificar()
-        {
-            //console.log(id_rotulos_detalle);
-            var formData = new FormData();
-                formData.append('id_rotulos_detalle', id_rotulos_detalle);
-
-            axios.post('/admin/rotulo/especifico',  formData, {
-            })
-           
-                .then((response) => {
-            
-                    closeLoading()
-
-                    if (response.data.success === 1) 
-                    { 
-                        console.log(response);
-
-                        if(response.data.rotulosEspecificos!=null)
-                        {
-                            toastr.warning('El rótulo ya fue específicada');
-                            return;
-                        }
-                        
-                        else{
-                      
-                                window.location.href="{{ url('/admin/rotulo_detalle/especifico') }}/"+id_rotulos_detalle;
-                              
-                            }
-                        }
-                })
-                .catch((error) => {
-                    closeLoading()
-                    toastMensaje('error', 'Error');
-                });
-            
-            
-        }
- 
-
 //CÓDIGO PARA NUEVA FORMA DE ESPECIFICAR RÓTULOS-
 
         function modalEspecificar()
@@ -550,7 +502,7 @@
                         {
                             
                             console.log(cantidadRotulo);
-                             
+
                      
                             var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
                             var rotulo_nombre = document.getElementById('rotulo_nombre').value;
@@ -563,8 +515,7 @@
 
                         ///console.log(rotulo_nombre);
                       
-                     
-                        
+                                          
                             if(rotulo_nombre === '')
                             {
                                 toastr.error('El campo nombre es obligatorio');
@@ -600,7 +551,7 @@
                                 toastr.error('El pago mensual es obligatorio')
                                 return; 
                             }
-                
+
              
                 var markup = "<tr>"+
                     
@@ -632,9 +583,7 @@
                             "<input name='coordenadas_geo[]' id= 'coordenadas_geo' class='form-control' value="+ coordenadas_rotulo +" style='max-width: 250px' type='text' autocomplete='off' disabled>"+
                             "</td>"+
                               
-                            "<td>"+ 
-                            "<input  name='foto_rotulo[]' id= 'coordenadas_geo' class='form-control-file'  style='max-width: 270px' type='file' disabled>"+
-                            "</td>"+
+                          
 
                             "</tr>";                                        
 
@@ -673,24 +622,34 @@
 
             var fondo_fiesta = 0.05;
             var tarifa_sin_fondo = '';
-            var pago_mensual = '';
+            var pago_mensual = ''; 
+            var total = '';
 
             var total_medidas = document.getElementById("total_medidas_rotulo").value;
             var caras = document.getElementById("caras_rotulo").value;
 
-                    if(total_medidas >= 2)
+                    if(total_medidas > 0 && total_medidas <= 2.00)
                     {
-                        var tarifa_sin_fondo = total_medidas * caras;
-                    }elseif(total_medidas >= 2.01 && total_medidas <= 8.0)
-                    {
-                        var tarifa_
-                    }
-              
-                var tarifa_total = tarifa_sin_fondo + (tarifa_sin_fondo * fondo_fiesta);
-            
+                        var tarifa_sin_fondo = 2.50;
+                    //var total =  tarifa_sin_fondo +( tarifa_sin_fondo * fondo_fiesta);
 
-            document.getElementById('tarifa_rotulo').value=tarifa_sin_fondo; 
-            document.getElementById('pago_mensual_rotulo').value=tarifa_total; 
+                    }
+                    else if(total_medidas >=2.01 && total_medidas <=8)
+                    {
+                        var tarifa_sin_fondo = 5.00;
+                    //var total =  tarifa_sin_fondo +( tarifa_sin_fondo * fondo_fiesta);
+
+                    }else 
+                    {
+                        var tarifa_sin_fondo = total_medidas;
+                    }
+
+            
+                var total =   tarifa_sin_fondo * caras ;                
+                var pago_mensual = total + (total * fondo_fiesta);
+
+            document.getElementById('tarifa_rotulo').value = total; 
+            document.getElementById('pago_mensual_rotulo').value= pago_mensual.toFixed(2); 
         
     
 

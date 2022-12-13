@@ -209,7 +209,69 @@ class RotulosDetalleController extends Controller
             ->where('rotulos_detalle_especifico.id_rotulos_detalle', $id_rotulos_detalle)
             ->first();
 
+            $rotulosE = RotulosDetalleEspecifico::where('id', $id_rotulos_detalle)->get();
 
+            $tRotulo = TarifaRotulo::orderBy('id', 'ASC')->get();
+
+            log::info($tRotulo);
+                   
+            $total1 = 0;
+            $totalanual = 0;
+            $totalA = 0;
+            $total = 0;
+            $monto_tarifa = 0;
+            $total_medidas = 0;
+            $fondoF = 0.05;
+            $total_impuesto = 0;
+           
+    //Calculo de la calificación de rótulos
+        foreach ($rotulosE as $dato)
+        {
+            $tarifa_mensual = 0;
+            
+            foreach($tRotulo as $tarifa)
+            {
+                if ($dato->total_medidas >= $tarifa->limite_inferior && $dato->total_medidas <= $tarifa->limite_superior)
+                {
+                    $tarifa_mensual = $tarifa->monto_tarifa; 
+                 
+                        if($dato->total_caras > 1)
+                        {
+                            $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                        }
+                        log::info($tarifa_mensual);
+                
+                break;         
+    
+               }  
+              
+                else if($dato->total_medidas > 8)
+                {
+                    $tarifa_mensual = $dato->total_medidas;
+    
+                        if($dato->total_caras >1)
+                        {
+                            $tarifa_mensual = $tarifa_mensual * $dato->total_caras;
+                        }
+                        
+                break;
+              
+                }
+    
+            }
+    
+            $total = $total + $tarifa_mensual;
+            $dato->monto = $tarifa_mensual;           
+            $total1 = round(($total * 12),2);
+            $totalImpuesto = round ($tarifa_mensual + ($tarifa_mensual * $fondoF),2);
+            $totalAnual = round($total1 + ($total1 * $fondoF),2);
+            
+            log::info('tarifa sin fondo fiesta ' . $total);
+            log::info('total impuesto mensual con fondo fiesta ' . $totalImpuesto);
+            log::info('Impuesto Anual sin fondo fiesta ' . $total1);
+            log::info('Impuesto anual con fondo fiesta ' . $totalAnual);
+
+        }
         
             return  [
 
@@ -217,9 +279,11 @@ class RotulosDetalleController extends Controller
                         'cantidad_rotulos' =>$CantidadSeleccionada->cantidad_rotulos,
                         'id_rotulos_detalle' =>$request->id_rotulos_detalle,
                         'rotulosEspecificos' =>$rotulosEspecificos,
-                       
+                     
                         
-                    ];
+            ];
+
+            
 
     }
 
