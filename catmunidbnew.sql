@@ -890,6 +890,22 @@ INSERT IGNORE INTO `contribuyente` (`id`, `nombre`, `apellido`, `direccion`, `du
 	(11, 'Luis Ernesto', 'Deras Aguilar', 'Col. la esperanza Calle los juzgados.', '123456781', '12345678901234', NULL, '54654574', 'luisderas@gmail.com', NULL);
 /*!40000 ALTER TABLE `contribuyente` ENABLE KEYS */;
 
+-- Volcando estructura para tabla catmunidb2.dispensa
+CREATE TABLE IF NOT EXISTS `dispensa` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `fecha_inicio_periodo` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `fecha_fin_periodo` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `estado` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- Volcando datos para la tabla catmunidb2.dispensa: ~2 rows (aproximadamente)
+/*!40000 ALTER TABLE `dispensa` DISABLE KEYS */;
+INSERT IGNORE INTO `dispensa` (`id`, `fecha_inicio_periodo`, `fecha_fin_periodo`, `estado`) VALUES
+	(1, '2022-12-10', '2022-12-12', 'Finalizado'),
+	(3, '2022-12-15', '2022-12-20', 'Activo');
+/*!40000 ALTER TABLE `dispensa` ENABLE KEYS */;
+
 -- Volcando estructura para tabla catmunidb2.empresa
 CREATE TABLE IF NOT EXISTS `empresa` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,

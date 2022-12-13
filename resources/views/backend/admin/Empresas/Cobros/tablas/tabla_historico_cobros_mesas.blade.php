@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>     
                     @foreach($ListaCobrosMesas as $dato)
-                <tr>
+                <tr id="letra_pequeña">
                 <td>{{ $dato-> fecha_cobro }}</td>
                         <td>{{ $dato-> cantidad_meses_cobro }}</td>
                         @if($dato-> periodo_cobro_inicio==null)

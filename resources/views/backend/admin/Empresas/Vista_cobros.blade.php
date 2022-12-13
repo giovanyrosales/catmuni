@@ -272,6 +272,22 @@ function buscar_empresa_a_cobrar(){
           axios.post('/admin/buscar/obligaciones_tributarias/calificadas', formData, {
            })
          .then((response) => {
+
+        if(response.data.success === 3)
+        {
+            Swal.fire({
+                                  icon: 'error',
+                                  title: 'Oops...',
+                                  text: 'Esta empresa se encuentra cerrada, cambie su estado para generar un cobro',                                 
+                                  showConfirmButton: true, 
+                                  
+                                }).then((result) => {
+                                    if (result.isConfirmed) 
+                                    {
+                                        window.location.href="{{ url('/admin/empresas/show') }}/"+id;
+                                    }
+                                }); 
+        }
         
         if(response.data.success === 2)
         {

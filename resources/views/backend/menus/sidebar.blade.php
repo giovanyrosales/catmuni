@@ -36,6 +36,13 @@
                     </li>
 
                     <li class="nav-item">
+                        <a href="{{ route('admin.Dispensa.index') }}" target="frameprincipal" class="nav-link">
+                        <i class="fas fa-hands-helping nav-icon"></i>
+                            <p>Dispensa</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="{{ route('admin.ActividadEspecifica.index') }}" target="frameprincipal" class="nav-link">
                         <i class="fas fa-network-wired nav-icon"></i>
                             <p>Actividades específicas</p>

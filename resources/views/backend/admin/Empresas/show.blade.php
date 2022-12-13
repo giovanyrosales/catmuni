@@ -340,33 +340,57 @@
     </div>
            
     <div class="col-md-4 col-sm-8">
-    @if($CE==1)
-      <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
-              <div class="widget stats-widget">
-                  <div class="widget-body clearfix bg-success">
-                      <div class="pull-left">
-                          <h3 class="widget-title text-white">Generar Cobro</h3>
-                      </div>
-                      <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
-                  </div>
-              </div><!-- .widget -->
-          </a>
+    @if($empresa->id_estado_empresa=='1')
+      <a href="#"  onclick="Empresa_cerrada_No_cobrar()" id="btnCobro">
+            <div class="widget stats-widget">
+                <div class="widget-body clearfix bg-success">
+                    <div class="pull-left">
+                        <h3 class="widget-title text-white">Generar Cobro</h3>
+                    </div>
+                    <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
+                </div>
+            </div><!-- .widget -->
+        </a>
     @else
-                  @if($detectorNull== '0')
-                      @if($pase_cobro_mat== '1')
-                            <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
-                                <div class="widget stats-widget">
-                                    <div class="widget-body clearfix bg-success">
-                                        <div class="pull-left">
-                                            <h3 class="widget-title text-white">Generar Cobro</h3>
-                                        </div>
-                                        <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
-                                    </div>
-                                </div><!-- .widget -->
-                            </a>
+            @if($CE==1)
+              <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
+                      <div class="widget stats-widget">
+                          <div class="widget-body clearfix bg-success">
+                              <div class="pull-left">
+                                  <h3 class="widget-title text-white">Generar Cobro</h3>
+                              </div>
+                              <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
+                          </div>
+                      </div><!-- .widget -->
+                  </a>
+            @else
+                          @if($detectorNull== '0')
+                              @if($pase_cobro_mat== '1')
+                                    <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
+                                        <div class="widget stats-widget">
+                                            <div class="widget-body clearfix bg-success">
+                                                <div class="pull-left">
+                                                    <h3 class="widget-title text-white">Generar Cobro</h3>
+                                                </div>
+                                                <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
+                                            </div>
+                                        </div><!-- .widget -->
+                                    </a>
+                                  @else
+                                    <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
+                                    <div class="widget stats-widget">
+                                              <div class="widget-body clearfix bg-success">
+                                                  <div class="pull-left">
+                                                      <h3 class="widget-title text-white">Generar Cobro</h3>
+                                                  </div>
+                                                  <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
+                                              </div>
+                                          </div><!-- .widget -->
+                                      </a>
+                                  @endif
                           @else
-                            <a href="#"  onclick="NoCobrar()" id="btnmodalCobro">
-                            <div class="widget stats-widget">
+                              <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
+                                  <div class="widget stats-widget">
                                       <div class="widget-body clearfix bg-success">
                                           <div class="pull-left">
                                               <h3 class="widget-title text-white">Generar Cobro</h3>
@@ -376,20 +400,9 @@
                                   </div><!-- .widget -->
                               </a>
                           @endif
-                  @else
-                      <a href="#"  onclick="Cobros({{$empresa->id}})" id="btnCobro">
-                          <div class="widget stats-widget">
-                              <div class="widget-body clearfix bg-success">
-                                  <div class="pull-left">
-                                      <h3 class="widget-title text-white">Generar Cobro</h3>
-                                  </div>
-                                  <span class="pull-right big-icon watermark"><i class="fas fa-hand-holding-usd"></i></span>
                               </div>
-                          </div><!-- .widget -->
-                      </a>
-                  @endif
-                      </div>
-      @endif
+              @endif
+    @endif
     </div><!-- .ROW -->
     <hr>
 
@@ -714,6 +727,10 @@ function NoCalificarMatricula(){
 
 function NoCobrar(){
   toastr.warning('Debe registrar una calificación primero para poder generar un cobro.');
+  return;
+}
+function Empresa_cerrada_No_cobrar(){
+  toastr.warning('Esta empresa se encuentra cerrada, cambie su estado en la sección [Cierres y traspasos].');
   return;
 }
 function NoCalificarCE(){

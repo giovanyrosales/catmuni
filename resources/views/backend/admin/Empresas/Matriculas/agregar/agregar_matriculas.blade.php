@@ -329,8 +329,8 @@ function ocultarAdd(){
             <table class="table" id="matrizMatriculas" style="border: 100px" data-toggle="table">
                     <thead>
                     <tr>                           
-                        <th style="width: 25%; text-align: center">Cód. Municipal</th>
-                        <th style="width: 15%; text-align: center">Código</th>
+                        <th style="width: 20%; text-align: center">Cód. Municipal</th>
+                        <th style="width: 20%; text-align: center">Código</th>
                         <th style="width: 20%; text-align: center">N° serie</th>
                         <th style="width: 35%; text-align: center">Dirección</th>
                         <th style="width: 15%; text-align: center">Eliminar</th>
@@ -494,12 +494,15 @@ function matricula_especificas(e){
         $(document).ready(function () {
             $("#btnAddmatriculaEspecifica").on("click", function () {
 
+
                 //agrega las filas dinamicamente
                
                 
-                if(cantidadMatricula==0){
-                    modalMensaje('¡Limite de Matrículas!', 'La cantidad de matrícula detalladas llegó a su limite');
-                   }//cierra if
+                    if(cantidadMatricula==0)
+                    {
+                        modalMensaje('¡Limite de Matrículas!', 'La cantidad de matrícula detalladas llegó a su limite');
+                    }   //cierra if
+
                 while(cantidadMatricula>0){
                    
                 var markup = "<tr>"+
@@ -509,7 +512,7 @@ function matricula_especificas(e){
                     "</td>"+
 
                     "<td>"+
-                    "<input name='codigo[]'  class='form-control'  min='1' style='max-width: 100px' type='number' value=''/>"+
+                    "<input name='codigo[]' disabled class='form-control'  min='1' style='max-width: 100px' type='number' value='"+ '{{$empresa->codigo_atc_economica}}' + "'/>"+
                     "</td>"+
 
                     

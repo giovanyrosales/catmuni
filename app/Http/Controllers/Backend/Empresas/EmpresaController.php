@@ -89,35 +89,49 @@ class EmpresaController extends Controller
     }
     public function buscar_ob_tributarias_calificadas(Request $request){
 
-        //** Detectando si ya hay una calificación */
+        //** Inicio - Detectando si una empre esta abierta o cerrada */
+        $empresa=Empresas::where('id',$request->id)->first();
+
+        //** Fin - Detectando si una empre esta abierta o cerrada */
+
+
+        //**Inicio - Detectando si ya hay una calificación */
         $consulta_calificacion=calificacion::latest()
         ->where('id_empresa',$request->id)
         ->first();
 
-        if($consulta_calificacion==null)
-            {
-                $id_detalle_matricula=MatriculasDetalle::where('id_empresa', $request->id)->pluck('id')->first();
-                $consulta_calificacion=CalificacionMatriculas::latest()->where('id_matriculas_detalle',$id_detalle_matricula)->first();
-  
-                if($consulta_calificacion==null)
+        if($empresa->id_estado_empresa=='2')
+        {
+            if($consulta_calificacion==null)
                 {
-                    $consulta_calificacion=0;
+                    $id_detalle_matricula=MatriculasDetalle::where('id_empresa', $request->id)->pluck('id')->first();
+                    $consulta_calificacion=CalificacionMatriculas::latest()->where('id_matriculas_detalle',$id_detalle_matricula)->first();
+    
+                    if($consulta_calificacion==null)
+                    {
+                        $consulta_calificacion=0;
 
-                    return  [
-                                'success' => 2,
-                            ];
+                        return  [
+                                    'success' => 2,
+                                ];
+                    }else{
+                            return  [
+                                        'success' => 1,
+                                    ];
+                        }
+                    
                 }else{
                         return  [
                                     'success' => 1,
                                 ];
-                     }
-                
-            }else{
-                    return  [
-                                'success' => 1,
-                            ];
-                 }
+                    }
+            //**Fin - Detectando si ya hay una calificación */
 
+        }else{
+                return  [
+                            'success' => 3,
+                        ];
+             }
  
     }
 
@@ -853,7 +867,7 @@ public function show($id)
     'contribuyente.dui','contribuyente.email','contribuyente.nit as nitCont',
     'contribuyente.registro_comerciante',
     'contribuyente.fax', 'contribuyente.direccion as direccionCont',
-    'estado_empresa.estado',
+    'estado_empresa.estado','estado_empresa.id as id_estado_empresa',
     'giro_comercial.nombre_giro','giro_comercial.id as id_giro',
     'actividad_economica.rubro',
     )
@@ -1306,7 +1320,7 @@ public function show($id)
                     Log::info('Era empresa y el estado de solvencia es: '.$estado_de_solvencia);
               }
 
-//******************* FIN - Determinando si una empresa o matricula esta en mora  *******************/
+//******************* FIN - Determinando si una empresa o matricula esta en mora  *******************/   
 
    if ($calificaciones == null)
     { 
@@ -3156,7 +3170,7 @@ public function infoTraspaso(Request $request)
             ];
             }
             if(Empresas::where('id', $request->id)->first()){
-                //** Guardar registro historio en tabla traspasos */
+                //** Guardar registro historico en tabla traspasos */
             
             if($id_contribuyente!=$empresa->id_contribuyente){
                 $traspaso = new Traspasos();
@@ -3166,7 +3180,7 @@ public function infoTraspaso(Request $request)
                 $traspaso->fecha_a_partir_de = $request->Apartirdeldia;
                 $traspaso->num_resolucion = $nueva_resolucion;
                 $traspaso->save();
-                //** FIN- Guardar registro historio en tabla traspasos */
+                //** FIN- Guardar registro historico en tabla traspasos */
                 Empresas::where('id', $request->id)->update([
          
                      'id_contribuyente' => $request->contribuyente,
