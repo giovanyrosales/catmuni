@@ -1624,22 +1624,21 @@ class reportesBusesDetalleController extends Controller
 
             ->find($id);
 
-        /* $calificacionBuses = CalificacionBuses::join('buses_detalle', 'calificacion_buses.id_buses_detalle', 'buses_detalle.id')
+        $calificacionBuses = CalificacionBuses::join('buses_detalle', 'calificacion_buses.id_buses_detalle', 'buses_detalle.id')
         ->join('contribuyente', 'calificacion_buses.id_contribuyente', 'contribuyente.id')
         ->join('buses_detalle_especifico', 'calificacion_buses.id_buses_detalle_especifico', 'buses_detalle_especifico.id')
 
-        ->select('calificacion_buses.id','calificacion_buses.id_buses_detalle','calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion','calificacion_buses.nFicha',
+        ->select('calificacion_buses.id','calificacion_buses.id_buses_detalle','calificacion_buses.fecha_calificacion','calificacion_buses.estado_calificacion','calificacion_buses.nFicha','calificacion_buses.monto','calificacion_buses.pago_mensual',
                 'buses_detalle.id','buses_detalle.fecha_apertura','buses_detalle.nom_empresa',
                 'contribuyente.id as id_contribuyente','contribuyente.nombre  as contribuyente','contribuyente.apellido',
-                'buses_detalle_especifico.id','buses_detalle_especifico.nombre','buses_detalle_especifico.medidas','buses_detalle_especifico.total_medidas',
-                'buses_detalle_especifico.caras','buses_detalle_especifico.tarifa','buses_detalle_especifico.total_tarifa','buses_detalle_especifico.coordenadas_geo',
-                'buses_detalle_especifico.foto_bus'
+                'buses_detalle_especifico.id','buses_detalle_especifico.nombre','buses_detalle_especifico.placa','buses_detalle_especifico.ruta',
+                'buses_detalle_especifico.telefono'
         )
 
-        ->where('calificacion_buses_detalle.id_buses_detalle', $id)
+        ->where('calificacion_buses.id_buses_detalle', $id)
         ->get();
 
-        log::info($calificacionBuses);*/
+        log::info($calificacionBuses);
 
         $calificacion = CalificacionBuses::where('id_buses_detalle', $id)->first(); 
 
@@ -1685,6 +1684,7 @@ class reportesBusesDetalleController extends Controller
                         </tr>
                     </table>";
      
+        
             $tabla .= " <table id='tablaRotulo' align='center'>
                         <tr>
                             <th scope='col' >RÓTULOS</th>
@@ -1693,18 +1693,18 @@ class reportesBusesDetalleController extends Controller
                             <th scope='col' >TARIFA</th> 
                             <th scope='col' >EJERCICIO</th>
                         </tr>";
-
+          
                         
-            /* foreach($calificacionRotulos as $dato) {
+            foreach($calificacionBuses as $dato) {
                 $tabla .= "<tr>           
                             <tr>     
                                 <td>" . $dato->nombre . "</td>
-                                <td>" . $dato->total_medidas . "</td>
-                                <td>" . $dato->caras . "</td>
-                                <td>$" .$dato->tarifa . "</td>
+                                <td>" . $dato->placa . "</td>
+                                <td>" . $dato->ruta . "</td>
+                                <td>$" .$dato->monto . "</td>
                                 <td>2022</td>
                             </tr>";
-            } */
+            } 
                     
             $tabla .= "<tr>   
                         <tr>

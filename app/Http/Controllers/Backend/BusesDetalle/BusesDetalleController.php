@@ -744,14 +744,15 @@ class BusesDetalleController extends Controller
             $calificacionB=BusesDetalleEspecifico
             ::join('buses_detalle','buses_detalle_especifico.id_buses_detalle','=','buses_detalle.id')
                                       
-            ->select('buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre',
+            ->select('buses_detalle_especifico.id','buses_detalle_especifico.id_buses_detalle', 'buses_detalle_especifico.placa','buses_detalle_especifico.nombre',
             'buses_detalle_especifico.ruta','buses_detalle_especifico.telefono',
             'buses_detalle.tarifa','buses_detalle.cantidad','buses_detalle.monto_pagar','buses_detalle.fecha_apertura','buses_detalle.nFicha')
             
             ->where('id_buses_detalle', $buses->id)					
             ->get();
         
-        
+        log::info($calificacionB);
+      
 
             $calificacion = BusesDetalle::join('contribuyente','buses_detalle.id_contribuyente','=','contribuyente.id')
             ->join('estado_buses','buses_detalle.id_estado_buses','estado_buses.id')
@@ -764,8 +765,9 @@ class BusesDetalleController extends Controller
             'contribuyente.nombre as contribuyente', 'contribuyente.apellido',
             'estado_buses.estado')
 
-            ->get();
+            ->find($buses->id);
            
+log::info($calificacion);
 
             $Cbus = ' ';
             $Tbus = '';
@@ -814,7 +816,32 @@ class BusesDetalleController extends Controller
                 $apellido = $contribuyentes->apellido;
                 
             }
-            return view('backend.admin.Buses.CalificacionBuses', compact('id','ficha','cantidad','tarifa','total','apellido','contribuyentes','contribuyente','nom_empresa','Total','nombre','Tbus','TotalF','fondoF','TotalT','TotalA','TotalAF','TotalT','fecha','busesE','Cbus','Mbus','buses','calificacionB','calificacion'));
+
+
+            
+            
+            foreach($bus as $dato)
+            {
+                
+                    $id_especifico = '';
+
+                        foreach($calificacionB as $especifico)
+                        {
+                            //$id_especifico = $especifico->id;
+                        }
+
+                        $id_especifico = $especifico->id;
+                        log::info('fwgg ' . $id_especifico);
+                        
+                }  
+
+               
+        
+            return view('backend.admin.Buses.CalificacionBuses', compact('id','ficha','cantidad',
+            'tarifa','total','apellido','contribuyentes','contribuyente',
+            'nom_empresa','Total','nombre','Tbus','TotalF','fondoF','TotalT',
+            'TotalA','TotalAF','TotalT','fecha','busesE','Cbus','Mbus','buses','calificacionB',
+            'calificacion','id_especifico'));
     }
 
 
@@ -870,6 +897,10 @@ class BusesDetalleController extends Controller
             $cantidad = '';
             $tarifa = '';
             $total = '';
+            $id_especifico = '';
+
+
+
 
             if ($buses = BusesDetalle::where('id', $id)->first())
             {
@@ -901,8 +932,9 @@ class BusesDetalleController extends Controller
                 $apellido = $contribuyentes->apellido;
                 
             }
-          
-            return view('backend.admin.Buses.tabla.tablaBus', compact('calificacionB','calificacion','buses','ficha','cantidad'
+
+
+        return view('backend.admin.Buses.tabla.tablaBus', compact('calificacionB','calificacion','buses','ficha','cantidad'
         ,'tarifa','total'));
              
     }
@@ -917,25 +949,27 @@ class BusesDetalleController extends Controller
         $id_buses_detalle = $request->id_buses_detalle;       
         $id_contribuyente = $request->id_contribuyente;
         $ficha = $request->ficha;
+        $id_buses_detalle_especifico = $request->id_buses_detalle_especifico;
 
         log::info('fecha calificacion '.$fecha_calificacion);
         log::info('estado calificacion '.$estado_calificaion);
         log::info('id buses detalle ' .$id_buses_detalle);
         log::info('id contribuyente ' .$id_contribuyente);
         log::info('ficha ' .$ficha);
-        
+        log::info('id especificos ' . $id_buses_detalle_especifico);
       
         
         $calificacionB=BusesDetalle::select('cantidad','tarifa','monto_pagar','estado_especificacion')
-        ->where('id', $id_buses_detalle)
-      
+        ->where('id', $id_buses_detalle)      
         ->latest()->first();
-        
+
+   
        
         log::info($calificacionB);
     
         $dt = new CalificacionBuses();
         $dt->id_buses_detalle = $request->id_buses_detalle;
+        $dt->id_buses_detalle_especifico = $request->id_buses_detalle_especifico;
         $dt->id_contribuyente = $request->id_contribuyente;
         $dt->fecha_calificacion = $request->fechacalificar; 
         $dt->nFicha = $request->ficha;          

@@ -16,6 +16,45 @@
     }
 </style>
 
+<style>
+/*
+
+#tabla {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 35px;
+            text-align: center;
+        }
+
+        #tabla th {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            background-color: #1E1E1E;
+            color: #1E1E1E;
+            text-align: center;
+            font-size: 16px;
+        }
+
+*/
+
+  .fake-textarea {
+        border: 1px solid black;
+        width: 30rem;
+        padding: .5rem;
+        min-height: 3rem;
+      }
+      .fake-textarea:empty::before {
+        position: absolute;
+        content: "Escribe aquí...";
+      }
+      #description {
+        display: none;
+      }
+</style>
+
 <!-- Contenido Frame Principal -->
 <div id="divcontenedor" style="display: none">
     <section class="content-header">
@@ -96,27 +135,24 @@
             <div class="tab-pane" id="tab_2">
 
                 <form>
-                        <div class="card-body">
-                <input  id='id_rotulos_detalle' type='hidden'/>
-                <table class="table" id="matrizRotulos" style="border: 100px" data-toggle="table">
+                    <div class="card-body">
+                        <input  id='id_rotulos_detalle' type='hidden'/>
+                        <table class="table" id="matrizRotulos" style="border: 200px" data-toggle="table">
                         <thead>
-                        <tr>                           
-                            <th style="width: 15%; text-align: center">Nombre</th>                           
-                            <th style="width: 17%; text-align: center">Medidas</th>
-                            <th style="width: 15%; text-align: center">Total Medidas</th>
-                            <th style="width: 10%; text-align: center">Caras</th>
-                            <th style="width: 11%; text-align: center">Tarifa</th>
-                            <th style="width: 15%; text-align: center">Pago Mensual</th>
-                            <th style="width: 19%; text-align: center">Coordenadas</th>
-                          
-                        </tr>                        
+                            <tr>                           
+                                <th style="width: 15%; text-align: center">Nombre</th>                           
+                                <th style="width: 18%; text-align: center">Medidas</th>
+                                <th style="width: 12%; text-align: center">Total Medidas</th>
+                                <th style="width: 10%; text-align: center">Caras</th>
+                                <th style="width: 10%; text-align: center">Tarifa</th>
+                                <th style="width: 10%; text-align: center">Pago Mensual</th>
+                                <th style="width: 20%; text-align: center">Coordenadas</th>                                                  
+                            </tr>                        
                         </thead>
-                            <tbody id="myTbodyRotulos">
-                            </tbody>
+                            <tbody id="myTbodyRotulos"></tbody>
                         </table>
                             <br>
-                                <button type="button"  class="btn btn-block btn-success" id="btnAddrotuloEspecifico"><i class="far fa-plus-square"></i> &nbsp; Específicar nuevo bus</button>               
-
+                                <button type="button"  class="btn btn-block btn-success" onclick="modalEspecificar()" id="btnAddrotuloEspecifico"><i class="far fa-plus-square"></i> &nbsp; Específicar Rótulos</button>         
                             <br>
                         </div>
                         </form>
@@ -131,6 +167,90 @@
 </div>
          
 <!--Finaliza Modal Especificar Bus-->
+
+<!--Empieza modal para especificar rótulos-->
+<!--NUEVO-->
+
+<div class="modal" id="modalEspecificar">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <!--Contenido del modal-->
+                <div class="modal-header">
+                        <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;DATOS</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+            <form id="formulario-Especificar">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nombre:</label>
+                    <input  id='id_rotulos_detalle' type='hidden'/>
+                    <input class="form-control" id="rotulo_nombre" name="rotulo_nombre[]">
+                   
+                </div>
+            </div>
+        
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Medidas:</label>
+                    <input class="form-control" id="medidas_rotulo" name="medidas_rotulo[]">
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Total Medidas:</label>
+                    <input class="form-control" id="total_medidas_rotulo" name="total_medidas_rotulo[]">
+                </div>
+            </div>
+      
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Caras:</label>
+                    <input class="form-control" id="caras_rotulo" onchange="calculo(this)" name="caras_rotulo[]">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Tarifa:</label>
+                    <input class="form-control" id="tarifa_rotulo" value="" name="tarifa_rotulo[]">
+                </div>
+            </div>
+      
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Pago Mensual:</label>
+                    <input class="form-control" id="pago_mensual_rotulo" name="pago_mensual_rotulo[]">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Coordenadas:</label>
+                    <input class="form-control" id="coordenadas_rotulo" name="coordenadas_rotulo[]">
+                </div>
+            </div>            
+        </div>
+    </div>
+        </form> 
+
+    <div class="card-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
+        <button type="button"  id="btnCopiarEspecificos" onclick="" class="btn btn-success float-right">Guardar</button>
+    </div>
+
+<!-- Termina modal para especifica rótulos-->
+
 
 
 
@@ -148,8 +268,7 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
  
-    <script src="sweetalert2.all.min.js"></script>
-    <script src="sweetalert2.min.js"></script>
+ 
 
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
@@ -167,17 +286,6 @@
 
 <script>
 
-    function calculo()
-    {
-        var fondo_fiesta = 0.05;
-        var tarifa_sin_fondo = '';
-        var pago_mensual = '';
-
-        var total_medidas = document.getElementById('total_medidas').value;
-        var caras = document.getElementById('caras').value;
-      
-
-    }
 
         function EspecificarRotulo(id_rotulos_detalle)
         {
@@ -200,7 +308,7 @@
 
                         if(response.data.rotulosEspecificos!=null)
                         {
-                            toastr.warning('El rótulo ya fue específicada');
+                            toastr.warning('El rótulo ya fue específicado');
                             return;
                         }else{
 
@@ -217,7 +325,8 @@
                     toastMensaje('error', 'Error');
                 });
             
-        }
+        } 
+        
 
         function rotulos_especificos(e)
         {
@@ -231,110 +340,47 @@
             var tarifa = table.cells[4].children[0]; 
             var pago_mensual = table.cells[5].children[0];
             var coordenadas = table.cells[6].children[0]; 
+        //    var foto_rotulo = table.cells[7].children[0]; 
            
 
         }
 
-        // filas de la tabla Agrega Buses Específicos
-        $(document).ready(function () {
-        $("#btnAddrotuloEspecifico").on("click", function () {
-
-            //agrega las filas dinamicamente
-            
-                if(cantidadRotulo == 0)
-                {
-                    modalMensaje('¡Limite de Buses!', 'La cantidad de buses detallados llegó a su limite');
-                }//cierra if
-                
-            while(cantidadRotulo > 0)
-            {
-                
-                var markup = "<tr>"+
-           
-                    "<td>"+
-                    "<textarea name='nombre[]' id= 'nombre' class='form-control' rows='2' min='1' style='max-width: 120px' type='text'></textarea>"+                   
-                    "</td>"+
-
-                    "<td>"+
-                    "<textarea name='medidas[]' id = 'medidas' class='form-control' rows = '2' min='2' style='max-width: 170px' type='text'></textarea>"+
-                    "</td>"+
-
-                    "<td>"+
-                    "<textarea name='total_medidas[]' id= 'total_medidas'  class='form-control'  min='2' style='max-width: 100px' type='number'>m²</textarea>"+
-                    "</td>"+
-             
-                    "<td>"+
-                    "<textarea name='caras[]' id = 'caras' class='form-control' rows= '2' min='2' style='max-width: 100px' type='text'></textarea>"+
-                    "</td>"+
-
-                    "<td>"+
-                    "<textarea name='tarifa[]' id= 'tarifa' class='form-control' rows = '2'  min='2' style='max-width: 100px' type='text'>$</textarea>"+
-                    "</td>"+
-
-                    "<td>"+
-                    "<textarea name='total_tarifa[]' id='total_tarifa' class='form-control' rows = '2' min='2' style='max-width: 100px' type='text'>$</textarea>"+
-                    "</td>"+
-
-                    "<td>"+
-                    "<textarea name='coordenadas_geo[]' id= 'coordenadas_geo class='form-control' rows = '2'  min='2' style='max-width: 150px' type='text'></textarea>"+
-                    "</td>"+
-
-                    "</tr>";
-             
-                // $("tbody").append(markup);
-                $("#matrizRotulos tbody").append(markup);
-                cantidadRotulo = cantidadRotulo - 1;
-                
-                console.log(cantidadRotulo);
-            }//cierra while
-
-            
-            });
-        });
-
-
+     
         function GuardarRotulosEspecificos()
         {
 
             var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
-            var nombre = $("textarea[name='nombre[]']").map(function(){return $(this).val();}).get();
-            var medidas = $("textarea[name='medidas[]']").map(function(){return $(this).val();}).get();
-            var total_medidas = $("textarea[name='total_medidas[]']").map(function(){return $(this).val();}).get();
-            var caras = $("textarea[name='caras[]']").map(function(){return $(this).val();}).get();
-            var tarifa = $("textarea[name='tarifa[]']").map(function(){return $(this).val();}).get();
-            var total_tarifa = $("textarea[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
-            var coordenadas_geo = $("textarea[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
-          
+            var nombre_rotulos = $("input[name='nombre_rotulos[]']").map(function(){return $(this).val();}).get();
+            var rotulos_medidas = $("input[name='rotulos_medidas[]']").map(function(){return $(this).val();}).get();
+            var total_medidas = $("input[name='total_medidas[]']").map(function(){return $(this).val();}).get();
+            var caras = $("input[name='caras[]']").map(function(){return $(this).val();}).get();
+            var tarifa = $("input[name='tarifa[]']").map(function(){return $(this).val();}).get();
+            var total_tarifa = $("input[name='total_tarifa[]']").map(function(){return $(this).val();}).get();
+            var coordenadas_geo = $("input[name='coordenadas_geo[]']").map(function(){return $(this).val();}).get();
+                    
             //**** Validar */
 
             var nRegistro = $('#matrizRotulos >tbody >tr').length;
 
             if (nRegistro <= 0)
             {
-
                     modalMensaje('Registro Vacio', 'Debe especificar al menos una matrícula');
                     return;
-            }
-
-          
+            }          
             //**** Fin de validar */
 
-            let formData = new FormData();
-
-                       
+            let formData = new FormData();                       
             // llenar array para enviar
-            for(var j = 0; j < nombre.length; j++)
+            for(var j = 0; j < nombre_rotulos.length; j++)
             {
-
                
-                    formData.append('nombre[]', nombre[j]);  
-                    formData.append('medidas[]', medidas[j]);
+                    formData.append('nombre_rotulos[]', nombre_rotulos[j]);  
+                    formData.append('rotulos_medidas[]', rotulos_medidas[j]);
                     formData.append('total_medidas[]', total_medidas[j]);
                     formData.append('caras[]', caras[j]);
                     formData.append('tarifa[]', tarifa[j]);
                     formData.append('total_tarifa[]', total_tarifa[j]);
-                    formData.append('coordenadas_geo[]', coordenadas_geo[j]);   
-      
+                    formData.append('coordenadas_geo[]', coordenadas_geo[j]);         
                                
             }
 
@@ -347,12 +393,12 @@
                        
                 if(response.data.success === 1)
                 {                             
-                // Rótulo agregado
+                    // Rótulo agregado
                     agregado_rotulos_especifico();
                 }  
 
                 else{
-                // error al crear
+                    // error al crear
                         toastr.error('Error al agregar rótulo');
                     }
 
@@ -365,6 +411,7 @@
 
         }//**** Fin de guardar bus */
  
+  
         function agregado_rotulos_especifico()
         {
                 Swal.fire({
@@ -393,8 +440,7 @@
         }
 
         function modalMensaje(titulo, mensaje)
-        {
-            
+        {            
             Swal.fire({
                 title: titulo,
                 text: mensaje,
@@ -439,48 +485,175 @@
     </script>
 
     <script>
-        function Especificar()
+//CÓDIGO PARA NUEVA FORMA DE ESPECIFICAR RÓTULOS-
+
+        function modalEspecificar()
         {
-            //console.log(id_rotulos_detalle);
-
-
-            var formData = new FormData();
-                formData.append('id_rotulos_detalle', id_rotulos_detalle);
-
-            axios.post('/admin/rotulo/especifico',  formData, {
-            })
-           
-                .then((response) => {
-            
-                    closeLoading()
-
-                    if (response.data.success === 1) 
-                    { 
-                        console.log(response);
-
-                        if(response.data.rotulosEspecificos!=null)
-                        {
-                            toastr.warning('El rótulo ya fue específicada');
-                            return;
-                        }
-                        
-                        else{
-
-                            openLoading();
-                                window.location.href="{{ url('/admin/rotulo_detalle/especifico') }}/"+id_rotulos_detalle;
-
-                              
-                            }
-                        }
-                })
-                .catch((error) => {
-                    closeLoading()
-                    toastMensaje('error', 'Error');
-                });
-            
+            $('#modalEspecificar').modal('show');
             
         }
 
+            // filas de la tabla Agrega Buses Específicos 
+            $(document).ready(function () {
+            $("#btnCopiarEspecificos").on("click", function () 
+            {
+
+                        if(cantidadRotulo > 0)
+                        {
+                            
+                            console.log(cantidadRotulo);
+
+                     
+                            var id_rotulos_detalle=(document.getElementById('id_rotulos_detalle').value);    
+                            var rotulo_nombre = document.getElementById('rotulo_nombre').value;
+                            var medidas_rotulo = document.getElementById('medidas_rotulo').value;
+                            var total_medidas_rotulo = document.getElementById('total_medidas_rotulo').value;
+                            var caras_rotulo = document.getElementById('caras_rotulo').value;
+                            var tarifa_rotulo = document.getElementById('tarifa_rotulo').value;
+                            var pago_mensual_rotulo = document.getElementById('pago_mensual_rotulo').value;
+                            var coordenadas_rotulo = document.getElementById('coordenadas_rotulo').value;
+
+                        ///console.log(rotulo_nombre);
+                      
+                                          
+                            if(rotulo_nombre === '')
+                            {
+                                toastr.error('El campo nombre es obligatorio');
+                                return;
+                            }
+
+                            if (medidas_rotulo === '')
+                            {
+                                toastr.error('Las medidas del rótulo son obligatorias');
+                                return;
+                            }
+
+                            if (total_medidas_rotulo === '')
+                            {
+                                toastr.error('El total de medidas es obligatorio');
+                                return;
+                            }
+
+                            if (caras_rotulo === '')
+                            {
+                                toastr.error('El total de caras es obligatorio');
+                                return;
+                            }
+
+                            if (tarifa_rotulo === '')
+                            {
+                                toastr.error('La tarifa es obligatoria')
+                                return;
+                            }
+
+                            if (pago_mensual_rotulo === '')
+                            {
+                                toastr.error('El pago mensual es obligatorio')
+                                return; 
+                            }
+
+             
+                var markup = "<tr>"+
+                    
+                            "<td>"+
+                            "<input name='nombre_rotulos[]' id= 'nombre_rotulos' value="+ rotulo_nombre +" class='form-control' style='max-width: 200px' type='text' autocomplete='off' disabled>"+                   
+                            "</td>"+
+
+                            "<td>"+
+                            "<input name='rotulos_medidas[]' id = 'rotulos_medidas' value="+ medidas_rotulo +" class='form-control' style='max-width: 230px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+
+                            "<td>"+
+                            "<input name='total_medidas[]' id= 'total_medidas' value="+ total_medidas_rotulo +" class='form-control'  style='max-width: 135px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+                    
+                            "<td>"+
+                            "<input name='caras[]' id = 'caras' class='form-control' value="+ caras_rotulo +" style='max-width: 135x'type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+
+                            "<td>"+
+                            "<input name='tarifa[]' id= 'tarifa' class='form-control' value="+ tarifa_rotulo +" style='max-width: 120px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+
+                            "<td>"+
+                            "<input name='total_tarifa[]' id='total_tarifa' class='form-control' value="+ pago_mensual_rotulo +"  style='max-width: 120px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+
+
+                            "<td>"+
+                            "<input name='coordenadas_geo[]' id= 'coordenadas_geo' class='form-control' value="+ coordenadas_rotulo +" style='max-width: 250px' type='text' autocomplete='off' disabled>"+
+                            "</td>"+          
+                          
+
+                            "</tr>";                                        
+
+
+                    // $("tbody").append(markup);
+                    $("#matrizRotulos tbody").append(markup);
+                    cantidadRotulo = cantidadRotulo - 1;       
+            
+                   // $('#modalEspecificar').hide();
+            }//cierra if
+             
+                        document.getElementById('rotulo_nombre').value = "";
+                        document.getElementById('medidas_rotulo').value = "";
+                        document.getElementById('total_medidas_rotulo').value = "";
+                        document.getElementById('caras_rotulo').value = "";
+                        document.getElementById('tarifa_rotulo').value = "";
+                        document.getElementById('pago_mensual_rotulo').value = "";
+                        document.getElementById('coordenadas_rotulo').value = "";
+                     
+                   
+                    });
+                  
+        });
+     
+/*
+        function limpiar()
+        {
+             // $('#modalEspecificar').reset();
+
+              document.getElementById("formulario-Especificar").reset();
+        }
+*/
+        
+        function calculo()
+        {
+
+            var fondo_fiesta = 0.05;
+            var tarifa_sin_fondo = '';
+            var pago_mensual = ''; 
+            var total = '';
+
+            var total_medidas = document.getElementById("total_medidas_rotulo").value;
+            var caras = document.getElementById("caras_rotulo").value;
+
+                    if(total_medidas > 0 && total_medidas <= 2.00)
+                    {
+                        var tarifa_sin_fondo = 2.50;
+                    //var total =  tarifa_sin_fondo +( tarifa_sin_fondo * fondo_fiesta);
+
+                    }
+                    else if(total_medidas >=2.01 && total_medidas <=8)
+                    {
+                        var tarifa_sin_fondo = 5.00;
+                    //var total =  tarifa_sin_fondo +( tarifa_sin_fondo * fondo_fiesta);
+
+                    }else 
+                    {
+                        var tarifa_sin_fondo = total_medidas;
+                    }
+
+            
+                var total =   tarifa_sin_fondo * caras ;                
+                var pago_mensual = total + (total * fondo_fiesta);
+
+            document.getElementById('tarifa_rotulo').value = total; 
+            document.getElementById('pago_mensual_rotulo').value= pago_mensual.toFixed(2); 
+        
+    
+
+        }
+//CÓDIGO PARA NUEVA FORMA DE ESPECIFICAR RÓTULOS--TERMINA
 
         </script>
 @stop
