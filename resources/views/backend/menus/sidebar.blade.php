@@ -11,7 +11,7 @@
 
     <!-- Grupo Roles y permisos -->
              <li class="nav-item">
-
+             @can('seccion.roles.y.permisos')
                  <a href="#" class="nav-link">
                     <i class="far fa-edit"></i>
                     <p>
@@ -85,7 +85,7 @@
                 </ul>
              </li>
 
-
+            @endcan
                 <!-- Grupo Contribuyentes -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -119,7 +119,8 @@
                             </li>
                         </ul>
                 <!-- Finaliza Grupo Contribuyentes -->
-
+                @can('url.empresa.crear.index')
+                
                 <!-- Grupo Empresas -->
                 <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -154,7 +155,8 @@
                                 </li>
                             </ul>
                 <!-- Finaliza Grupo Empresas -->
-
+           
+                @endcan
                 <!-- Grupo Rótulos -->
                          <li class="nav-item">
                                 <a href="#" class="nav-link">

@@ -31,7 +31,7 @@ class RolesSeeder extends Seeder
 
         // visualizar roles y permisos
         Permission::create(['name' => 'seccion.roles.y.permisos', 'description' => 'Cuando hace login, se podra visualizar roles y permisos'])->syncRoles($role1);
-
+       
         // redireccionamiento a url - encargado de Empresas
         Permission::create(['name' => 'url.empresa.crear.index', 'description' => 'Cuando hace login, se redirigirá la vista Empresas Crear'])->syncRoles($role2);
 

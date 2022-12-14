@@ -24,14 +24,16 @@
                                     <td align="center"> <span class="badge bg-success">Activo</span></td>
                                     @elseif($dato->estado == 'Finalizado')
                                     <td align="center"> <span class="badge bg-danger">Finalizado</span></td>
+                                    @elseif($dato->estado == 'Cancelado')
+                                    <td align="center"> <span class="badge bg-warning">Cancelado</span></td>         
                                     @endif
                                     <td>
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="verInformacion()">
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="verInformacion('{{$dato->id}}')">
                                             <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
                                         </button>
 
                                         <button type="button" class="btn btn-danger btn-xs" onclick="modalBorrar('{{$dato->id}}')">
-                                            <i class="fas fa-trash-alt" title="Eliminar"></i>&nbsp; Eliminar
+                                        <i class="fas fa-window-close"  title="Cancelar"></i>&nbsp; Cancelar
                                         </button>
                                     </td>
                                 </tr>
@@ -40,6 +42,7 @@
                             </tbody>
 
                         </table>
+                        
                     </div>
                 </div>
             </div>

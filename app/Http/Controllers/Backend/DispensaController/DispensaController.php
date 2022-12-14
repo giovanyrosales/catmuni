@@ -109,6 +109,26 @@ class DispensaController extends Controller
              }
     }
 
+    public function info_periodo_dispensa(Request $request){
+
+        if($info = Dispensa::where('id', $request->id)->first()){
+            if($info->estado=='Activo')
+            {
+                $info->activo=1;
+            }else{
+                    $info->activo=0;
+                 }
+
+            return [
+                    'success' => 1,
+                    'info' => $info,
+                   ];
+
+        }else{
+            return ['success' => 2];
+        }
+    }
+
 
 
 
