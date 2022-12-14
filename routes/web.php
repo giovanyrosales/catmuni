@@ -394,3 +394,5 @@ use App\Models\Empresas;
     Route::get('/admin/tabla/historico/dispensas', [DispensaController::class,'tabla_dispensas']);
     Route::post('/admin/dispensa/nuevo/periodo', [DispensaController::class, 'nuevo_periodo_dispensa']);
     Route::post('/admin/dispensa/borrar/periodo', [DispensaController::class, 'borrar_periodo_dispensa']);
+    Route::post('/admin/dispensa/infoperiodo', [DispensaController::class, 'info_periodo_dispensa']);
+    

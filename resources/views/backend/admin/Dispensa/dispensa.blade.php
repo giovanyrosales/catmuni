@@ -5,7 +5,8 @@
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/bootstrap-select.min.css') }}" type="text/css" rel="stylesheet" />
-@stop
+    <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
+    @stop
 
 <style>
     table{
@@ -13,9 +14,6 @@
         table-layout:fixed;
     }
 </style>
-
-<!-- Muestra una lista de permisos de un determinado Rol, para acceder aqui hay que seleccionar
-    un Rol primero-->
 
 <section class="content-header">
     <div class="container-fluid">
@@ -48,6 +46,62 @@
     </div>
 </section>
 
+<div class="modal fade" id="modalEditar">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="far fa-plus-square"></i>&nbsp;Editar período de dispensa</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formulario-editar">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                    <!-- /.form-group -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Inicio del período:</label>
+                                            <input type="date" name="inicio_periodo_editar" id="inicio_periodo_editar" required class="form-control" >
+                                        </div>
+                                    </div>
+                                    <!-- /.form-group -->   
+                                    <!-- /.form-group -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Finalización del período:</label>
+                                            <input type="date" name="fin_periodo_editar" id="fin_periodo_editar" required class="form-control" >
+                                        </div>
+                                    </div>
+                                    <!-- /.form-group -->  
+                                    <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Estado del período</label><br>
+                                        <label class="switch" style="margin-top:10px">
+                                            <input type="checkbox" id="toggle-editar">
+                                            <div class="slider round">
+                                                <span class="on">Activo</span>
+                                                <span class="off">Finalizado</span>
+                                            </div>
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <!-- /.form-group -->  
+                                </div>
+                            </div>
+                        </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i>&nbsp;Cerrar</button>
+                <button type="button" class="btn btn-success" onclick="editar_periodo_dispensa()"><i class="fas fa-plus-square"></i>&nbsp;Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="modalAgregar">
     <div class="modal-dialog">
@@ -122,6 +176,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 
@@ -227,6 +283,39 @@
                 });
         }
 
+        function verInformacion(id){
+        console.log(id);
+            openLoading();
+            document.getElementById("formulario-editar").reset();
+
+            axios.post('/admin/dispensa/infoperiodo',{
+                'id': id
+            })
+                .then((response) => {
+                    closeLoading();
+                    if(response.data.success === 1){
+                        $('#modalEditar').modal('show');
+                        $('#inicio_periodo_editar').val(response.data.info.fecha_inicio_periodo);
+                        $('#fin_periodo_editar').val(response.data.info.fecha_fin_periodo);
+
+                   //     document.getElementById("rol-editar").options.length = 0;
+
+                       if(response.data.info.activo === 0){
+                           $("#toggle-editar").prop("checked", false);
+                       }else{
+                          $("#toggle-editar").prop("checked", true);
+                        }
+
+                    }else{
+                        toastMensaje('error', 'Información no encontrado');
+                    }
+
+                })
+                .catch((error) => {
+                    closeLoading()
+                    toastMensaje('error', 'Información no encontrado');
+                });
+        }
 
 
     function modalMensaje(titulo, mensaje){
