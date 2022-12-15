@@ -11,7 +11,7 @@
 
     <!-- Grupo Roles y permisos -->
              <li class="nav-item">
-
+             @can('seccion.roles.y.permisos')
                  <a href="#" class="nav-link">
                     <i class="far fa-edit"></i>
                     <p>
@@ -32,6 +32,13 @@
                         <a href="{{ route('admin.permisos.index') }}" target="frameprincipal" class="nav-link">
                             <i class="fas fa-user-shield nav-icon"></i>
                             <p>Permisos y usuarios</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.Dispensa.index') }}" target="frameprincipal" class="nav-link">
+                        <i class="fas fa-hands-helping nav-icon"></i>
+                            <p>Dispensa</p>
                         </a>
                     </li>
 
@@ -78,7 +85,7 @@
                 </ul>
              </li>
 
-
+            @endcan
                 <!-- Grupo Contribuyentes -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -112,7 +119,8 @@
                             </li>
                         </ul>
                 <!-- Finaliza Grupo Contribuyentes -->
-
+                @can('url.empresa.crear.index')
+                
                 <!-- Grupo Empresas -->
                 <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -147,7 +155,8 @@
                                 </li>
                             </ul>
                 <!-- Finaliza Grupo Empresas -->
-
+           
+                @endcan
                 <!-- Grupo Rótulos -->
                          <li class="nav-item">
                                 <a href="#" class="nav-link">

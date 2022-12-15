@@ -22,6 +22,7 @@ use App\Http\Controllers\Backend\RotulosDetalle\RotulosDetalleController;
 use App\Http\Controllers\Backend\Reportes\reportesRotulosDetalleController;
 use App\Http\Controllers\Backend\BusesDetalle\BusesDetalleController;
 use App\Http\Controllers\Backend\Buses\BusesController;
+use App\Http\Controllers\Backend\DispensaController\DispensaController;
 use App\Http\Controllers\Backend\Reportes\reportesBusesController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Backend\Reportes\reportesController;
@@ -284,7 +285,7 @@ use App\Models\Empresas;
     Route::post('/admin/rotulos_detalle/calcular-CobrosR', [RotulosDetalleController::class, 'calcularCobrosRotulo']);
 
     //especificar rotulos
-    Route::post('/admin/rotulo/especifico/', [RotulosDetalleController::class, 'especificar']);
+    //Route::post('/admin/rotulo/especifico/', [RotulosDetalleController::class, 'especificar']);
     //termina especificar rotulos
 
 
@@ -389,3 +390,11 @@ use App\Models\Empresas;
     Route::get('/admin/generar/resolucion_apertura/bus/pdf/{id}', [reportesBusesDetalleController::class, 'resolucion_apertura_buses']);
     Route::get('/admin/pdf/reporte/buses_detalle/cobros/{id}', [reportesBusesDetalleController::class, 'pdfReporteCobrosBus']);
     Route::get('/admin/buses_detalle/reporte/calificacion/pdf/{id}', [reportesBusesDetalleController::class, 'generarCalificacionImprimir']);
+
+    //DISPENSA E INTERESES
+    Route::get('/admin/dispensa/config', [DispensaController::class, 'index'])->name('admin.Dispensa.index');
+    Route::get('/admin/tabla/historico/dispensas', [DispensaController::class,'tabla_dispensas']);
+    Route::post('/admin/dispensa/nuevo/periodo', [DispensaController::class, 'nuevo_periodo_dispensa']);
+    Route::post('/admin/dispensa/borrar/periodo', [DispensaController::class, 'borrar_periodo_dispensa']);
+    Route::post('/admin/dispensa/infoperiodo', [DispensaController::class, 'info_periodo_dispensa']);
+    

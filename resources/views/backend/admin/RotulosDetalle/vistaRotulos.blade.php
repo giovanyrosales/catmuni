@@ -52,7 +52,17 @@
         <div class="card card-green">
           <div class="card-header card-header-success">
     
-          <h5 class="card-category-">RÓTULOS <span class="badge badge-warning"></span>&nbsp; </h5>
+        <h5 class="card-category-">RÓTULOS <span class="badge badge-warning"></span>&nbsp; 
+        @if($estado_de_solvencia==0)
+
+        <img src="{{ asset('/images/solvente3.svg') }}"class="avatar">
+
+        @elseif($estado_de_solvencia==1)
+
+        <img src="{{ asset('/images/mora2.svg') }}" class="avatar">
+
+        @endif                                
+        </h5>
       
           </div>
       <!--body-->
@@ -75,7 +85,7 @@
                   <i class="fas fa-exclamation-circle " style="color:EBEBEB;float:right;font-size: 7vh;"></i>
                 </div>
                 <p class="font-weight text-primary">
-                  Avisos: &nbsp;<span class="badge badge-pill badge-primary"></span>
+                  Avisos: &nbsp;<span class="badge badge-pill badge-primary">{{$alerta_aviso_rotulo}}</span>
                 </p>
                  
               </div>
@@ -95,7 +105,7 @@
                   <i class="fas fa-bell" style="color:EBEBEB;float:right;font-size: 7vh;"></i>
                 </div>
                 <p class="font-weight text-primary">
-                  Notificaciones: <span class="badge badge-pill badge-primary"></span>
+                  Notificaciones: <span class="badge badge-pill badge-primary">{{$alerta_notificacion_rotulo}}</span>
                 </p>
               </div>
               <div class="icon">
@@ -111,7 +121,6 @@
   
         <div class="row">
     <div class="col-md-4 col-sm-8">
-
     @if($detectorNull == '0')
         <a href="#" onclick="CrearCalificacion({{$rotulos->id_rotulos_detalle}})" >
                       <div class="widget stats-widget">
@@ -130,7 +139,6 @@
                <div class="widget-body clearfix bg-info">
                   <div class="pull-left">
                          <h3 class="widget-title text-white">Calificación realizada &nbsp; {{$calificacionRotulos->fecha_calificacion}}
-
                          </span></h3>
                   </div>
                   <span class="pull-right big-icon watermark"><i class="far fa-newspaper"></i> &nbsp; <i class="fas fa-check-double"></i></span>
@@ -169,11 +177,11 @@
  
   
     <div class="col-md-4 col-sm-8">
-
+    @if($NoNotificar == 1)
         <a href="#" onclick="Aldia()">      
- 
+      @else
         <a href="#" onclick="reporteeAviso({{$rotulos->id_rotulos_detalle}})">
-                   
+    @endif                 
             <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-primary">
                     <div class="pull-left">
@@ -186,11 +194,11 @@
     </div>
 
     <div class="col-md-4 col-sm-8">
-             
+    @if($NoNotificar == 1)
           <a href="#" onclick="Aldia()">
-                  
+        @else          
           <a href="#" onclick="reporte_notificacion_rotulos({{$rotulos->id_rotulos_detalle}})">
-                 
+    @endif              
               <div class="widget stats-widget">
                 <div class="widget-body clearfix bg-purple">
                   <div class="pull-left">

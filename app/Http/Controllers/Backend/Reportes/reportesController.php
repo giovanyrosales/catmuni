@@ -15167,10 +15167,10 @@ public function cobros_codigos_periodo(Request $request){
                                 <td align='center'>" . $dato->cantidad_meses_cobro . "</td>";
                 if ($dato->periodo_cobro_inicio == null) {
                     $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicioMatricula . "</td>
-                                <td align='center'> . $dato->periodo_cobro_finMatricula</td>";
+                                <td align='center'>" . $dato->periodo_cobro_finMatricula. "</td>";
                 } else {
                     $tabla .= "<td align='center'>" . $dato->periodo_cobro_inicio . "</td>
-                                <td align='center'> . $dato->periodo_cobro_fin</td>";
+                                <td align='center'>" . $dato->periodo_cobro_fin . "</td>";
                 }
                 $tabla .= "<td align='center'>$" . $dato->multa_matricula_15313 . "</td>
                             <td align='center'>$" . $dato->monto_multaPE_15313 . "</td>

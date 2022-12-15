@@ -111,7 +111,7 @@ function calculo()
  
 
     if(id_giro_empresarial === ''){
-        toastr.error('El giro empresarial es requerido.');
+        toastr.error('El rubro es requerido.');
         document.getElementById('activo_total').value='';
         document.getElementById('deducciones').value='';
         return;
@@ -1270,7 +1270,7 @@ function GenerarCalificacionMatricula(){
 
   //Validación
   if(giro_empresarial == ""){
-                  modalMensaje('Aviso', 'El giro empresarial es requerido');
+                  modalMensaje('Aviso', 'El rubro es requerido');
                   return;
               }
 

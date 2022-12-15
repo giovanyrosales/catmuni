@@ -50,7 +50,7 @@ class MatriculasDetalleController extends Controller
         'contribuyente.fax', 'contribuyente.direccion as direccionCont',
         'estado_empresa.estado',
         'giro_comercial.nombre_giro','giro_comercial.id as id_giro','giro_comercial.slug',
-        'actividad_economica.rubro',
+        'actividad_economica.rubro','actividad_economica.codigo_atc_economica',
         )
         ->find($id);
 
