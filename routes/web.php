@@ -306,8 +306,10 @@ use App\Models\Empresas;
     Route::get('/admin/estado_cuenta_sinfonolas/pdf/{f1}/{f2}/{is}/{ti}/{id}', [reportesController::class, 'estado_cuenta_sinfonolas2']); //Borrar el 2 para funcion con Dompdf
     Route::get('/admin/estado_cuenta_maquinas/pdf/{f1}/{f2}/{im}/{ti}/{id}', [reportesController::class, 'estado_cuenta_maquinas2']); //Borrar el 2 para funcion con Dompf
     Route::get('/admin/estado_cuenta_mesas/pdf/{f1}/{f2}/{ime}/{ti}/{id}', [reportesController::class, 'estado_cuenta_mesas2']); //Borrar el 2 para funcion con Dompdf
-    Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa']);
-    Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa']);
+    // Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa']); // Dompdf
+    Route::get('/admin/traspaso_empresas/pdf/{id}', [reportesController::class, 'traspaso_empresa2']); // mpdf
+    // Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa']); // Dompdf
+    Route::get('/admin/cierre_empresas/pdf/{id}', [reportesController::class, 'cierre_empresa2']); // Mpdf
     Route::get('/admin/traspaso_empresas_historico/pdf/{id}', [reportesController::class, 'traspaso_empresa_historico']);
         /** Reporte de cierre ruta**/
     Route::get('/admin/cierres_empresas_historico/pdf/{id}', [reportesController::class, 'cierre_empresa_historico']); /** Con Dompdf **/

@@ -182,4 +182,5 @@ footer img {
 #lineaimg {
     height: 5px;
     width: 720px;
+    margin-top: -5px;
 }
