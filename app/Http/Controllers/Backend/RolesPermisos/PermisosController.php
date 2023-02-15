@@ -24,7 +24,7 @@ class PermisosController extends Controller
     public function tablaUsuarios(){
         $usuarios = Usuario::orderBy('id', 'ASC')->get();
 
-        return view('backend.admin.rolesypermisos.tabla.tablapermisos', compact('usuarios'));
+        return view('backend.admin.RolesyPermisos.tabla.tablapermisos', compact('usuarios'));
     }
 
     public function nuevoUsuario(Request $request){
