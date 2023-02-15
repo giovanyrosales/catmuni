@@ -487,7 +487,7 @@ function OcultarhistorialCierres(){
             formData.append('contribuyente', contribuyente);
             formData.append('Apartirdeldia', Apartirdeldia);
 
-            axios.post('/admin/empresas/show/traspaso', formData, {
+            axios.post(url+'/empresas/show/traspaso', formData, {
             })
             .then((response) => {          
                 closeLoading();
@@ -520,7 +520,7 @@ function OcultarhistorialCierres(){
 
         function informacionTraspaso(id){
             openLoading();
-            axios.post('/admin/empresas/show/informacion',{
+            axios.post(url+'/empresas/show/informacion',{
                 'id': id
             })
             .then((response) => {
@@ -583,7 +583,7 @@ function OcultarhistorialCierres(){
             formData.append('estado_empresa', estado_empresa);
             formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
 
-            axios.post('/admin/empresas/show/cierre', formData, {
+            axios.post(url+'/empresas/show/cierre', formData, {
             })
             .then((response) => {          
                 closeLoading();

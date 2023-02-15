@@ -269,7 +269,7 @@ function buscar_empresa_a_cobrar(){
             var formData = new FormData();
             formData.append('id', id);
           
-          axios.post('/admin/buscar/obligaciones_tributarias/calificadas', formData, {
+          axios.post(url+'/buscar/obligaciones_tributarias/calificadas', formData, {
            })
          .then((response) => {
 

@@ -561,7 +561,7 @@
           
         
 
-            axios.post('/admin/Rotulos/CrearRotulos', formData, {
+            axios.post(url+'/Rotulos/CrearRotulos', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -602,7 +602,7 @@
              var formData = new FormData();
              formData.append('id_select', id_select);
              
-            axios.post('/admin/rotulos/buscarE', formData, {
+            axios.post(url+'/rotulos/buscarE', formData, {
               })
             .then((response) => {
             

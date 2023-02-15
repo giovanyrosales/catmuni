@@ -336,7 +336,7 @@
       formData.append('nom_actividad_especifica', nom_actividad_especifica);
    
 
-      axios.post('/admin/ActividadEspecifica/NuevaM', formData,
+      axios.post(url+'/ActividadEspecifica/NuevaM', formData,
        {
             })
 
@@ -373,7 +373,7 @@ function infoActividadE(id)
       openLoading();
             document.getElementById("formulario-EditarActividadEspecifica").reset();
 
-            axios.post('/admin/ActividadEspecifica/informacion',{
+            axios.post(url+'/ActividadEspecifica/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -419,7 +419,7 @@ function infoActividadE(id)
               formData.append('nom_actividad_especifica', nom_actividad_especifica);
               formData.append('giro_empresarial', giro_empresarial);
              
-            axios.post('/admin/ActividadEspecifica/editar', formData, {
+            axios.post(url+'/ActividadEspecifica/editar', formData, {
             })
 
                 .then((response) => {
@@ -466,7 +466,7 @@ function infoActividadE(id)
       var formData = new FormData();
       formData.append('id', id);
 
-            axios.post('/admin/ActividadEspecifica/eliminar', formData, {
+            axios.post(url+'/ActividadEspecifica/eliminar', formData, {
             })
               .then((response) => {
                 closeLoading()

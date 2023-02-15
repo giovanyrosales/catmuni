@@ -485,7 +485,7 @@
             openLoading();
             document.getElementById("formulario-CierreRotulo").reset();
 
-            axios.post('/admin/Rotulos/vista/inf-cierre',{
+            axios.post(url+'/Rotulos/vista/inf-cierre',{
                 'id': id
             })
             .then((response) => {
@@ -550,7 +550,7 @@
             formData.append('estado', estado);
             formData.append('fecha_cierre', fecha_cierre);
 
-            axios.post('/admin/Rotulos/vista/cierre', formData, {
+            axios.post(url+'/Rotulos/vista/cierre', formData, {
             })
             .then((response) => {          
                 closeLoading();
@@ -598,7 +598,7 @@
             formData.append('id', id);
             formData.append('contribuyente', contribuyente);
 
-            axios.post('/admin/Rotulos/vista/traspaso', formData, {
+            axios.post(url+'/Rotulos/vista/traspaso', formData, {
             })
             .then((response) => {          
                 closeLoading();

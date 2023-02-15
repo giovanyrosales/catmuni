@@ -361,7 +361,7 @@
       formData.append('tarifa', tarifa);
       formData.append('tipo_permiso', tipo_permiso);
 
-      axios.post('/admin/LicenciaMatricula/Nuevas', formData,
+      axios.post(url+'/LicenciaMatricula/Nuevas', formData,
        {
             })
 
@@ -397,7 +397,7 @@
             openLoading();
             document.getElementById("formulario-EditarLM").reset();
 
-            axios.post('/admin/LicenciaMatricula/informacion',{
+            axios.post(url+'/LicenciaMatricula/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -447,7 +447,7 @@
             formData.append('tarifa', tarifa);
             formData.append('tipo_permiso', tipo_permiso);
 
-            axios.post('/admin/LicenciaMatricula/editar', formData, {
+            axios.post(url+'/LicenciaMatricula/editar', formData, {
             })
 
                 .then((response) => {
@@ -496,7 +496,7 @@
             var formData = new FormData();
             formData.append('id', id);
 
-            axios.post('/admin/LicenciaMatricula/eliminar', formData, {
+            axios.post(url+'/LicenciaMatricula/eliminar', formData, {
             })
                 .then((response) => {
                     closeLoading()

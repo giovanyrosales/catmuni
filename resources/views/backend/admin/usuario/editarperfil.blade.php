@@ -64,7 +64,7 @@
                 
       // GUARDAR DATOS + CONTRASENa
 
-            axios.post('/admin/usuario/editarperfil', formData)
+            axios.post(url+'/usuario/editarperfil', formData)
                       .then(function (response) {
             if (response.data.success === 999)
                 {

@@ -295,7 +295,7 @@
                 formData.append('id_rotulos_detalle', id_rotulos_detalle);
 
                 
-            axios.post('/admin/rotulo_detalle/especifico', formData, {
+            axios.post(url+'/rotulo_detalle/especifico', formData, {
             })
            
                 .then((response) => {
@@ -386,7 +386,7 @@
 
                 formData.append('id_rotulos_detalle', id_rotulos_detalle);
          
-                    axios.post('/admin/rotulos_detalle_especifico/agregar', formData, {
+                    axios.post(url+'/rotulos_detalle_especifico/agregar', formData, {
                     })
                     .then((response) => {
                        console.log(response)

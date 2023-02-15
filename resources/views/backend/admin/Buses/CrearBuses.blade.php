@@ -333,7 +333,7 @@ function f4(){
                 formData.append('r_comerciante', r_comerciante);
            
 
-                    axios.post('/admin/buses/agregar', formData, {
+                    axios.post(url+'/buses/agregar', formData, {
                     })
                         .then((response) => {
                             console.log(response)

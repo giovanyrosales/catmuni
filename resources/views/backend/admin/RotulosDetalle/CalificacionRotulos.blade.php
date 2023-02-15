@@ -501,7 +501,7 @@
           console.log(id_rotulos_detalle_especifico)
           
 
-        axios.post('/admin/rotulos_detalle/calificacion/guardar', formData, {
+        axios.post(url+'/rotulos_detalle/calificacion/guardar', formData, {
         })
             .then((response) => {
               console.log(response)

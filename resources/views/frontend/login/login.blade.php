@@ -98,7 +98,11 @@
         let formData = new FormData();
         formData.append('usuario', usuario);
         formData.append('password', password);
-        axios.post('/admin/login', formData, {
+
+         // /catmuni/admin/login
+
+         axios.post('/admin/login', formData, {
+       // axios.post(url+'/login', formData, {
         })
             .then((response) => {
                 closeLoading();

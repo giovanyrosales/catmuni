@@ -500,7 +500,7 @@ return;
                     formData.append('id_buses_detalle_esp', id_buses_detalle_esp);                  
                     formData.append('Apartirdeldia', Apartirdeldia);
 
-                    axios.post('/admin/buses/show/traspaso-buses', formData, {
+                    axios.post(url+'/buses/show/traspaso-buses', formData, {
                     })
                     .then((response) => { 
                         console.log(response);         
@@ -537,7 +537,7 @@ return;
         {
 
             openLoading();
-            axios.post('/admin/buses_detalle/show/informacion',{
+            axios.post(url+'/buses_detalle/show/informacion',{
                 'id': id
             })
             .then((response) => {
@@ -602,7 +602,7 @@ return;
                         formData.append('estado_buses', estado_buses);
                         formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
 
-                    axios.post('/admin/buses/show/cierre', formData, {
+                    axios.post(url+'/buses/show/cierre', formData, {
                     })
                     .then((response) => {          
                         closeLoading();

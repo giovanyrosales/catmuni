@@ -275,7 +275,7 @@
        formData.append('email', email);
        formData.append('fax', fax);
 
-       axios.post('/admin/Contribuyentes/Crear_Contribuyentes', formData, {
+       axios.post(url+'/Contribuyentes/Crear_Contribuyentes', formData, {
             })
 
         .then((response) => {

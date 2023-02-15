@@ -320,7 +320,7 @@
             var formData = new FormData();
 
   
-          axios.post('/admin/calculo/mora_codigos', formData, {
+          axios.post(url+'/calculo/mora_codigos', formData, {
            })
           .then((response) => {
             closeLoading();
@@ -538,7 +538,7 @@
             var formData = new FormData();
 
   
-          axios.post('/admin/calculo/mora', formData, {
+          axios.post(url+'/calculo/mora', formData, {
            })
         .then((response) => {
         
@@ -648,7 +648,7 @@
             var formData = new FormData();
 
   
-          axios.post('/admin/calculo/mora_tasas', formData, {
+          axios.post(url+'/calculo/mora_tasas', formData, {
            })
           .then((response) => {
         

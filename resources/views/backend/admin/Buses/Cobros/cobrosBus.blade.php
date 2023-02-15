@@ -127,7 +127,7 @@
     formData.append('tasa_interes', tasa_interes);
     formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
-    axios.post('/admin/buses/calcular-CobrosB', formData, {
+    axios.post(url+'/buses/calcular-CobrosB', formData, {
             })
             .then((response) => {
                     console.log(response);

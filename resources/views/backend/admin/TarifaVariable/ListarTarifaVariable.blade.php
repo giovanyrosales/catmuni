@@ -502,7 +502,7 @@
          openLoading();
            document.getElementById("formulario-EditarTarifaVariable").reset();
 
-            axios.post('/admin/TarifaVariable/informacion',{
+            axios.post(url+'/TarifaVariable/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -562,7 +562,7 @@
             formData.append('categoria',categoria);
             formData.append('millar',millar)
             
-            axios.post('/admin/TarifaVariable/editar', formData, {
+            axios.post(url+'/TarifaVariable/editar', formData, {
             })
             .then((response) => {
                 closeLoading();
@@ -597,7 +597,7 @@
              openLoading();
              document.getElementById("formulario-verTarifaVariable").reset();
 
-            axios.post('/admin/TarifaVariable/informacion',{
+            axios.post(url+'/TarifaVariable/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -652,7 +652,7 @@
             var formData = new FormData();
             formData.append('id', id);
 
-            axios.post('/admin/TarifaVariable/eliminar_detalles', formData, {
+            axios.post(url+'/TarifaVariable/eliminar_detalles', formData, {
             })
                 .then((response) => {
                     closeLoading()
@@ -731,7 +731,7 @@
       formData.append('categoria', categoria);
       formData.append('millar', millar);
 
-      axios.post('/admin/TarifaVariable/Detalle-Act', formData,
+      axios.post(url+'/TarifaVariable/Detalle-Act', formData,
        {
             })
 

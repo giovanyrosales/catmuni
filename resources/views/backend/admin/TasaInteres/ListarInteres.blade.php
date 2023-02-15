@@ -287,7 +287,7 @@
       formData.append('fecha_fin', fecha_fin);
       
 
-      axios.post('/admin/nuevo/TasaInteres/nuevo', formData,
+      axios.post(url+'/nuevo/TasaInteres/nuevo', formData,
        {
             })
 
@@ -323,7 +323,7 @@
             openLoading();
             document.getElementById("formulario-EditarInteres").reset();
 
-            axios.post('/admin/TasaInteres/informacion',{
+            axios.post(url+'/TasaInteres/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -363,7 +363,7 @@
             formData.append('monto_interes', monto_interes);
             formData.append('fecha_fin', fecha_fin);  
             
-            axios.post('/admin/TasaInteres/editar', formData, {
+            axios.post(url+'/TasaInteres/editar', formData, {
             })
 
                 .then((response) => {
@@ -412,7 +412,7 @@
             var formData = new FormData();
             formData.append('id', id);
 
-            axios.post('/admin/TasaInteres/eliminar', formData, {
+            axios.post(url+'/TasaInteres/eliminar', formData, {
             })
                 .then((response) => {
                     closeLoading()

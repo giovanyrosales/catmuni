@@ -448,7 +448,7 @@
         document.getElementById("formulario-EditarBus").reset();
         $("#matrizBusesEditar tbody tr").remove();
 
-        axios.post('/admin/buses_detalle/informacion',{
+        axios.post(url+'/buses_detalle/informacion',{
             'id': id
         })
             .then((response) => {
@@ -543,7 +543,7 @@
             var formData = new FormData();
                 formData.append('id_buses_detalle', id_buses_detalle);
 
-            axios.post('/admin/buses_detalle/especifico', formData, {
+            axios.post(url+'/buses_detalle/especifico', formData, {
             })
 
                 .then((response) => {
@@ -695,7 +695,7 @@
                 formData.append('id_buses_detalle_editar', id_buses_detalle_editar);
 
 
-                axios.post('/admin/buses_detalle/editar', formData, {
+                axios.post(url+'/buses_detalle/editar', formData, {
                 })
 
                     .then((response) => {
@@ -828,7 +828,7 @@
 
                 formData.append('id_buses_detalle',id_buses_detalle);
 
-                axios.post('/admin/buses_detalle_especifico/agregar', formData, {
+                axios.post(url+'/buses_detalle_especifico/agregar', formData, {
                 })
                 .then((response) => {
 
@@ -859,7 +859,7 @@
             document.getElementById("formulario-VerBusEsp").reset();
             $("#matrizVerBusesEsp tbody tr").remove();
 
-            axios.post('/admin/buses_detalle/ver_buses_especificos',{
+            axios.post(url+'/buses_detalle/ver_buses_especificos',{
                 'id': id_buses_detalle
             })
             .then((response) => {
@@ -945,7 +945,7 @@
             var formData = new FormData();
             formData.append('id', id);
 
-            axios.post('/admin/buses_detalle/eliminar', formData, {
+            axios.post(url+'/buses_detalle/eliminar', formData, {
             })
             .then((response) => {
                 closeLoading()
@@ -1097,7 +1097,7 @@
             formData.append('tarifa', tarifa);
             formData.append('monto_pagar', monto_pagar);
 
-                axios.post('/admin/buses/agregar', formData, {
+                axios.post(url+'/buses/agregar', formData, {
                 })
                     .then((response) => {
                         console.log(response)

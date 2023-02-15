@@ -521,7 +521,7 @@ function llenardetalle_matriculas(){
              var formData = new FormData();
              formData.append('id_giro_comercial', id_giro_comercial);
              
-             axios.post('/admin/empresas/llenar_detalle_matriculas', formData, {
+             axios.post(url+'/empresas/llenar_detalle_matriculas', formData, {
               })
             .then((response) => {
 
@@ -768,7 +768,7 @@ function nuevo(){
         formData.append('telefono', telefono);
         formData.append('toggle', toggle);
 
-        axios.post('/admin/empresa/nueva', formData, {
+        axios.post(url+'/empresa/nueva', formData, {
         })
             .then((response) => {
                 closeLoading();

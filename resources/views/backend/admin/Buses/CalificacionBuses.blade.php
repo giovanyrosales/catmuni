@@ -518,7 +518,7 @@
             
           
 
-        axios.post('/admin/buses/calificacion/nueva', formData, {
+        axios.post(url+'/buses/calificacion/nueva', formData, {
         })
             .then((response) => {
               console.log(response)

@@ -659,7 +659,7 @@ function AgregarMatricula(){
   formData.append('tipo_matricula', tipo_matricula);
   formData.append('cantidad', cantidad);
 
-  axios.post('/admin/matriculas_detalle/agregar', formData, {
+  axios.post(url+'/matriculas_detalle/agregar', formData, {
   })
       .then((response) => {
           closeLoading();
@@ -701,7 +701,7 @@ function eliminarM(){
     var formData = new FormData();
     formData.append('id', id);
 
-    axios.post('/admin/matriculas_detalle/eliminar', formData, {
+    axios.post(url+'/matriculas_detalle/eliminar', formData, {
             })
               .then((response) => {
                 closeLoading()
@@ -746,7 +746,7 @@ function EspecificarM(id_matriculas_detalle)
         var formData = new FormData();
         formData.append('id_matriculas_detalle', id_matriculas_detalle);
      
-        axios.post('/admin/matriculas_detalle/especificar', formData, {
+        axios.post(url+'/matriculas_detalle/especificar', formData, {
             })
 
                 .then((response) => {
@@ -793,7 +793,7 @@ function InformacionMatricula(id)
             document.getElementById("formulario-EditarMatricula").reset();
             $("#matrizMatriculasEditar tbody tr").remove();
 
-            axios.post('/admin/matriculas_detalle/informacion',{
+            axios.post(url+'/matriculas_detalle/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -983,7 +983,7 @@ function InformacionMatricula(id)
 
 
            
-            axios.post('/admin/matriculas_detalle/editar', formData, {
+            axios.post(url+'/matriculas_detalle/editar', formData, {
             })
 
                 .then((response) => {
@@ -1098,7 +1098,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
       
             formData.append('id_matriculas_detalle',id_matriculas_detalle);
         
-        axios.post('/admin/matriculas_detalle_especifico/agregar', formData, {
+        axios.post(url+'/matriculas_detalle_especifico/agregar', formData, {
         })
         .then((response) => {
 
@@ -1274,7 +1274,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
          document.getElementById("formulario-VerMatriculaEsp").reset();
          $("#matrizVerMatriculasEsp tbody tr").remove();
 
-         axios.post('/admin/matriculas_detalle/ver_matriculas_especificas',{
+         axios.post(url+'/matriculas_detalle/ver_matriculas_especificas',{
                 'id': id_matriculas_detalle
             })
             .then((response) => {

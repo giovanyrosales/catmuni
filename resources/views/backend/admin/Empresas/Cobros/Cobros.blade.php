@@ -135,7 +135,7 @@ formData.append('id_matriculadetalle', id_matriculadetalle);
 formData.append('id_empresa', id_empresa);
 
 
- axios.post('/admin/empresas/info_cobro_matriculas', formData, {
+ axios.post(url+'/empresas/info_cobro_matriculas', formData, {
         })
         .then((response) => {
                 console.log(response);
@@ -247,7 +247,7 @@ formData.append('ultimo_cobro', ultimo_cobro);
 formData.append('tasa_interes', tasa_interes);
 formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
- axios.post('/admin/empresas/calculo_cobros_empresa', formData, {
+ axios.post(url+'/empresas/calculo_cobros_empresa', formData, {
         })
         .then((response) => {
                 console.log(response);
@@ -328,7 +328,7 @@ formData.append('ultimo_cobro', ultimo_cobroLicor);
 
 
 
- axios.post('/admin/empresas/calculo_cobros_licencia_licor', formData, {
+ axios.post(url+'/empresas/calculo_cobros_licencia_licor', formData, {
         })
         .then((response) => {
                 console.log(response);
@@ -410,7 +410,7 @@ formData.append('tasa_interesMesas', tasa_interesMesas);
 formData.append('fecha_interesMoratorioMesas', fecha_interesMoratorioMesas);
 formData.append('estado', estado);
 
- axios.post('/admin/empresas/calculo_cobros_mesas', formData, {
+ axios.post(url+'/empresas/calculo_cobros_mesas', formData, {
         })
         .then((response) => {
                 console.log(response);
@@ -512,7 +512,7 @@ formData.append('ultimo_cobroMaquinas', ultimo_cobroMaquinas);
 formData.append('tasa_interesMaquinas', tasa_interesMaquinas);
 formData.append('fecha_interesMoratorioMaquinas', fecha_interesMoratorioMaquinas);
 
- axios.post('/admin/empresas/calculo_cobros_maquinas', formData, {
+ axios.post(url+'/empresas/calculo_cobros_maquinas', formData, {
         })
         .then((response) => {
                 console.log(response);
@@ -610,7 +610,7 @@ formData.append('ultimo_cobroSinfonolas', ultimo_cobroSinfonolas);
 formData.append('tasa_interesSinfonolas', tasa_interesSinfonolas);
 formData.append('fecha_interesMoratorioSinfonolas', fecha_interesMoratorioSinfonolas);
 
- axios.post('/admin/empresas/calculo_cobros_sinfonolas', formData, {
+ axios.post(url+'/empresas/calculo_cobros_sinfonolas', formData, {
         })
         .then((response) => {
                 console.log(response);
@@ -684,7 +684,7 @@ formData.append('cobrar', valor);
 formData.append('id_matriculadetalleAparatos', id_matriculadetalleAparatos);
 formData.append('ultimo_cobroAparatos', ultimo_cobroAparatos);
 formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
- axios.post('/admin/empresas/calculo_cobros_aparatos', formData, {
+ axios.post(url+'/empresas/calculo_cobros_aparatos', formData, {
         })
         .then((response) => {
                 console.log(response);

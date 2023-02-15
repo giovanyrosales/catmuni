@@ -433,7 +433,7 @@
           formData.append('limite_superior', limite_superior);
           formData.append('impuesto_mensual', impuesto_mensual);
      
-      axios.post('/admin/TarifaFija/NuevaT', formData,
+      axios.post(url+'/TarifaFija/NuevaT', formData,
         {
             })
 
@@ -472,7 +472,7 @@
       openLoading();
             document.getElementById("formulario-EditarTarifaFija").reset();
 
-            axios.post('/admin/TarifaFija/informacion',{
+            axios.post(url+'/TarifaFija/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -539,7 +539,7 @@
               formData.append('limite_superior', limite_superior);
               formData.append('impuesto_mensual', impuesto_mensual);
            
-            axios.post('/admin/TarifaFija/editar', formData, {
+            axios.post(url+'/TarifaFija/editar', formData, {
             })
 
                 .then((response) => {
@@ -590,7 +590,7 @@
       var formData = new FormData();
           formData.append('id', id);
 
-            axios.post('/admin/TarifaFija/eliminar', formData, {
+            axios.post(url+'/TarifaFija/eliminar', formData, {
             })
               .then((response) => {
                 closeLoading()
@@ -625,7 +625,7 @@
              var formData = new FormData();
              formData.append('id_select', id_select);
              
-             axios.post('/admin/TarifaFija/buscar', formData, {
+             axios.post(url+'/TarifaFija/buscar', formData, {
               })
               .then((response) => {
             
@@ -656,7 +656,7 @@ function llenarSelectEditar()
             var formData = new FormData();
                 formData.append('id_select', id_select);
              
-             axios.post('/admin/TarifaFija/buscar', formData, {
+             axios.post(url+'/TarifaFija/buscar', formData, {
               })
               .then((response) => {
             

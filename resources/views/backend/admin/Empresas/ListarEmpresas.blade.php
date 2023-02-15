@@ -358,7 +358,7 @@ function informacion(id){
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/empresas/informacion',{
+            axios.post(url+'/empresas/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -549,7 +549,7 @@ function editar(){
               formData.append('telefono', telefono);
               formData.append('toggle', toggle);
 
-            axios.post('/admin/empresas/editar', formData, {
+            axios.post(url+'/empresas/editar', formData, {
             })
             .then((response) => {
 

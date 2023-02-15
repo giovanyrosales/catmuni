@@ -652,7 +652,7 @@
         openLoading();
         document.getElementById("formulario-VerRotulos").reset();
 
-          axios.post('/admin/Rotulos/Ver',{
+          axios.post(url+'/Rotulos/Ver',{
           'id': id
             })
           .then((response) => {
@@ -707,7 +707,7 @@
       openLoading();
         document.getElementById("formulario-EditarRotulos").reset();
 
-          axios.post('/admin/Rotulos/Ver',{
+          axios.post(url+'/Rotulos/Ver',{
           'id': id
             })
           .then((response) => {
@@ -811,7 +811,7 @@
             formData.append('cargo_inspeccion', cargo_inspeccion);
             
           
-            axios.post('/admin/Rotulos/Editar', formData, {
+            axios.post(url+'/Rotulos/Editar', formData, {
             })
             .then((response) => {
               console.log(response)
@@ -860,7 +860,7 @@
       var formData = new FormData();
       formData.append('id', id);
 
-            axios.post('/admin/Rotulos/Borrar', formData, {
+            axios.post(url+'/Rotulos/Borrar', formData, {
             })
               .then((response) => {
                 closeLoading()

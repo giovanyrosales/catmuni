@@ -335,7 +335,7 @@
       formData.append('tipo_multa', tipo_multa);
       formData.append('nombre', nombre);
 
-      axios.post('/admin/Multas/NuevaM', formData,
+      axios.post(url+'/Multas/NuevaM', formData,
        {
             })
 
@@ -372,7 +372,7 @@
             openLoading();
             document.getElementById("formulario-EditarMultas").reset();
 
-            axios.post('/admin/Multas/informacion',{
+            axios.post(url+'/Multas/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -414,7 +414,7 @@
             formData.append('tipo_multa', tipo_multa);
             formData.append('nombre', nombre);
 
-            axios.post('/admin/Multas/editar', formData, {
+            axios.post(url+'/Multas/editar', formData, {
             })
 
                 .then((response) => {
@@ -462,7 +462,7 @@
             var formData = new FormData();
             formData.append('id', id);
 
-            axios.post('/admin/Multas/eliminar', formData, {
+            axios.post(url+'/Multas/eliminar', formData, {
             })
                 .then((response) => {
                     closeLoading()

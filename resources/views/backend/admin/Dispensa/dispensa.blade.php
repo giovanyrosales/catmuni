@@ -219,7 +219,7 @@
             formData.append('inicio_periodo', inicio_periodo);
             formData.append('fin_periodo', fin_periodo);
 
-            axios.post('/admin/dispensa/nuevo/periodo', formData, {
+            axios.post(url+'/dispensa/nuevo/periodo', formData, {
             })
                 .then((response) => {
                     closeLoading()
@@ -264,7 +264,7 @@
             var formData = new FormData();
             formData.append('id_dispensa', id_dispensa);
 
-            axios.post('/admin/dispensa/borrar/periodo', formData, {
+            axios.post(url+'/dispensa/borrar/periodo', formData, {
             })
                 .then((response) => {
                     closeLoading()
@@ -288,7 +288,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/dispensa/infoperiodo',{
+            axios.post(url+'/dispensa/infoperiodo',{
                 'id': id
             })
                 .then((response) => {

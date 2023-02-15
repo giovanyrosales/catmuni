@@ -365,7 +365,7 @@ function buscar_obligaciones_tributarias(){
           var formData = new FormData();
           formData.append('id_contribuyente', id_contribuyente);
           
-          axios.post('/admin/buscar/obligaciones_tributarias', formData, {
+          axios.post(url+'/buscar/obligaciones_tributarias', formData, {
            })
          .then((response) => {
         

@@ -469,7 +469,7 @@
                     }
                 //FIN - Validando SI se selecionado una fecha de ambos calendarios
 
-                axios.post('/admin/cobros/globales/periodo', formData, {
+                axios.post(url+'/cobros/globales/periodo', formData, {
                 })
                 .then((response) => {
 
@@ -718,7 +718,7 @@
 
             $("#matriz_ver_cobros_codigos tbody tr").remove();
 
-          axios.post('/admin/calculo/cobros_codigos_periodo', formData, {
+          axios.post(url+'/calculo/cobros_codigos_periodo', formData, {
            })
           .then((response) => {
             closeLoading();
@@ -1036,7 +1036,7 @@
             var formData = new FormData();
 
   
-          axios.post('/admin/calculo/mora_tasas_periodo', formData, {
+          axios.post(url+'/calculo/mora_tasas_periodo', formData, {
            })
           .then((response) => {
         

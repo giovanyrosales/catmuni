@@ -66,7 +66,7 @@
     formData.append('tasa_interes', tasa_interes);
     formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
 
-    axios.post('/admin/rotulos/calcular-Cobros', formData, {
+    axios.post(url+'/rotulos/calcular-Cobros', formData, {
             })
             .then((response) => {
                     console.log(response);

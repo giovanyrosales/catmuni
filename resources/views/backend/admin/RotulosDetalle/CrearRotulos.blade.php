@@ -274,7 +274,7 @@ function f4(){
                 formData.append('reg_comerciante', reg_comerciante);
            
 
-                    axios.post('/admin/rotulo-detalle/agregar', formData, {
+                    axios.post(url+'/rotulo-detalle/agregar', formData, {
                     })
                     .then((response) => {
                             console.log(response)

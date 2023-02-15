@@ -400,7 +400,7 @@
             formData.append('fecha_fin_mora', fecha_fin_mora);
 
   
-          axios.post('/admin/calculo/mora_codigos_periodo', formData, {
+          axios.post(url+'/calculo/mora_codigos_periodo', formData, {
            })
           .then((response) => {
             closeLoading();
@@ -631,7 +631,7 @@
             formData.append('fecha_inicio_mora', fecha_inicio_mora);
             formData.append('fecha_fin_mora', fecha_fin_mora);
   
-          axios.post('/admin/calculo/mora_periodo', formData, {
+          axios.post(url+'/calculo/mora_periodo', formData, {
            })
         .then((response) => {
         
@@ -736,7 +736,7 @@
             var formData = new FormData();
 
   
-          axios.post('/admin/calculo/mora_tasas_periodo', formData, {
+          axios.post(url+'/calculo/mora_tasas_periodo', formData, {
            })
           .then((response) => {
         

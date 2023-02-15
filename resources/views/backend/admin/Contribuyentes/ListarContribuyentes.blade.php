@@ -361,7 +361,7 @@
                   openLoading();
                  document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/Contribuyentes/informacion',{
+            axios.post(url+'/Contribuyentes/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -418,7 +418,7 @@
                 formData.append('email', email);
                 formData.append('fax', fax);
          
-            axios.post('/admin/Contribuyentes/editar', formData, {
+            axios.post(url+'/Contribuyentes/editar', formData, {
             })
 
                 .then((response) => {
@@ -475,7 +475,7 @@
             var formData = new FormData();
             formData.append('id', id);
 
-            axios.post('/admin/Contribuyentes/eliminar_contribuyentes', formData, {
+            axios.post(url+'/Contribuyentes/eliminar_contribuyentes', formData, {
             })
                 .then((response) => {
                     closeLoading()
@@ -520,7 +520,7 @@
                   openLoading();
                  document.getElementById("formulario-ver").reset();
 
-            axios.post('/admin/Contribuyentes/informacion',{
+            axios.post(url+'/Contribuyentes/informacion',{
                 'id': id
             })
                 .then((response) => {

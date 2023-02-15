@@ -155,7 +155,7 @@ formData.append('estado_calificacion', estado_calificacion);
 formData.append('fecha_pres_balance', fecha_pres_balance);
 formData.append('año_calificacion', año_calificacion);
 
-axios.post('/admin/empresas/calculo_calificacion', formData, {
+axios.post(url+'/empresas/calculo_calificacion', formData, {
         })
             .then((response) => {
               console.log(response);
@@ -287,7 +287,7 @@ function calculo_calificacion_matricula()
   formData.append('monto_total', monto_total);
   formData.append('id_empresa', id_empresa);
 
-  axios.post('/admin/empresas/calculo_calificacion_matricula', formData, {
+  axios.post(url+'/empresas/calculo_calificacion_matricula', formData, {
         })
             .then((response) => {
               console.log(response);
@@ -1413,7 +1413,7 @@ function borrarCalificacion()
       formData.append('id', id);
       formData.append('id_empresa', id_empresa);
 
-            axios.post('/admin/empresas/calificaciones/eliminar', formData, {
+            axios.post(url+'/empresas/calificaciones/eliminar', formData, {
             })
               .then((response) => {
                 closeLoading()
@@ -1615,7 +1615,7 @@ function Registrar_Calificacion_matricula(){
   formData.append('fondofp_impuesto_mat', fondofp_impuesto_mat);
 
 
-  axios.post('/admin/empresas/calificacion/matricula/nueva', formData, {
+  axios.post(url+'/empresas/calificacion/matricula/nueva', formData, {
   })
       .then((response) => {
           closeLoading();
@@ -1742,7 +1742,7 @@ function nuevo(){
   formData.append('activo_imponible', activo_imponible);
   formData.append('fondofp_licencia_permisos',fondofp_licencia_permisos);
 
-  axios.post('/admin/empresas/calificacion/nueva', formData, {
+  axios.post(url+'/empresas/calificacion/nueva', formData, {
   })
       .then((response) => {
           closeLoading();
@@ -1823,7 +1823,7 @@ swalWithBootstrapButtons.fire({
     var id_empresa = document.getElementById('id_empresa').value;
     var formData = new FormData();
     formData.append('id_empresa', id_empresa);
-    axios.post('/admin/empresas/calificacion/asignar_anterior', formData, {
+    axios.post(url+'/empresas/calificacion/asignar_anterior', formData, {
       })
       .then((response) => {
           closeLoading();
@@ -1890,7 +1890,7 @@ function llenarSelect()
              var formData = new FormData();
              formData.append('id_select', id_select);
              
-             axios.post('/admin/empresa/buscar/act_especifica', formData, {
+             axios.post(url+'/empresa/buscar/act_especifica', formData, {
               })
             .then((response) => {
             

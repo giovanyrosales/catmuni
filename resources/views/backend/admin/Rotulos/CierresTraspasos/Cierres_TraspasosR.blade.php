@@ -488,7 +488,7 @@ window.onload = f4;
                 formData.append('contribuyente', contribuyente)
                 formData.append('Apartirdeldia', Apartirdeldia);
 
-            axios.post('/admin/rotulos/show/traspaso', formData, {
+            axios.post(url+'/rotulos/show/traspaso', formData, {
             })
             .then((response) => {          
                 closeLoading();
@@ -523,7 +523,7 @@ window.onload = f4;
         function informacionTraspaso(id)
         {
             openLoading();
-            axios.post('/admin/rotulos/show/informacion',{
+            axios.post(url+'/rotulos/show/informacion',{
                 'id': id
             })
             .then((response) => {
@@ -599,7 +599,7 @@ window.onload = f4;
             formData.append('estado_rotulo', estado_rotulo);
             formData.append('cierre_apartirdeldia', cierre_apartirdeldia);
 
-            axios.post('/admin/rotulos/show/cierre', formData, {
+            axios.post(url+'/rotulos/show/cierre', formData, {
             })
             .then((response) => {          
                 closeLoading();
@@ -654,7 +654,7 @@ window.onload = f4;
             var formData = new FormData();
                 formData.append('id_select', id_select);
                 
-                axios.post('/admin/rotulos/buscar-traspaso', formData, {
+                axios.post(url+'/rotulos/buscar-traspaso', formData, {
                 })
                 .then((response) => {
                     
