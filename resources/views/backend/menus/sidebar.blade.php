@@ -11,7 +11,8 @@
 
     <!-- Grupo Roles y permisos -->
              <li class="nav-item">
-             <!-- @can('seccion.roles.y.permisos') -->
+                
+             
                  <a href="#" class="nav-link">
                     <i class="far fa-edit"></i>
                     <p>
@@ -21,12 +22,7 @@
                 </a>
 
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{ route('admin.roles.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="fas fa-user-friends nav-icon"></i>
-                            <p>Roles</p>
-                        </a>
-                    </li>
+                   
 
                     <li class="nav-item">
                         <a href="{{ route('admin.permisos.index') }}" target="frameprincipal" class="nav-link">
@@ -85,7 +81,7 @@
                 </ul>
              </li>
 
-             <!-- @endcan -->
+             
                 <!-- Grupo Contribuyentes -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
