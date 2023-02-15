@@ -78,7 +78,7 @@ class EmpresaController extends Controller
         ->orderby('id','desc')
         ->get();
 
-        return view('backend.admin.Empresas.Cobros_buscador',  compact('contribuyentes',
+        return view('backend.admin.Empresas.cobros_buscador',  compact('contribuyentes',
                                                                         'estadoempresas',
                                                                         'giroscomerciales',
                                                                         'actividadeseconomicas',
