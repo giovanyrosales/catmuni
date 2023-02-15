@@ -26,7 +26,7 @@ use App\Models\GiroComercial;
 use App\Models\ActividadEconomica;
 use App\Models\ActividadEspecifica;
 use App\Models\Cobros;
-use App\Models\calificacion;
+use App\Models\Calificacion;
 use App\Models\CalificacionMatriculas;
 use App\Models\CobrosLicenciaLicor;
 use App\Models\CobrosMatriculas;

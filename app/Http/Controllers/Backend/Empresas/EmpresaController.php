@@ -14,7 +14,7 @@ use App\Models\ActividadEspecifica;
 use App\Models\alertas_detalle;
 use App\Models\BusesDetalle;
 use App\Models\Cobros;
-use App\Models\calificacion;
+use App\Models\Calificacion;
 use App\Models\CalificacionMatriculas;
 use App\Models\CierresReaperturas;
 use App\Models\CobrosLicenciaLicor;
