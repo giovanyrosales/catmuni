@@ -82,7 +82,7 @@
                   }
 
 </script>
-@extends('backend.menus.Superior')
+@extends('backend.menus.superior')
  
 @section('content-admin-css')
 
@@ -93,7 +93,7 @@
               
 </script>
 
-@extends('backend.menus.Superior')
+@extends('backend.menus.superior')
  
 <section class="content-header">
     <div class="container-fluid">
