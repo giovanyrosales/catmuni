@@ -11,7 +11,7 @@
 
     <!-- Grupo Roles y permisos -->
              <li class="nav-item">
-             @can('seccion.roles.y.permisos')
+             <!-- @can('seccion.roles.y.permisos') -->
                  <a href="#" class="nav-link">
                     <i class="far fa-edit"></i>
                     <p>
@@ -85,7 +85,7 @@
                 </ul>
              </li>
 
-            @endcan
+             <!-- @endcan -->
                 <!-- Grupo Contribuyentes -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
