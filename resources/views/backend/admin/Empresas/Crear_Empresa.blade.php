@@ -13,20 +13,20 @@
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
-    
- 
-    
- 
+
+
+
+
 @stop
 
 
 
-<div class="content-wrapper" style="display: none" id="divcontenedor">
+<div style="display: none; padding-bottom:30px;" id="divcontenedor">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                  
+
                     </div><!-- Col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -61,12 +61,12 @@
           <div class="card border-info mb-3"><!-- Panel Asignar empresa -->
           <div class="card-header text-info"><label>DATOS GENERALES</label></div>
             <div class="card-body"><!-- Card-body -->
-        
+
             <div class="row">
               <div class="col-md-6">
               <div class="form-group">
                         <label>Nombre del negocio:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Nombre del negocio">
+                        <input type="text" name="nombre" id="nombre" class="form-control"  placeholder="Nombre del negocio">
                         <input type="hidden" name="id" id="id" class="form-control" >
                       </div>
                 <!-- /.form-group -->
@@ -79,7 +79,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                           <label>N° de Tarjeta:</label>
-                          <input type="number" name="num_tarjeta" id="num_tarjeta" required placeholder="0000" class="form-control" >
+                          <input type="number" name="num_tarjeta" id="num_tarjeta" placeholder="0000" class="form-control" >
                     </div>
                  </div>
                 </div>
@@ -87,34 +87,26 @@
                 <div class="col-md-14">
                 <div class="form-group">
                     <label>Dirección:</label>
-                    <input type="text" name="direccionE" id="direccionE" class="form-control" required placeholder="Dirección de la empresa"  >
-                  </div> </div>   
+                    <input type="text" name="direccionE" id="direccionE" class="form-control" placeholder="Dirección de la empresa"  >
+                  </div> </div>
                 <!-- /.form-group -->
 
-      <!-- Asignar Representante-->  
+      <!-- Asignar Representante-->
        <!-- /.form-group -->
-                 <div class="row">     
+                 <div class="row">
               <!-- /.form-group -->
                         <!--asignar actividad economica -->
                     <div class="col-md-6">
                       <div class="form-group">
                             <label>Actividad económica:</label>
-                            
+
                             <!-- Select estado - live search -->
                             <div class="input-group mb-9">
-                                  <select 
-                                  required
-                                  class="selectpicker"
-                                  data-show-subtext="true" 
-                                  data-live-search="true"   
-                                  id="select-actividad_economica" 
-                                  title="-- Selecione la actividad --"
-                                  onchange="excepciones_especificas(),resetmatriz()"
-                                  >
+                                  <select class="selectpicker" data-show-subtext="true" data-live-search="true" id="select-actividad_economica" title="-- Selecione la actividad --" onchange="excepciones_especificas(),resetmatriz()">
                                     @foreach($actividadeseconomicas as $actEc)
                                     <option value="{{ $actEc->id }}" data-actividad="{{ $actEc->codigo_atc_economica }}"> {{ $actEc->rubro }} ({{ $actEc->codigo_atc_economica }})</option>
-                                    @endforeach 
-                                  </select> 
+                                    @endforeach
+                                  </select>
                             </div>
                             <!-- finaliza asignar actividad economica-->
                           </div>
@@ -126,33 +118,24 @@
                           <label>Giro comercial:</label>
                               <!-- Select Giro Comercial -live search -->
                                   <div class="input-group mb-9">
-                                  <select 
-                                  required 
-                                  class="selectpicker"
-                                  data-show-subtext="true" 
-                                  data-live-search="true"  
-                                  id="select-giro_comercial" 
-                                  title="--  Selecione un giro  --"
-                                  onchange="detallematricula(),llenardetalle_matriculas(),resetmatriz()"
-                                  required
-                                  >
+                                  <select class="selectpicker" data-show-subtext="true" data-live-search="true" id="select-giro_comercial" title="--  Selecione un giro  --" onchange="detallematricula(),llenardetalle_matriculas(),resetmatriz()" >
                                     @foreach($giroscomerciales as $giro)
                                     <option value="{{ $giro->id }}" data-matricula="{{ $giro->matricula }}"> {{ $giro->nombre_giro }}
                                     </option>
-                                    @endforeach 
-                                  </select> 
+                                    @endforeach
+                                  </select>
                                   </div>
                             <!-- finaliza select Giro Comercial-->
                         </div>
                     </div>
                </div> <!-- /.ROW -->
                <!-- /.form-group -->
-            </div> 
+            </div>
               <!-- /.col -->
 
            <div class="col-md-6">
-              <!-- /.form-group --> 
-              <div class="row"> 
+              <!-- /.form-group -->
+              <div class="row">
                   <div class="col-md-6">
                       <div class="form-group">
                         <label>Tipo de Comerciante:</label>
@@ -162,27 +145,27 @@
                   <div class="col-md-6">
                       <div class="form-group">
                        <label>Referencia Catastral:</label>
-                       <input type="text" name="referencia_catastral" id="referencia_catastral" class="form-control"  required placeholder="000-00-000-0000P00"  >
+                       <input type="text" name="referencia_catastral" id="referencia_catastral" class="form-control"  placeholder="000-00-000-0000P00"  >
                       </div>
                   </div>
                 </div>
               <!-- /.form-group -->
                 <!-- /.form-group -->
-                <div class="row"> 
+                <div class="row">
                 <div class="col-md-6">
                       <div class="form-group">
                           <label>Inicio de Operaciones:</label>
-                          <input type="date" name="inicio_operaciones" id="inicio_operaciones" required class="form-control" >
+                          <input type="date" name="inicio_operaciones" id="inicio_operaciones" class="form-control" >
                       </div>
                       </div>
-              <!-- /.form-group --> 
+              <!-- /.form-group -->
                   <div class="col-md-6">
                       <div class="form-group">
                           <label>Teléfono:</label>
-                          <input type="number" name="telefono" id="telefono" class="form-control"  required placeholder="7777-7777"  >
+                          <input type="number" name="telefono" id="telefono" class="form-control"  placeholder="7777-7777"  >
                       </div>
                   </div>
-                
+
                 </div>
                 <div class="row">
                   <div class="col-md-6">
@@ -196,27 +179,19 @@
                       <label>Asignar representante legal:</label>
                               <!-- Select live search -->
                               <div class="input-group mb-14">
-                                <select 
-                                required
-                                class="selectpicker show-tick" 
-                                data-show-subtext="true" 
-                                data-live-search="true" 
-                                id="select-contribuyente" 
-                                title="-- Seleccione un registro --"
-                                
-                                >
+                                <select class="selectpicker show-tick" data-show-subtext="true" data-live-search="true" id="select-contribuyente" title="-- Seleccione un registro --">
                                   @foreach($contribuyentes as $contribuyente)
                                   <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
-                                  @endforeach 
-                                </select> 
+                                  @endforeach
+                                </select>
                                 </div>
                            <!-- finaliza select Asignar Representante-->
                       </div>
                   </div>
-                  
+
                 </div>
               <!-- /.form-group -->
-            <div class="row"> 
+            <div class="row">
                     <div class="col-md-6" id="Excepcion_especifica">
                           <div class="form-group">
                               <label>¿Caso Especial?</label>
@@ -233,14 +208,14 @@
 
                </div>
             <!-- /.form-group -->
-            
+
             <!-- Fin /.col -->
             </div>
           <!-- /.row -->
           </div>
         </div>
       </div>
-          
+
   <!-------------------------------- PANEL LLENAR CANTIDAD MATRICRULAS Y SU ESPECIFICACIÓN ------------------------------------- -->
 
         <div class="card border-info mb-3" id="detalle_matricula"><!-- Panel Asignar empresa -->
@@ -261,7 +236,7 @@
                                     <td align="center">
                                     <input  id='cantidad' class='form-control' disabled min='1' style='max-width: 250px; text-align:center;' type='text' value='' onchange="calculo_cantidad_mat()" />
                                     <input type="hidden" id='id_matriculas'/>
-                                    </td>                         
+                                    </td>
                                     <td align="center">
                                     <input  id='monto' class='form-control' disabled min='1' style='max-width: 250px;text-align:center;' type='text' value=''/>
                                     <input type="hidden" id='monto_hidden'/>
@@ -275,14 +250,14 @@
                                     </tr>
                                         </tbody>
                                         </table>
-                                  
+
 
 <!-----------------------------------Inicia Contenido Matrícuila específica------------------------------------------->
 
-                             
+
                                 <table class="table" id="matrizMatriculas" style="border: 100px" data-toggle="table">
                                 <thead>
-                                <tr>                           
+                                <tr>
                                     <th style="width: 25%; text-align: center">Código Municipal</th>
                                     <th style="width: 15%; text-align: center">Código</th>
                                     <th style="width: 20%; text-align: center">N° serie</th>
@@ -291,11 +266,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                             
+
                                 </tbody>
                                 </table>
                                 <br>
-                                     <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEspecifica"><i class="fas fa-plus"></i> &nbsp; Especificar Matrícula</button>             
+                                     <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEspecifica"><i class="fas fa-plus"></i> &nbsp; Especificar Matrícula</button>
                                 <br>
                                 </div>
 
@@ -304,14 +279,14 @@
                </div><!-- /.col-md-6 -->
             <!-- Finaliza Empresa-->
          </div>
-        
+
 
 
 <!--------------------------- FINALIZA PANEL LLENAR CANTIDAD MATRICRULAS Y SU ESPECIFICACIÓN ------------------------------- -->
 
          </div>
                   <!-- /.card-body -->
-                  <div class="card-footer"> 
+                  <div class="card-footer">
                   <button type="button" onclick="location.href='{{ url('/panel')}}'" class="btn btn-default">
                   <i class="fas fa-times-circle"></i>&nbsp;Cancelar</button>
                   <button type="button" class="btn btn-info float-right" onclick="nuevo()">
@@ -343,7 +318,7 @@
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}" type="text/javascript"></script>
- 
+
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
@@ -356,24 +331,24 @@
         {
             document.getElementById("divcontenedor").style.display = "block";
            // document.getElementById("select-actividad_especifica").style.backgroundColor = 'green';
-           
+
            window.cantidadMatricula=0;
 
            $('#actividad-especificaDIV').hide();
            $('#detalle_matricula').hide();
            $('#Excepcion_especifica').hide();
-           
+
 
           }); //** Las funciones que se llaman aquí inician automaticamente */
 
-          
+
     $("#btnAddmatriculaEspecifica").on("click", function () {
 
       var select_actividad_economica=document.getElementById("select-actividad_economica").value;
-      var sel = document.getElementById("select-actividad_economica");  
+      var sel = document.getElementById("select-actividad_economica");
       var selected = sel.options[sel.selectedIndex];
       var act_ec_matriculas=selected.getAttribute('data-actividad');
-            
+
       if(select_actividad_economica == "")
       {
           modalMensaje('Aviso', 'No ha selecionado una actividad económica');
@@ -410,7 +385,7 @@
 
                     // $("tbody").append(markup);
                     $("#matrizMatriculas tbody").append(markup);
-                    
+
                     cantidadMatricula=cantidadMatricula+1;
 
                     $('#cantidad').val(cantidadMatricula);
@@ -424,11 +399,11 @@
 
                     //Imprimiendo resultado
                     $('#monto').val('$'+monto_total);
-                    $('#pago_mensual').val('$'+Total_pago_mensual);      
+                    $('#pago_mensual').val('$'+Total_pago_mensual);
 
                     //resultado sin signo $
                     $('#Total_monto_hidden').val(monto_total);
-                    $('#Total_pago_mensual_hidden').val(Total_pago_mensual);       
+                    $('#Total_pago_mensual_hidden').val(Total_pago_mensual);
 
                     });
 
@@ -445,7 +420,7 @@ function resetmatriz(){
 }
 
 function calculo_cantidad_mat(){
- 
+
  var monto_matricula=document.getElementById("monto_hidden").value;
  var tarifa=document.getElementById("pago_mensual_hidden").value;
  var cantidadMatricula=document.getElementById("cantidad").value;
@@ -456,11 +431,11 @@ function calculo_cantidad_mat(){
 
  //Imprimiendo resultado
  $('#monto').val('$'+monto_total);
- $('#pago_mensual').val('$'+Total_pago_mensual);      
+ $('#pago_mensual').val('$'+Total_pago_mensual);
 
  //resultado sin signo $
  $('#Total_monto_hidden').val(monto_total);
- $('#Total_pago_mensual_hidden').val(Total_pago_mensual);       
+ $('#Total_pago_mensual_hidden').val(Total_pago_mensual);
 
 }
 
@@ -470,9 +445,9 @@ var table = e.parentNode.parentNode; // fila de la tabla
        var cod_municipal = table.cells[0].children[0]; //
        var codigo = table.cells[1].children[0]; //
        var num_serie = table.cells[2].children[0];
-       var direccion = table.cells[3].children[0];    
+       var direccion = table.cells[3].children[0];
 }
- 
+
 function borrarFila(elemento){
 
 cantidadMatricula=cantidadMatricula-1;
@@ -487,7 +462,7 @@ cantidadMatricula=cantidadMatricula-1;
 
         //Imprimiendo resultado modo vista usuario con $
         $('#monto').val('$'+monto_total);
-        $('#pago_mensual').val('$'+Total_pago_mensual);  
+        $('#pago_mensual').val('$'+Total_pago_mensual);
 
         //resultado sin signo $
         $('#Total_monto_hidden').val(monto_total);
@@ -499,13 +474,13 @@ cantidadMatricula=cantidadMatricula-1;
 
 function detallematricula(){
 
-var sel = document.getElementById("select-giro_comercial");  
+var sel = document.getElementById("select-giro_comercial");
 var selected = sel.options[sel.selectedIndex];
 var ap_matriculas=selected.getAttribute('data-matricula');
 
 
                 if(ap_matriculas=== 'SI')
-                {   
+                {
                      $('#detalle_matricula').show();
                 }else{
                   $('#detalle_matricula').hide();
@@ -517,17 +492,17 @@ var ap_matriculas=selected.getAttribute('data-matricula');
 function llenardetalle_matriculas(){
 
              var id_giro_comercial = document.getElementById('select-giro_comercial').value;
-          
+
              var formData = new FormData();
              formData.append('id_giro_comercial', id_giro_comercial);
-             
+
              axios.post(url+'/empresas/llenar_detalle_matriculas', formData, {
               })
             .then((response) => {
 
              if(response.data.success === 1)
                    {
-                    
+
                        document.getElementById('id_matriculas').value=response.data.matricula_Seleccionada.id;
                        document.getElementById('monto_hidden').value=response.data.matricula_Seleccionada.monto;
                        document.getElementById('pago_mensual_hidden').value=response.data.matricula_Seleccionada.tarifa;
@@ -535,20 +510,20 @@ function llenardetalle_matriculas(){
                })
             .catch((error) => {
                // toastr.error('Error al registrar empresa');
-               
+
             });
-            
-             
+
+
           }
 
 // Termina función
 function excepciones_especificas(){
-  var sel = document.getElementById("select-actividad_economica");  
+  var sel = document.getElementById("select-actividad_economica");
   var selected = sel.options[sel.selectedIndex];
   var Codigo_Act=selected.getAttribute('data-actividad');
 
   if(Codigo_Act==='11802')
-                {   
+                {
                      $('#Excepcion_especifica').show();
                 }else{
                   $('#Excepcion_especifica').hide();
@@ -558,7 +533,7 @@ function excepciones_especificas(){
 
 
 function nuevo(){
-  
+
 
         var contribuyente = document.getElementById('select-contribuyente').value;
         var giro_comercial = document.getElementById('select-giro_comercial').value;
@@ -586,118 +561,27 @@ function nuevo(){
             toastr.error('El nombre no puede contener más de 50 caracteres');
             return;
         }
-        
-        if(num_tarjeta === ''){
-            toastr.error('El número de tarjeta de la empresa es requerido');
-            return;
-        }
-                
-        if(inicio_operaciones === ''){
-            toastr.error('El inicio de operaciones de la empresa es requerido');
-            return;
-        }
-        if(direccionE === ''){
-            toastr.error('La dirección de la empresa es requerido');
-            return;
-        }
 
-        if(telefono === ''){
-            toastr.error('El número de teléfono de la empresa es requerido');
-            return;
-        }
-        if(telefono.length > 8){
-            toastr.error('El número de teléfono no puede contener más de 8 digitos');
-            return;
-        }
-        if(telefono.length < 8){
-            toastr.error('El número de teléfono no puede contener menos de 8 digitos');
-            return;
-        }
-        
-        if(contribuyente === ''){
-            toastr.error('El dato contribuyente es requerido');
-            return;
-        }
-
-        if(actividad_economica === ''){
-            toastr.error('La actividad económica de la empresa es requerido');
-            return;
-        }
-
-        if(giro_comercial === ''){
-            toastr.error('El giro comercial de la empresa es requerido');
-            return;
-        }
-
-        if(matricula_comercio  != ''){
-          if(matricula_comercio.length < 0){
-              toastr.error('El número de matricula no puede contener números negativos');
-              return;
-          }
-          if(matricula_comercio.length < 10){
-              toastr.error('El número de matricula no puede contener menos de 10 números');
-              return;
-          }
-          if(matricula_comercio.length > 10){
-              toastr.error('El número de matricula no puede contener más de 10 números');
-              return;
-          }
-        }
         var reglaNumeroDecimal = /^[0-9]\d*(\.\d+)?$/;
-       
-        if(nit  != ''){
 
-                  if(nit.length > 14 ) 
-                        {
-                          toastr.error('El NIT no puede contener más de 14 números');
-                          return;
-                        }
-                   if(nit.length< 14 ) 
-                        {
-                          toastr.error('El NIT debe contener 14 números');
-                          return;
-                        }
-                  if(nit.length < 0)
-                  {
-                          toastr.error('El NIT no puede tener números negativos');
-                          return;
-                  }
-         }
-
-        if(!telefono.match(reglaNumeroDecimal)) {
-            toastr.error('El número de teléfono debe ser un número entero');
-            return;
-        }
-
-        if(telefono < 0){
-            toastr.error('El número de teléfono no puede tener números negativos');
-            return;
-        }
-
-        if(num_tarjeta < 0){
-            toastr.error('El número de tarjeta no puede tener números negativos');
-            return;
-        }
-
-        
         var formData = new FormData();
 
         //**** Validar */
-        var hayregistro=0; 
+        var hayregistro=0;
         var nRegistro = $('#matrizMatriculas >tbody >tr').length;
 
         if(giro_comercial!='1')
                {
                 //**** Datos detalle matricula */
-                var tipo_matricula = document.getElementById("id_matriculas").value; 
-                var cantidad = document.getElementById("cantidad").value; 
+                var tipo_matricula = document.getElementById("id_matriculas").value;
+                var cantidad = document.getElementById("cantidad").value;
 
                 //**** Datos especificar matricula */
                 var cod_municipal = $("input[name='cod_municipal[]']").map(function(){return $(this).val();}).get();
                 var codigo= $("input[name='codigo[]']").map(function(){return $(this).val();}).get();
                 var num_serie = $("input[name='num_serie[]']").map(function(){return $(this).val();}).get();
                 var direccionM = $("input[name='direccionM[]']").map(function(){return $(this).val();}).get();
-                
+
                 if (nRegistro <= 0){
                                     modalMensaje('Registro Vacio', 'Debe especificar al menos una matrícula');
                                     return;
@@ -720,22 +604,7 @@ function nuevo(){
                                 }
                 }
 
-                for(var c = 0; c < num_serie.length; c++){
-                    var DatoNum_serie = num_serie[c];
-                    if(DatoNum_serie == ""){
-                                        modalMensaje('Número de serie', 'Debe digitar un número de serie');
-                                        return;
-                                    }
-                    }
 
-                  for(var e = 0; e < direccionM.length; e++){
-                      var DatoDireccion =direccionM[e];
-                      if(DatoDireccion == ""){
-                                          modalMensaje('Dirección', 'Debe digitar una dirección');
-                                          return;
-                                        }
-
-                        }       
                 //**** Fin de validar */
 
                     formData.append('tipo_matricula', tipo_matricula);
@@ -743,7 +612,7 @@ function nuevo(){
 
                     // llenar array para enviar
                     for(var f = 0; f < num_serie.length; f++){
-                    
+
                     formData.append('cod_municipal[]', cod_municipal[f]);
                     formData.append('codigo[]', codigo[f]);
                     formData.append('num_serie[]', num_serie[f]);
@@ -752,7 +621,7 @@ function nuevo(){
 
                     }
           }//**** Fin de si hay registro */
-       
+
         openLoading();
         formData.append('contribuyente', contribuyente);
         formData.append('giro_comercial', giro_comercial);
@@ -774,32 +643,32 @@ function nuevo(){
                 closeLoading();
                 if(response.data.success === 0){
                     toastr.error(response.data.message);
-          
+
                 }
                 if(response.data.success === 1){
-             
+
                   Swal.fire({
                           position:'top-end',
                           icon: 'success',
                           title: '¡Empresa registrada correctamente!',
                           showConfirmButton: true,
-                         
+
                         }).then((result) => {
                         if (result.isConfirmed) {
                               location.reload();
                             }
                         });
-                          
-                   
+
+
                 }
-               
+
             })
             .catch((error) => {
-                
+
                 Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Error al registrar empresa!', 
+                          text: 'Error al registrar empresa!',
                         }).then((result) => {
                         if (result.isConfirmed) {
                               location.reload();
@@ -821,11 +690,11 @@ function nuevo(){
 
                 }
             });
-            
+
         }
 
-</script> 
+</script>
 
-    
+
 @endsection
 

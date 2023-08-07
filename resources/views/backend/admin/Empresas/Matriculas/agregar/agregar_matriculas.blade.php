@@ -13,21 +13,21 @@
 @stop
 <script type="text/javascript">
 function f1(){
-    
+
     $('#tmatriculas').hide();
     $('#DivMatriculas').hide();
     $('#aviso').show();
 }
 function f2(){
     $('#tmatriculas').show();
-    $('#aviso').hide();              
+    $('#aviso').hide();
 }
 function f3(){
     $('#tmatriculas').show();
-    $('#DivMatriculas').show();          
+    $('#DivMatriculas').show();
 }
 function f4(){
-    location.reload();        
+    location.reload();
 }
 function ocultarAdd(){
     $('#tmatriculas').hide();
@@ -43,7 +43,7 @@ function ocultarAdd(){
 </style>
 <!-----------------------------------Inicia Contenido ------------------------------------------->
 
-<div class="content-wrapper" style="display: none" id="divcontenedor">
+<div class=" " style="display: none" id="divcontenedor">
 
     <section class="content-header">
         <div class="container-fluid">
@@ -91,11 +91,11 @@ function ocultarAdd(){
                             <select class='form-control seleccion' onchange='multiplicar(this)' style='max-width: 300px' id='select_matriculas'  >
                                <!-- <option value='0'> --  Seleccione el tipo matrícula  -- </option> -->
                                 @foreach($matriculas as $data)
-                                  
+
                                         <option value='{{ $data->id }}' data-matricula='{{ $data->monto }}' data-pagoM='{{ $data->tarifa }}'> {{ $data->nombre }}</option>
-                                    
+
                                 @endforeach>
-                   
+
                             </select>
                             </td>
 
@@ -114,7 +114,7 @@ function ocultarAdd(){
 
                         <td>
                         <button type='button' class='btn btn-block btn-success'  id="btnAdd" onclick='verificar()'>
-                            <i class="far fa-plus-square"></i> 
+                            <i class="far fa-plus-square"></i>
                             &nbsp;Agregar
                         </button>
                         </td>
@@ -125,12 +125,12 @@ function ocultarAdd(){
                             </div>
                         </form>
                        </div>
-              
+
                        <!-- Inclución de tabla -->
                        <div class="m-0 row justify-content-center" id="DivMatriculas">
                             <div class="card">
                                     <div class="card-header" style="background-color:#FFD219; color: #FFFFFF;">
-                                        <h5> Matrículas registradas para <span class="badge badge-pill badge-light">{{$empresa->nombre}}</span></h5> 
+                                        <h5> Matrículas registradas para <span class="badge badge-pill badge-light">{{$empresa->nombre}}</span></h5>
                                     </div>
                                     <div class="col-auto  p-5 text-center" id="tablaDatatable"></div>
                             </div>
@@ -145,9 +145,9 @@ function ocultarAdd(){
                                             <br>
                                             <div class="callout callout-info">
                                                 <h5><i class="fas fa-info"></i> Nota:</h5>
-                                                <h5> No hay matrículas registradas para <span class="badge badge-warning">{{$empresa->nombre}}</span></h5> 
+                                                <h5> No hay matrículas registradas para <span class="badge badge-warning">{{$empresa->nombre}}</span></h5>
                                                 <button type='button' class='btn btn-block btn-primary'  id="btnAdd" onclick='f2()'>
-                                                    <i class="far fa-plus-square"></i> 
+                                                    <i class="far fa-plus-square"></i>
                                                     &nbsp;Agregar matrículas
                                                 </button>
                                             </div>
@@ -161,7 +161,7 @@ function ocultarAdd(){
                        </script>
                        @endif
                        <!-- /.Inclución de tabla -->
-                  
+
                             <div class="card-footer">
                                 <button type="button" class="btn btn-default" onclick="VerEmpresa()"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
                             </div>
@@ -210,7 +210,7 @@ function ocultarAdd(){
     <!--Finaliza Modal Eliminar Matrícula-->
 
     <!--Inicia Modal Editar Matrícula y matrícula específica-->
-    
+
     <div class="modal fade bd-example-modal-lg" id="modalEditarMatricula" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -239,9 +239,9 @@ function ocultarAdd(){
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <td> 
-                                        <input  id='id-editar' class='form-control' min='1' style='max-width: 250px' type='hidden' value=''/>                                        
-                                        <select class='form-control seleccion' disabled style='max-width: 300px' id='select_matriculas-editar'  >  
+                                    <td>
+                                        <input  id='id-editar' class='form-control' min='1' style='max-width: 250px' type='hidden' value=''/>
+                                        <select class='form-control seleccion' disabled style='max-width: 300px' id='select_matriculas-editar'  >
                                         </select>
                                         </td>
                                     </td>
@@ -271,7 +271,7 @@ function ocultarAdd(){
                                 <input  id='id_matriculas_detalle-editar' type='hidden'/>
                                 <table class="table" id="matrizMatriculasEditar" style="border: 100px" data-toggle="table">
                                 <thead>
-                                <tr>                           
+                                <tr>
                                     <th style="width: 25%; text-align: center">Cód. Municipal</th>
                                     <th style="width: 15%; text-align: center">Código</th>
                                     <th style="width: 20%; text-align: center">N° serie</th>
@@ -280,14 +280,14 @@ function ocultarAdd(){
                                 </tr>
                                 </thead>
                                 <tbody>
-                             
+
                                 </tbody>
                                 </table>
                                 <br>
-                                     <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEditar"><i class="far fa-plus-square"></i> &nbsp; Especificar nueva matrícula</button>             
+                                     <button type="button"  class="btn btn-block btn-success"   id="btnAddmatriculaEditar"><i class="far fa-plus-square"></i> &nbsp; Especificar nueva matrícula</button>
                                 <br>
                                 </div>
-                                    
+
                         <!-----------------------------------Termina  Contenido Editar Matrícuila específica ------------------------------------------->
                     </form>
                 </div>
@@ -305,7 +305,7 @@ function ocultarAdd(){
     <!--Finaliza Modal Editar Matrícula y matrícula específica-->
 
     <!--Inicia Modal Especificar Matrícula-->
-    
+
     <div class="modal fade" id="modalEspecificarMatricula">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -328,7 +328,7 @@ function ocultarAdd(){
             <input  id='id_matriculas_detalle' type='hidden'/>
             <table class="table" id="matrizMatriculas" style="border: 100px" data-toggle="table">
                     <thead>
-                    <tr>                           
+                    <tr>
                         <th style="width: 20%; text-align: center">Cód. Municipal</th>
                         <th style="width: 20%; text-align: center">Código</th>
                         <th style="width: 20%; text-align: center">N° serie</th>
@@ -340,7 +340,7 @@ function ocultarAdd(){
                     </tbody>
                     </table>
                     <br>
-                        <button type="button"  class="btn btn-block btn-success" id="btnAddmatriculaEspecifica"><i class="far fa-plus-square"></i> &nbsp; Específicar nueva matrícula</button>               
+                        <button type="button"  class="btn btn-block btn-success" id="btnAddmatriculaEspecifica"><i class="far fa-plus-square"></i> &nbsp; Específicar nueva matrícula</button>
                     <br>
                     </div>
                     </form>
@@ -367,7 +367,7 @@ function ocultarAdd(){
 
 
 <!--Inicia Modal ver Matrícula y matrícula específica-->
-    
+
 <div class="modal fade bd-example-modal-lg" id="modalVerMatriculaEsp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -409,7 +409,7 @@ function ocultarAdd(){
                                         <th>Telefono:</th>
                                         <td>{{$empresa->telefono}}</td>
                                     </tr>
-                                    
+
                                     </tbody>
                                 </form>
                                 </table>
@@ -417,7 +417,7 @@ function ocultarAdd(){
                                 <!--Tabla 12-->
                                 <table class="table" id="matrizVerMatriculasEsp" style="border: 100px" data-toggle="table">
                                 <thead>
-                                <tr>                           
+                                <tr>
                                     <th style="width: 25%; text-align: center">Cód. Municipal</th>
                                     <th style="width: 15%; text-align: center">Código</th>
                                     <th style="width: 20%; text-align: center">N° serie</th>
@@ -426,13 +426,13 @@ function ocultarAdd(){
                                 </tr>
                                 </thead>
                                 <tbody>
-                             
+
                                 </tbody>
                                 </table>
                                 </div>
                                 </div>
                             </div>
-                                    
+
                         <!-----------------------------------Termina  Contenido Editar Matrícuila específica ------------------------------------------->
                     </form>
                 </div>
@@ -485,9 +485,9 @@ function matricula_especificas(e){
             var cod_municipal = table.cells[0].children[0]; //
             var codigo = table.cells[1].children[0]; //
             var num_serie = table.cells[2].children[0];
-            var direccion = table.cells[3].children[0]; 
-          
-         
+            var direccion = table.cells[3].children[0];
+
+
 }
 
 // filas de la tabla Agrega Matrículas Específicas
@@ -496,17 +496,17 @@ function matricula_especificas(e){
 
 
                 //agrega las filas dinamicamente
-               
-                
+
+
                     if(cantidadMatricula==0)
                     {
                         modalMensaje('¡Limite de Matrículas!', 'La cantidad de matrícula detalladas llegó a su limite');
                     }   //cierra if
 
                 while(cantidadMatricula>0){
-                   
+
                 var markup = "<tr>"+
-  
+
                     "<td>"+
                     "<input name='cod_municipal[]'  onchange='matricula_especificas(this)' class='form-control' min='1' style='max-width: 250px' type='Text' value=''/>"+
                     "</td>"+
@@ -515,7 +515,7 @@ function matricula_especificas(e){
                     "<input name='codigo[]' disabled class='form-control'  min='1' style='max-width: 100px' type='number' value='"+ '{{$empresa->codigo_atc_economica}}' + "'/>"+
                     "</td>"+
 
-                    
+
                     "<td>"+
                     "<input name='num_serie[]'  class='form-control'  min='1' style='max-width: 120px' type='text' value=''/>"+
                     "</td>"+
@@ -533,11 +533,11 @@ function matricula_especificas(e){
                // $("tbody").append(markup);
                 $("#matrizMatriculas tbody").append(markup);
                 cantidadMatricula=cantidadMatricula-1;
-                
+
                 console.log(cantidadMatricula);
               }//cierra while
-            
-              
+
+
             });
         });
 
@@ -549,16 +549,16 @@ $(document).ready(function () {
 
 
                 var markup = "<tr id='0'>"+
-  
+
                     "<td>"+
-                    "<input name='cod_municipaleditararray[]'  onchange='matricula_especificas(this)' class='form-control' min='1' style='max-width: 250px' type='text' value=''/>"+                  
+                    "<input name='cod_municipaleditararray[]'  onchange='matricula_especificas(this)' class='form-control' min='1' style='max-width: 250px' type='text' value=''/>"+
                     "</td>"+
 
                     "<td>"+
                     "<input name='codigoeditararray[]'  class='form-control'  min='1' style='max-width: 100px' type='number' value=''/>"+
                     "</td>"+
 
-                    
+
                     "<td>"+
                     "<input name='num_serieeditararray[]'  class='form-control'  min='1' style='max-width: 120px' type='text' value=''/>"+
                     "</td>"+
@@ -575,19 +575,19 @@ $(document).ready(function () {
 
                // $("tbody").append(markup);
                 $("#matrizMatriculasEditar tbody").append(markup);
-              
+
                 cantidadMatriculaEditar=cantidadMatriculaEditar+1;
                 $('#cantidad-editar').val(cantidadMatriculaEditar);
 
-                
-                var sel = document.getElementById("select_matriculas-editar");  
+
+                var sel = document.getElementById("select_matriculas-editar");
                 var selected = sel.options[sel.selectedIndex];
                 var monto_matricula=selected.getAttribute('data-matriculaEditar');
                 var tarifa=selected.getAttribute('data-pagoMEditar');
-                
 
-                var cantidad = document.getElementById("cantidad-editar").value; 
-                
+
+                var cantidad = document.getElementById("cantidad-editar").value;
+
 
                 //Operación
                 var monto_total= '$'+ monto_matricula*cantidadMatriculaEditar;
@@ -595,9 +595,9 @@ $(document).ready(function () {
                 console.log(monto_matricula,monto_total,cantidad,Total_pago_mensual);
                 //Imprimiendo resultado
                 document.getElementById('monto-editar').value=monto_total;
-                document.getElementById('pago_mensual-editar').value=Total_pago_mensual;  
-               
-               
+                document.getElementById('pago_mensual-editar').value=Total_pago_mensual;
+
+
             });
         });
 </script>
@@ -612,36 +612,36 @@ $(document).ready(function () {
 //* Inicia función multiplicar
 function multiplicar(){
 
-var sel = document.getElementById("select_matriculas");  
+var sel = document.getElementById("select_matriculas");
 var selected = sel.options[sel.selectedIndex];
 var monto_matricula=selected.getAttribute('data-matricula');
 var tarifa=selected.getAttribute('data-pagoM');
 console.log(pago_mensual,monto_matricula);
-var cantidad = document.getElementById("cantidad").value; 
+var cantidad = document.getElementById("cantidad").value;
 
 //Operación
 var Total_pago_mensual= '$'+ tarifa*cantidad;
 var monto_total= '$'+ monto_matricula*cantidad;
 
 //Imprimiendo resultado
-document.getElementById('monto_matricula').value=monto_total; 
+document.getElementById('monto_matricula').value=monto_total;
 document.getElementById('pago_mensual').value=Total_pago_mensual;
 
 
-} //* Termina función multiplicar 
+} //* Termina función multiplicar
 
 
 //*** Inicia Agregar matrículas ***//
 function AgregarMatricula(){
     var id={{$id}};
-    var tipo_matricula = document.getElementById("select_matriculas").value; 
-    var cantidad = document.getElementById("cantidad").value; 
+    var tipo_matricula = document.getElementById("select_matriculas").value;
+    var cantidad = document.getElementById("cantidad").value;
 
     if(tipo_matricula==0){
                             modalMensaje('Aviso', 'Debe selecionar una matrícula');
                             return;
                         }
-                        
+
     if(cantidad==""){
                             modalMensaje('Aviso', 'Debe ingresar una cantidad');
                             return;
@@ -675,12 +675,12 @@ function AgregarMatricula(){
            //**   resetbtn();
            //**   return;
            //**   }
-         
+
       })
       .catch((error) => {
         fallo('Error!', 'Error al agregar la matrícula');
-       
-      });              
+
+      });
 
 }//*** Termina agregar matrículas ***//
 
@@ -694,7 +694,7 @@ function modalEliminarMatricula(id)
 
 function eliminarM(){
     openLoading()
-        
+
     // se envia el ID de la matrícula
     var id = document.getElementById('idborrar').value;
 
@@ -706,9 +706,9 @@ function eliminarM(){
               .then((response) => {
                 closeLoading()
                     $('#modalEliminarMatricula').modal('hide');
-                    
+
                     if(response.data.success === 1){
-               
+
                         Swal.fire({
                                     position: 'top-end',
                                     icon: 'success',
@@ -718,13 +718,13 @@ function eliminarM(){
                                 }).then((result) => {
                                 if (result.isConfirmed) {
                                     openLoading();
-                                    location.reload();    
+                                    location.reload();
                                 }
                             });
-                            
-                            
-                               
-                        
+
+
+
+
               }else if(response.data.success === 2)
               {
                   toastr.warning('Debe eliminar primero las matrículas específicas en la sección [Editar].');
@@ -732,11 +732,11 @@ function eliminarM(){
                        toastMensaje('error', 'Error al borrar');
                    }
                 })
-                
+
            .catch(function (error) {
               closeLoading()
               toastr.error("Error de Servidor!");
-               }); 
+               });
         }
 //*** Termina eliminar matrículas ***//
 
@@ -745,15 +745,15 @@ function EspecificarM(id_matriculas_detalle)
     {
         var formData = new FormData();
         formData.append('id_matriculas_detalle', id_matriculas_detalle);
-     
+
         axios.post(url+'/matriculas_detalle/especificar', formData, {
             })
 
                 .then((response) => {
-             
+
                     closeLoading()
 
-                   if (response.data.success === 1) 
+                   if (response.data.success === 1)
                     { console.log(response);
 
                         if(response.data.matriculasEspecificas!=null)
@@ -767,10 +767,10 @@ function EspecificarM(id_matriculas_detalle)
                                 document.getElementById('id_matriculas_detalle').value=response.data.id_matriculas_detalle;
                                 window.cantidadMatricula=response.data.cantidad;
                              }
-                        
-                        
+
+
                     }
-                    else 
+                    else
                         {
                             toastMensaje('Error');
                             $('#modalEspecificarMatricula').modal('hide');
@@ -782,13 +782,13 @@ function EspecificarM(id_matriculas_detalle)
                     toastMensaje('error', 'Error');
                 });
 
-                
-           
+
+
 
     }
 function InformacionMatricula(id)
     {
-        
+
          openLoading();
             document.getElementById("formulario-EditarMatricula").reset();
             $("#matrizMatriculasEditar tbody tr").remove();
@@ -811,9 +811,9 @@ function InformacionMatricula(id)
                         $('#id_matriculas_detalle-editar').val(response.data.matriculas_detalle.id);
                         $('#monto-editar').val(response.data.montoDolar);
                         $('#pago_mensual-editar').val(response.data.Pago_mensualDolar);
-                        
+
                         console.log(cantidadMatriculaEditar);
-                        
+
                         document.getElementById("select_matriculas-editar").options.length = 0;
                         $.each(response.data.tipo_matricula, function( key, val ){
                             if(response.data.id_matriculas == val.id){
@@ -826,10 +826,10 @@ function InformacionMatricula(id)
 
                         //****  Cargar información editar matrícula detalle específico  ****//
                         var infodetalle = response.data.listado;
-                        
-                        
+
+
                         for (var i = 0; i < infodetalle.length; i++) {
-                  
+
 
                             var markup = "<tr id='"+infodetalle[i].id+"'>"+
 
@@ -844,7 +844,7 @@ function InformacionMatricula(id)
                                 "<td>"+
                                 "<input name='num_serieeditararray[]' value='"+infodetalle[i].num_serie+"' maxlength='400' class='form-control' type='text'>"+
                                 "</td>"+
-                                
+
                                 "<td>"+
                                 "<input name='direccioneditararray[]' value='"+infodetalle[i].direccion+"' maxlength='400' class='form-control' type='text'>"+
                                 "</td>"+
@@ -856,10 +856,10 @@ function InformacionMatricula(id)
                                 "</tr>";
 
                             $("#matrizMatriculasEditar tbody").append(markup);
-                            
+
                             }//*Cierre de for
-                            
-                               
+
+
 
                         }else{
                                 toastr.warning('Debe específicar primero la matrícula en la sección [Específicar matrículas].');
@@ -867,26 +867,26 @@ function InformacionMatricula(id)
                              }//*Cierre de if
 
                         //****  /. Cargar información editar matrícula detalle específico  ****//
-                     
+
                     }else{
                         toastr.error('Información solicitada no fue encontrada.');
                         }
-                    
+
                 })
                 .catch((error) => {
                     closeLoading();
                     toastr.error('Información no encontrada.');
                 });
-       
+
     }
   //*** Inicia Editar matrículas ***//
     function EditarMatricula()
     {
             var cantidad_editar = document.getElementById('cantidad-editar').value;
             var tipo_matricula_editar = document.getElementById('select_matriculas-editar').value;
-            var id_editar = document.getElementById('id-editar').value; 
-           
-            
+            var id_editar = document.getElementById('id-editar').value;
+
+
             //Datos matrícula específica
             var id_matricula_detalle_editar = document.getElementById('id_matriculas_detalle-editar').value;
             var cod_municipal_editar = $("input[name='cod_municipaleditararray[]']").map(function(){return $(this).val();}).get();
@@ -898,17 +898,17 @@ function InformacionMatricula(id)
             //**** Validar */
             var hayregistro=0;
             var nRegistro = $('#matrizMatriculasEditar >tbody >tr').length;
-            
+
             let formData = new FormData();
 
-        if (nRegistro > 0){  
+        if (nRegistro > 0){
 
-        hayregistro = 1;  
+        hayregistro = 1;
 
         for(var a = 0; a < cod_municipal_editar.length; a++){
 
             var DatoCod_municipal = cod_municipal_editar[a];
-      
+
 
             if(DatoCod_municipal == ""){
                             modalMensaje('Código Municipal', 'Debe digitar un código municipal');
@@ -916,7 +916,7 @@ function InformacionMatricula(id)
                         }
 
         }
-    
+
         for(var b = 0; b < codigo_editar.length; b++){
 
             var DatoCodigo = codigo_editar[b];
@@ -928,7 +928,7 @@ function InformacionMatricula(id)
                             }
 
             }
-    
+
         for(var c = 0; c < num_serie_editar.length; c++){
 
             var DatoNum_serie = num_serie_editar[c];
@@ -951,24 +951,24 @@ function InformacionMatricula(id)
                                 }
 
                 }
-               
+
     //**** Fin de validar */
- 
-    
+
+
     }//**Cierre de if nRegistro */
 
     //*** Cargando los datos de matriculas detalle */
-   
-    formData.append('hayregistro', hayregistro);  
+
+    formData.append('hayregistro', hayregistro);
     formData.append('id_editar', id_editar);
     formData.append('cantidad_editar', cantidad_editar);
-    formData.append('tipo_matricula_editar', tipo_matricula_editar); 
+    formData.append('tipo_matricula_editar', tipo_matricula_editar);
 
     console.log(hayregistro);
-    openLoading() 
+    openLoading()
     // llenar array para enviar
     //*** Cargando los datos de matriculas específicas */
-        
+
         for(var f = 0; f < num_serie_editar.length; f++){
             var id = $("#matrizMatriculasEditar tr:eq("+(f+1)+")").attr('id');
             formData.append('idarray[]', id);
@@ -979,18 +979,18 @@ function InformacionMatricula(id)
             console.log(cod_municipal_editar[f],codigo_editar[f],num_serie_editar[f],direccion_editar[f]);
             }
             formData.append('id_matricula_detalle_editar', id_matricula_detalle_editar);
-  
 
 
-           
+
+
             axios.post(url+'/matriculas_detalle/editar', formData, {
             })
 
                 .then((response) => {
-             
+
                     closeLoading()
 
-                   if (response.data.success === 1) 
+                   if (response.data.success === 1)
                     {
                       Swal.fire({
                           position: 'top-end',
@@ -1002,7 +1002,7 @@ function InformacionMatricula(id)
                         $('#modalEditarMatricula').modal('hide');
                         recargar();
                     }
-                    else 
+                    else
                     {
                         toastMensaje('Error al actualizar');
                         $('#modalEditarMatricula').modal('hide');
@@ -1034,11 +1034,11 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                         return;
                 }
 
-                   
+
     for(var a = 0; a < cod_municipal.length; a++){
 
         var DatoCod_municipal = cod_municipal[a];
-      
+
 
         if(DatoCod_municipal == ""){
                             modalMensaje('Código Municipal', 'Debe digitar un código municipal');
@@ -1046,7 +1046,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                         }
 
      }
-    
+
      for(var b = 0; b < codigo.length; b++){
 
         var DatoCodigo = codigo[b];
@@ -1058,7 +1058,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                         }
 
         }
-    
+
         for(var c = 0; c < num_serie.length; c++){
 
             var DatoNum_serie = num_serie[c];
@@ -1081,23 +1081,23 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                                 }
 
                 }
-               
+
     //**** Fin de validar */
- 
+
     let formData = new FormData();
 
     // llenar array para enviar
         for(var f = 0; f < num_serie.length; f++){
-            
+
             formData.append('cod_municipal[]', cod_municipal[f]);
             formData.append('codigo[]', codigo[f]);
             formData.append('num_serie[]', num_serie[f]);
             formData.append('direccion[]', direccion[f]);
             console.log(cod_municipal[f],codigo[f],num_serie[f],direccion[f]);
             }
-      
+
             formData.append('id_matriculas_detalle',id_matriculas_detalle);
-        
+
         axios.post(url+'/matriculas_detalle_especifico/agregar', formData, {
         })
         .then((response) => {
@@ -1119,7 +1119,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
 
 
 
-        
+
     }//**** Fin de guardar matricula */
 
 
@@ -1129,7 +1129,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                      window.location.href="{{ url('/admin/empresas/show') }}/"+id;
         }
 
-        
+
         function borrarFila(elemento){
             var tabla = elemento.parentNode.parentNode;
             tabla.parentNode.removeChild(tabla);
@@ -1137,20 +1137,20 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
         }
 
         function borrarFilaMatrículaEspEditar(elemento){
-            
+
             var tabla = elemento.parentNode.parentNode;
             tabla.parentNode.removeChild(tabla);
             cantidadMatriculaEditar=cantidadMatriculaEditar-1;
             $('#cantidad-editar').val(cantidadMatriculaEditar);
 
-                var sel = document.getElementById("select_matriculas-editar");  
+                var sel = document.getElementById("select_matriculas-editar");
                 var selected = sel.options[sel.selectedIndex];
                 var monto_matricula=selected.getAttribute('data-matriculaEditar');
                 var tarifa=selected.getAttribute('data-pagoMEditar');
-                
 
-                var cantidad = document.getElementById("cantidad-editar").value; 
-                
+
+                var cantidad = document.getElementById("cantidad-editar").value;
+
 
                 //Operación
                 var monto_total= '$'+ monto_matricula*cantidadMatriculaEditar;
@@ -1158,8 +1158,8 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                 console.log(monto_matricula,monto_total,cantidad,Total_pago_mensual);
                 //Imprimiendo resultado
                 document.getElementById('monto-editar').value=monto_total;
-                document.getElementById('pago_mensual-editar').value=Total_pago_mensual;   
-               
+                document.getElementById('pago_mensual-editar').value=Total_pago_mensual;
+
         }
 
         function verificar(){
@@ -1191,7 +1191,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
 
                 }
             });
-            
+
         }
 
         function agregado(){
@@ -1210,7 +1210,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                         location.reload();
                         recargar();
                         f3()
-                          
+
 
                 }
             });
@@ -1230,7 +1230,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                     $('#modalEspecificarMatricula').modal('hide');
                         recargar();
                         f3()
-                        location.reload();    
+                        location.reload();
                 }
             });
         }
@@ -1247,7 +1247,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                 location.reload;
                 }
             });
-            
+
         }
 
         function recargar()
@@ -1259,17 +1259,17 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
 
     function resetbtn()
     {
-        document.getElementById('monto_matricula').value=""; 
-        document.getElementById('cantidad').value=""; 
-        document.getElementById('pago_mensual').value=""; 
-        document.getElementById('select_matriculas').value=0; 
-    }   
-    
-    
+        document.getElementById('monto_matricula').value="";
+        document.getElementById('cantidad').value="";
+        document.getElementById('pago_mensual').value="";
+        document.getElementById('select_matriculas').value=0;
+    }
+
+
 
 
     function VerMatricula_especifica(id_matriculas_detalle){
-         
+
          openLoading();
          document.getElementById("formulario-VerMatriculaEsp").reset();
          $("#matrizVerMatriculasEsp tbody tr").remove();
@@ -1281,7 +1281,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                     closeLoading();
                     console.log(response);
                     if(response.data.success === 1){
-                    
+
                         if(response.data.listado.length!=0){//*** If para saber si la matrícula ya fue específicada */
 
                         $('#modalVerMatriculaEsp').css('overflow-y', 'auto');
@@ -1289,21 +1289,21 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
 
                         //****  Cargar información editar matrícula detalle específico  ****//
                         var infodetalle = response.data.listado;
-                
+
                         var caracteristica = response.data.mdetalle.nombre;
                         var id_de_matricula = response.data.mdetalle.id_matriculas;
-                        
+
                         if(id_de_matricula=='2'){
                             $('#seccionAlertas').hide();
                         }else{
                             $('#seccionAlertas').show();
                             }
 
-                        document.getElementById('nombre_matricula').innerHTML=caracteristica; 
-                        document.getElementById('id_de_matricula').value=id_de_matricula; 
+                        document.getElementById('nombre_matricula').innerHTML=caracteristica;
+                        document.getElementById('id_de_matricula').value=id_de_matricula;
 
                         for (var i = 0; i < infodetalle.length; i++) {
-                 
+
 
                             var markup = "<tr id='"+infodetalle[i].id+"'>"+
 
@@ -1318,7 +1318,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                                 "<td align='center'>"+
                                     infodetalle[i].num_serie+
                                 "</td>"+
-                                
+
                                 "<td align='center'>"+
                                     infodetalle[i].direccion+
                                 "</td>"+
@@ -1330,10 +1330,10 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                                 "</tr>";
 
                             $("#matrizVerMatriculasEsp tbody").append(markup);
-                            
+
                             }//*Cierre de for
-                            
-                               
+
+
 
                         }else{
                                 toastr.warning('Debe específicar primero la matrícula en la sección [Específicar matrículas].');
@@ -1341,11 +1341,11 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                              }//*Cierre de if
 
                         //****  /. Cargar información editar matrícula detalle específico  ****//
-                     
+
                     }else{
                         toastr.error('Información solicitada no fue encontrada.');
                         }
-                    
+
                 })
                 .catch((error) => {
                     closeLoading();
@@ -1353,7 +1353,7 @@ var nRegistro = $('#matrizMatriculas >tbody >tr').length;
                 });
 
  }//**cierre de función */
-     
+
 </script>
 
 @endsection

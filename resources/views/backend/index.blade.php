@@ -24,15 +24,16 @@
  <body class="sidebar-mini sidebar-closed sidebar-collapse" style="height: auto;">
  -->
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini" style=" overflow: hidden;">
 <div class="wrapper">
     @include("backend.menus.navbar")
     @include("backend.menus.sidebar")
 
-    <div class="content-wrapper" style=" background-color: #fff;">
+
+    <div class="content-wrapper" style=" background-color: #fff; ">
         <!-- redireccionamiento de vista -->
 
-        <iframe style="width: 100%; resize: initial; overflow: hidden; min-height: 83vh" frameborder="0"  scrolling="" id="frameprincipal" src="{{ route($ruta) }}" name="frameprincipal">
+        <iframe style="vertical-align: bottom; width: 100%; resize: initial; overflow: hidden; min-height: 96vh" id="frameprincipal" src="{{ route($ruta) }}" name="frameprincipal">
         </iframe>
 
     </div>

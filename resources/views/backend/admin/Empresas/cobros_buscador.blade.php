@@ -13,7 +13,7 @@
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
-  
+
 <style>
 
         #tres {
@@ -144,12 +144,12 @@
     transform: rotate(135deg);
     font-size: 25px;
 }
-       
+
 </style>
-@stop    
+@stop
 
 <!-- Inicia content-wrapper-->
-<div class="content-wrapper" style="display: none" id="divcontenedor">
+<div style="display: none; padding-bottom:30px;" id="divcontenedor">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -179,20 +179,20 @@
     <!-- Inicia Contenido-->
     <div class="col-md-6" style="width: 95%; height:50%; margin: 0 auto;">
         <div class="input-group mb-3">
-            <select 
-            required 
-            onchange="buscar_obligaciones_tributarias()" 
-            class="form-control selectpicker show-tick" 
-            data-style="btn btn-outline-success"  
-            data-show-subtext="false" 
-            data-live-search="true" 
-            id="select-contribuyente" 
+            <select
+            required
+            onchange="buscar_obligaciones_tributarias()"
+            class="form-control selectpicker show-tick"
+            data-style="btn btn-outline-success"
+            data-show-subtext="false"
+            data-live-search="true"
+            id="select-contribuyente"
             title="Seleccione un contribuyente."
             >
                 @foreach($contribuyentes as $contribuyente)
                   <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}&nbsp;(&nbsp;DUI:&nbsp;{{ $contribuyente->dui }}&nbsp;)</option>
-                @endforeach 
-            </select> 
+                @endforeach
+            </select>
           <div class="input-group-append">
             <label class="input-group-text"  for="inputGroupSelect02"><i class="fas fa-search"></i>&nbsp;Buscar </label>
           </div>
@@ -204,14 +204,14 @@
  <!-- Finaliza Contenido card-project-->
 
 <!-- Inicia Contenido IMG-->
-    <div class="card" style="margin: 5 auto;width: 98%;">
-      <div class="progress" style="margin: 0 auto;width: 100%;height:5px;">
+    <div class="card" style="margin: 5px auto;width: 98%;">
+      <div class="progress" style="margin: 0 auto;width: 100%; height:5px;">
         <div class="progress-bar bg-secondary" role="progressbar" style="width:10%; height:100%;-webkit-border-radius: 1px 0 0 0; border-radius: 5px 0 0 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         </div>
       </div>
         <div class="card-body"  >
-        <!-- Inicia contenido-->  
-          <img src="{{ asset('/img/063.svg') }}" id="img_contribuyente" style="display: block;margin: 0px auto;width: 30%; height:30%;" >
+        <!-- Inicia contenido-->
+          <img src="{{ asset('/img/063.svg') }}" id="img_contribuyente" style="display: block; margin: 0px auto;width: 30%; height:30%;" >
           <!--Tarjeta para empresas-->
           <div class="card border-primary mb-3" id="tarjeta_empresas_registradas">
                     <div class="card-header"  style="background-color:#14A3D9; color: #FFFFFF;">
@@ -221,8 +221,8 @@
                           <!--Tabla 12-->
                           <table class="table" id="matriz_ver_empresas" style="border: 100px;" data-toggle="table">
                                     <thead>
-                                    <tr id="tbempresa">      
-                                      <td style="width: 15%; text-align: center;font-weight: 700;">Opciones</td>                     
+                                    <tr id="tbempresa">
+                                      <td style="width: 15%; text-align: center;font-weight: 700;">Opciones</td>
                                       <td style="width: 25%; text-align: center;font-weight: 700;">Nombre</td>
                                       <td style="width: 15%; text-align: center;font-weight: 700;">Giro Comercial</td>
                                       <td style="width: 15%; text-align: center;font-weight: 700;">Estado</td>
@@ -231,7 +231,7 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                
+
                                     </tbody>
                           </table>
                       </div>
@@ -246,8 +246,8 @@
                           <!--Tabla 12-->
                           <table class="table" id="matriz_ver_buses" style="border: 100px;" data-toggle="table">
                                     <thead>
-                                      <tr>  
-                                        <th style="width: 15%; text-align: center;font-weight: 700;">Opciones</th>                         
+                                      <tr>
+                                        <th style="width: 15%; text-align: center;font-weight: 700;">Opciones</th>
                                         <th style="width: 25%; text-align: center;font-weight: 700;">Empresa</th>
                                         <th style="width: 15%; text-align: center;font-weight: 700;">Cantidad</th>
                                         <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
@@ -255,7 +255,7 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                
+
                                     </tbody>
                           </table>
                       </div>
@@ -270,8 +270,8 @@
                           <!--Tabla 12-->
                           <table class="table" id="matriz_ver_rotulos" style="border: 100px;" data-toggle="table">
                                     <thead>
-                                    <tr>  
-                                      <th style="width: 15%; text-align: center;font-weight: 700;">Opciones</th>                         
+                                    <tr>
+                                      <th style="width: 15%; text-align: center;font-weight: 700;">Opciones</th>
                                       <th style="width: 25%; text-align: center;font-weight: 700;">Rótulo</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Cantidad</th>
                                       <th style="width: 15%; text-align: center;font-weight: 700;">Estado</th>
@@ -279,7 +279,7 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                
+
                                     </tbody>
                           </table>
                       </div>
@@ -341,8 +341,8 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-  document.getElementById("divcontenedor").style.display = "block"; 
-  
+  document.getElementById("divcontenedor").style.display = "block";
+
   $('#tarjeta_empresas_registradas').hide();
   $('#tarjeta_buses_registradas').hide();
   $('#tarjeta_rotulos_registrados').hide();
@@ -361,14 +361,14 @@ function buscar_obligaciones_tributarias(){
          $("#matriz_ver_rotulos tbody tr").remove();
 
           var id_contribuyente = document.getElementById('select-contribuyente').value;
-          
+
           var formData = new FormData();
           formData.append('id_contribuyente', id_contribuyente);
-          
+
           axios.post(url+'/buscar/obligaciones_tributarias', formData, {
            })
          .then((response) => {
-        
+
         if(response.data.success === 2)
         {
             $('#constancia_simple').show();
@@ -378,12 +378,12 @@ function buscar_obligaciones_tributarias(){
 
         if(response.data.success === 1)
                 {
-                    
+
                     Swal.fire({
                           position:'top-end',
                           icon: 'success',
                           title: '¡Información encontrada!',
-                          showConfirmButton: false,                     
+                          showConfirmButton: false,
                         })
                         $('#img_contribuyente').hide();
                         $('#constancia_simple').hide();
@@ -398,7 +398,7 @@ function buscar_obligaciones_tributarias(){
                         }else{
                                 $('#tarjeta_empresas_registradas').show();
                             }
-                        
+
                         if(response.data.rotulos_reg==0){
                           $('#tarjeta_rotulos_registrados').hide();
                         }else{
@@ -411,23 +411,23 @@ function buscar_obligaciones_tributarias(){
                         }else{
                             $('#contenedor').hide();
                              }
-                        
+
 
                             //**** Cargar información empresas registradas ****//
                             var infodetalle = response.data.empresas_registradas;
-                            
-                            
+
+
                             for (var i = 0; i < infodetalle.length; i++) {
 
                             var markup = `<tr id="${infodetalle[i].id}">
 
-                            <td align="center">               
+                            <td align="center">
                             <button type="button" class="btn btn-primary btn-xs" onclick="VerEmpresa(${infodetalle[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;<b>VER</b>&nbsp;&nbsp;</button>
                             </td>
 
                             <td align="center">
                             <b>${infodetalle[i].nombre}</b>
-                            </td>                     
+                            </td>
 
                             <td align="center">
                             ${infodetalle[i].nombre_giro}
@@ -448,7 +448,7 @@ function buscar_obligaciones_tributarias(){
                            </tr>`;
 
                             $("#matriz_ver_empresas tbody").append(markup);
-                            
+
                             }//*Cierre de for empresas
 
                             //****  Cargar información buses registradas ****//
@@ -457,21 +457,21 @@ function buscar_obligaciones_tributarias(){
                             for (var i = 0; i < infodetalle_bus.length; i++) {
 
                              var markup = `<tr id="${infodetalle_bus[i].id}">
-                            
-                                <td align="center">               
+
+                                <td align="center">
                                       <button type="button" class="btn btn-success btn-xs" onclick="VerBuses(${infodetalle_bus[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;<b>VER</b>&nbsp;&nbsp;</button>
                                 </td>
 
                                 <td align="center">
                                 ${infodetalle_bus[i].nom_empresa}
                                 </td>
-                            
+
                                 <td align="center">
                                 ${infodetalle_bus[i].cantidad}
                                 </td>
-                                
+
                                 <td align="center">
-                        
+
                                 ${infodetalle_bus[i].id_estado_bus!=1? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-danger">Cerrado</span>'}
 
                                 </td>
@@ -483,7 +483,7 @@ function buscar_obligaciones_tributarias(){
                                 </tr>`;
 
                             $("#matriz_ver_buses tbody").append(markup);
-                            
+
                             }//*Cierre de for buses
 
                             //****  Cargar información buses registradas ****//
@@ -492,21 +492,21 @@ function buscar_obligaciones_tributarias(){
                             for (var i = 0; i < infodetalle_rotulo.length; i++) {
 
                              var markup = `<tr id="${infodetalle_rotulo[i].id}">
-                            
-                                <td align="center">               
+
+                                <td align="center">
                                       <button type="button" class="btn btn-danger btn-xs" onclick="VerRotulos(${infodetalle_rotulo[i].id})">&nbsp;&nbsp;<i class="fas fa-search"></i>&nbsp;&nbsp;<b>VER</b>&nbsp;&nbsp;</button>
                                 </td>
 
                                 <td align="center">
                                 ${infodetalle_rotulo[i].nom_empresa}
                                 </td>
-                            
+
                                 <td align="center">
                                 ${infodetalle_rotulo[i].cantidad_rotulos}
                                 </td>
-                                
+
                                 <td align="center">
-                        
+
                                 ${infodetalle_rotulo[i].id_estado_rotulo!=1? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-danger">Cerrado</span>'}
 
                                 </td>
@@ -518,7 +518,7 @@ function buscar_obligaciones_tributarias(){
                                 </tr>`;
 
                             $("#matriz_ver_rotulos tbody").append(markup);
-                            
+
                             }//*Cierre de for rótulos
 
 
@@ -541,7 +541,7 @@ function buscar_obligaciones_tributarias(){
             })
          .catch((error) =>{
                             toastr.error('Error al buscar la obligación triburaria');
-                           });                 
+                           });
 }
 function Generar_solvencia(){
     var id = document.getElementById('select-contribuyente').value;
@@ -583,9 +583,9 @@ function modalMensaje(titulo, mensaje)
                 if (result.isConfirmed) {
 
                 }
-            });           
+            });
 }
 
 </script>
 
-@endsection 
+@endsection

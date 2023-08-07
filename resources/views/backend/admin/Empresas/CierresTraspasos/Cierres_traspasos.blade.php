@@ -30,7 +30,7 @@ function f4(){
   var hayTraspaso={{$Consul_traspasos}};
 
   if (hayTraspaso==1){
-         $('#historico_traspaso_emp').show(); 
+         $('#historico_traspaso_emp').show();
     }else{
         $('#historico_traspaso_emp').hide();
         }
@@ -56,7 +56,7 @@ function f7(){
   }
 
 function verhistorialTraspasos(){
-  
+
   $('#Div_historico').show();
   $('#btn_ocultar_historial_traspasos').show();
   $('#btn_ver_historial_traspasos').hide();
@@ -69,7 +69,7 @@ function OcultarhistorialTraspasos(){
 }
 
 function verhistorialCierres(){
- 
+
   $('#Div_historico_cierres').show();
   $('#btn_ocultar_historial_cierres').show();
   $('#btn_ver_historial_cierres').hide();
@@ -95,7 +95,7 @@ function OcultarhistorialCierres(){
 </style>
 <!-----------------------------------Inicia Contenido ------------------------------------------->
 
-<div class="content-wrapper" style="display: none" id="divcontenedor">
+<div class=" " style="display: none" id="divcontenedor">
 
     <section class="content-header">
         <div class="container-fluid">
@@ -140,7 +140,7 @@ function OcultarhistorialCierres(){
                                 <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
                                 </div>
                             </div>
-                            
+
                             <div class="card-body">
                                 <div class="row"><!-- /.ROW2 -->
 
@@ -156,36 +156,36 @@ function OcultarhistorialCierres(){
                                         <div class="form-group">
                                             <!-- Select estado - live search -->
                                             <div class="input-group mb-9">
-                                                    <select 
+                                                    <select
                                                     required
-                                                    class="form-control" 
-                                                    data-style="btn btn-outline-success"  
-                                                    data-show-subtext="false" 
-                                                    data-live-search="true" 
-                                                    id="select-contribuyente-traspaso" 
-                                                    
+                                                    class="form-control"
+                                                    data-style="btn btn-outline-success"
+                                                    data-show-subtext="false"
+                                                    data-live-search="true"
+                                                    id="select-contribuyente-traspaso"
+
                                                     >
                                                     @foreach($contribuyentes as $contribuyente)
                                                     <option value="{{ $contribuyente->id }}"> {{ $contribuyente->nombre }}&nbsp;{{ $contribuyente->apellido }}</option>
                                                     @endforeach
                                                     </select>
                                             </div>
-                                            <!-- finaliza select estado-->  
+                                            <!-- finaliza select estado-->
                                     </div><!-- /.col-md-3 -->
                                     </div><!-- /.form-group -->
                                     <!-- /.form-group -->
                                     <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>A PARTIR DEL DÍA:</label>                          
+                                        <label>A PARTIR DEL DÍA:</label>
                                     </div>
                                     </div>
-                                <!-- /.form-group --> 
+                                <!-- /.form-group -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="date" id="Apartirdeldia" required class="form-control" >
                                     </div>
                                     </div>
-                                <!-- /.form-group --> 
+                                <!-- /.form-group -->
                                 </div><!--  /.ROW2 -->
 
                                 <!-- /.form-group -->
@@ -193,7 +193,7 @@ function OcultarhistorialCierres(){
                                 <!-- /.form-group -->
                                 <div class="col-md-6">
                                 <div class="form-group">
-                                
+
                                     <!-- Botón Imprimir Traspaso-->
                                     <br>
                                     <button type="button"  onclick="ImprimirTraspaso({{$empresa->id}})" id="imp_traspaso" class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
@@ -207,7 +207,7 @@ function OcultarhistorialCierres(){
                                 <div class="form-group">
                                     <!-- Botón Guardar Traspaso -->
                                         <br>
-                                        <button type="button"  onclick="guardarTraspaso({{$empresa->id}})" 
+                                        <button type="button"  onclick="guardarTraspaso({{$empresa->id}})"
                                         class="btn btn-warning btn-sm float-right" ><i class="fas fa-save"></i>
                                         &nbsp; Guardar Traspaso &nbsp;</button>
                                     <!-- /.Botón Guardar Traspaso -->
@@ -217,7 +217,7 @@ function OcultarhistorialCierres(){
                                 </div><!-- /.ROW4 -->
                                 <hr>
                                 <div class="row" id="historico_traspaso_emp"><!-- /.ROW5 -->
-                               
+
                                     <div class="col-md-6">
                                     <div class="form-group">
                                         <h5>HISTÓRICO</h5>
@@ -226,13 +226,13 @@ function OcultarhistorialCierres(){
                                     <div class="col-md-6">
                                     <div class="form-group">
                                         <!-- Botón ver historial de traspasos -->
-                                            <button type="button" id="btn_ver_historial_traspasos"   onclick="verhistorialTraspasos()" 
+                                            <button type="button" id="btn_ver_historial_traspasos"   onclick="verhistorialTraspasos()"
                                             class="btn btn-dark btn-sm float-right" >
                                             <i class="fas fa-history"></i>
                                             &nbsp; Ver historial de traspasos &nbsp;</button>
                                         <!-- /.Botón ver historial de traspasos -->
                                         <!-- Botón ver historial de traspasos -->
-                                            <button type="button" id="btn_ocultar_historial_traspasos"  onclick="OcultarhistorialTraspasos()" 
+                                            <button type="button" id="btn_ocultar_historial_traspasos"  onclick="OcultarhistorialTraspasos()"
                                             class="btn btn-secondary btn-sm float-right" >
                                             <i class="fas fa-eye-slash"></i>
                                             &nbsp; Ocultar historial de traspasos &nbsp;</button>
@@ -244,10 +244,10 @@ function OcultarhistorialCierres(){
                                         <div class="col-auto  p-12 text-center" id="tabla_traspasos"></div>
                                     </div>
                                   </div>
-                        
+
                                 </div><!-- /.ROW5 -->
 
-                            </div> 
+                            </div>
                         </div>
                         </div>
                         </div>
@@ -262,7 +262,7 @@ function OcultarhistorialCierres(){
                                 <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
                                 </div>
                             </div>
-                                
+
                             <div class="card-body">
 
                             <div class="row"><!-- /.ROW2 -->
@@ -279,37 +279,37 @@ function OcultarhistorialCierres(){
                                     <div class="form-group">
                                     <!-- Select estado - live search -->
                                         <div class="input-group mb-9">
-                                            <select 
+                                            <select
                                             required
                                             class="form-control"
                                             data-style="btn-success"
-                                            data-show-subtext="true" 
-                                            data-live-search="true"   
-                                            id="select-estado_empresa" 
+                                            data-show-subtext="true"
+                                            data-live-search="true"
+                                            id="select-estado_empresa"
                                             title="-- Seleccione el estado  --"
                                             >
                                                 @foreach($estadoempresas as $estado)
                                                 <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
-                                                @endforeach 
+                                                @endforeach
                                             </select>
                                         </div>
-                                    <!-- finaliza select estado-->  
+                                    <!-- finaliza select estado-->
                                 </div><!-- /.col-md-3 -->
                             </div><!-- /.form-group -->
                             <!-- /.form-group -->
                             <!-- /.form-group -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>A PARTIR DEL DÍA:</label>                          
+                                    <label>A PARTIR DEL DÍA:</label>
                                 </div>
                                 </div>
-                            <!-- /.form-group --> 
+                            <!-- /.form-group -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="date" id="Cierre_Apartirdeldia" required class="form-control" >
                                 </div>
                                 </div>
-                            <!-- /.form-group --> 
+                            <!-- /.form-group -->
 
                             </div><!--  /.ROW2 -->
 
@@ -318,7 +318,7 @@ function OcultarhistorialCierres(){
                             <!-- /.form-group -->
                             <div class="col-md-6">
                             <div class="form-group">
-                                
+
                             <!-- Botón Imprimir Cierre -->
                                  <br>
                                 <button type="button"  onclick="ImprimirCierre({{$empresa->id}})" id="imp_cierre"  class="btn btn-default btn-sm" ><i class="fa fa-print"></i>
@@ -341,7 +341,7 @@ function OcultarhistorialCierres(){
                             </div><!-- /.ROW3 -->
                             <hr>
                             <div class="row" id="historico_cierres_emp"><!-- /.ROW4 -->
-                               
+
                                <div class="col-md-6">
                                <div class="form-group">
                                    <h5>HISTÓRICO</h5>
@@ -350,13 +350,13 @@ function OcultarhistorialCierres(){
                                <div class="col-md-6">
                                <div class="form-group">
                                    <!-- Botón ver historial de cierres y reaperturas -->
-                                       <button type="button" id="btn_ver_historial_cierres"   onclick="verhistorialCierres()" 
+                                       <button type="button" id="btn_ver_historial_cierres"   onclick="verhistorialCierres()"
                                        class="btn btn-dark btn-sm float-right" >
                                        <i class="fas fa-history"></i>
                                        &nbsp; Ver historial &nbsp;</button>
                                    <!-- /.Botón ver historial de cierres y reaperturas -->
                                    <!-- Botón ver historial de cierres y reaperturas -->
-                                       <button type="button" id="btn_ocultar_historial_cierres"  onclick="OcultarhistorialCierres()" 
+                                       <button type="button" id="btn_ocultar_historial_cierres"  onclick="OcultarhistorialCierres()"
                                        class="btn btn-secondary btn-sm float-right" >
                                        <i class="fas fa-eye-slash"></i>
                                        &nbsp; Ocultar historial &nbsp;</button>
@@ -368,7 +368,7 @@ function OcultarhistorialCierres(){
                                     <div class="col-auto  p-12 text-center" id="tabla_cierres"></div>
                                </div>
                              </div>
-                   
+
                            </div><!-- /.ROW4 -->
 
                           </div>
@@ -376,14 +376,14 @@ function OcultarhistorialCierres(){
                        </div>
                      </div>
                 </section>
-    <!-----------------------------------Termina Contenido ------------------------------------------->          
+    <!-----------------------------------Termina Contenido ------------------------------------------->
                             <div class="card-footer">
                                 <button type="button" class="btn btn-default" onclick="VerEmpresa({{$empresa->id}})"><i class="fas fa-chevron-circle-left"></i> &nbsp;Volver</button>
                             </div>
                     </div>
                 </div>
             </div>
-        </div>      
+        </div>
     </section>
 </div>
 
@@ -405,7 +405,7 @@ function OcultarhistorialCierres(){
 
     <script type="text/javascript">
 
-        $(document).ready(function(){   
+        $(document).ready(function(){
             var id = "{{$empresa->id}}";
 
             //**Para tabla cierres */
@@ -422,17 +422,17 @@ function OcultarhistorialCierres(){
         function resolucion_traspaso_historico(id){
             window.open("{{ URL::to('/admin/traspaso_empresas_historico/pdf')}}/"+ id)
         }
-        
+
         /* RUTA CON EL DOMPDF*/
         /* function resolucion_cierre_historico(id){
             window.open("{{ URL::to('/admin/cierres_empresas_historico/pdf')}}/"+ id)
         } */
-        
+
         /** RUTA CON EL MPDF      NOTA: comentar si se descomente el de Dompdf**/
         function resolucion_cierre_historico(id){
             window.open("{{ URL::to('/admin/cierres_empresas_historico/m/pdf')}}/"+ id)
         }
-        
+
         function ImprimirTraspaso(id)
         {
                 window.open("{{ URL::to('/admin/traspaso_empresas/pdf') }}/" + id );
@@ -457,13 +457,13 @@ function OcultarhistorialCierres(){
                 showCancelButton: false,
                 confirmButtonColor: '#28a745',
                 confirmButtonText: 'Aceptar'
-            }).then((result) => 
+            }).then((result) =>
             {
-                if (result.isConfirmed) 
+                if (result.isConfirmed)
                 {
 
                 }
-            });   
+            });
         }
 
         function guardarTraspaso(id){
@@ -489,17 +489,17 @@ function OcultarhistorialCierres(){
 
             axios.post(url+'/empresas/show/traspaso', formData, {
             })
-            .then((response) => {          
+            .then((response) => {
                 closeLoading();
 
-                if (response.data.success === 1) 
-                    
+                if (response.data.success === 1)
+
                     {
                         toastr.success('¡Propietario actualizado!');
                         f6();
                         recargarTraspasos();
                         document.getElementById('Apartirdeldia').value='';
-                
+
                     }
                     else if(response.data.success === 3){
 
@@ -510,7 +510,7 @@ function OcultarhistorialCierres(){
                             toastMensaje('Error al actualizar');
 
                         }
-            
+
             })
             .catch((error) => {
                 toastr.error('Error al actualizar empresa');
@@ -527,12 +527,12 @@ function OcultarhistorialCierres(){
               console.log(response);
                     closeLoading();
                     if(response.data.success === 1){
-                        
+
 
                         document.getElementById("select-contribuyente-traspaso").options.length = 0;
                         document.getElementById("select-estado_empresa").options.length = 0;
 
-                        
+
                         $.each(response.data.contribuyente, function( key, val ){
                             if(response.data.idcont == val.id){
                                 $('#select-contribuyente-traspaso').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'&nbsp;'+val.apellido+'</option>');
@@ -547,7 +547,7 @@ function OcultarhistorialCierres(){
                             }else{
                                 $('#select-estado_empresa').append('<option value="' +val.id +'">'+val.estado+'</option>');
                             }
-                        }); 
+                        });
 
                       }else{
                         toastr.error('Información no encontrada');
@@ -585,11 +585,11 @@ function OcultarhistorialCierres(){
 
             axios.post(url+'/empresas/show/cierre', formData, {
             })
-            .then((response) => {          
+            .then((response) => {
                 closeLoading();
 
-                if (response.data.success === 1) 
-                   
+                if (response.data.success === 1)
+
                    {
                        toastr.success('¡Estado de la empresa actualizado!');
                        f7();
@@ -601,12 +601,12 @@ function OcultarhistorialCierres(){
                     modalMensaje('Aviso', 'No ha cambiado el estado de la empresa, debe seleccionar otro.');
                     return;
                     }
-                      else 
+                      else
                             {
                                 toastMensaje('Error al actualizar');
-                                
+
                             }
-             
+
             })
             .catch((error) => {
                 toastr.error('Error al actualizar empresa');
@@ -635,5 +635,5 @@ function OcultarhistorialCierres(){
 </script>
 
 
-  
+
 @endsection

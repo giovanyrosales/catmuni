@@ -3,7 +3,7 @@
 @section('content-admin-css')
     <link href="{{ asset('css/adminlte.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" /> 
+    <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
 @stop
 <style>
     table{
@@ -13,21 +13,20 @@
 </style>
 
 <!-- Contenido Frame Principal -->
-<div id="divcontenedor" style="display: none">
+<div id="divcontenedor" style="display: none; padding-bottom:30px;">
     <section class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1> </h1>
-          </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                            <li class="breadcrumb-item active">Listado de contribuyentes</li>
-                            </ol>
-                        </div>
-        </div>
-        <br>
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1> </h1>
+              </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                                <li class="breadcrumb-item active">Listado de contribuyentes</li>
+                                </ol>
+                            </div>
+            </div>
             <button type="button" class="btn btn-success btn-sm" onclick="location.href='{{ url('/admin/nuevo/contribuyentes/Crear') }}'">
                 <i class="fas fa-pencil-alt"></i>
                 Nuevo Contribuyente
@@ -35,45 +34,30 @@
       </div>
     </section>
     <section class="content">
-    <div class="container-fluid">
+        <div class="container-fluid">
         <!-- CAJA -->
-        <form class="form-horizontal" id="form1">
-        <div class="card card-green">
-          <div class="card-header">
-            <h3 class="card-title"> <i class="fas fa-th-list"></i> &nbsp;Lista de contribuyentes</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
-            </div>
+            <form class="form-horizontal" id="form1">
+                <div class="card card-green">
+                    <div class="card-header">
+                        <h3 class="card-title"> <i class="fas fa-th-list"></i> &nbsp;Lista de contribuyentes</h3>
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <!-- /.col -->
+                        <div id="tablaDatatable">
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </form>
+            <!-- /form -->
         </div>
-    <!-- /.card-header -->
-            <div class="card-body">
-            <div class="row">
-            <div class="col-md-6">
-            </div>
-            </div>
-
-            <!-- Aqui termina-->
-            <!-- /.col -->
-
-            <div id="tablaDatatable"></div>
-            </div>
-
-            </div>
-          <!-- /.row -->
-          </div>
-         <!-- /.card-body -->
-        <div class="card-footer">
-           
-        </div>
-        <!-- /.card-footer -->
-         </div>
-      <!-- /.card -->
-      </form>
-      <!-- /form -->
-      </div>
-    <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
     </section>
 
  <!-- /Modal Actualizar contribuyente-->
@@ -98,7 +82,7 @@
                           <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                           <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-remove"></i></button>
                         </div>
-                      </div>     
+                      </div>
                 <!--inicia los campos del formulario-->
                  <!-- /.card-header -->
                  <div class="card-body">
@@ -128,12 +112,12 @@
                     <label>Dirección:</label>
                     <input type="text" name="direccion" id="direccion-editar" class="form-control" placeholder="Dirección de la empresa">
                   </div>
-                <!-- /.form-group --> 
+                <!-- /.form-group -->
                 <div class="form-group">
                     <label>Correo Electrónico:</label>
                     <input type="email" name="email" id="email-editar" class="form-control" placeholder="Correo@dominio.com"  >
                   </div>
-                <!-- /.form-group -->  
+                <!-- /.form-group -->
               </div>
                 <!-- Inicia Segunda Columna de campos-->
               <!-- /.col -->
@@ -163,7 +147,7 @@
                   </div>
                 </div>
              </div>
-            
+
               <!--finaliza los campos del formulario-->
                      </div>
                      </form>
@@ -194,13 +178,13 @@
                     </button>
                 </div>
                <div class="modal-body">
-                    <form id="formulario-ver">         
+                   <form id="formulario-ver">
                 <!--inicia los campos del formulario ver-->
                  <!-- /.card-header -->
                  <div class="card-body">
                   <div class="row">
                         <div class="col-md-6">
-                        <div class="form-group"> 
+                        <div class="form-group">
                          <label>Nombre:</label>
                         <input type="text" name="nombre" id="nombre-ver" disabled class="form-control" >
                         <input type="hidden" name="id" id="id-ver"  >
@@ -224,12 +208,12 @@
                     <label>Dirección:</label>
                     <input type="text" name="direccion" id="direccion-ver" disabled class="form-control">
                   </div>
-                <!-- /.form-group --> 
+                <!-- /.form-group -->
                 <div class="form-group">
                     <label>Correo Electrónico:</label>
                     <input type="email" name="email" id="email-ver" disabled class="form-control" >
                   </div>
-                <!-- /.form-group -->  
+                <!-- /.form-group -->
               </div>
                 <!-- Inicia Segunda Columna de campos-->
               <!-- /.col -->
@@ -257,20 +241,20 @@
                   </div>
                 </div>
              </div>
-            
+
               <!--finaliza los campos del formulario-->
                      </div>
                      </form>
                     </div>
-                    <div class="card-footer">
-                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i> &nbsp;Cerrar</button>
-                    </div>
+                        <div class="card-footer">
+                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times-circle"></i> &nbsp;Cerrar</button>
+                        </div>
                    </div>
                   </div>
                 </div>
               </div>
            </div>
-           
+
 
         <!--Finaliza Modal ver datos del contribuyente -->
 
@@ -382,13 +366,13 @@
                     }else{
                         toastr.error('Información no encontrada');
                     }
-                    
+
                 })
                 .catch((error) => {
                     closeLoading();
                     toastr.error('Información no encontrada');
                 });
-       
+
             }
 
             function actualizar()
@@ -417,7 +401,7 @@
                 formData.append('telefono', telefono);
                 formData.append('email', email);
                 formData.append('fax', fax);
-         
+
             axios.post(url+'/Contribuyentes/editar', formData, {
             })
 
@@ -425,8 +409,8 @@
                   ///  console.log(response);
                     closeLoading()
 
-                   if (response.data.success === 1) 
-                   
+                   if (response.data.success === 1)
+
                     {
                       Swal.fire({
                           icon: 'success',
@@ -439,14 +423,14 @@
                                  recargar();
                         }
                       });
-                                
+
                     }
-                    else 
+                    else
                     {
                         Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: '¡Error al actualizar!', 
+                          text: '¡Error al actualizar!',
                         })
                         $('#modalEditar').modal('hide');
                                recargar();
@@ -457,7 +441,7 @@
                     toastMensaje('error', 'Error');
                 });
         }
- 
+
     //se recibe el ID del contribuyente a eliminar
 
             function modalEliminar(id)
@@ -468,7 +452,7 @@
 
         function eliminarC(){
             openLoading()
-        
+
             // se envia el ID del contribuyente
             var id = document.getElementById('idborrar').value;
 
@@ -480,7 +464,7 @@
                 .then((response) => {
                     closeLoading()
                     $('#modalEliminar').modal('hide');
-                    
+
                     if(response.data.success === 1){
                       Swal.fire({
                           icon: 'success',
@@ -488,30 +472,30 @@
                           showConfirmButton: true,
                       }).then((result) => {
                         if (result.isConfirmed) {
- 
+
                                  recargar();
                         }
                       });
                     }else if(response.data.success===2){
-                       
+
                       Swal.fire({
                           icon: 'error',
                           title: 'Petición denegada!',
-                          text: 'El contribuyente tiene obligaciones tributarias y no se puede eliminar mientras no se desligue de ellas.', 
+                          text: 'El contribuyente tiene obligaciones tributarias y no se puede eliminar mientras no se desligue de ellas.',
                           showConfirmButton: true,
                         }).then((result) => {
-                        if (result.isConfirmed) 
+                        if (result.isConfirmed)
                         {
                           closeLoading();
                         }
                       });
                     }
                 })
-                
+
                 .catch(function (error) {
                         closeLoading()
                         toastr.error("Error de Servidor!");
-                      }); 
+                      });
         }
 
 //funcion para ver la informacion del contribuyente
@@ -547,7 +531,7 @@
                     closeLoading();
                     toastr.error('Información no encontrada');
                 });
-       
+
             }
 
 </script>

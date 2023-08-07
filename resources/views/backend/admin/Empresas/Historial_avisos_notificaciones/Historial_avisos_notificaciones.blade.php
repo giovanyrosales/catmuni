@@ -9,7 +9,7 @@
     <link href="{{ asset('css/dataTables.bootstrap4.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" /> 
+    <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 @stop
 <style>
     table{
@@ -70,7 +70,7 @@
 
 </style>
 <!-- Inicia content-wrapper-->
-<div class="content-wrapper" style="display: none" id="divcontenedor">
+<div class=" " style="display: none" id="divcontenedor">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -98,9 +98,9 @@
   <div class="card-body">
 
                 <div class="row" style="display: flex;justify-content: center;">
-                  
+
                         <div class="col-lg-3 col-6">
-            
+
                         <div class="small-box bg-info">
                             <div class="inner" style="text-align: center;">
                                 <h3><span class="badge badge-pill badge-light">{{$cantidad_avisos}}</span></h3>
@@ -112,9 +112,9 @@
                             <a onclick="cargar_historico_avisos()" class="small-box-footer" style="cursor: pointer">Cargar <i class="fas fa-arrow-circle-down"></i></a>
                             </div>
                         </div>
-            
+
                         <div class="col-lg-3 col-6" >
-            
+
                         <div class="small-box bg-primary">
                             <div class="inner" style="text-align: center;">
                                 <h3><span class="badge badge-pill badge-light">{{$cantidad_notificaciones}}</span></h3>
@@ -139,9 +139,9 @@
         </div>
       </div>
         <div class="card-body"  >
-        <!-- Inicia contenido--> 
-        <!--<img src="{{ asset('/img/notificacion.gif') }}" id="img_notificacion" style="display: block;margin: 0px auto;width: 15%; height:15%;" >--> 
-        <img src="{{ asset('/img/notificacion.png') }}" id="img_notificacion" style="display: block;margin: 0px auto;width: 25%; height:25%;" > 
+        <!-- Inicia contenido-->
+        <!--<img src="{{ asset('/img/notificacion.gif') }}" id="img_notificacion" style="display: block;margin: 0px auto;width: 15%; height:15%;" >-->
+        <img src="{{ asset('/img/notificacion.png') }}" id="img_notificacion" style="display: block;margin: 0px auto;width: 25%; height:25%;" >
         <!-- Inclución de tabla -->
             <div class="m-0 row justify-content-center" id="div_historico_avisos">
                     <div class="col-auto  p-5 text-center" id="tablahistoricoavisos"></div>
@@ -212,7 +212,7 @@
 <script type="text/javascript">
 
     function cargar_historico_avisos()
-    { 
+    {
         $('#div_historico_avisos').show();
         $('#div_historico_notificaciones').hide();
         $('#img_notificacion').hide();
@@ -220,9 +220,9 @@
             $('#tablahistoricoavisos').load(ruta);
     }
 
-    
+
     function cargar_historico_notificaciones()
-    {   
+    {
         $('#div_historico_avisos').hide();
         $('#div_historico_notificaciones').show();
         $('#img_notificacion').hide();

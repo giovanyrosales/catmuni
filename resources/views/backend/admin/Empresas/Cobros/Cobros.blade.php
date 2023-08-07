@@ -13,7 +13,7 @@
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
-  
+
 <style>
 
 
@@ -75,30 +75,30 @@
   function f1_disabled()
   {
     if(document.getElementById('CheckMesas').checked){
-               
-          document.getElementById('fecha_hasta_donde_pagaraMesas').disabled=true; 
-              
+
+          document.getElementById('fecha_hasta_donde_pagaraMesas').disabled=true;
+
         }else{
-              document.getElementById('fecha_hasta_donde_pagaraMesas').disabled=false; 
+              document.getElementById('fecha_hasta_donde_pagaraMesas').disabled=false;
              }
 
     if(document.getElementById('CheckMaquinas').checked){
-               
-           document.getElementById('fecha_hasta_donde_pagaraMaquinas').disabled=true; 
-                   
+
+           document.getElementById('fecha_hasta_donde_pagaraMaquinas').disabled=true;
+
         }else{
-            document.getElementById('fecha_hasta_donde_pagaraMaquinas').disabled=false; 
+            document.getElementById('fecha_hasta_donde_pagaraMaquinas').disabled=false;
              }
 
-    
+
     if(document.getElementById('CheckSinfonolas').checked){
-               
-               document.getElementById('fecha_hasta_donde_pagaraSinfonolas').disabled=true; 
-                       
+
+               document.getElementById('fecha_hasta_donde_pagaraSinfonolas').disabled=true;
+
             }else{
-                document.getElementById('fecha_hasta_donde_pagaraSinfonolas').disabled=false; 
+                document.getElementById('fecha_hasta_donde_pagaraSinfonolas').disabled=false;
                  }
-    
+
   }//** FIN- funcion para desabilitar boton hasta donde pagará */
 
     function f1()
@@ -110,21 +110,21 @@
            $('#periodoMaquinas').hide();
            $('#periodoSinfonolas').hide();
            $('#periodoAparatos').hide();
-           $('#estado_de_cuentaIMP').hide(); 
+           $('#estado_de_cuentaIMP').hide();
            $('#estado_de_cuenta_licorIMP').hide();
            $('#estado_de_cuenta_aparatosIMP').hide();
            $('#estado_de_cuenta_sinfonolasIMP').hide();
            $('#estado_de_cuenta_maquinasIMP').hide();
            $('#estado_de_cuenta_mesasIMP').hide();
-         
+
           }
-      
+
 window.onload = f1;
 
 </script>
 
 <!-- Función para calcular el pago momentaneo------------------------------------------>
-<script> 
+<script>
 function info_cobros_matriculas()//*** Para recuperar los ID de las matriculas detalle */
 {
 var id_empresa='{{$empresa->id}}';
@@ -142,7 +142,7 @@ formData.append('id_empresa', id_empresa);
                   closeLoading();
 
                   if(response.data.success === 1){
-                    
+
                     //** Si la matricula es Mesas de billar */
                     if (response.data.id_matriculaReg===1)
                     {
@@ -158,7 +158,7 @@ formData.append('id_empresa', id_empresa);
                       }
 
                     //** Si la matricula es Maquinas Electrónicas */
-                    if (response.data.id_matriculaReg===3)   
+                    if (response.data.id_matriculaReg===3)
                     {
                         if(response.data.ultimo_cobroMaquinas!=null)
                         {
@@ -198,19 +198,19 @@ formData.append('id_empresa', id_empresa);
                             }
                      }//** FIn - Si la matricula es Aparatos Parlantes */
 
-                  }  
+                  }
               })
               .catch((error) => {
                   toastr.error('Error');
                   closeLoading();
-              }); 
+              });
 
         }//Termina funcion info_cobros_matriculas
 
 function calculo(id, valor)
 {
     /*Declaramos variables */
-  
+
     var fechaPagara=(document.getElementById('fecha_hasta_donde_pagara').value);
     var ultimo_cobro=(document.getElementById('ultimo_cobro').value);
     var tasa_interes=(document.getElementById('select_interes').value);
@@ -255,7 +255,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                   if(response.data.success ===0){
                     toastr.error('La fecha selecionada no puede ser menor o igual a la del último mes de pago.');
                     document.getElementById('hasta').innerHTML= '';
-                    document.getElementById('cant_meses').value='';      
+                    document.getElementById('cant_meses').value='';
                     document.getElementById('fondoFP_imp').innerHTML='$-';
                     document.getElementById('totalPago_imp').innerHTML='$-';
                     document.getElementById('multa_balanceImp').innerHTML='$-';
@@ -264,10 +264,10 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                     document.getElementById('fechaInicioPago_imp').innerHTML='';
                     document.getElementById('multaPagoExtemporaneo_imp').innerHTML='$-';
                     document.getElementById('InteresTotal_imp').innerHTML='$-';
-                  } 
+                  }
                   if(response.data.success === 1){
                     $('#periodo').show();
-                    $('#estado_de_cuentaIMP').show(); 
+                    $('#estado_de_cuentaIMP').show();
                     document.getElementById('hasta').innerHTML=response.data.PagoUltimoDiaMes;
                     document.getElementById('cant_meses').value=response.data.Cantidad_MesesTotal;
                     document.getElementById('impuestos_mora_imp').innerHTML=response.data.impuestos_mora_Dollar;
@@ -275,11 +275,11 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
                     document.getElementById('InteresTotal_imp').innerHTML=response.data.InteresTotalDollar;
                     document.getElementById('multa_balanceImp').innerHTML=response.data.multas_balance;
                     document.getElementById('multaPagoExtemporaneo_imp').innerHTML=response.data.multaPagoExtemporaneoDollar;
-                    document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;      
-                    document.getElementById('fechaInicioPago_imp').innerHTML=response.data.InicioPeriodo;            
+                    document.getElementById('fondoFP_imp').innerHTML=response.data.fondoFP;
+                    document.getElementById('fechaInicioPago_imp').innerHTML=response.data.InicioPeriodo;
                     document.getElementById('totalPago_imp').innerHTML=response.data.totalPago;
 
-                  }  
+                  }
                   if(response.data.success===2)
                       {
                           cobro_registrado();
@@ -288,7 +288,7 @@ formData.append('fecha_interesMoratorio', fecha_interesMoratorio);
               .catch((error) => {
                   toastr.error('Error');
                   closeLoading();
-              }); 
+              });
 
 
 }
@@ -340,16 +340,16 @@ formData.append('ultimo_cobro', ultimo_cobroLicor);
                     document.getElementById('MultaLicor_imp').innerHTML='';
                     document.getElementById('totalPagoLicor_imp').innerHTML='';
                     document.getElementById('fechaInicioPagoLicor_imp').innerHTML='';
-                  } 
+                  }
                   if(response.data.success === 1){
                     $('#periodoLicor').show();
                     $('#estado_de_cuenta_licorIMP').show();
-                    document.getElementById('hastaLicor').innerHTML=response.data.PagoUltimoDiaMesLicor;          
+                    document.getElementById('hastaLicor').innerHTML=response.data.PagoUltimoDiaMesLicor;
                     document.getElementById('LicenciaLicor_imp').innerHTML=response.data.monto_pago_licencia;
                     document.getElementById('MultaLicor_imp').innerHTML=response.data.monto_pago_multaDollar;
                     document.getElementById('totalPagoLicor_imp').innerHTML=response.data.totalPagoLicor;
                     document.getElementById('fechaInicioPagoLicor_imp').innerHTML=response.data.InicioPeriodoLicor;
-                  }  
+                  }
                   if(response.data.success===2)
                       {
                           cobro_registrado();
@@ -358,7 +358,7 @@ formData.append('ultimo_cobro', ultimo_cobroLicor);
               .catch((error) => {
                   toastr.error('Error');
                   closeLoading();
-              }); 
+              });
 
 
 }//** FIN- cálculo para cobrar Licencia licor */
@@ -376,9 +376,9 @@ function calculo_cobros_mesas(id, valor)
 
     openLoading();
     if(document.getElementById('CheckMesas').checked){
-               
-           var estado='On' 
-          
+
+           var estado='On'
+
     }else{
            var estado='Off'
          }
@@ -417,37 +417,37 @@ formData.append('estado', estado);
                   closeLoading();
                   if(response.data.success ===0){
                     toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
-                    document.getElementById('fechaInicioPagoMesas_imp').innerHTML=''; 
+                    document.getElementById('fechaInicioPagoMesas_imp').innerHTML='';
                     document.getElementById('hastaMesas').innerHTML= '';
-                    document.getElementById('cant_mesesMesas').value=''; 
+                    document.getElementById('cant_mesesMesas').value='';
                     document.getElementById('impuestos_moraMesas_imp').innerHTML='$-';
                     document.getElementById('impuesto_año_actualMesas_imp').innerHTML='$-';
                     document.getElementById('InteresTotalMesas_imp').innerHTML='$-';
-                    document.getElementById('multaPagoExtemporaneoMesas_imp').innerHTML='$-';                   
-                    document.getElementById('MatriculaMesas_imp').innerHTML='$-';  
-                    document.getElementById('fondoFPMesas_imp').innerHTML='$-';    
-                    document.getElementById('multa_MartriculaMesas_Imp').innerHTML='$-';            
+                    document.getElementById('multaPagoExtemporaneoMesas_imp').innerHTML='$-';
+                    document.getElementById('MatriculaMesas_imp').innerHTML='$-';
+                    document.getElementById('fondoFPMesas_imp').innerHTML='$-';
+                    document.getElementById('multa_MartriculaMesas_Imp').innerHTML='$-';
                     document.getElementById('totalPagoMesas_imp').innerHTML='$-';
 
-                    
 
-                  } 
+
+                  }
                   if(response.data.success === 1){
                     $('#periodoMesas').show();
                     $('#estado_de_cuenta_mesasIMP').show();
-                    document.getElementById('fechaInicioPagoMesas_imp').innerHTML=response.data.InicioPeriodoMesas; 
+                    document.getElementById('fechaInicioPagoMesas_imp').innerHTML=response.data.InicioPeriodoMesas;
                     document.getElementById('hastaMesas').innerHTML= response.data.PagoUltimoDiaMesMesas;
-                    document.getElementById('cant_mesesMesas').value=response.data.Cantidad_MesesTotalMesas; 
+                    document.getElementById('cant_mesesMesas').value=response.data.Cantidad_MesesTotalMesas;
                     document.getElementById('impuestos_moraMesas_imp').innerHTML=response.data.impuestos_mora_DollarMesas;
                     document.getElementById('impuesto_año_actualMesas_imp').innerHTML=response.data.impuesto_año_actual_DollarMesas;
                     document.getElementById('InteresTotalMesas_imp').innerHTML=response.data.InteresTotalDollar;
-                    document.getElementById('multaPagoExtemporaneoMesas_imp').innerHTML=response.data.totalMultaPagoExtemporaneoMesas;                   
-                    document.getElementById('MatriculaMesas_imp').innerHTML=response.data.monto_pago_PmatriculaDollarMesas;  
-                    document.getElementById('fondoFPMesas_imp').innerHTML=response.data.fondoFPMesas;    
-                    document.getElementById('multa_MartriculaMesas_Imp').innerHTML=response.data.multa_por_matricula;            
+                    document.getElementById('multaPagoExtemporaneoMesas_imp').innerHTML=response.data.totalMultaPagoExtemporaneoMesas;
+                    document.getElementById('MatriculaMesas_imp').innerHTML=response.data.monto_pago_PmatriculaDollarMesas;
+                    document.getElementById('fondoFPMesas_imp').innerHTML=response.data.fondoFPMesas;
+                    document.getElementById('multa_MartriculaMesas_Imp').innerHTML=response.data.multa_por_matricula;
                     document.getElementById('totalPagoMesas_imp').innerHTML=response.data.totalPagoMesas;
-               
-                  }  
+
+                  }
                   if(response.data.success===2)
                       {
                           cobro_registrado();
@@ -456,7 +456,7 @@ formData.append('estado', estado);
               .catch((error) => {
                   toastr.error('Error');
                   closeLoading();
-              }); 
+              });
 
 
 }
@@ -475,12 +475,12 @@ function calculo_cobros_maquinas(id, valor)
 
     openLoading();
     if(document.getElementById('CheckMaquinas').checked){
-               
-           var estado='On' 
-          
+
+           var estado='On'
+
     }else{
            var estado='Off'
-                
+
          }
 
       //* Validaciones **//
@@ -519,35 +519,35 @@ formData.append('fecha_interesMoratorioMaquinas', fecha_interesMoratorioMaquinas
                   closeLoading();
                   if(response.data.success ===0){
                     toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
-                    document.getElementById('fechaInicioPagoMaquinas_imp').innerHTML=''; 
+                    document.getElementById('fechaInicioPagoMaquinas_imp').innerHTML='';
                     document.getElementById('hastaMaquinas').innerHTML= '';
-                    document.getElementById('cant_mesesMaquinas').value=''; 
+                    document.getElementById('cant_mesesMaquinas').value='';
                     document.getElementById('impuestos_moraMaquinas_imp').innerHTML='$-';
                     document.getElementById('impuesto_año_actualMaquinas_imp').innerHTML='$-';
-                    document.getElementById('InteresTotalMaquinas_imp').innerHTML='$-';              
-                    document.getElementById('MatriculaMaquinas_imp').innerHTML='$-';  
-                    document.getElementById('fondoFPMaquinas_imp').innerHTML='$-';    
-                    document.getElementById('multa_MartriculaMaquinas_Imp').innerHTML='$-';            
+                    document.getElementById('InteresTotalMaquinas_imp').innerHTML='$-';
+                    document.getElementById('MatriculaMaquinas_imp').innerHTML='$-';
+                    document.getElementById('fondoFPMaquinas_imp').innerHTML='$-';
+                    document.getElementById('multa_MartriculaMaquinas_Imp').innerHTML='$-';
                     document.getElementById('totalPagoMaquinas_imp').innerHTML='$-';
 
-                    
 
-                  } 
+
+                  }
                   if(response.data.success === 1){
                     $('#periodoMaquinas').show();
                     $('#estado_de_cuenta_maquinasIMP').show();
-                    document.getElementById('fechaInicioPagoMaquinas_imp').innerHTML=response.data.InicioPeriodoMaquinas; 
+                    document.getElementById('fechaInicioPagoMaquinas_imp').innerHTML=response.data.InicioPeriodoMaquinas;
                     document.getElementById('hastaMaquinas').innerHTML= response.data.PagoUltimoDiaMesMaquinas;
-                    document.getElementById('cant_mesesMaquinas').value=response.data.Cantidad_MesesTotalMaquinas; 
+                    document.getElementById('cant_mesesMaquinas').value=response.data.Cantidad_MesesTotalMaquinas;
                     document.getElementById('impuestos_moraMaquinas_imp').innerHTML=response.data.impuestos_mora_DollarMaquinas;
                     document.getElementById('impuesto_año_actualMaquinas_imp').innerHTML=response.data.impuesto_año_actual_DollarMaquinas;
                     document.getElementById('InteresTotalMaquinas_imp').innerHTML=response.data.InteresTotalDollar;
-                    document.getElementById('MatriculaMaquinas_imp').innerHTML=response.data.monto_pago_PmatriculaDollarMaquinas;  
-                    document.getElementById('fondoFPMaquinas_imp').innerHTML=response.data.fondoFPMaquinas;    
-                    document.getElementById('multa_MartriculaMaquinas_Imp').innerHTML=response.data.multaDolarMaquinas;            
+                    document.getElementById('MatriculaMaquinas_imp').innerHTML=response.data.monto_pago_PmatriculaDollarMaquinas;
+                    document.getElementById('fondoFPMaquinas_imp').innerHTML=response.data.fondoFPMaquinas;
+                    document.getElementById('multa_MartriculaMaquinas_Imp').innerHTML=response.data.multaDolarMaquinas;
                     document.getElementById('totalPagoMaquinas_imp').innerHTML=response.data.totalPagoMaquinas;
-               
-                  }  
+
+                  }
                   if(response.data.success===2)
                       {
                           cobro_registrado();
@@ -556,7 +556,7 @@ formData.append('fecha_interesMoratorioMaquinas', fecha_interesMoratorioMaquinas
               .catch((error) => {
                   toastr.error('Error');
                   closeLoading();
-              }); 
+              });
 
 
 }
@@ -576,9 +576,9 @@ function calculo_cobros_sinfonolas(id, valor)
     openLoading();
     //* Validaciones **//
     if(document.getElementById('CheckSinfonolas').checked){
-               
-           var estado='On' 
-          
+
+           var estado='On'
+
     }else{
            var estado='Off'
          }
@@ -617,37 +617,37 @@ formData.append('fecha_interesMoratorioSinfonolas', fecha_interesMoratorioSinfon
                   closeLoading();
                   if(response.data.success ===0){
                     toastr.error('La fecha selecionada no puede ser menor o igual a la del ultimo pago');
-                    document.getElementById('fechaInicioPagoSinfonolas_imp').innerHTML=''; 
+                    document.getElementById('fechaInicioPagoSinfonolas_imp').innerHTML='';
                     document.getElementById('hastaSinfonolas').innerHTML= '';
-                    document.getElementById('cant_mesesSinfonolas').value=''; 
+                    document.getElementById('cant_mesesSinfonolas').value='';
                     document.getElementById('impuestos_moraSinfonolas_imp').innerHTML='$-';
                     document.getElementById('impuesto_año_actualSinfonolas_imp').innerHTML='$-';
                     document.getElementById('InteresTotalSinfonolas_imp').innerHTML='$-';
-                    document.getElementById('multaPagoExtemporaneoSinfonolas_imp').innerHTML='$-';                   
-                    document.getElementById('MatriculaSinfonolas_imp').innerHTML='$-';  
-                    document.getElementById('fondoFPSinfonolas_imp').innerHTML='$-';    
-                    document.getElementById('multa_MartriculaSinfonolas_Imp').innerHTML='$-';            
+                    document.getElementById('multaPagoExtemporaneoSinfonolas_imp').innerHTML='$-';
+                    document.getElementById('MatriculaSinfonolas_imp').innerHTML='$-';
+                    document.getElementById('fondoFPSinfonolas_imp').innerHTML='$-';
+                    document.getElementById('multa_MartriculaSinfonolas_Imp').innerHTML='$-';
                     document.getElementById('totalPagoSinfonolas_imp').innerHTML='$-';
 
-                    
 
-                  } 
+
+                  }
                   if(response.data.success === 1){
                     $('#periodoSinfonolas').show();
                     $('#estado_de_cuenta_sinfonolasIMP').show();
-                    document.getElementById('fechaInicioPagoSinfonolas_imp').innerHTML=response.data.InicioPeriodoSinfonolas; 
+                    document.getElementById('fechaInicioPagoSinfonolas_imp').innerHTML=response.data.InicioPeriodoSinfonolas;
                     document.getElementById('hastaSinfonolas').innerHTML= response.data.PagoUltimoDiaMesSinfonolas;
-                    document.getElementById('cant_mesesSinfonolas').value=response.data.Cantidad_MesesTotalSinfonolas; 
+                    document.getElementById('cant_mesesSinfonolas').value=response.data.Cantidad_MesesTotalSinfonolas;
                     document.getElementById('impuestos_moraSinfonolas_imp').innerHTML=response.data.impuestos_mora_DollarSinfonolas;
                     document.getElementById('impuesto_año_actualSinfonolas_imp').innerHTML=response.data.impuesto_año_actual_DollarSinfonolas;
                     document.getElementById('InteresTotalSinfonolas_imp').innerHTML=response.data.InteresTotalDollar;
-                    document.getElementById('multaPagoExtemporaneoSinfonolas_imp').innerHTML=response.data.totalMultaPagoExtemporaneoSinfonolas;                   
-                    document.getElementById('MatriculaSinfonolas_imp').innerHTML=response.data.monto_pago_PmatriculaDollarSinfonolas;  
-                    document.getElementById('fondoFPSinfonolas_imp').innerHTML=response.data.fondoFPSinfonolas;    
-                    document.getElementById('multa_MartriculaSinfonolas_Imp').innerHTML=response.data.multa_por_matricula;            
+                    document.getElementById('multaPagoExtemporaneoSinfonolas_imp').innerHTML=response.data.totalMultaPagoExtemporaneoSinfonolas;
+                    document.getElementById('MatriculaSinfonolas_imp').innerHTML=response.data.monto_pago_PmatriculaDollarSinfonolas;
+                    document.getElementById('fondoFPSinfonolas_imp').innerHTML=response.data.fondoFPSinfonolas;
+                    document.getElementById('multa_MartriculaSinfonolas_Imp').innerHTML=response.data.multa_por_matricula;
                     document.getElementById('totalPagoSinfonolas_imp').innerHTML=response.data.totalPagoSinfonolas;
-               
-                  }  
+
+                  }
                   if(response.data.success===2)
                       {
                           cobro_registrado();
@@ -656,7 +656,7 @@ formData.append('fecha_interesMoratorioSinfonolas', fecha_interesMoratorioSinfon
               .catch((error) => {
                   toastr.error('Error');
                   closeLoading();
-              }); 
+              });
 
 
 }
@@ -691,27 +691,27 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   closeLoading();
                   if(response.data.success ===0){
                     toastr.error('La fecha selecionada no puede ser menor a la del ultimo pago');
-                    document.getElementById('fechaInicioPagoAparatos_imp').innerHTML=''; 
-                    document.getElementById('hastaAparatos').innerHTML= '';                
-                    document.getElementById('MatriculaAparatos_imp').innerHTML='$-';  
-                    document.getElementById('fondoFPAparatos_imp').innerHTML='$-';    
-                    document.getElementById('multa_MartriculaAparatos_Imp').innerHTML='$-';            
+                    document.getElementById('fechaInicioPagoAparatos_imp').innerHTML='';
+                    document.getElementById('hastaAparatos').innerHTML= '';
+                    document.getElementById('MatriculaAparatos_imp').innerHTML='$-';
+                    document.getElementById('fondoFPAparatos_imp').innerHTML='$-';
+                    document.getElementById('multa_MartriculaAparatos_Imp').innerHTML='$-';
                     document.getElementById('totalPagoAparatos_imp').innerHTML='$-';
 
-                    
 
-                  } 
+
+                  }
                   if(response.data.success === 1){
                     $('#periodoAparatos').show();
                     $('#estado_de_cuenta_aparatosIMP').show();
-                    document.getElementById('fechaInicioPagoAparatos_imp').innerHTML=response.data.InicioPeriodoAparatos; 
+                    document.getElementById('fechaInicioPagoAparatos_imp').innerHTML=response.data.InicioPeriodoAparatos;
                     document.getElementById('hastaAparatos').innerHTML= response.data.PagoUltimoDiaMesAparatos;
-                    document.getElementById('MatriculaAparatos_imp').innerHTML=response.data.monto_pago_PmatriculaDollarAparatos;  
-                    document.getElementById('fondoFPAparatos_imp').innerHTML=response.data.fondoFPAparatos;    
-                    document.getElementById('multa_MartriculaAparatos_Imp').innerHTML=response.data.multa_por_matricula;            
+                    document.getElementById('MatriculaAparatos_imp').innerHTML=response.data.monto_pago_PmatriculaDollarAparatos;
+                    document.getElementById('fondoFPAparatos_imp').innerHTML=response.data.fondoFPAparatos;
+                    document.getElementById('multa_MartriculaAparatos_Imp').innerHTML=response.data.multa_por_matricula;
                     document.getElementById('totalPagoAparatos_imp').innerHTML=response.data.totalPagoAparatos;
-               
-                  }  
+
+                  }
                   if(response.data.success ===2)
                       {
                           cobro_registrado();
@@ -720,7 +720,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
               .catch((error) => {
                   toastr.error('Error');
                   closeLoading();
-              }); 
+              });
 
 
 }
@@ -741,7 +741,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </button>
                 </div>
                <div class="modal-body" id="tres">
-                    <form id="formulario_ver_historial_cobros_emp">        
+                    <form id="formulario_ver_historial_cobros_emp">
                  <!-- /.card-header -->
                  <div>
                     @if (count($ListaCobros) > 0)
@@ -749,25 +749,25 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       <i class="fas fa-print"></i>&nbsp; Imprimir</a>
                     @endif
                  </div>
-                        
-  
+
+
               <!--inicia los campos del formulario ver-->
 
 
-              <table id="tab_historial_cobros_emp" class="table table-bordered table-hover" > 
-              <thead>             
-                <tr id="uno">  
-                    <th style="width: 25%;">Fecha pago</th> 
-                    <th style="width: 8%;">Meses</th>   
-                    <th style="width: 20%;">Impuestos Mora</th>                          
-                    <th style="width: 15%;">Impuestos</th>                          
-                    <th style="width: 15%;">Intereses</th>    
+              <table id="tab_historial_cobros_emp" class="table table-bordered table-hover" >
+              <thead>
+                <tr id="uno">
+                    <th style="width: 25%;">Fecha pago</th>
+                    <th style="width: 8%;">Meses</th>
+                    <th style="width: 20%;">Impuestos Mora</th>
+                    <th style="width: 15%;">Impuestos</th>
+                    <th style="width: 15%;">Intereses</th>
                     <th style="width: 15%;">Multa Balance</th>
-                    <th style="width: 20%;">Multas</th>                          
-                    <th style="width: 10%;">Total</th>                           
+                    <th style="width: 20%;">Multas</th>
+                    <th style="width: 10%;">Total</th>
                 </tr>
                     </thead>
-                    <tbody>     
+                    <tbody>
                     @foreach($ListaCobros as $dato)
                 <tr id="dos">
                     <td>{{ $dato-> fecha_cobro }}</td>
@@ -777,12 +777,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <td>${{ $dato-> intereses_moratorios_15302 }}</td>
                     <td>${{ $dato-> monto_multa_balance_15313 }}</td>
                     <td>${{ $dato-> monto_multaPE_15313 }}</td>
-                    <td>${{ $dato-> pago_total }}</td>                    
+                    <td>${{ $dato-> pago_total }}</td>
                 </tr>
-                    @endforeach  
-                    </tbody>            
-            </table> 
-            
+                    @endforeach
+                    </tbody>
+            </table>
+
               <!--finaliza los campos del formulario-->
 
                      </form>
@@ -807,9 +807,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </button>
                 </div>
                <div class="modal-body" id="tres">
-                    <form id="formulario_historial_cobros_aparatos">        
+                    <form id="formulario_historial_cobros_aparatos">
                  <!-- /.card-header -->
-                
+
                   <!--inicia los campos del formulario ver-->
                         <div class="col-md-12">
                             <div class="form-group" id="Div_historico_cobros_aparatos">
@@ -838,7 +838,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </button>
                 </div>
                <div class="modal-body" id="tres">
-                    <form id="formulario_ver_historial_cobros_licor">        
+                    <form id="formulario_ver_historial_cobros_licor">
                  <!-- /.card-header -->
                  <div>
                     @if (count($ListaCobroslicor) > 0)
@@ -846,23 +846,23 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       <i class="fas fa-print"></i>&nbsp; Imprimir</a>
                     @endif
                  </div>
-                        
-  
+
+
               <!--inicia los campos del formulario ver-->
 
 
-              <table id="tab_historial_cobros_licor" class="table table-bordered table-hover" > 
-              <thead>             
-                <tr id="uno">  
-                    <th style="width: 25%;">Fecha pago</th> 
-                    <th style="width: 20%;">Periodo inicio</th>                          
+              <table id="tab_historial_cobros_licor" class="table table-bordered table-hover" >
+              <thead>
+                <tr id="uno">
+                    <th style="width: 25%;">Fecha pago</th>
+                    <th style="width: 20%;">Periodo inicio</th>
                     <th style="width: 15%;">Periodo fin</th>
-                    <th style="width: 15%;">Licencia</th>                             
-                    <th style="width: 15%;">Multa licencia</th>                       
-                    <th style="width: 10%;">Total</th>                           
+                    <th style="width: 15%;">Licencia</th>
+                    <th style="width: 15%;">Multa licencia</th>
+                    <th style="width: 10%;">Total</th>
                 </tr>
                     </thead>
-                    <tbody>     
+                    <tbody>
                     @foreach($ListaCobroslicor as $dato)
               <tr id="dos">
                     <td>{{ $dato-> fecha_cobro }}</td>
@@ -870,12 +870,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     <td>{{ $dato-> periodo_cobro_fin }}</td>
                     <td>${{ $dato-> monto_licencia_12207 }}</td>
                     <td>${{ $dato-> monto_multa_licencia_15313 }}</td>
-                    <td>${{ $dato-> pago_total }}</td>                    
+                    <td>${{ $dato-> pago_total }}</td>
                 </tr>
-                    @endforeach  
-                    </tbody>            
-            </table> 
-            
+                    @endforeach
+                    </tbody>
+            </table>
+
               <!--finaliza los campos del formulario-->
 
                      </form>
@@ -900,7 +900,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </button>
                 </div>
                <div class="modal-body" id="tres">
-                    <form id="formulario_historial_cobros_sinfonolas">        
+                    <form id="formulario_historial_cobros_sinfonolas">
                  <!-- /.card-header -->
 
                   <!--inicia los campos del formulario ver-->
@@ -931,9 +931,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </button>
                 </div>
                <div class="modal-body" id="tres">
-                    <form id="formulario_historial_cobros_maquinas">        
+                    <form id="formulario_historial_cobros_maquinas">
                  <!-- /.card-header -->
-                 
+
                   <!--inicia los campos del formulario ver-->
                         <div class="col-md-12">
                             <div class="form-group" id="Div_historico_cobros_maquinas">
@@ -962,7 +962,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                     </button>
                 </div>
                <div class="modal-body" id="tres">
-                    <form id="formulario_historial_cobros_mesas">        
+                    <form id="formulario_historial_cobros_mesas">
                  <!-- /.card-header -->
 
                   <!--inicia los campos del formulario ver-->
@@ -983,12 +983,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 <!-- FIN Modal Historial de cobros Mesas -->
 
 
-<div class="content-wrapper" style="display: none" id="divcontenedor">
+<div class=" " style="display: none" id="divcontenedor">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                  
+
                     </div><!-- Col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -1019,15 +1019,15 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
             </div>
           </div>
           <!-- /.card-header -->
-          
+
           <div class="card-body">
-            
+
 <!-------------------------CONEDIDO (CAMPOS) ----------------------------------------------->
-      <!-- Nav.Items--> 
-    <!--  <h5><i class="fas fa-cash-register"></i> &nbsp;Tipo de cobro: </h5>--> 
- 
-      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"> 
-        @if($MatriculasNull==1)      
+      <!-- Nav.Items-->
+    <!--  <h5><i class="fas fa-cash-register"></i> &nbsp;Tipo de cobro: </h5>-->
+
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        @if($MatriculasNull==1)
         <li class="nav-item">
           <a class="nav-link active"  data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-hand-holding-usd"></i> &nbsp;Impuestos</a>
         </li>
@@ -1048,28 +1048,28 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
       <div class="tab-content" id="pills-tabContent">
       <hr>
 
-<!------------------------------------------------------- Nav.Items ( Impuestos Empresa )------------------------------------------------------------------------------------------------------>  
-@if($MatriculasNull==1)  
+<!------------------------------------------------------- Nav.Items ( Impuestos Empresa )------------------------------------------------------------------------------------------------------>
+@if($MatriculasNull==1)
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-        
+
           <div class="row" id="cobros_empresa"><!-- /.ROWPADRE -->
           <!-- Campos del formulario de cobros -->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-success"><b>DATOS GENERALES.</b>
-                <button type="button" class="btn btn-outline-success btn-sm float-right" 
+                <button type="button" class="btn btn-outline-success btn-sm float-right"
                   onclick="historial_cobros_empresa({{$empresa->id}});" id="Historial_cobrosIMP" >
                   <i class="fas fa-history"></i> Historial de cobros
-                </button> 
+                </button>
           </div>
             <div class="card-body"><!-- Card-body -->
             <form action="/admin/estado_cuenta/pdf" method="POST" id="formularioCalculo">
            @csrf
              <div class="row"><!-- /.ROW1 -->
-             
+
                <!-- /.form-group -->
                 <div class="col-md-6">
-                  <div class="form-group">   
+                  <div class="form-group">
                         <label>NÚMERO DE TARJETA:</label>
                   </div>
                </div><!-- /.col-md-6 -->
@@ -1083,14 +1083,14 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         &nbsp;
                           <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
-                        </button> 
+                        </button>
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>FECHA DE ÚLTIMO PAGO:</label>            
+                        <label>FECHA DE ÚLTIMO PAGO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
@@ -1110,7 +1110,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-success" id="fecha_hasta_donde_pagara" >   
+                        <input  type="date" class="form-control text-success" id="fecha_hasta_donde_pagara" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -1122,12 +1122,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
-                <div class="input-group mb-3">  
+                <div class="input-group mb-3">
                            <!-- finaliza select estado-->
                         <input type="text" disabled value="{{ $empresa->nombre_giro }}" name="giro_comercial"  id="giroc_comercial" class="form-control" required >
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
-                            </div> 
+                            </div>
                       </div>
                 </div>
               <!-- finaliza select Giro Comercial-->
@@ -1141,20 +1141,20 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <!-- /.form-group -->
                 <div class="col-md-5">
                   <div  class="input-group mb-3">
-                          <!-- Select estado - live search -->                        
-                                <select 
+                          <!-- Select estado - live search -->
+                                <select
                                 required
                                 class="form-control"
                                 data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select_interes" 
+                                data-show-subtext="true"
+                                data-live-search="true"
+                                id="select_interes"
                                 title="-- Seleccione un interés  --"
                                  >
                                   @foreach($tasasDeInteres as $dato)
                                   <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
-                                  @endforeach 
-                                </select> 
+                                  @endforeach
+                                </select>
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-percent"></i></span>
                                   </div>
@@ -1213,7 +1213,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   <div class="col-md-6">
                   <div class="form-group">
                         <br>
-                        
+
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
@@ -1225,22 +1225,22 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-              
+
             </div> <!-- /.ROW1 -->
             </div> <!-- /.card card-success -->
             </div> <!-- /.card-header text-success -->
             </div> <!-- /.Panel datos generales de la empresa -->
 
 
-        
+
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-       
-             <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label> 
-              <button type="submit" class="btn btn-outline-success btn-sm float-right" 
+
+             <div class="card-header text-success"> <label> IMPUESTOS APLICADOS.</label>
+              <button type="submit" class="btn btn-outline-success btn-sm float-right"
               onclick="reporte_empresa({{$empresa->id}});" id="estado_de_cuentaIMP" >
               <i class="fas fa-print"></i> Estado cuenta
-              </button> 
-             
+              </button>
+
              </div>
              <div class="card-body">
 
@@ -1250,24 +1250,24 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-12">
                   <div class="form-group">
                         <h6 id="periodo">
-                          Periodo del: 
+                          Periodo del:
                              <label class="badge badge-info" id="fechaInicioPago_imp"></label>
                           &nbsp; al &nbsp;<label class="badge badge-success" id="hasta"></label>
-                          
+
                         </h6>
-                        
+
                   </div>
                   <hr>
               <!-- /.form-group -->
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
-                        
-                
+
+
                       <table class="table table-hover table-sm table-striped"  width:760px;>
                           <tr>
                             <th scope="col">IMPUESTOS</th>
-                            <th scope="col"></th> 
+                            <th scope="col"></th>
                             <th scope="col"></th>
                           </tr>
 
@@ -1327,7 +1327,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       </button>
                     </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
-              </div><!-- ROW FILA3 -->        
+              </div><!-- ROW FILA3 -->
 
             </div><!-- /.Panel Tarifas -->
 
@@ -1347,25 +1347,25 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
 
 <div class="tab-pane fade" id="pills-licencia_licor" role="tabpanel" aria-labelledby="pills-contact-tab">
-          
+
           <section class="content-header" id="tab_licencia_licor">
               <div class="container-fluid">
                   <div>
          <!--------------- Cobro licencia licor -------------------->
-         
+
          <div class="row" id="cobros_licor"><!-- /.ROWPADRE -->
           <!-- Campos del formulario de cobros LICENCIA LICOR-->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-secondary"><b>DATOS GENERALES</b>.
-                <button type="button" class="btn btn-outline-secondary btn-sm float-right" 
+                <button type="button" class="btn btn-outline-secondary btn-sm float-right"
                   onclick="historial_cobros_licor({{$empresa->id}});" id="Historial_cobrosIMP" >
                   <i class="fas fa-history"></i> Historial de cobros
-                </button> 
+                </button>
           </div>
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
-            
+
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -1375,7 +1375,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <div class="col-md-3">
                   <div class="input-group mb-3">
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaLicor" class="form-control" required >
-                        
+
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
@@ -1385,15 +1385,15 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>FECHA DE ÚLTIMO PAGO:</label>            
+                        <label>FECHA DE ÚLTIMO PAGO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                   <div class="input-group mb-3">
                     @if($ultimo_cobro_licor=='')
-                    <input  type="date" class="form-control text-success" id="ultimo_cobroLicor"> 
+                    <input  type="date" class="form-control text-success" id="ultimo_cobroLicor">
                     @else
-                    <input  type="date" disabled  value="{{$ultimo_cobro_licor->periodo_cobro_fin}}" id="ultimo_cobroLicor" class="form-control text-success"> 
+                    <input  type="date" disabled  value="{{$ultimo_cobro_licor->periodo_cobro_fin}}" id="ultimo_cobroLicor" class="form-control text-success">
                     @endif
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
@@ -1409,7 +1409,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-success"  id="fecha_hasta_donde_pagaraLicor" >   
+                        <input  type="date" class="form-control text-success"  id="fecha_hasta_donde_pagaraLicor" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -1419,15 +1419,15 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
-                <div class="input-group mb-3">  
+                <div class="input-group mb-3">
                 <!-- finaliza select estado-->
                         <input type="text" disabled value="{{ $empresa->nombre_giro }}" id="giroc_comercialLicor" class="form-control" required >
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
-                            </div> 
+                            </div>
                       </div>
                 </div>
-               
+
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -1443,21 +1443,21 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-                          
+
             </div> <!-- /.ROW1 -->
             </div> <!-- /.card card-success -->
             </div> <!-- /.card-header text-success -->
             </div> <!-- /.Panel datos generales de la empresa -->
-        
+
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-secondary"> <label> IMPUESTOS APLICADOS.</label> 
-         <button type="submit" class="btn btn-outline-secondary btn-sm float-right" 
+         <div class="card-header text-secondary"> <label> IMPUESTOS APLICADOS.</label>
+         <button type="submit" class="btn btn-outline-secondary btn-sm float-right"
             onclick="reporte_licencia_licor({{$empresa->id}});" id="estado_de_cuenta_licorIMP" >
               <i class="fas fa-print"></i> Estado cuenta
-            </button> 
-        
+            </button>
+
         </div>
-         
+
             <div class="card-body">
 
               <div class="row"><!-- /.ROW FILA1 -->
@@ -1466,7 +1466,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-12">
                   <div class="form-group">
                         <h6 id="periodoLicor">
-                          Periodo del: 
+                          Periodo del:
                           <label class="badge badge-info" id="fechaInicioPagoLicor_imp" ></label>
                          &nbsp; al &nbsp;<label class="badge badge-success" id="hastaLicor"></label>
                         </h6>
@@ -1476,12 +1476,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
-                        
-                
+
+
                       <table class="table table-hover table-sm table-striped"  width:760px;>
                           <tr>
                             <th scope="col">IMPUESTOS</th>
-                            <th scope="col"></th> 
+                            <th scope="col"></th>
                             <th scope="col"></th>
                           </tr>
 
@@ -1510,7 +1510,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       </button>
                     </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
-              </div><!-- ROW FILA3 -->        
+              </div><!-- ROW FILA3 -->
 
             </div><!-- /.Panel Tarifas -->
 
@@ -1525,24 +1525,24 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
 @if($tipo_matricula==1)
 <div class="tab-pane fade show active" id="pills-mesa_de_billar" role="tabpanel" aria-labelledby="pills-contact-tab">
-          
+
           <section class="content-header" id="tab_mesa_de_billar">
-        
+
          <!--------------- Cobro mesa de billar -------------------->
-         
+
          <div class="row" id="cobros_mesas"><!-- /.ROWPADRE -->
           <!-- Campos del formulario de cobros mesa de billar-->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-primary"><b>DATOS GENERALES</b>.
-                <button type="button" class="btn btn-outline-primary btn-sm float-right" 
+                <button type="button" class="btn btn-outline-primary btn-sm float-right"
                   onclick="historial_cobros_mesas();" id="Historial_cobros_mesas" >
                   <i class="fas fa-history"></i> Historial de cobros
-                </button> 
+                </button>
           </div>
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
-            
+
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -1553,27 +1553,27 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   <div class="input-group mb-3">
                   <input type="hidden"  value="" id="id_matriculadetalle" disabled >
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"   id="num_tarjetaMesas" class="form-control" required  disabled>
-                        
+
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
                           <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
-                        </button> 
+                        </button>
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>FECHA DE ÚLTIMO PAGO:</label>            
+                        <label>FECHA DE ÚLTIMO PAGO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                   <div class="input-group mb-3">
-                        <input  type="date" class="form-control text-primary" id="ultimo_cobroMesas"> 
-                        
+                        <input  type="date" class="form-control text-primary" id="ultimo_cobroMesas">
+
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                         </div>
@@ -1587,7 +1587,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date"   class="form-control text-primary"  id="fecha_hasta_donde_pagaraMesas" >   
+                        <input  type="date"   class="form-control text-primary"  id="fecha_hasta_donde_pagaraMesas" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -1598,12 +1598,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
-                <div class="input-group mb-3">  
+                <div class="input-group mb-3">
                 <!-- finaliza select estado-->
                         <input type="text" disabled value="{{ $empresa->nombre_giro }}" id="giroc_comercialMesas" class="form-control" required >
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
-                            </div> 
+                            </div>
                       </div>
                 </div>
               <!-- finaliza select Giro Comercial-->
@@ -1617,20 +1617,20 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-5">
                   <div  class="input-group mb-3">
                           <!-- Select estado - live search -->
-                                <select 
+                                <select
                                 required
                                 class="form-control"
                                 data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select_interesMesas" 
+                                data-show-subtext="true"
+                                data-live-search="true"
+                                id="select_interesMesas"
                                 title="-- Seleccione un interés  --"
                                  >
-                                  
+
                                   @foreach($tasasDeInteres as $dato)
                                   <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
-                                  @endforeach 
-                                </select> 
+                                  @endforeach
+                                </select>
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-percent"></i></span>
                                   </div>
@@ -1674,7 +1674,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <div class="col-md-6">
                   <div class="form-group">
                   <br>
-                  
+
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
@@ -1694,10 +1694,10 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
             </div> <!-- /.Panel datos generales de la empresa -->
 
 
-        
+
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-primary"> <label> IMPUESTOS APLICADOS.</label>
-         <button type="submit" class="btn btn-outline-primary btn-sm float-right" 
+         <button type="submit" class="btn btn-outline-primary btn-sm float-right"
             onclick="reporte_mesas({{$empresa->id}});" id="estado_de_cuenta_mesasIMP" >
               <i class="fas fa-print"></i> Estado cuenta
             </button>
@@ -1710,7 +1710,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-12">
                   <div class="form-group">
                         <h6 id="periodoMesas">
-                          Periodo del: 
+                          Periodo del:
                         <label class="badge badge-info" id="fechaInicioPagoMesas_imp"></label>
                          &nbsp; al &nbsp;<label class="badge badge-primary" id="hastaMesas"></label>
                         </h6>
@@ -1720,12 +1720,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
-                        
-                
+
+
                       <table class="table table-hover table-sm table-striped"  width:760px;>
                           <tr>
                             <th scope="col">IMPUESTOS</th>
-                            <th scope="col"></th> 
+                            <th scope="col"></th>
                             <th scope="col"></th>
                           </tr>
 
@@ -1786,12 +1786,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
 
                   </div> <!-- /.card-body -->
-              </div><!-- ROW FILA3 -->        
+              </div><!-- ROW FILA3 -->
 
             </div><!-- /.Panel Tarifas -->
 
          <!-------------- /. cobro mesa de billar -------------------->
-   
+
           </section>
 
 </div><!-- pills-MatriculasLicencias-->
@@ -1799,25 +1799,25 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 <!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
 @if($tipo_matricula==3)
 <div class="tab-pane fade show active" id="pills-maquinas_electronicas" role="tabpanel" aria-labelledby="pills-contact-tab">
-          
+
       <section class="content-header" id="tab_maquinas_electronicas">
         <div class="container-fluid">
-                     
+
         <!--------------- Cobro Máquinas electrónicas -------------------->
-         
+
          <div class="row" id="cobrosMaquinas"><!-- /.ROWPADRE -->
           <!-- Campos del formulario de cobros Máquinas electrónicas-->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-warning"><b>DATOS GENERALES</b>.
-                <button type="button" class="btn btn-outline-warning btn-sm float-right" 
+                <button type="button" class="btn btn-outline-warning btn-sm float-right"
                   onclick="historial_cobros_maquinas();" id="Historial_cobros_maquinas" >
                   <i class="fas fa-history"></i> Historial de cobros
-                </button> 
+                </button>
           </div>
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
-            
+
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -1828,26 +1828,26 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   <div class="input-group mb-3">
                   <input type="hidden"  value="" id="id_matriculadetalle" disabled >
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaMaquinas" class="form-control" required >
-                        
+
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
                           <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
-                        </button> 
+                        </button>
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>FECHA DE ÚLTIMO PAGO:</label>            
+                        <label>FECHA DE ÚLTIMO PAGO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                   <div class="input-group mb-3">
-                        <input  type="date" class="form-control text-warning" id="ultimo_cobroMaquinas">                        
+                        <input  type="date" class="form-control text-warning" id="ultimo_cobroMaquinas">
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                         </div>
@@ -1862,7 +1862,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-warning"  id="fecha_hasta_donde_pagaraMaquinas" >   
+                        <input  type="date" class="form-control text-warning"  id="fecha_hasta_donde_pagaraMaquinas" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -1874,12 +1874,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
-                <div class="input-group mb-3">  
+                <div class="input-group mb-3">
                 <!-- finaliza select estado-->
                         <input type="text" disabled value="{{ $empresa->nombre_giro }}" id="giroc_comercialMaquinas" class="form-control" required >
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
-                            </div> 
+                            </div>
                       </div>
                 </div>
               <!-- finaliza select Giro Comercial-->
@@ -1894,21 +1894,21 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-5">
                   <div  class="input-group mb-3">
                           <!-- Select estado - live search -->
-                         
-                                <select 
+
+                                <select
                                 required
                                 class="form-control"
                                 data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select_interesMaquinas" 
+                                data-show-subtext="true"
+                                data-live-search="true"
+                                id="select_interesMaquinas"
                                 title="-- Seleccione un interés  --"
                                  >
-                                  
+
                                   @foreach($tasasDeInteres as $dato)
                                   <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
-                                  @endforeach 
-                                </select> 
+                                  @endforeach
+                                </select>
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-percent"></i></span>
                                   </div>
@@ -1966,18 +1966,18 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-              
-              
+
+
             </div> <!-- /.ROW1 -->
             </div> <!-- /.card card-success -->
             </div> <!-- /.card-header text-success -->
             </div> <!-- /.Panel datos generales de la empresa -->
 
 
-        
+
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
          <div class="card-header text-warning"> <label> IMPUESTOS APLICADOS.</label>
-         <button type="submit" class="btn btn-outline-warning btn-sm float-right" 
+         <button type="submit" class="btn btn-outline-warning btn-sm float-right"
             onclick="reporte_maquinas({{$empresa->id}});" id="estado_de_cuenta_maquinasIMP" >
             <i class="fas fa-print"></i> Estado cuenta
          </button>
@@ -1990,9 +1990,9 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-12">
                   <div class="form-group">
                         <h6 id="periodoMaquinas">
-                          Periodo del: 
+                          Periodo del:
                           <label class="badge badge-info" id="fechaInicioPagoMaquinas_imp"></label>
-                         &nbsp; al &nbsp;<label class="badge badge-warning" id="hastaMaquinas"></label> 
+                         &nbsp; al &nbsp;<label class="badge badge-warning" id="hastaMaquinas"></label>
                         </h6>
 
                   </div>
@@ -2001,12 +2001,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
-                        
-                
+
+
                       <table class="table table-hover table-sm table-striped"  width:760px;>
                           <tr>
                             <th scope="col">TASAS POR SERVICIO</th>
-                            <th scope="col"></th> 
+                            <th scope="col"></th>
                             <th scope="col"></th>
                           </tr>
 
@@ -2059,32 +2059,32 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       </button>
                     </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
-              </div><!-- ROW FILA3 -->        
+              </div><!-- ROW FILA3 -->
 
             </div><!-- /.Panel Tarifas -->
 
-         <!-------------- /. cobro Máquinas electrónicas --------------------> 
-                                     
+         <!-------------- /. cobro Máquinas electrónicas -------------------->
+
             </div>
-          </section>            
+          </section>
      </div><!-- pills-MatriculasLicencias-->
 @endif
-<!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>    
+<!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
 @if($tipo_matricula==2)
 <div class="tab-pane fade show active" id="pills-aparatos_parlantes" role="tabpanel" aria-labelledby="pills-contact-tab">
-          
+
  <section class="content-header" id="tab_aparatos_parlantes">
  <div class="container-fluid">
-                                        
+
   <!--------------- Cobro APARATOS PARLANTES -------------------->
-         
+
  <div class="row" id="cobros_aparatosparlantes"><!-- /.ROWPADRE -->
           <!-- Campos del formulario de cobros APARATOS PARLANTES-->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-info"><b>DATOS GENERALES</b>.
-    
-                <button type="button" class="btn btn-outline-info btn-sm float-right" 
+
+                <button type="button" class="btn btn-outline-info btn-sm float-right"
                   onclick="historial_cobros_Aparatos()" id="Historial_cobros_aparatosIMP" >
                   <i class="fas fa-history"></i> Historial de cobros
                 </button>
@@ -2092,7 +2092,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
               </div>
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
-            
+
              <!-- /.form-group -->
              <div class="col-md-6">
                   <div class="form-group">
@@ -2115,26 +2115,26 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   <div class="input-group mb-3">
                   <input type="hidden"  id="id_matriculadetalle" disabled >
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaAparatos" class="form-control" required >
-                        
+
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
                           <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
-                        </button> 
+                        </button>
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>FECHA DE ÚLTIMO PAGO:</label>            
+                        <label>FECHA DE ÚLTIMO PAGO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                   <div class="input-group mb-3">
-                        <input  type="date" class="form-control text-info" id="ultimo_cobroAparatos"> 
+                        <input  type="date" class="form-control text-info" id="ultimo_cobroAparatos">
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                         </div>
@@ -2149,7 +2149,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-success"  id="fecha_hasta_donde_pagaraAparatos" >   
+                        <input  type="date" class="form-control text-success"  id="fecha_hasta_donde_pagaraAparatos" >
                   </div>
                </div><!-- /.col-md-6 -->
 
@@ -2161,7 +2161,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
-                <div class="input-group mb-6">  
+                <div class="input-group mb-6">
                 <!-- finaliza select estado-->
                         <input type="text" disabled value="{{ $empresa->nombre_giro }}" id="giroc_comercialAparatos" class="form-control" required >
                             <div class="input-group-append">
@@ -2180,7 +2180,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       <button type="button" class="btn btn-outline-info btn-lg" onclick="calculo_cobros_aparatos({{$empresa->id}},0);">
                        <i class="fas fa-envelope-open-text"></i>
                        &nbsp;Generar Cobro &nbsp;
-                      </button> 
+                      </button>
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
@@ -2190,20 +2190,20 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         <br>
                   </div>
                </div><!-- /.col-md-6 -->
-              
+
             </div> <!-- /.ROW1 -->
             </div> <!-- /.card card-success -->
             </div> <!-- /.card-header text-success -->
             </div> <!-- /.Panel datos generales de la empresa -->
 
 
-        
+
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-info"> <label> IMPUESTOS APLICADOS.</label> 
-            <button type="submit" class="btn btn-outline-info btn-sm float-right" 
+         <div class="card-header text-info"> <label> IMPUESTOS APLICADOS.</label>
+            <button type="submit" class="btn btn-outline-info btn-sm float-right"
               onclick="reporte_aparatos({{$empresa->id}});" id="estado_de_cuenta_aparatosIMP" >
               <i class="fas fa-print"></i> Estado cuenta
-            </button>         
+            </button>
         </div>
             <div class="card-body">
 
@@ -2213,7 +2213,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-12">
                   <div class="form-group">
                         <h6 id="periodoAparatos">
-                          Periodo del: 
+                          Periodo del:
                         <label class="badge badge-info" id="fechaInicioPagoAparatos_imp"> </label>
                          &nbsp; al &nbsp;<label class="badge badge-info" id="hastaAparatos"></label>
                         </h6>
@@ -2223,12 +2223,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
-                        
-                
+
+
                       <table class="table table-hover table-sm table-striped"  width:760px;>
                           <tr>
                             <th scope="col">IMPUESTOS</th>
-                            <th scope="col"></th> 
+                            <th scope="col"></th>
                             <th scope="col"></th>
                           </tr>
 
@@ -2263,38 +2263,38 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       </button>
                     </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
-              </div><!-- ROW FILA3 -->        
+              </div><!-- ROW FILA3 -->
 
             </div><!-- /.Panel Tarifas -->
 
          <!-------------- /. cobro APARATOS PARLANTES -------------------->
-                              
+
                                     </div>
                                 </section>
-                     
+
           </div><!-- pills-MatriculasLicencias-->
 @endif
-<!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>    
+<!------------------------------------------------------- Nav.Items------------------------------------------------------------------------------------------------------>
 @if($tipo_matricula==4)
 <div class="tab-pane fade show active" id="pills-sinfonolas" role="tabpanel" aria-labelledby="pills-contact-tab">
-          
+
           <section class="content-header" id="tab_pills-sinfonolas">
               <div class="container-fluid">
  <!--------------- Cobro Sinfonolas -------------------->
-         
+
  <div class="row" id="cobros_sinfonolas"><!-- /.ROWPADRE -->
           <!-- Campos del formulario de cobros Sinfonolas-->
           <div class="col-sm-7 float-left"><!-- Panel Datos generales de la empresa -->
           <div class="card card">
           <div class="card-header text-danger"><b>DATOS GENERALES</b>.
-                <button type="button" class="btn btn-outline-danger btn-sm float-right" 
+                <button type="button" class="btn btn-outline-danger btn-sm float-right"
                   onclick="historial_cobros_sinfonolas();" id="Historial_cobros_sinfonolas" >
                   <i class="fas fa-history"></i> Historial de cobros
-                </button> 
+                </button>
           </div>
             <div class="card-body"><!-- Card-body -->
              <div class="row"><!-- /.ROW1 -->
-            
+
                <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
@@ -2305,27 +2305,27 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   <div class="input-group mb-3">
                         <input type="hidden"  value="" id="id_matriculadetalle" disabled >
                         <input type="number"  value="{{ $empresa->num_tarjeta }}"  disabled id="num_tarjetaSinfonolas" class="form-control" required >
-                        
+
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-archive"></i></span>
                         </div>
                         &nbsp;
                           <button type="button" class="btn btn-info float-right" onclick="abrir_modal()">
                           <i class="fas fa-info-circle"></i>
-                        </button> 
+                        </button>
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
               <!-- /.form-group -->
                 <div class="col-md-6">
                   <div class="form-group">
-                        <label>FECHA DE ÚLTIMO PAGO:</label>            
+                        <label>FECHA DE ÚLTIMO PAGO:</label>
                   </div>
                </div><!-- /.col-md-6 -->
                <div class="col-md-5">
                   <div class="input-group mb-3">
-                        <input  type="date" class="form-control text-danger" id="ultimo_cobroSinfonolas"> 
-                        
+                        <input  type="date" class="form-control text-danger" id="ultimo_cobroSinfonolas">
+
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
                         </div>
@@ -2340,7 +2340,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <div class="col-md-6">
                   <div class="form-group">
-                        <input  type="date" class="form-control text-danger"  id="fecha_hasta_donde_pagaraSinfonolas" >   
+                        <input  type="date" class="form-control text-danger"  id="fecha_hasta_donde_pagaraSinfonolas" >
                   </div>
                </div><!-- /.col-md-6 -->
               <!-- /.form-group -->
@@ -2352,12 +2352,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                </div><!-- /.col-md-6 -->
                <!-- Inicia Select Giro Comercial -->
                <div class="col-md-6">
-                <div class="input-group mb-3">  
+                <div class="input-group mb-3">
                 <!-- finaliza select estado-->
                         <input type="text" disabled value="{{ $empresa->nombre_giro }}" id="giroc_comercialSinfonolas" class="form-control" required >
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-network-wired"></i></span>
-                            </div> 
+                            </div>
                       </div>
                 </div>
               <!-- finaliza select Giro Comercial-->
@@ -2372,21 +2372,21 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-5">
                   <div  class="input-group mb-3">
                           <!-- Select estado - live search -->
-                         
-                                <select 
+
+                                <select
                                 required
                                 class="form-control"
                                 data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select_interesSinfonolas" 
+                                data-show-subtext="true"
+                                data-live-search="true"
+                                id="select_interesSinfonolas"
                                 title="-- Seleccione un interés  --"
                                  >
-                                  
+
                                   @foreach($tasasDeInteres as $dato)
                                   <option value="{{ $dato->monto_interes }}"> {{ $dato->monto_interes }}</option>
-                                  @endforeach 
-                                </select> 
+                                  @endforeach
+                                </select>
                                   <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-percent"></i></span>
                                   </div>
@@ -2444,21 +2444,21 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                   </div>
                </div><!-- /.col-md-6 -->
                <!-- /.form-group -->
-              
-              
+
+
             </div> <!-- /.ROW1 -->
             </div> <!-- /.card card-success -->
             </div> <!-- /.card-header text-success -->
             </div> <!-- /.Panel datos generales de la empresa -->
 
 
-        
+
          <div  class="col-sm-5 float-right"><!-- Panel Tarifas -->
-         <div class="card-header text-danger"> <label> IMPUESTOS APLICADOS.</label> 
-         <button type="submit" class="btn btn-outline-danger btn-sm float-right" 
+         <div class="card-header text-danger"> <label> IMPUESTOS APLICADOS.</label>
+         <button type="submit" class="btn btn-outline-danger btn-sm float-right"
             onclick="reporte_sinfonolas({{$empresa->id}});" id="estado_de_cuenta_sinfonolasIMP" >
               <i class="fas fa-print"></i> Estado cuenta
-            </button> 
+            </button>
         </div>
             <div class="card-body">
 
@@ -2468,7 +2468,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                 <div class="col-md-12">
                   <div class="form-group">
                         <h6 id="periodoSinfonolas">
-                          Periodo del: 
+                          Periodo del:
                           <label class="badge badge-info" id="fechaInicioPagoSinfonolas_imp"> </label>
                          &nbsp; al &nbsp;<label class="badge badge-danger" id="hastaSinfonolas"></label>
                         </h6>
@@ -2478,12 +2478,12 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                <!-- /.form-group -->
                <div class="col-md-12">
                   <div class="form-group">
-                        
-                
+
+
                       <table class="table table-hover table-sm table-striped"  width:760px;>
                           <tr>
                             <th scope="col">IMPUESTOS</th>
-                            <th scope="col"></th> 
+                            <th scope="col"></th>
                             <th scope="col"></th>
                           </tr>
 
@@ -2542,7 +2542,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                       </button>
                     </div> <!-- /.ROW1 -->
                   </div> <!-- /.card-body -->
-              </div><!-- ROW FILA3 -->        
+              </div><!-- ROW FILA3 -->
 
             </div><!-- /.Panel Tarifas -->
 
@@ -2575,23 +2575,23 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 <div class="modal fade" id="modal_info_cali">
       <div class="modal-dialog" >
             <div class="modal-content card border-dark mb-3" style="border-radius: 20px;">
-                
+
                 <!-- /.card-header -->
                 <div class="modal-header">
                     <h5 class="modal-title" style="padding-left: 140px;">
                             <i class="fas fa-history"></i>
-                            &nbsp;Última <b>calificación</b> 
+                            &nbsp;Última <b>calificación</b>
                     </h5>
                 </div>
                <div class="modal-body" id="tres">
-                    <form id="formulario_info_cali">        
+                    <form id="formulario_info_cali">
                 <!-- /.card-header -->
                 @if($cali_lista=='0')
                         <div class="callout callout-info">
                               <h5><i class="fas fa-info"></i> Nota:</h5>
-                              <h5> No tiene <span class="badge badge-warning">ninguna calificación</span></h5> 
+                              <h5> No tiene <span class="badge badge-warning">ninguna calificación</span></h5>
                         </div>
-                          
+
                 @else
                     <!--inicia los campos del formulario ver-->
                     <table class="table"  style="border: 50px" data-toggle="table">
@@ -2603,7 +2603,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                         <td style="width: 15%; text-align: center"><b>Matrícula</b></td>
                         @endif
                         <td style="width: 25%; text-align: center"><b>Base imponible</b></td>
-                    
+
                         </tr>
                     </thead>
                     <tbody>
@@ -2619,7 +2619,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                               <h4>
                                 <span class="badge badge-pill badge-info">
                                             @if($MatriculasNull==0)
-                                            ${{$cali_lista->pago_mensual}} 
+                                            ${{$cali_lista->pago_mensual}}
                                             @else
                                             ${{$cali_lista->tarifa}}
                                             @endif
@@ -2631,7 +2631,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                                 <td align="center">
                                   <h4>
                                     <span class="badge badge-pill badge-info">
-                                            ${{$cali_lista->monto_matricula}} 
+                                            ${{$cali_lista->monto_matricula}}
                                     </span>
                                   </h4>
                                 </td>
@@ -2641,7 +2641,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
                               <h4>
                                 <span class="badge badge-pill badge-dark">
                                             @if($MatriculasNull==0)
-                                              {{$cali_lista->cantidad}} 
+                                              {{$cali_lista->cantidad}}
                                             @else
                                               1
                                             @endif
@@ -2692,7 +2692,7 @@ formData.append('fecha_pagaraAparatos', fecha_pagaraAparatos);
 
 
 <script>
-  
+
 function VerEmpresa(id){
 
 window.location.href="{{ url('/admin/empresas/show') }}/"+id;
@@ -2722,7 +2722,7 @@ function reporte_licencia_licor(id){
 }
 
 function reporte_aparatos(id){
-  
+
 var f1=(document.getElementById('ultimo_cobroAparatos').value);
 var f2=(document.getElementById('fecha_hasta_donde_pagaraAparatos').value);
 var ap=(document.getElementById('id_matriculadetalle').value);
@@ -2732,36 +2732,36 @@ window.open("{{ URL::to('/admin/estado_cuenta_aparatos/pdf') }}/" + f1 + "/" + f
 }
 
 function reporte_sinfonolas(id){
-  
+
   var f1=(document.getElementById('ultimo_cobroSinfonolas').value);
   var f2=(document.getElementById('fecha_hasta_donde_pagaraSinfonolas').value);
   var is=(document.getElementById('id_matriculadetalle').value);
   var ti=(document.getElementById('select_interesSinfonolas').value);
 
   window.open("{{ URL::to('/admin/estado_cuenta_sinfonolas/pdf') }}/" + f1 + "/" + f2 + "/" + is + "/" + ti + "/" + id );
-  
+
   }
 
   function reporte_maquinas(id){
-  
+
   var f1=(document.getElementById('ultimo_cobroMaquinas').value);
   var f2=(document.getElementById('fecha_hasta_donde_pagaraMaquinas').value);
   var im=(document.getElementById('id_matriculadetalle').value);
   var ti=(document.getElementById('select_interesMaquinas').value);
 
   window.open("{{ URL::to('/admin/estado_cuenta_maquinas/pdf') }}/" + f1 + "/" + f2 + "/" + im + "/" + ti + "/" + id );
-  
+
   }
 
   function reporte_mesas(id){
-  
+
   var f1=(document.getElementById('ultimo_cobroMesas').value);
   var f2=(document.getElementById('fecha_hasta_donde_pagaraMesas').value);
   var ime=(document.getElementById('id_matriculadetalle').value);
   var ti=(document.getElementById('select_interesMesas').value);
 
   window.open("{{ URL::to('/admin/estado_cuenta_mesas/pdf') }}/" + f1 + "/" + f2 + "/" + ime + "/" + ti + "/" + id );
-  
+
   }
 
 //** FIN - Reportes de estados de cuenta */
@@ -2783,10 +2783,10 @@ function modalMensaje(titulo, mensaje){
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
-               
+
                 }
-            });           
-}//Fin- Modal Mensaje. 
+            });
+}//Fin- Modal Mensaje.
 
 function verificar(){
             Swal.fire({
@@ -2821,7 +2821,7 @@ function verificar_cobro_aparatos(){
                 }
             });
         }
-        
+
 function verificar_pagoLicor(){
             Swal.fire({
                 title: '¿Desea guardar el Cobro?',
@@ -2838,7 +2838,7 @@ function verificar_pagoLicor(){
                 }
             });
         }
-        
+
 function verificar_cobro_sinfonolas(){
             Swal.fire({
                 title: '¿Desea guardar el Cobro?',
@@ -2854,7 +2854,7 @@ function verificar_cobro_sinfonolas(){
                   calculo_cobros_sinfonolas({{$empresa->id}},1);
                 }
             });
-        } 
+        }
 
 function verificar_cobros_maquinas(){
             Swal.fire({
@@ -2871,7 +2871,7 @@ function verificar_cobros_maquinas(){
                   calculo_cobros_maquinas({{$empresa->id}},1);
                 }
             });
-        } 
+        }
 
 function verificar_cobros_mesas(){
             Swal.fire({
@@ -2888,7 +2888,7 @@ function verificar_cobros_mesas(){
                   calculo_cobros_mesas({{$empresa->id}},1);
                 }
             });
-        } 
+        }
 function modalMensaje(titulo, mensaje){
             Swal.fire({
                 title: titulo,
@@ -2902,10 +2902,10 @@ function modalMensaje(titulo, mensaje){
 
                 }
             });
-            
+
         }
 
-                                
+
 function cobro_registrado(){
                       Swal.fire({
                       title: 'Cobro registrado correctamente',
@@ -2917,7 +2917,7 @@ function cobro_registrado(){
                       allowOutsideClick: false,
                       confirmButtonText: 'Aceptar'
                       }).then((result) => {
-                        if (result.isConfirmed) 
+                        if (result.isConfirmed)
                                     {
                                      recargar({{$empresa->id}});
                                     }
@@ -2932,19 +2932,19 @@ function cobro_registrado(){
 
 //** Funciones para abrir modales de historiales de cobros */
     function historial_cobros_empresa(id){
-   
+
       $('#historial_cobros_empresas').modal('show');
     }
 
     function historial_cobros_licor(id){
-   
+
       $('#historial_cobros_licor').modal('show');
     }
-   
+
 
    function historial_cobros_Aparatos()
    {
-    var id=document.getElementById("id_matriculadetalle").value; 
+    var id=document.getElementById("id_matriculadetalle").value;
 
     $('#historial_cobros_aparatos').css('overflow-y', 'auto');
     $('#historial_cobros_aparatos').modal({backdrop: 'static', keyboard: false})
@@ -2955,7 +2955,7 @@ function cobro_registrado(){
    }
    function historial_cobros_sinfonolas()
    {
-    var id=document.getElementById("id_matriculadetalle").value; 
+    var id=document.getElementById("id_matriculadetalle").value;
 
     $('#historial_cobros_sinfonolas').css('overflow-y', 'auto');
     $('#historial_cobros_sinfonolas').modal({backdrop: 'static', keyboard: false})
@@ -2967,7 +2967,7 @@ function cobro_registrado(){
 
    function historial_cobros_maquinas()
    {
-    var id=document.getElementById("id_matriculadetalle").value; 
+    var id=document.getElementById("id_matriculadetalle").value;
 
     $('#historial_cobros_maquinas').css('overflow-y', 'auto');
     $('#historial_cobros_maquinas').modal({backdrop: 'static', keyboard: false})
@@ -2979,7 +2979,7 @@ function cobro_registrado(){
 
    function historial_cobros_mesas()
    {
-    var id=document.getElementById("id_matriculadetalle").value; 
+    var id=document.getElementById("id_matriculadetalle").value;
 
     $('#historial_cobros_mesas').css('overflow-y', 'auto');
     $('#historial_cobros_mesas').modal({backdrop: 'static', keyboard: false})
@@ -2995,7 +2995,7 @@ function recuperariD()//*** Para recuperar los ID de las matriculas detalle */
         {
 
         //recuper ID del detalle.
-         var id='{{$id_detalleM}}'; 
+         var id='{{$id_detalleM}}';
          document.getElementById('id_matriculadetalle').value=id;
 
         }
@@ -3039,11 +3039,11 @@ function imp_historial_cobros_licor(id_empresa) {
 
 
 
-</script> 
+</script>
 
 <style>
-@media screen 
-    and (max-width: 760px), (min-device-width: 768px) 
+@media screen
+    and (max-width: 760px), (min-device-width: 768px)
     and (max-device-width: 1024px)  {
 
 		/* Force table to not be like tables anymore */
@@ -3061,11 +3061,11 @@ function imp_historial_cobros_licor(id_empresa) {
     tr {
       margin: 0 0 1rem 0;
     }
-      
+
     tr:nth-child(odd) {
       background: #ccc;
     }
-    
+
 		td {
 			/* Behave  like a "row" */
 			border: none;
@@ -3133,7 +3133,7 @@ $("#tab_historial_cobros_emp").DataTable({
 "responsive": true, "lengthChange": false, "autoWidth": true,
 });
 });
-</script> 
+</script>
 
 <script>
 //Script para Organizar la tabla de datos // prueba
@@ -3174,7 +3174,7 @@ $("#tab_historial_cobros_licor").DataTable({
 "responsive": true, "lengthChange": false, "autoWidth": true,
 });
 });
-</script> 
+</script>
 
-@endsection 
+@endsection
 

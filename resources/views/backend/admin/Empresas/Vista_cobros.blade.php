@@ -13,7 +13,7 @@
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
-  
+
 <style>
 
         #tres {
@@ -144,12 +144,12 @@
     transform: rotate(135deg);
     font-size: 25px;
 }
-       
+
 </style>
-@stop    
+@stop
 
 <!-- Inicia content-wrapper-->
-<div class="content-wrapper" style="display: none" id="divcontenedor">
+<div style="display: none" id="divcontenedor">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -179,20 +179,20 @@
     <!-- Inicia Contenido-->
     <div class="col-md-6" style="width: 95%; height:50%; margin: 0 auto;">
         <div class="input-group mb-3">
-            <select 
-            required 
-            onchange="buscar_empresa_a_cobrar()" 
-            class="form-control selectpicker show-tick" 
-            data-style="btn btn-outline-success"  
-            data-show-subtext="false" 
-            data-live-search="true" 
-            id="select-empresa" 
+            <select
+            required
+            onchange="buscar_empresa_a_cobrar()"
+            class="form-control selectpicker show-tick"
+            data-style="btn btn-outline-success"
+            data-show-subtext="false"
+            data-live-search="true"
+            id="select-empresa"
             title="Buscar una empresa."
             >
                 @foreach($ConsultaEmpresa as $empresas)
                   <option value="{{ $empresas->id }}"> {{ $empresas->nombre }} &nbsp;({{ $empresas->num_tarjeta }})</option>
-                @endforeach 
-            </select> 
+                @endforeach
+            </select>
           <div class="input-group-append">
             <label class="input-group-text"  for="inputGroupSelect02"><i class="fas fa-search"></i>&nbsp;Buscar </label>
           </div>
@@ -210,8 +210,8 @@
         </div>
       </div>
         <div class="card-body"  >
-        <!-- Inicia contenido-->  
-            <img src="{{ asset('/img/cobros.png') }}" id="img_cobros" style="display: block;margin: 0px auto;width: 25%; height:25%;" >                
+        <!-- Inicia contenido-->
+            <img src="{{ asset('/img/cobros.png') }}" id="img_cobros" style="display: block;margin: 0px auto;width: 25%; height:25%;" >
         <!-- Finaliza contenido-->
         </div>
       </div>
@@ -253,7 +253,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-  document.getElementById("divcontenedor").style.display = "block"; 
+  document.getElementById("divcontenedor").style.display = "block";
 
   //** Tooltips de botón flotante */
   $('[data-toggle="tooltip"]').tooltip();
@@ -264,11 +264,11 @@ function buscar_empresa_a_cobrar(){
 
             var id = document.getElementById('select-empresa').value;
             openLoading();
-            
-            
+
+
             var formData = new FormData();
             formData.append('id', id);
-          
+
           axios.post(url+'/buscar/obligaciones_tributarias/calificadas', formData, {
            })
          .then((response) => {
@@ -278,49 +278,49 @@ function buscar_empresa_a_cobrar(){
             Swal.fire({
                                   icon: 'error',
                                   title: 'Oops...',
-                                  text: 'Esta empresa se encuentra cerrada, cambie su estado para generar un cobro',                                 
-                                  showConfirmButton: true, 
-                                  
+                                  text: 'Esta empresa se encuentra cerrada, cambie su estado para generar un cobro',
+                                  showConfirmButton: true,
+
                                 }).then((result) => {
-                                    if (result.isConfirmed) 
+                                    if (result.isConfirmed)
                                     {
                                         window.location.href="{{ url('/admin/empresas/show') }}/"+id;
                                     }
-                                }); 
+                                });
         }
-        
+
         if(response.data.success === 2)
         {
             Swal.fire({
                                   icon: 'error',
                                   title: 'Oops...',
-                                  text: 'Esta empresa no cuenta con una calificación, registre una para poder generar un cobro',                                 
-                                  showConfirmButton: true, 
-                                  
+                                  text: 'Esta empresa no cuenta con una calificación, registre una para poder generar un cobro',
+                                  showConfirmButton: true,
+
                                 }).then((result) => {
-                                    if (result.isConfirmed) 
+                                    if (result.isConfirmed)
                                     {
                                         window.location.href="{{ url('/admin/empresas/show') }}/"+id;
                                     }
-                                }); 
+                                });
         }
 
         if(response.data.success === 1)
                 {
-                    
+
                     Swal.fire({
                           position:'top-end',
                           icon: 'success',
                           title: '¡Información encontrada!',
-                          showConfirmButton: false,                     
+                          showConfirmButton: false,
                         })
                         window.location.href="{{ url('/admin/empresas/cobros') }}/"+id;
                 }
-              
+
             })
             .catch((error) =>{
                                 toastr.error('Error al buscar la obligación triburaria');
-                            });                 
+                            });
     }
 
 
@@ -343,9 +343,9 @@ function modalMensaje(titulo, mensaje)
                 if (result.isConfirmed) {
 
                 }
-            });           
+            });
 }
 
 </script>
 
-@endsection 
+@endsection

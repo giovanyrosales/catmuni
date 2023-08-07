@@ -5,8 +5,5 @@
     </div>
 </aside>
 
-<footer class="main-footer">
-    <strong>Alcaldía de Metapán</strong>
-</footer>
 </div>
 
