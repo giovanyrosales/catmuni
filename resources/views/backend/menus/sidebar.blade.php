@@ -7,12 +7,12 @@
     <div class="sidebar">
 
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
 
     <!-- Grupo Roles y permisos -->
              <li class="nav-item">
-                
-             
+
+
                  <a href="#" class="nav-link">
                     <i class="far fa-edit"></i>
                     <p>
@@ -22,7 +22,7 @@
                 </a>
 
                 <ul class="nav nav-treeview">
-                   
+
 
                     <li class="nav-item">
                         <a href="{{ route('admin.permisos.index') }}" target="frameprincipal" class="nav-link">
@@ -81,7 +81,7 @@
                 </ul>
              </li>
 
-             
+
                 <!-- Grupo Contribuyentes -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -116,7 +116,7 @@
                         </ul>
                 <!-- Finaliza Grupo Contribuyentes -->
                 @can('url.empresa.crear.index')
-                
+
                 <!-- Grupo Empresas -->
                 <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -151,7 +151,7 @@
                                 </li>
                             </ul>
                 <!-- Finaliza Grupo Empresas -->
-           
+
                 @endcan
                 <!-- Grupo Rótulos -->
                          <li class="nav-item">
@@ -159,7 +159,7 @@
                                 <i class="fas fa-sign"></i>
                                 <p>Rótulos <i class="right fas fa-angle-left"></i></p>
                                 </a>
-                       
+
                 <!-- NUEVO MÓDULO DE RÓTULOS DETALLE -->
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -248,21 +248,21 @@
                                 <p>Cobros diarios</p>
                                 </a>
                             </li>
-                       
+
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.actividad.economica') }}" target="frameprincipal" class="nav-link">
                                     <i class="fas fa-cubes nav-icon"></i>
                                     <p>Actividad Económica</p>
                                 </a>
                             </li>
-                        
+
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.contribuyentes') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-id-badge nav-icon"></i>
                                     <p>Contribuyentes</p>
                                 </a>
                             </li>
-                       <!--     
+                       <!--
                             <li class="nav-item">
                                 <a href="{{ route('admin.sidebar.reporte.empresas.prueba') }}" target="frameprincipal" class="nav-link">
                                 <i class="fas fa-hotel nav-icon"></i>

@@ -70,7 +70,7 @@
 
 </style>
 <!-- Inicia content-wrapper-->
-<div class=" " style="display: none" id="divcontenedor">
+<div style="display: none; padding-bottom: 30px;" id="divcontenedor">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
