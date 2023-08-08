@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteBase /catmuni/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

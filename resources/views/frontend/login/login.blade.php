@@ -101,7 +101,7 @@
 
          // /catmuni/admin/login
 
-         axios.post('/catmuni/admin/login', formData, {
+         axios.post('/admin/login', formData, {
        // axios.post(url+'/login', formData, {
         })
             .then((response) => {
