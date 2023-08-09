@@ -16,6 +16,6 @@
     @yield('content-admin-css')
 
     <!-- /catmuni/admin -->
-    <script type="text/javascript"> let url = "/admin"; </script>
+    <script type="text/javascript"> let url = "/catmuni/admin"; </script>
 </head>
 <body class="hold-transition sidebar-mini">
