@@ -415,7 +415,7 @@
                 })
                 .catch((error) => {
                     closeLoading();
-                    toastr.error('Información no encontrada');
+                    toastr.error('Error de servidor');
                 });
 
             }
