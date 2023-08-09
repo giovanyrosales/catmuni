@@ -2269,13 +2269,13 @@ public function nuevaEmpresa(Request $request){
     $dato->id_actividad_economica = $request->actividad_economica;
     $dato->nombre = $request->nombre;
     $dato->matricula_comercio = $request->matricula_comercio;
-    $dato->nit = $request->nit;
+    $dato->nit = str_replace("-", "", $request->nit);
     $dato->referencia_catastral = $request->referencia_catastral;
     $dato->tipo_comerciante = $request->tipo_comerciante;
     $dato->inicio_operaciones = $request->inicio_operaciones;
     $dato->direccion = $request->direccionE;
     $dato->num_tarjeta = $request->num_tarjeta;
-    $dato->telefono = $request->telefono;
+    $dato->telefono = str_replace("-", "", $request->telefono);
     $dato->excepciones_especificas = $excepciones_especificas;
     $dato->num_resolucion = $nueva_resolucion;
     $dato->save();
@@ -2375,13 +2375,13 @@ public function nuevaEmpresa(Request $request){
             'id_actividad_economica' => $request->actividad_economica,
             'nombre' => $request->nombre,
             'matricula_comercio' => $request->matricula_comercio,
-            'nit' => $request->nit,
+            'nit' => str_replace("-", "", $request->nit),
             'referencia_catastral'=> $request->referencia_catastral,
             'tipo_comerciante' => $request->tipo_comerciante,
             'inicio_operaciones' => $request->inicio_operaciones,
             'direccion' => $request->direccion,
             'num_tarjeta' => $request->num_tarjeta,
-            'telefono' => $request->telefono,
+            'telefono' => str_replace("-", "", $request->telefono),
             'excepciones_especificas' =>  $excepciones_especificas
 
         ]);

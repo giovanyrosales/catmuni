@@ -66,7 +66,7 @@
           <!-- /.row -->
           </div>
          <!-- /.card-body -->
-        <div class="card-footer">          
+        <div class="card-footer">
         </div>
         <!-- /.card-footer -->
          </div>
@@ -126,7 +126,7 @@
                   <div class="col-md-6">
                    <div class="form-group">
                           <label>NIT de la Empresa:</label>
-                          <input type="number" name="nit" id="nit-editar" class="form-control"  placeholder="0000-000000-000-0" >
+                          <input type="text" name="nit" id="nit-editar" class="form-control"  maxlength="17" placeholder="0000-000000-000-0" onkeyup="this.value = mascaranit(this.value) ">
                         </div></div>
                   <div class="col-md-6">
                     <div class="form-group">
@@ -140,14 +140,14 @@
                 <div class="form-group">
                     <label>Dirección:</label>
                     <input type="text" name="direccion" id="direccion-editar" class="form-control" required placeholder="Dirección de la empresa"  >
-                  </div> </div>   
+                  </div> </div>
                 <!-- /.form-group -->
             <!-- inicia row telefono estado -->
                 <div class="row">
                 <div class="col-md-6">
                       <div class="form-group">
                           <label>Teléfono:</label>
-                          <input type="number" name="telefono" id="telefono-editar" class="form-control"  required placeholder="7777-7777"  >
+                          <input type="text" name="telefono" id="telefono-editar" class="form-control" maxlength="9" required placeholder="7777-7777" onkeyup="this.value = mascaratel(this.value)" >
                       </div>
                   </div>
                   <div class="col-md-6">
@@ -155,28 +155,28 @@
                         <label>Giro comercial:</label>
                             <!-- Select Giro Comercial -live search -->
                                 <div class="input-group mb-9">
-                                <select 
-                                required 
-                                class="form-control" 
+                                <select
+                                required
+                                class="form-control"
                                 data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"  
-                                id="select-giro_comercial-editar" 
+                                data-show-subtext="true"
+                                data-live-search="true"
+                                id="select-giro_comercial-editar"
                                 required
                                 >
                                   @foreach($giroscomerciales as $giro)
                                   <option value="{{ $giro->id }}"> {{ $giro->nombre_giro }}
                                   </option>
-                                  @endforeach 
-                                </select> 
+                                  @endforeach
+                                </select>
                                 </div>
                           </div>
                   </div>
-           <!-- cierra div row-->       
+           <!-- cierra div row-->
                 </div>
-      <!-- Asignar Representante-->  
+      <!-- Asignar Representante-->
             <div class="col-md-14">
-                      
+
                     <!-- finaliza select Asignar Representante-->
 
                     <!--asignar actividad economica -->
@@ -185,33 +185,33 @@
                           <label>Actividad económica:</label>
                           <!-- Select estado - live search -->
                           <div class="input-group mb-9">
-                                <select 
+                                <select
                                 required
-                                class="form-control" 
+                                class="form-control"
                                 data-style="btn-success"
-                                data-show-subtext="true" 
-                                data-live-search="true"   
-                                id="select-actividad_economica-editar" 
+                                data-show-subtext="true"
+                                data-live-search="true"
+                                id="select-actividad_economica-editar"
                                 onchange="excepciones_especificas()"
                                  >
 
-                                </select> 
+                                </select>
                            </div>
                         </div>
                     </div>
-               </div> 
+               </div>
                <!-- finaliza asignar actividad economica-->
 
              </div> <!-- /.ROW -->
               <!-- /.col -->
 
               <div class="col-md-6">
-                <!-- /.form-group --> 
+                <!-- /.form-group -->
                       <div class="form-group">
                         <label>Tipo de Comerciante:</label>
                         <input type="text" name="tipo_comerciante" id="tipo_comerciante-editar" class="form-control" placeholder="Tipo de comerciante" >
                       </div>
-                <!-- /.form-group --> 
+                <!-- /.form-group -->
                       <div class="form-group">
                        <label>Referencia Catastral:</label>
                        <input type="text" name="referencia_catastral" id="referencia_catastral-editar" class="form-control"  required placeholder="000-00-000-0000P00"  >
@@ -222,14 +222,14 @@
                           <label>Inicio de Operaciones:</label>
                           <input type="date" name="inicio_operaciones" id="inicio_operaciones-editar" required class="form-control" >
                       </div>
-                <!-- /.form-group --> 
+                <!-- /.form-group -->
                       <div class="form-group">
                         <label>Matricula de Comercio:</label>
                         <input type="number" name="matricula_comercio" id="matricula_comercio-editar" class="form-control"  placeholder="Matricula de Comercio">
                       </div>
               <!-- /.form-group -->
                <!-- /.form-group -->
-            <div class="row"> 
+            <div class="row">
                     <div class="col-md-6" id="Excepcion_especifica">
                           <div class="form-group">
                               <label>¿Excepción especifica?</label>
@@ -246,9 +246,9 @@
 
                </div>
             <!-- /.form-group -->
-        
-      <!-- cierra div de row-->       
-                  
+
+      <!-- cierra div de row-->
+
         </div>
               </div>
             <!-- Fin /.col -->
@@ -271,7 +271,7 @@
       </div>
     <!-- /.container-fluid -->
     </section>
-<!-- Finaliza Formulario Crear Empresa-->      
+<!-- Finaliza Formulario Crear Empresa-->
 <!--Finaliza modal Editar empresa -->
 
 
@@ -294,7 +294,28 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
-    
+                  <script type="text/javascript">
+                      function mascaranit(valor) {
+                          if (valor.match(/^\d{4}$/) !== null) {
+                              return valor + '-';
+                          } else if (valor.match(/^\d{4}\-\d{6}$/) !== null) {
+                              return valor + '-';
+                          }
+                          else if (valor.match(/^\d{4}\-\d{6}-\d{3}$/) !== null) {
+                              return valor + '-';
+                          }
+                          return valor;
+                      }
+                      function mascaratel(valor) {
+                          if (valor.match(/^\d{4}$/) !== null) {
+                              return valor + '-';
+                          } else if (valor.match(/^\d{4}\-\d{4}$/) !== null) {
+                              return valor;
+                          }
+                          return valor;
+                      }
+                  </script>
+
 <script>
 function modalAgregar(){
             document.getElementById("formulario-nuevo").reset();
@@ -334,19 +355,19 @@ function VerEmpresa(id){
         window.location.href="{{ url('/admin/empresas/show') }}/"+id;
 
         }
-        
+
 // Para show empresa
 
 
 // Para informacion empresa
 
 function excepciones_especificas(){
-  var sel = document.getElementById("select-actividad_economica-editar");  
+  var sel = document.getElementById("select-actividad_economica-editar");
   var selected = sel.options[sel.selectedIndex];
   var Codigo_Act=selected.getAttribute('data-actividad');
 
   if(Codigo_Act== 1)
-                {   
+                {
                          $('#Excepcion_especifica').show();
                 }else{
                         $('#Excepcion_especifica').hide();
@@ -364,24 +385,33 @@ function informacion(id){
                 .then((response) => {
                     closeLoading();
                     if(response.data.success === 1){
-                   
+
+                        let lengthsnit = [4, 6, 3, 1];
+                        let resultnit = lengthsnit.map((p => i => response.data.empresa.nit.slice(p, p += i))(0));
+                        let textnit = resultnit.join("-");
+
+                        let lengthstel = [4, 4];
+                        let resulttel = lengthstel.map((p => i => response.data.empresa.telefono.slice(p, p += i))(0));
+                        let texttel = resulttel.join("-");
+
+
                         $('#modalEditar').modal('show');
                         $('#id-editar').val(response.data.empresa.id);
                         $('#nombre-editar').val(response.data.empresa.nombre);
                         $('#matricula_comercio-editar').val(response.data.empresa.matricula_comercio);
-                        $('#nit-editar').val(response.data.empresa.nit);
+                        $('#nit-editar').val(textnit);
                         $('#referencia_catastral-editar').val(response.data.empresa.referencia_catastral);
                         $('#num_tarjeta-editar').val(response.data.empresa.num_tarjeta);
                         $('#tipo_comerciante-editar').val(response.data.empresa.tipo_comerciante);
                         $('#inicio_operaciones-editar').val(response.data.empresa.inicio_operaciones);
                         $('#direccion-editar').val(response.data.empresa.direccion);
-                        $('#telefono-editar').val(response.data.empresa.telefono);
-                        
+                        $('#telefono-editar').val(texttel);
+
 
                         document.getElementById("select-giro_comercial-editar").options.length = 0;
                         document.getElementById("select-actividad_economica-editar").options.length = 0;
 
-                        
+
 
                         $.each(response.data.giro_comercial, function( key, val ){
                             if(response.data.idgiro_co == val.id){
@@ -389,7 +419,7 @@ function informacion(id){
                             }else{
                                 $('#select-giro_comercial-editar').append('<option value="' +val.id +'">'+val.nombre_giro+'</option>');
                             }
-                        }); 
+                        });
 
                         $.each(response.data.actividad_economica, function( key, val ){
                             if(response.data.idact_eco == val.id){
@@ -398,7 +428,7 @@ function informacion(id){
                                 $('#select-actividad_economica-editar').append('<option value="' +val.id +'"data-actividad="' +val.codigo+'">'+val.rubro+'&nbsp;'+'('+val.codigo_atc_economica+')'+'</option>');
                             }
                         });
-                     
+
 
                         if(response.data.empresa.excepciones_especificas == 'NO'){
                             $("#toggle-excepcion_especifica-editar").prop("checked", false);
@@ -407,7 +437,7 @@ function informacion(id){
                         }
                         excepciones_especificas();
 
-                            
+
                     }else{
                         toastr.error('Información no encontrada');
                     }
@@ -445,43 +475,9 @@ function editar(){
             toastr.error('El nombre no puede contener más de 50 caracteres');
             return;
         }
-        
-        if(num_tarjeta === ''){
-            toastr.error('El número de tarjeta de la empresa es requerido');
-            return;
-        }
-                
-        if(inicio_operaciones === ''){
-            toastr.error('El inicio de operaciones de la empresa es requerido');
-            return;
-        }
-        if(direccion === ''){
-            toastr.error('La dirección de la empresa es requerido');
-            return;
-        }
 
-        if(telefono === ''){
-            toastr.error('El número de teléfono de la empresa es requerido');
-            return;
-        }
-        if(telefono.length > 8){
-            toastr.error('El número de teléfono no puede contener más de 8 digitos');
-            return;
-        }
-        if(telefono.length < 8){
-            toastr.error('El número de teléfono no puede contener menos de 8 digitos');
-            return;
-        }
-       
-        if(actividad_economica === ''){
-            toastr.error('La actividad económica de la empresa es requerido');
-            return;
-        }
 
-        if(giro_comercial === ''){
-            toastr.error('El giro comercial de la empresa es requerido');
-            return;
-        }
+
 
         if(matricula_comercio  != ''){
           if(matricula_comercio.length < 0){
@@ -498,36 +494,6 @@ function editar(){
           }
         }
         var reglaNumeroDecimal = /^[0-9]\d*(\.\d+)?$/;
-       
-        if(nit  != ''){
-
-                  if(nit.length > 14 ) 
-                        {
-                          toastr.error('El NIT no puede contener más de 14 números');
-                          return;
-                        }
-                   if(nit.length< 14 ) 
-                        {
-                          toastr.error('El NIT debe contener 14 números');
-                          return;
-                        }
-                  if(nit.length < 0)
-                  {
-                          toastr.error('El NIT no puede tener números negativos');
-                          return;
-                  }
-                  
-         }
-
-        if(!telefono.match(reglaNumeroDecimal)) {
-            toastr.error('El número de teléfono debe ser un número entero');
-            return;
-        }
-
-        if(telefono < 0){
-            toastr.error('El número de teléfono no puede tener números negativos');
-            return;
-        }
 
         if(num_tarjeta < 0){
             toastr.error('El número de tarjeta no puede tener números negativos');
@@ -576,10 +542,10 @@ function editar(){
               Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Error al actualizar empresa!', 
+                          text: 'Error al actualizar empresa!',
                           showConfirmButton: true,
                         }).then((result) => {
-                        if (result.isConfirmed) 
+                        if (result.isConfirmed)
                         {
                           closeLoading();
                         }

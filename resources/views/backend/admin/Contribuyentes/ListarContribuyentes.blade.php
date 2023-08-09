@@ -390,6 +390,14 @@
                             let resultdui = lengthsdui.map((p => i => response.data.contribuyente.dui.slice(p, p += i))(0));
                             let textdui = resultdui.join("-");
 
+                        let lengthstel = [4, 4];
+                        let resulttel = lengthstel.map((p => i => response.data.contribuyente.telefono.slice(p, p += i))(0));
+                        let texttel = resulttel.join("-");
+
+                        let lengthsfax = [4, 4];
+                        let resultfax = lengthsfax.map((p => i => response.data.contribuyente.fax.slice(p, p += i))(0));
+                        let textfax = resultfax.join("-");
+
                         $('#id-editar').val(response.data.contribuyente.id);
                         $('#nombre-editar').val(response.data.contribuyente.nombre);
                         $('#apellido-editar').val(response.data.contribuyente.apellido);
@@ -397,9 +405,9 @@
                         $('#nit-editar').val(textnit);
                         $('#registro_comerciante-editar').val(response.data.contribuyente.registro_comerciante);
                         $('#direccion-editar').val(response.data.contribuyente.direccion);
-                        $('#telefono-editar').val(response.data.contribuyente.telefono);
+                        $('#telefono-editar').val(texttel);
                         $('#email-editar').val(response.data.contribuyente.email);
-                        $('#fax-editar').val(response.data.contribuyente.fax);
+                        $('#fax-editar').val(textfax);
                     }else{
                         toastr.error('Información no encontrada');
                     }
