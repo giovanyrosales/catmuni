@@ -36,24 +36,24 @@ class ContribuyentesController extends Controller
 
         return view('backend.admin.Contribuyentes.ListarContribuyentes', compact('contribuyentes'));
     }
-  
+
 //Agregar nuevo contribuyente
 
     public function crearContribuyentes()
     {
         return view('backend.admin.Contribuyentes.Crear_Contribuyentes');
     }
-    
+
     public function tablaContribuyentes(){
         $contribuyentes = Contribuyentes::orderBy('id', 'ASC')->get();
 
         return view('backend.admin.Contribuyentes.tabla.tablalistacontribuyentes', compact('contribuyentes'));
-    
+
     }
 
     public function tablahistoricocs(){
 
-        
+
 
         $constancias_cs= ConstanciasHistorico::join('contribuyente','constancias_historico.id_contribuyente','=','contribuyente.id')
 
@@ -61,7 +61,7 @@ class ContribuyentesController extends Controller
         'constancias_historico.num_resolucion','constancias_historico.created_at',
         'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
         'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
-        'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+        'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax',
         'contribuyente.direccion as direccionCont',
          )
         ->where('tipo_constancia','Simple')
@@ -70,12 +70,12 @@ class ContribuyentesController extends Controller
 
         foreach($constancias_cs as $dato){
             $dato->año=carbon::parse($dato->created_at)->format('y');
-            $dato->fecha_registro=date("d-m-Y H:i:s A", strtotime($dato->created_at));  
-    
+            $dato->fecha_registro=date("d-m-Y H:i:s A", strtotime($dato->created_at));
+
         }
- 
+
         return view('backend.admin.Contribuyentes.tabla.tablahistoricocs', compact('constancias_cs'));
-    
+
     }
 
     public function tablahistoricocg(){
@@ -87,7 +87,7 @@ class ContribuyentesController extends Controller
         'constancias_historico.num_resolucion','constancias_historico.created_at',
         'contribuyente.id as id_contribuyente','contribuyente.nombre as contribuyente',
         'contribuyente.apellido','contribuyente.telefono as tel','contribuyente.dui','contribuyente.email',
-        'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax', 
+        'contribuyente.nit as nitCont','contribuyente.registro_comerciante','contribuyente.fax',
         'contribuyente.direccion as direccionCont',
          )
         ->where('tipo_constancia','Global')
@@ -98,9 +98,9 @@ class ContribuyentesController extends Controller
             $dato->año=carbon::parse($dato->created_at)->format('y');
             $dato->fecha_registro=date("d-m-Y H:i:s A", strtotime($dato->created_at));
         }
- 
+
         return view('backend.admin.Contribuyentes.tabla.tablahistoricocg', compact('constancias_cg'));
-    
+
     }
 
 //Agregar nuevo contribuyente
@@ -110,63 +110,63 @@ class ContribuyentesController extends Controller
         $regla = array(
             'nombre' => 'Required',
             'apellido' => 'Required',
-            'direccion' => 'Required',
+           // 'direccion' => 'Required',
             'dui' => 'Required|unique:contribuyente,dui',
-            'nit' => 'Required|unique:contribuyente,nit',
+            //'nit' => 'Required|unique:contribuyente,nit',
            // 'registro_comerciante' => 'unique:contribuyente,registro_comerciante',
-            'telefono' => 'Required',
-            'email' => 'Required',
-            'fax' => 'nullable'
-          
+            //'telefono' => 'Required',
+           // 'email' => 'Required',
+           // 'fax' => 'nullable'
+
           );
           $message=[
-    
-  
+
+
             'dui.unique'=>'EL número de DUI ingresado ya esta registrado',
         ];
 
-        $validar = Validator::make($request->all(), $regla, 
+        $validar = Validator::make($request->all(), $regla,
         $message
-    
+
         );
-  
-          
+
+
           if ($validar->fails()){ return [
             'success' => 0,
-            'message' => $validar->errors()->first()       
+            'message' => $validar->errors()->first()
         ];}
-          
+
               $dato = new Contribuyentes();
               $dato->nombre = $request->nombre;
               $dato->apellido = $request->apellido;
               $dato->direccion = $request->direccion;
-              $dato->dui = $request->dui;
-              $dato->nit = $request->nit;
+              $dato->dui = str_replace("-", "", $request->dui);
+              $dato->nit = str_replace("-", "", $request->nit);
               $dato->registro_comerciante = $request->registro_comerciante;
-              $dato->telefono = $request->telefono;
+              $dato->telefono = str_replace("-", "", $request->telefono);
               $dato->email = $request->email;
-              $dato->fax = $request->fax;
-  
+              $dato->fax = str_replace("-", "", $request->fax);
+
               if($dato->save()){
                   return ['success' => 1];
               }else{
                   return ['success' => 2];
               }
-          }  
-//Función para llamar informacion
+          }
+//Función para llamar información
 
         public function informacionContribuyentes(Request $request)
            {
             $regla = array(
                 'id' => 'required',
             );
-    
+
             $validar = Validator::make($request->all(), $regla);
-    
+
             if ($validar->fails()){ return ['success' => 0];}
-    
+
             if($lista = Contribuyentes::where('id', $request->id)->first()){
-            
+
             return ['success' => 1,
                 'contribuyente' => $lista,
                ];
@@ -174,30 +174,22 @@ class ContribuyentesController extends Controller
                 return ['success' => 2];
             }
             }
-        
+
 //Funcion editar contribuyentes
 
         public function editarContribuyente(Request $request)
           {
-            
+
             $regla = array(
                 'id' => 'required',
                 'nombre' => 'required',
-                'apellido' => 'required',
-                'direccion' => 'required',
-                'dui' => 'required',
-                'nit' => 'required',
-                
-                'telefono' => 'required',
-                'email' => 'required',
-                
-            
+                'dui' => 'required'
             );
 
             $validar = Validator::make($request->all(), $regla);
 
-            if ($validar->fails()){ return ['success' => 0];} 
-            
+            if ($validar->fails()){ return ['success' => 0];}
+
             if(Contribuyentes::where('id', $request->id)->first())
             {
 
@@ -205,13 +197,13 @@ class ContribuyentesController extends Controller
                         'nombre' => $request->nombre,
                         'apellido' => $request->apellido,
                         'direccion' => $request->direccion,
-                        'dui' => $request->dui,
-                        'nit' => $request->nit,
+                        'dui' => str_replace("-", "", $request->dui),
+                        'nit' => str_replace("-", "", $request->nit),
                         'registro_comerciante' => $request->registro_comerciante,
-                        'telefono' => $request->telefono,
+                        'telefono' =>str_replace("-", "", $request->telefono),
                         'email' => $request->email,
-                        'fax' => $request->fax,
-                       
+                        'fax' => str_replace("-", "", $request->fax),
+
                     ]);
 
                 //  $contribuyente->save();
@@ -219,12 +211,12 @@ class ContribuyentesController extends Controller
                     return ['success' => 1];
                 }else {
                     return['success' => 2];
-                }              
-         
+                }
+
                 //return view('backend.admin.Contribuyentes.ListarContribuyentes', compact('contribuyente'));
             }
-         
-//Eliminar Contribuyente    
+
+//Eliminar Contribuyente
 
         public function eliminarContribuyentes(Request $request)
             {
@@ -234,7 +226,7 @@ class ContribuyentesController extends Controller
                 $lista_buses=BusesDetalle::where('id_contribuyente',$request->id)->get();
 
                 if(sizeof($lista_empresas)>0 or sizeof($lista_rotulos)>0 or sizeof($lista_buses)>0)
-                {   
+                {
                     //** [ El contribuyente tiene obligaciones tributarias por lo         **//
                     //**   tanto no se puede eliminar mientras no se desligue de ellas.   ] **//
 
@@ -259,7 +251,7 @@ class ContribuyentesController extends Controller
 
               //  return ['success' => 1];
            // }
-   
+
 
            public function verinfoContribuyentes(Request $request)
            {
@@ -267,13 +259,13 @@ class ContribuyentesController extends Controller
             $regla = array(
                 'id' => 'required',
             );
-    
+
             $validar = Validator::make($request->all(), $regla);
-    
+
             if ($validar->fails()){ return ['success' => 0];}
-    
+
             if($lista = Contribuyentes::where('id', $request->id)->first()){
-            
+
             return ['success' => 1,
                 'contribuyente' => $lista,
                ];
@@ -285,17 +277,17 @@ class ContribuyentesController extends Controller
         public function historico_solvencias()
         {
             $contribuyentes = Contribuyentes::All();
-            
+
             return view('backend.admin.Contribuyentes.HistoricoSolvencias', compact('contribuyentes'));
         }
 
 
 }
-           
-    
-      
-    
-    
 
-    
+
+
+
+
+
+
 

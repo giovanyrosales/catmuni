@@ -66,13 +66,13 @@
                     <div class="col-md-4">
                       <div class="form-group">
                               <label>NIT (Opcional):</label>
-                              <input type="number" name="nit" id="nit" class="form-control" placeholder="0000-000000-000-0" >
+                              <input type="text" name="nit" id="nit" class="form-control" placeholder="0000-000000-000-0" maxlength="17" onkeyup="this.value = mascaranit(this.value)">
                       </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                               <label>DUI o Pasaporte:</label>
-                              <input type="number" name="dui" id="dui" placeholder="00000000-0" class="form-control" >
+                              <input type="text" name="dui" id="dui" placeholder="00000000-0" maxlength="10" class="form-control" onkeyup="this.value = mascaradui(this.value)">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -105,13 +105,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                               <label>Teléfono Celular:</label>
-                              <input type="number" name="telefono" id="telefono" class="form-control"  placeholder="7777-7777">
+                              <input type="text" name="telefono" id="telefono" maxlength="9" class="form-control"  placeholder="7777-7777" onkeyup="this.value = mascaratel(this.value)">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                               <label>Teléfono Fijo (Opcional):</label>
-                              <input type="number" name="fax" id="fax"  placeholder="2222-2222" class="form-control" >
+                              <input type="text" name="fax" id="fax"  placeholder="2222-2222"  maxlength="9" class="form-control" onkeyup="this.value = mascaratel(this.value)">
                         </div>
                     </div>
 
@@ -152,7 +152,35 @@
 
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
-
+        <script type="text/javascript">
+            function mascaranit(valor) {
+                if (valor.match(/^\d{4}$/) !== null) {
+                    return valor + '-';
+                } else if (valor.match(/^\d{4}\-\d{6}$/) !== null) {
+                    return valor + '-';
+                }
+                  else if (valor.match(/^\d{4}\-\d{6}-\d{3}$/) !== null) {
+                    return valor + '-';
+                }
+                return valor;
+            }
+            function mascaradui(valor) {
+                if (valor.match(/^\d{8}$/) !== null) {
+                    return valor + '-';
+                } else if (valor.match(/^\d{4}\-\d{1}$/) !== null) {
+                    return valor;
+                }
+                return valor;
+            }
+            function mascaratel(valor) {
+                if (valor.match(/^\d{4}$/) !== null) {
+                    return valor + '-';
+                } else if (valor.match(/^\d{4}\-\d{4}$/) !== null) {
+                    return valor;
+                }
+                return valor;
+            }
+        </script>
 
 
 <script type="text/javascript">

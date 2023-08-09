@@ -17,11 +17,11 @@ class CreateContribuyenteTable extends Migration
             $table->id();
             $table->string('nombre', 50);
             $table->string('apellido', 50);
-            $table->string('direccion', 250);
+            $table->string('direccion', 250)->nullable();
             $table->string('dui', 50);
-            $table->string('nit', 50);
+            $table->string('nit', 50)->nullable();
             $table->string('registro_comerciante', 50)->nullable();
-            $table->string('telefono', 50);
+            $table->string('telefono', 50)->nullable();
             $table->string('email', 250)->nullable();
             $table->string('fax', 50)->nullable();
         });

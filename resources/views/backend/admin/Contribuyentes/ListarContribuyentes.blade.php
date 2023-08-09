@@ -98,12 +98,12 @@
                 <div class="col-md-6">
                   <div class="form-group">
                           <label>NIT:</label>
-                          <input type="number" name="nit" id="nit-editar" class="form-control" required placeholder="0000-000000-000-0" >
+                          <input type="´text" name="nit" id="nit-editar" maxlength="17" class="form-control"  placeholder="0000-000000-000-0" onkeyup="this.value = mascaranit(this.value) ">
                   </div></div>
                 <div class="col-md-6">
                   <div class="form-group">
                           <label>DUI:</label>
-                          <input type="number" name="dui" id="dui-editar" required placeholder="00000000-0" class="form-control" >
+                          <input type="text" name="dui" id="dui-editar" maxlength="10" placeholder="00000000-0" class="form-control" onkeyup="this.value = mascaradui(this.value)">
                       </div>
                   </div>
                 </div>
@@ -124,24 +124,24 @@
               <div class="col-md-5">
               <div class="form-group">
                         <label>Apellido:</label>
-                        <input type="text" name="apellido" id="apellido-editar" class="form-control" required placeholder="Apellido del propietario" >
+                        <input type="text" name="apellido" id="apellido-editar" class="form-control"  placeholder="Apellido del propietario" >
                       </div>
                 <!-- /.form-group -->
                 <div class="form-group">
                 <label>Registro de Comerciante:</label>
-                          <input type="number" name="registro_comerciante-editar" id="registro_comerciante-editar"  class="form-control" required placeholder="0000000"  >
+                          <input type="number" name="registro_comerciante-editar" id="registro_comerciante-editar"  class="form-control"  placeholder="0000000"  >
                       </div>
                 <!-- /.form-group -->
                 <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                           <label>Teléfono:</label>
-                          <input type="number" name="telefono" id="telefono-editar" class="form-control" required placeholder="7777-7777">
+                          <input type="text" name="telefono" id="telefono-editar" maxlength="9" class="form-control"  placeholder="7777-7777" onkeyup="this.value = mascaratel(this.value)">
                   </div></div>
                 <div class="col-md-6">
                   <div class="form-group">
-                          <label>Fax:</label>
-                          <input type="number" name="fax" id="fax-editar" required placeholder="0000-0000" class="form-control" >
+                          <label>Teléfono Fijo (Opcional):</label>
+                          <input type="text" name="fax" id="fax-editar"  maxlength="9" placeholder="0000-0000" class="form-control" onkeyup="this.value = mascaratel(this.value)">
                      </div>
                    </div>
                   </div>
@@ -225,19 +225,19 @@
                 <!-- /.form-group -->
                 <div class="form-group">
                 <label>Registro de Comerciante:</label>
-                    <input type="number" name="registro_comerciante-ver" id="registro_comerciante-ver" disabled required class="form-control" >
+                    <input type="number" name="registro_comerciante-ver" id="registro_comerciante-ver" disabled  class="form-control" >
                       </div>
                 <!-- /.form-group -->
                 <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                           <label>Teléfono:</label>
-                          <input type="number" name="telefono" id="telefono-ver" disabled class="form-control" required >
+                          <input type="number" name="telefono" id="telefono-ver" disabled class="form-control"  >
                   </div></div>
                 <div class="col-md-6">
                   <div class="form-group">
                           <label>Fax:</label>
-                          <input type="number" name="fax" id="fax-ver" disabled required class="form-control" >
+                          <input type="number" name="fax" id="fax-ver" disabled  class="form-control" >
                   </div>
                 </div>
              </div>
@@ -327,7 +327,35 @@
             document.getElementById("divcontenedor").style.display = "block";
         });
 </script>
-
+    <script type="text/javascript">
+        function mascaranit(valor) {
+            if (valor.match(/^\d{4}$/) !== null) {
+                return valor + '-';
+            } else if (valor.match(/^\d{4}\-\d{6}$/) !== null) {
+                return valor + '-';
+            }
+            else if (valor.match(/^\d{4}\-\d{6}-\d{3}$/) !== null) {
+                return valor + '-';
+            }
+            return valor;
+        }
+        function mascaradui(valor) {
+            if (valor.match(/^\d{8}$/) !== null) {
+                return valor + '-';
+            } else if (valor.match(/^\d{4}\-\d{1}$/) !== null) {
+                return valor;
+            }
+            return valor;
+        }
+        function mascaratel(valor) {
+            if (valor.match(/^\d{4}$/) !== null) {
+                return valor + '-';
+            } else if (valor.match(/^\d{4}\-\d{4}$/) !== null) {
+                return valor;
+            }
+            return valor;
+        }
+    </script>
 <script type="text/javascript">
 
     function recargar()
@@ -353,11 +381,20 @@
                     if(response.data.success === 1){
                         $('#modalEditar').modal('show');
 
+
+                         let lengthsnit = [4, 6, 3, 1];
+                         let resultnit = lengthsnit.map((p => i => response.data.contribuyente.nit.slice(p, p += i))(0));
+                         let textnit = resultnit.join("-");
+
+                            let lengthsdui = [8, 1];
+                            let resultdui = lengthsdui.map((p => i => response.data.contribuyente.dui.slice(p, p += i))(0));
+                            let textdui = resultdui.join("-");
+
                         $('#id-editar').val(response.data.contribuyente.id);
                         $('#nombre-editar').val(response.data.contribuyente.nombre);
                         $('#apellido-editar').val(response.data.contribuyente.apellido);
-                        $('#dui-editar').val(response.data.contribuyente.dui);
-                        $('#nit-editar').val(response.data.contribuyente.nit);
+                        $('#dui-editar').val(textdui);
+                        $('#nit-editar').val(textnit);
                         $('#registro_comerciante-editar').val(response.data.contribuyente.registro_comerciante);
                         $('#direccion-editar').val(response.data.contribuyente.direccion);
                         $('#telefono-editar').val(response.data.contribuyente.telefono);
